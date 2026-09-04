@@ -161,6 +161,32 @@ tests/test_weave.py            34 tests, incl. the crash mode above
 python -m pytest tests -q
 ```
 
+---
+
+## Also here: a windshield washer nozzle
+
+Same idea, different object. [`docs/washer-nozzle.md`](docs/washer-nozzle.md)
+generates a replacement washer nozzle as STL from two caliper readings and a
+photograph of the hole it has to fit. The hole is a distance field, every
+section of the part is an offset of it, and the body is written as a single
+closed tube, so the channel that must not leak has no boolean subtraction
+anywhere near it.
+
+```bash
+python nozzle.py --check-only
+python nozzle.py --part gauge --out out/gauge.stl     # print this one first
+python nozzle.py --part all --out out/plate.stl --preview out/nozzle.svg
+```
+
+```
+nozzle.py                      CLI
+washer/geom.py                 the hole outline, as distance fields
+washer/mesh.py                 rings, tubes, hexahedra, watertightness, STL
+washer/parts.py                nozzle, wedge clip, fit gauge
+washer/check.py                does it go in, hold, flow, and print
+tests/test_nozzle.py           52 tests
+```
+
 ## Provenance
 
 The technique here was worked out from the geometry, not transcribed from a
