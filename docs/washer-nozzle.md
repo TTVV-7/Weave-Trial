@@ -118,8 +118,8 @@ hole 13.5 x 5.4 mm (10.9 over the lobes), 1.0 mm sheet
   head           covers the hole by 1.6 mm all round
   clip           grips 0.8-2.9 mm sheet, 12 mm of travel
   channel        2.2 mm bore, 0.85 mm wall beside it
-  jet            1.2 x 0.55 mm at 40 deg, 0.66 mm2
-  printing       40 deg worst overhang, 0.40 mm worst ledge, head face down
+  jet            1.2 x 0.55 mm at 45 deg, 0.66 mm2
+  printing       45 deg worst overhang, 0.40 mm worst ledge, head face down
   nozzle         1.25 g, 5760 triangles
   fit            OK
 ```
@@ -134,6 +134,15 @@ hole 13.5 x 5.4 mm (10.9 over the lobes), 1.0 mm sheet
 - **printing** — measured off the triangles that actually get written, not off
   the change in radius: where a section is not round, a radial step is not the
   surface slope. Anything past 45 degrees is refused.
+
+  The default aim of 45 degrees puts the part exactly on that limit, and it is
+  the channel that is on it: the roof of a tilted bore is an overhang of the
+  tilt angle, no matter how gradually the tilt is reached. That is fine at 45 —
+  each layer is half supported by the one under it — and the tilted run is only
+  2.6 mm, but it is also the reason the limit is where it is. There is no
+  supporting the inside of a 2.2 mm hole, so a steeper aim is refused rather
+  than printed badly. `--preset shallow` throws at 35 degrees if you would
+  rather have the margin.
 - **clip** — the sheet thickness range the wedge can reach, and whether the one
   you asked for is inside it.
 
@@ -167,11 +176,12 @@ nozzle and four.
    It wedges; it should need a push.
 3. Push the hose on. The barb is sized for 4 mm bore — `--hose-id` if yours is
    different, and the check will tell you if that makes it too fat for the hole.
-4. Aim it. `--aim` is the tilt from vertical, `--aim-az` is which way it points,
-   0 being square across the neck of the hole. **Which way that is on the car,
-   the photographs do not say** — look at where the hole's long axis runs before
-   you print, and reprint with `--aim-az 180` if it sprays at the wrong end of
-   the glass.
+4. Aim it. The default is 45 degrees from vertical, which is what the nozzle
+   that came off the car threw; `--aim` changes it. `--aim-az` is which way it
+   points, 0 being square across the neck of the hole. **Which way that is on
+   the car, the photographs do not say** — look at where the hole's long axis
+   runs before you print, and reprint with `--aim-az 180` if it sprays at the
+   wrong end of the glass.
 
 The head sits on paint, not on a gasket. If it needs to be watertight, a smear
 of silicone under the head does it; the clip will still pull it down.

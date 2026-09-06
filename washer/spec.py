@@ -66,7 +66,11 @@ class NozzleSpec:
     jet_w: float = 1.2
     jet_h: float = 0.55
     #: Tilt from vertical, and which way. az 0 points across the hole's neck.
-    aim_deg: float = 40.0
+    #: 45 is what the nozzle that came off the car threw, and it is also the
+    #: steepest a channel can be and still print: the roof of a tilted bore is
+    #: an overhang of exactly the tilt angle. Anything past this needs support
+    #: inside a 2.2 mm hole, which is not a thing, so check_fit refuses it.
+    aim_deg: float = 45.0
     aim_az: float = 0.0
     #: Height at which the bore stops being vertical and starts aiming.
     plenum_z: float = 1.0
@@ -174,6 +178,8 @@ PRESETS: dict[str, NozzleSpec] = {
     "tight": replace(NozzleSpec(), fit_scale=0.95),
     # Thicker sheet, e.g. a plastic cowl rather than a hood skin.
     "thick-panel": replace(NozzleSpec(), panel=2.0),
-    # Straight up, for a cowl nozzle that sprays from below the glass line.
+    # Nearer vertical, for a cowl nozzle that sprays from below the glass line.
     "steep": replace(NozzleSpec(), aim_deg=20.0),
+    # A flatter throw, and a gentler overhang inside the channel.
+    "shallow": replace(NozzleSpec(), aim_deg=35.0),
 }
