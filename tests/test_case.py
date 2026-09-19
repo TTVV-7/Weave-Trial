@@ -569,6 +569,30 @@ def test_every_phone_draws_its_own_lenses_inside_its_own_opening(model):
         assert r > 0.4
 
 
+def test_an_opening_is_big_enough_for_the_lenses_behind_it():
+    # The cluster is the same hardware whatever shape the opening around it
+    # is, so the lens the preview can fit inside a three-lens opening should
+    # come out about the same size on every three-lens phone. It did not:
+    # the 17 Pro's bar was specified at 25 mm tall, which is shorter than
+    # the triangle that needs a 39 mm island on a 16 Pro, and the drawn lens
+    # came out a third smaller than its neighbours'. An opening too small
+    # for its own lenses is a case with plastic over one.
+    from phonecase.preview import _lens_layout
+    by_count: dict[int, list[float]] = {}
+    for model, phone in PHONES.items():
+        spec = spec_for(model)
+        cam = next(c for c in spec.cutouts if c.name == "camera")
+        r = max(p[2] for p in _lens_layout(phone, cam) if p[3])
+        by_count.setdefault(phone.lenses, []).append(r)
+    for count, radii in by_count.items():
+        if len(radii) < 2:
+            continue
+        assert max(radii) / min(radii) < 1.3, (
+            f"{count}-lens phones disagree about how big a lens is: "
+            f"{min(radii):.1f} to {max(radii):.1f} mm. One of their camera "
+            "openings is the wrong size")
+
+
 def test_the_preview_hands_the_page_what_it_needs_to_drag():
     # The page slides the artwork under the outline while it waits for the
     # rebuild, which it can only do if it knows the scale and which paths
@@ -710,7 +734,10 @@ def test_a_plateau_camera_spans_the_back_and_is_centred(model):
     cam = next(c for c in spec.cutouts if c.name == "camera")
     assert cam.u == pytest.approx(0.0), "a plateau is centred, not cornered"
     assert cam.w > 0.85 * spec.phone.width, "a plateau reaches both edges"
-    assert cam.h < cam.w / 2, "a plateau is a bar, not an island"
+    # Wider than tall is what makes it a bar. Not "twice as wide": the 17
+    # Pro's is 67.9 by 34, and a rule that insists on 2:1 is a rule that
+    # argues with the hardware.
+    assert cam.h < cam.w * 0.75, "a plateau is a bar, not an island"
 
 
 @pytest.mark.parametrize("model", CORNER)

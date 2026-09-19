@@ -287,7 +287,21 @@ every colour change down there is another gram in the bin.
 | `corner`, pill | 15, 15 Plus, 16, 16 Plus, 17 | ~27 x 47 vertical pill |
 | `corner`, diagonal | 13, 14 | ~34 x 34 |
 | `corner`, small | SE (3rd gen) | ~17 x 17 |
-| `plateau` | 17 Pro, 17 Pro Max, Air | full width, ~25 mm tall, centred |
+| `plateau` | 17 Pro, 17 Pro Max | full width, ~34 mm tall, centred |
+| `plateau` | Air | full width, ~26 mm tall, one lens |
+
+The plateau height was wrong to begin with -- 25 mm, which is shorter than
+the three-lens cluster that has to fit inside it. The same triangle of lenses
+needs a 39 mm island on a 16 Pro, so the bar holding it cannot be much under
+thirty: the opening and the hardware are not independent, and a plateau too
+short for its own lenses is a case with plastic over one. A test now compares
+how big a lens each opening can hold and complains when phones with the same
+cluster disagree by more than a third.
+
+It is still an estimate. Measure yours and pass `--camera 68x34:12
+--camera-margin 2.5,2`; the web page has the same five fields, starts them
+from the phone's defaults, outlines whichever you have moved, and prints the
+command line that reproduces what it used.
 
 A plateau leaves the back plate holding on a few millimetres of material
 above and beside it. That is true of the real cases too, and `check_case`
