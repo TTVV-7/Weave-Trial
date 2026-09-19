@@ -224,6 +224,14 @@ positions are estimates and have not been measured against a real phone** —
 so that finding out costs twenty minutes. Full documentation:
 [docs/phone-case.md](docs/phone-case.md).
 
+There is a browser front end for it, at
+[3-d-print-sandbox.vercel.app/case](https://3-d-print-sandbox.vercel.app/case):
+pick a phone, drop in an SVG, watch the back redraw, download the g-code. It
+runs a vendored copy of `phonecase/` living in
+[ttvv-7/3D-print-sandbox](https://github.com/TTVV-7/3D-print-sandbox), so a
+fix here has to be copied across -- that repo's `src/case_app.py` records
+which commit its copy came from.
+
 ---
 
 # Layout

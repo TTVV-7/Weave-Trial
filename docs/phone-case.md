@@ -9,6 +9,14 @@ python case.py --phone iphone-16-pro --test-fit            # print this first
 python case.py --phone iphone-16-pro --art logo.svg --palette duo
 ```
 
+There is also a browser front end, at
+[3-d-print-sandbox.vercel.app/case](https://3-d-print-sandbox.vercel.app/case).
+It runs a **vendored copy** of this package, in
+[ttvv-7/3D-print-sandbox](https://github.com/TTVV-7/3D-print-sandbox): this
+repository is where the generator is developed and tested, so fix things here
+and copy `phonecase/` across, updating the `PROVENANCE` string in that repo's
+`src/case_app.py` as you go.
+
 The case prints **back face down**, so the artwork is layer 1, against the
 build plate. That is the flattest, glossiest surface the printer can make and
 the only one worth painting. It is also the face you cannot see while it
