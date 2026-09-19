@@ -157,7 +157,15 @@ this on my case".
 fills the back and crops; `stretch` distorts; `none` treats user units as
 millimetres. Then `--art-scale`, `--art-rotate`, `--art-x`, `--art-y` and
 `--art-margin` move it around, and `--art-box view` fits the SVG's viewBox
-instead of the drawing's own bounding box.
+instead of the drawing's own bounding box. On the web page, drag the artwork
+on the preview and scroll to scale it; the sliders follow, and the sliders
+still work on their own.
+
+**`--art-x` and `--art-y` are in the frame you look at the case in**, not the
+one the g-code is written in: positive x is to the right *as you hold the
+finished case*, which is the case's -x, because everything on that face is
+mirrored. A control that pushes the opposite way from the picture above it is
+not a control, it is a puzzle.
 
 `--no-mirror` turns the mirror off. **This makes the case come out
 backwards** and exists only because occasionally that is what you want — art

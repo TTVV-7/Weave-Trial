@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import math
 import random
+import re
 import struct
 from dataclasses import replace
 
@@ -464,9 +465,106 @@ def test_splitting_a_line_by_colour_keeps_it_continuous():
         assert a[-1] == pytest.approx(b[0]), "a gap between two colours"
 
 
+def test_moving_the_artwork_goes_the_way_the_picture_does():
+    # The case prints face down, so +x on the case points *left* in every
+    # view of the finished thing. An offset that is not corrected for that
+    # is a control that pushes the opposite way from the picture above it.
+    spec = spec_for()
+    pal = Palette.parse(["#1b1b1f:ink", "#e03131:red"])
+    art = load('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 200">'
+               '<rect width="100" height="200" fill="#1b1b1f"/>'
+               '<circle cx="20" cy="30" r="12" fill="#e03131"/></svg>')
+
+    def seen_at(**kw):
+        """Where the blob sits as you look at the case: (right, up) in mm."""
+        r = plan_paint(art, pal, spec.outer_w, spec.outer_l, **kw).raster
+        xs, ys = [], []
+        for iy in range(r.ny):
+            row = iy * r.nx
+            for ix in range(r.nx):
+                if r.data[row + ix] == 1:
+                    xs.append(r.x0 + ix * r.res)
+                    ys.append(r.y0 + iy * r.res)
+        assert xs, "the artwork missed the case entirely"
+        # Negated: the view of the back is the mirror of case coordinates.
+        return -sum(xs) / len(xs), sum(ys) / len(ys)
+
+    right0, up0 = seen_at()
+    right1, up1 = seen_at(offset=(12.0, 0.0))
+    assert right1 - right0 == pytest.approx(12.0, abs=0.5), "art-x went the wrong way"
+    assert up1 == pytest.approx(up0, abs=0.2)
+    right2, up2 = seen_at(offset=(0.0, 12.0))
+    assert up2 - up0 == pytest.approx(12.0, abs=0.5), "art-y went the wrong way"
+    assert right2 == pytest.approx(right0, abs=0.2)
+
+
 def test_a_placement_with_no_art_is_the_identity():
     p = Placement(1, 1, 0, 0, 0, False)
     assert p.apply((3.0, 4.0)) == (3.0, -4.0)
+
+
+# --------------------------------------------------------------------------
+# the preview
+# --------------------------------------------------------------------------
+
+def _rects(svg: str) -> list[tuple[float, float, float, float]]:
+    """(centre x, centre y, w, h) of every rect in an SVG fragment."""
+    out = []
+    for m in re.finditer(r'<rect ([^>]*)/>', svg):
+        a = dict(re.findall(r'([\w-]+)="([^"]*)"', m.group(1)))
+        try:
+            x, y = float(a["x"]), float(a["y"])
+            w, h = float(a["width"]), float(a["height"])
+        except (KeyError, ValueError):
+            continue
+        out.append((x + w / 2, y + h / 2, w, h))
+    return out
+
+
+@pytest.mark.parametrize("model", ["iphone-16-pro", "iphone-15", "iphone-17-pro"])
+def test_both_panels_put_the_camera_on_the_same_side(model):
+    # One panel showing the camera on the left and the one beside it showing
+    # it on the right is the kind of thing you only notice after printing.
+    from phonecase.preview import _plan
+    spec = spec_for(model)
+    cam = next(c for c in spec.cutouts if c.name == "camera")
+    drawn = [r for r in _rects(_plan(spec))
+             if abs(r[2] - cam.w) < 0.01 and abs(r[3] - cam.h) < 0.01]
+    assert len(drawn) == 1, "the camera opening is not in the plan"
+    cx, cy, _, _ = drawn[0]
+    # _back() draws case (x, y) at (-x, -y); the plan has to match it.
+    assert cx == pytest.approx(-cam.u, abs=0.01)
+    assert cy == pytest.approx(-cam.v, abs=0.01)
+
+
+@pytest.mark.parametrize("model", sorted(PHONES))
+def test_every_phone_draws_its_own_lenses_inside_its_own_opening(model):
+    from phonecase.preview import _lens_layout
+    spec = spec_for(model)
+    cam = next(c for c in spec.cutouts if c.name == "camera")
+    layout = _lens_layout(spec.phone, cam)
+    lenses = [p for p in layout if p[3]]
+    assert len(lenses) == spec.phone.lenses
+    for dx, dy, r, _ in layout:
+        assert abs(dx) + r <= cam.w / 2 + 1e-6, f"{model}: a lens is outside the hole"
+        assert abs(dy) + r <= cam.h / 2 + 1e-6, f"{model}: a lens is outside the hole"
+        assert r > 0.4
+
+
+def test_the_preview_hands_the_page_what_it_needs_to_drag():
+    # The page slides the artwork under the outline while it waits for the
+    # rebuild, which it can only do if it knows the scale and which paths
+    # are the artwork.
+    from phonecase.preview import render
+    spec = spec_for(section_res=0.9)
+    paint = plan_paint(load(_SVG), PALETTES["primary"], spec.outer_w, spec.outer_l)
+    svg = render(spec, build(spec, paint, skirt=0, max_layers=2), paint)
+    assert svg.count('<g id="art-runs">') == 1
+    m = re.search(r'id="backface"[^>]*data-mm-w="([\d.]+)"[^>]*data-mm-l="([\d.]+)"',
+                  svg)
+    assert m, "the back face does not say how big it is"
+    assert float(m.group(1)) == pytest.approx(spec.outer_w, abs=0.01)
+    assert float(m.group(2)) == pytest.approx(spec.outer_l, abs=0.01)
 
 
 # --------------------------------------------------------------------------

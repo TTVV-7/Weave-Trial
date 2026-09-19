@@ -112,7 +112,14 @@ def _hex(s: str) -> tuple[int, int, int] | None:
 
 @dataclass
 class Placement:
-    """How SVG user space maps onto the back of the case."""
+    """How SVG user space maps onto the back of the case.
+
+    ``dx`` and ``dy`` are in the frame you look at the finished case in, not
+    the frame the g-code is written in. Positive ``dx`` moves the artwork to
+    the *right as you hold it*, which is the case's -x, because the case
+    prints face down and everything on that face is mirrored. Anything else
+    is a control that pushes the opposite way from the picture above it.
+    """
 
     scale_x: float
     scale_y: float
@@ -132,7 +139,9 @@ class Placement:
             x, y = x * c - y * s, x * s + y * c
         if self.mirror:
             x = -x
-        return (x + self.dx, y + self.dy)
+        # -dx, because +x on the case points left in the view of it. +y needs
+        # no such correction: the top of the phone is the top of the view.
+        return (x - self.dx, y + self.dy)
 
 
 def place(art: Art, width: float, length: float, *, fit: str = "contain",

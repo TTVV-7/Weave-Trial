@@ -67,8 +67,11 @@ def build_parser() -> argparse.ArgumentParser:
                    help="fit the drawing itself, or the SVG's viewBox")
     a.add_argument("--art-scale", type=float, default=1.0)
     a.add_argument("--art-rotate", type=float, default=0.0, metavar="DEG")
-    a.add_argument("--art-x", type=float, default=0.0)
-    a.add_argument("--art-y", type=float, default=0.0)
+    a.add_argument("--art-x", type=float, default=0.0, metavar="MM",
+                   help="move the artwork right, as you look at the finished "
+                        "case. Negative moves it left")
+    a.add_argument("--art-y", type=float, default=0.0, metavar="MM",
+                   help="move the artwork up, towards the top of the phone")
     a.add_argument("--art-margin", type=float, default=2.0,
                    help="keep-out at the edge of the back (default 2)")
     a.add_argument("--art-layers", type=int, default=None,
