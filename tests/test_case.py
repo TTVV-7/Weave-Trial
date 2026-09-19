@@ -17,7 +17,7 @@ from phonecase.paint import Palette, Placement, plan as plan_paint, split
 from phonecase.profiles import CASES, FILAMENTS, PALETTES, PRINTERS
 from phonecase.shapes import Field, RRect, Section
 from phonecase.spec import PHONES, CaseSpec, Cutout, check_case
-from phonecase.svgart import load
+from phonecase.svgart import load, load_file
 from phonecase.toolpath import build, section_at, stats
 
 BED = (256.0, 256.0, 256.0)
@@ -366,6 +366,36 @@ def test_a_stroke_with_no_fill_still_prints_something(cap, width):
     assert art.shapes and art.shapes[0].origin.endswith(":stroke")
     x0, y0, x1, y1 = art.shapes[0].bbox()
     assert x1 - x0 == pytest.approx(width, abs=0.6)
+
+
+def test_an_entity_bomb_is_refused_rather_than_expanded():
+    # ElementTree does not fetch external entities, but it does expand
+    # internal ones, and this is the shape of a file that turns a few
+    # hundred bytes into gigabytes of memory before any shape is parsed.
+    bomb = """<?xml version="1.0"?>
+    <!DOCTYPE svg [
+      <!ENTITY a "aaaaaaaaaa">
+      <!ENTITY b "&a;&a;&a;&a;&a;&a;&a;&a;&a;&a;">
+      <!ENTITY c "&b;&b;&b;&b;&b;&b;&b;&b;&b;&b;">
+    ]>
+    <svg xmlns="http://www.w3.org/2000/svg"><text>&c;</text></svg>"""
+    with pytest.raises(ValueError, match="DOCTYPE|ENTITY"):
+        load(bomb)
+
+
+def test_an_oversized_upload_is_refused():
+    with pytest.raises(ValueError, match="limit"):
+        load("<svg xmlns='http://www.w3.org/2000/svg'/>" + " " * (5 << 20))
+
+
+def test_a_local_file_is_not_second_guessed(tmp_path):
+    # The limits are for things that arrived over a network. Your own file
+    # on your own disk is your business.
+    f = tmp_path / "a.svg"
+    f.write_text("<svg xmlns='http://www.w3.org/2000/svg'>"
+                 "<rect width='2' height='2' fill='#000'/></svg>"
+                 + " " * (5 << 20))
+    assert load_file(f).shapes
 
 
 def test_text_is_reported_rather_than_silently_dropped():

@@ -98,8 +98,37 @@ _NUM = re.compile(r"[-+]?(?:\d*\.\d+|\d+\.?)(?:[eE][-+]?\d+)?")
 _CMD = re.compile(r"([MmZzLlHhVvCcSsQqTtAa])")
 
 
-def load(text: str, *, flatness: float = 0.05) -> Art:
-    """Parse SVG source into filled polygons."""
+#: Refused outright rather than parsed. ElementTree does not fetch external
+#: entities, but it does expand internal ones, and a dozen nested entity
+#: definitions expand to gigabytes before any of this code sees a shape. No
+#: drawing program emits a DOCTYPE in an SVG, so nothing real is lost.
+_DOCTYPE = re.compile(r"<!\s*(DOCTYPE|ENTITY)", re.I)
+
+#: An SVG larger than this is not a drawing, it is a payload.
+MAX_BYTES = 4 << 20
+#: A shape count past this is a stress test, not artwork.
+MAX_SHAPES = 20_000
+
+
+def load(text: str, *, flatness: float = 0.05, limit: bool = True) -> Art:
+    """Parse SVG source into filled polygons.
+
+    ``limit`` bounds the work an untrusted file can ask for. Leave it on for
+    anything that arrived over a network; the numbers are far above what a
+    drawing needs and far below what hurts.
+    """
+    if limit:
+        if len(text) > MAX_BYTES:
+            raise ValueError(
+                f"SVG is {len(text) / 1e6:.1f} MB; the limit is "
+                f"{MAX_BYTES / 1e6:.0f} MB")
+        found = _DOCTYPE.search(text)
+        if found:
+            raise ValueError(
+                f"SVG declares a {found.group(1).upper()}, which is refused: "
+                "entity definitions expand without bound. Re-export it from "
+                "your drawing program, which will not emit one")
+
     art = Art()
     try:
         root = ET.fromstring(text)
@@ -117,6 +146,10 @@ def load(text: str, *, flatness: float = 0.05) -> Art:
 
     unsupported: set[str] = set()
     _walk(root, (1, 0, 0, 1, 0, 0), {}, art, gradients, unsupported, flatness)
+    if limit and len(art.shapes) > MAX_SHAPES:
+        raise ValueError(
+            f"SVG holds {len(art.shapes)} filled shapes; the limit is "
+            f"{MAX_SHAPES}. Flatten or simplify it first")
 
     if not vb and art.shapes:
         art.view = art.bbox()
@@ -592,6 +625,8 @@ def _num_or(v, default: float) -> float:
         return default
 
 
-def load_file(p) -> Art:
+def load_file(p, **kw) -> Art:
+    """Load a file from disk. Local files are trusted; see :func:`load`."""
     from pathlib import Path
-    return load(Path(p).read_text())
+    kw.setdefault("limit", False)
+    return load(Path(p).read_text(), **kw)
