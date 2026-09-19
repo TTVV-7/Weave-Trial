@@ -96,6 +96,12 @@ def build_parser() -> argparse.ArgumentParser:
 
     w = p.add_argument_group("output")
     w.add_argument("--out", type=Path, default=Path("out/case.gcode"))
+    w.add_argument("--no-gcode", action="store_true",
+                   help="skip the g-code; useful with --stl on its own")
+    w.add_argument("--stl", type=Path, metavar="FILE.stl",
+                   help="also write the case as a solid, to slice yourself. "
+                        "Built from the same dimensions as the g-code, not "
+                        "traced from it. Needs the manifold3d package")
     w.add_argument("--preview", type=Path, help="also write an SVG preview here")
     w.add_argument("--test-fit", nargs="?", type=float, const=7.0,
                    metavar="MM",
@@ -304,10 +310,28 @@ def main(argv: list[str] | None = None) -> int:
               file=sys.stderr)
         return 1
 
-    text = write_gcode(spec, path, printer, filament, paint, tower=tower)
-    args.out.parent.mkdir(parents=True, exist_ok=True)
-    args.out.write_text(text)
-    print(f"\nwrote {args.out} ({len(text) / 1e6:.1f} MB)")
+    print()
+    if not args.no_gcode:
+        text = write_gcode(spec, path, printer, filament, paint, tower=tower)
+        args.out.parent.mkdir(parents=True, exist_ok=True)
+        args.out.write_text(text)
+        print(f"wrote {args.out} ({len(text) / 1e6:.1f} MB)")
+
+    if args.stl:
+        from phonecase.solid import (MeshUnavailable, build_solid, mesh_to_stl,
+                                     stats as solid_stats)
+        try:
+            solid = build_solid(spec, test_fit=bool(args.test_fit))
+        except MeshUnavailable as exc:
+            raise SystemExit(str(exc))
+        except ValueError as exc:
+            raise SystemExit(str(exc))
+        data = mesh_to_stl(solid, header=f"{args.phone} case - phonecase")
+        args.stl.parent.mkdir(parents=True, exist_ok=True)
+        args.stl.write_bytes(data)
+        ss = solid_stats(solid)
+        print(f"wrote {args.stl} ({len(data) / 1e6:.2f} MB, "
+              f"{ss['triangles']} triangles, {ss['volume_mm3'] / 1000:.1f} cm3)")
 
     if args.preview:
         from phonecase.preview import render

@@ -2,3 +2,6 @@
 # These are only for the optional extras:
 pytest>=7.0        # tests
 fullcontrol>=0.1   # --fullcontrol backend (its viewer and printer library)
+manifold3d>=3.0    # case.py --stl: the boolean, and nothing else. The case's
+                   # rounded rectangles, lofts and binary STL are written out
+                   # here; this is only what subtracts the cutouts.

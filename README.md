@@ -176,11 +176,12 @@ per-bead extrusion heights the fade regions need.
 python case.py --list
 python case.py --phone iphone-16-pro --test-fit            # print this first
 python case.py --phone iphone-16-pro --art logo.svg --palette duo
+python case.py --phone iphone-17-pro --no-gcode --stl case.stl
 ```
 
 ![back, plan and edges of a painted case](docs/phone-case.png)
 
-A case for any of seventeen iPhones, written straight to multi-tool g-code
+A case for any of eighteen iPhones, written straight to multi-tool g-code
 with your SVG painted onto the outside of the back by the AMS. It prints back
 face down, so the artwork is layer 1 against the build plate — the flattest
 surface the printer can make, and the one face you cannot see while it
@@ -212,14 +213,26 @@ downstream is going to, and a tool change leaves the old colour in the melt
 zone. Artwork on the back plate changes colour twice and never again, so the
 tower is three layers tall and costs 1.5 g rather than outweighing the case.
 
+**There is an STL too.** `--stl` builds the same case as a solid, from the
+same dimensions rather than traced off the toolpath, for slicing yourself or
+painting in your slicer's own colour tool. Not by marching a grid through it
+— a case is flat faces and straight walls, and a grid turns a back plate that
+wants a hundred triangles into three hundred thousand. Tubes of rounded
+rectangles and convex prisms instead: two thousand triangles, a tenth of a
+megabyte, and one optional dependency doing the boolean.
+
 **The SVG reader is stdlib.** Every path command including arcs, nested
 transforms, inherited fill, and strokes converted to fills — because plenty
 of line art has no fills at all. It tells you what it could not read
 (`<text>`: convert it to paths) and which of your colours merged onto the
 same slot.
 
-The body dimensions are published specs. **The camera openings and button
-positions are estimates and have not been measured against a real phone** —
+The camera *shape* is per phone, not one generic hole: a square island for
+the 13–16 Pro, a vertical pill for the 15/16, and for the 17 Pro the bar
+across the full width of the back, which a corner island would cover two
+lenses of. The body dimensions are published specs. **The camera openings and
+button positions are estimates and have not been measured against a real
+phone** —
 `--test-fit` prints the walls and a rim of back plate for half the filament
 so that finding out costs twenty minutes. Full documentation:
 [docs/phone-case.md](docs/phone-case.md).
@@ -252,9 +265,10 @@ phonecase/toolpath.py          layers, perimeters, colour, ordering
 phonecase/svgart.py            SVG -> filled polygons (stdlib only)
 phonecase/paint.py             palette, rasteriser, splitting a path by colour
 phonecase/gcode.py             multi-tool writer and the purge tower
+phonecase/solid.py             the case as a mesh, and a binary STL
 phonecase/preview.py           SVG preview: back, plan, edges
 phonecase/profiles.py          printers, filaments, palettes, case presets
-tests/test_case.py             132 tests
+tests/test_case.py             173 tests
 ```
 
 The two packages share no code on purpose. They are two generators that

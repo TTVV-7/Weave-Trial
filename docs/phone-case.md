@@ -1,12 +1,14 @@
 # The phone case generator
 
 A parametric iPhone case, written straight to multi-tool g-code, with your
-artwork painted onto the outside of the back by the AMS.
+artwork painted onto the outside of the back by the AMS -- or as an STL, if
+you would rather slice it yourself.
 
 ```bash
 python case.py --list
 python case.py --phone iphone-16-pro --test-fit            # print this first
 python case.py --phone iphone-16-pro --art logo.svg --palette duo
+python case.py --phone iphone-17-pro --no-gcode --stl case.stl
 ```
 
 There is also a browser front end, at
@@ -47,7 +49,11 @@ clearance, the wall, the lip, and where the camera and the port are — at
 about half the filament and none of the purge.
 
 You need it, because **the camera opening and the button positions are
-estimates.** The body dimensions in `phonecase/spec.py` are published specs.
+estimates.** The *shape* of the camera is not a guess -- a 17 Pro's cameras
+sit in a bar across the whole width of the back, and putting a corner island
+there would cover two of the three lenses, so `camera_style` distinguishes
+`corner` from `plateau` and the plateau is sized from the body rather than
+given as a number. The millimetres are still estimates. The body dimensions in `phonecase/spec.py` are published specs.
 The camera island and the buttons are not published, and nothing in this
 repository has been measured against a real phone. If the test fit is wrong,
 measure yours and pass the numbers:
@@ -59,6 +65,46 @@ python case.py --phone iphone-16-pro \
 ```
 
 ---
+
+## An STL, if you would rather slice it yourself
+
+```bash
+python case.py --phone iphone-17-pro --no-gcode --stl case.stl
+```
+
+```
+wrote case.stl (0.10 MB, 1952 triangles, 19.5 cm3)
+```
+
+Built from the same `CaseSpec` as the g-code, **not traced from the
+toolpath**, so it is the real shape rather than a rendering of the beads. Use
+it to paint the case in your slicer's own colour tool, to look at it before
+committing, or to take the shape somewhere else.
+
+It is deliberately not marching anything. A phone case is mostly flat faces
+and straight walls, and putting a grid through it turns a back plate that
+wants a hundred triangles into three hundred thousand. Every surface here is
+what it actually is: the shell, the cavity and the lip are stacks of rounded
+rectangles stitched into watertight tubes, with the base chamfer and the lip
+taper one exact loft each; every cutout is a convex prism. A whole case is
+about two thousand triangles and a tenth of a megabyte.
+
+Which leaves one thing needing a library — subtracting the cutouts.
+`manifold3d` does that and is the only non-stdlib import in
+`phonecase/solid.py`; the rounded rectangles, the half-plane clip, the lofts
+and the binary STL are all written out. Without it installed, `--stl` says so
+and the g-code writer carries on regardless.
+
+Two things worth knowing:
+
+- **`--test-fit` has no STL.** Leaving the middle of the back plate unfilled
+  is a thing g-code can say and a solid cannot, so asking for both is
+  refused rather than quietly giving you a different part.
+- **The STL's volume is not the g-code's filament figure.** A 15 Pro is
+  18.7 cm³ of solid, which is 23 g of PLA if it were truly solid; the g-code
+  says 20 g. The difference is the corner voids between adjacent beads, and
+  the extrusion model that accounts for them is the same one PrusaSlicer
+  uses. Neither number is wrong.
 
 ## The artwork
 
@@ -174,6 +220,20 @@ every colour change down there is another gram in the bin.
 
 ## Cases and phones
 
+### The camera, per phone
+
+| style | phones | opening |
+|---|---|---|
+| `corner`, square | 13/14/15/16 Pro and Pro Max | ~39 x 39 island, top corner |
+| `corner`, pill | 15, 15 Plus, 16, 16 Plus, 17 | ~27 x 47 vertical pill |
+| `corner`, diagonal | 13, 14 | ~34 x 34 |
+| `corner`, small | SE (3rd gen) | ~17 x 17 |
+| `plateau` | 17 Pro, 17 Pro Max, Air | full width, ~25 mm tall, centred |
+
+A plateau leaves the back plate holding on a few millimetres of material
+above and beside it. That is true of the real cases too, and `check_case`
+measures it and complains if your wall and clearance make it thinner.
+
 | preset | clearance | wall | back | lip | |
 |---|---|---|---|---|---|
 | `snug` | 0.35 | 1.7 | 1.3 | 1.2 | the default |
@@ -271,9 +331,10 @@ phonecase/toolpath.py          layers, perimeters, colour assignment, ordering
 phonecase/svgart.py            SVG -> filled polygons (stdlib only)
 phonecase/paint.py             palette, rasteriser, splitting a path by colour
 phonecase/gcode.py             multi-tool writer and the purge tower
+phonecase/solid.py             the case as a mesh, and a binary STL
 phonecase/preview.py           SVG preview: back, plan, edges
 phonecase/profiles.py          printers, filaments, palettes, case presets
-tests/test_case.py             132 tests
+tests/test_case.py             173 tests
 ```
 
 The lamp's `weave/` package and this one share no code on purpose. They are

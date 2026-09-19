@@ -7,6 +7,8 @@ band on a coarse section grid and the whole file still runs in seconds.
 from __future__ import annotations
 
 import math
+import random
+import struct
 from dataclasses import replace
 
 import pytest
@@ -576,6 +578,143 @@ def test_the_purge_tower_cost_is_reported():
 
 
 # --------------------------------------------------------------------------
+# the cameras
+# --------------------------------------------------------------------------
+
+PLATEAU = [k for k, v in PHONES.items() if v.camera_style == "plateau"]
+CORNER = [k for k, v in PHONES.items() if v.camera_style == "corner"]
+
+
+@pytest.mark.parametrize("model", PLATEAU)
+def test_a_plateau_camera_spans_the_back_and_is_centred(model):
+    # The 17 Pro's cameras are in a bar across the whole width. Treating one
+    # as a corner island puts plastic over two of the three lenses, so this
+    # is about the shape being right, not the millimetres.
+    spec = spec_for(model)
+    cam = next(c for c in spec.cutouts if c.name == "camera")
+    assert cam.u == pytest.approx(0.0), "a plateau is centred, not cornered"
+    assert cam.w > 0.85 * spec.phone.width, "a plateau reaches both edges"
+    assert cam.h < cam.w / 2, "a plateau is a bar, not an island"
+
+
+@pytest.mark.parametrize("model", CORNER)
+def test_a_corner_camera_stays_in_its_corner(model):
+    spec = spec_for(model)
+    cam = next(c for c in spec.cutouts if c.name == "camera")
+    assert cam.u > 0 and cam.v > 0, "the camera is on the +x, +y corner"
+    assert cam.w < 0.75 * spec.phone.width
+    # It clears the far side of the phone, which is what makes it a corner.
+    assert cam.u - cam.w / 2 > -spec.phone.width / 4
+
+
+def test_the_17_pro_is_not_the_16_pro_with_new_numbers():
+    a = next(c for c in spec_for("iphone-16-pro").cutouts if c.name == "camera")
+    b = next(c for c in spec_for("iphone-17-pro").cutouts if c.name == "camera")
+    assert b.w > 1.5 * a.w and b.h < a.h
+
+
+@pytest.mark.parametrize("model", PLATEAU)
+def test_a_plateau_still_leaves_a_case(model):
+    # A cutout that runs off the edge would cut the back plate in two.
+    spec = spec_for(model)
+    cam = next(c for c in spec.cutouts if c.name == "camera")
+    assert abs(cam.u) + cam.w / 2 < spec.outer_w / 2
+    assert abs(cam.v) + cam.h / 2 < spec.outer_l / 2
+    assert check_case(spec, bed=BED, slots=4, used_slots=1).ok
+
+
+# --------------------------------------------------------------------------
+# the solid
+# --------------------------------------------------------------------------
+
+def _solid_mod():
+    return pytest.importorskip(
+        "manifold3d", reason="the solid needs manifold3d for the boolean")
+
+
+def test_a_rounded_rectangle_touches_its_own_flat_sides():
+    # A stadium's flat side has to land exactly on the tangent, or a cutout
+    # built from it stops a tenth of a millimetre short of reaching through.
+    from phonecase.solid import _rrect
+    pts = _rrect(8.0, 2.0, 2.0, 5, cx=-18.0, cy=5.6)
+    assert min(p[1] for p in pts) == pytest.approx(3.6, abs=1e-9)
+    assert max(p[1] for p in pts) == pytest.approx(7.6, abs=1e-9)
+    assert min(p[0] for p in pts) == pytest.approx(-26.0, abs=1e-9)
+    # ... and the polygon is closed, with no repeated point.
+    assert len({(round(x, 9), round(y, 9)) for x, y in pts}) == len(pts)
+
+
+@pytest.mark.parametrize("model", ["iphone-15-pro", "iphone-17-pro",
+                                   "iphone-se-3", "iphone-air"])
+def test_the_solid_is_a_closed_case_with_a_hole_per_cutout(model):
+    _solid_mod()
+    from phonecase.solid import build_solid, stats
+    spec = spec_for(model)
+    solid = build_solid(spec)
+    st = stats(solid)
+    # Every cutout pierces the shell, and each one is a handle.
+    assert st["genus"] == len(spec.cutouts)
+    assert st["volume_mm3"] > 0
+    (x0, y0, z0), (x1, y1, z1) = st["bbox"]
+    assert x1 - x0 == pytest.approx(spec.outer_w, abs=0.05)
+    assert y1 - y0 == pytest.approx(spec.outer_l, abs=0.05)
+    assert z0 == pytest.approx(0.0, abs=1e-4)
+    assert z1 == pytest.approx(spec.height, abs=1e-4)
+
+
+@pytest.mark.parametrize("model", ["iphone-16-pro", "iphone-17-pro"])
+def test_the_solid_and_the_toolpath_are_the_same_case(model):
+    # The two are built from the same spec by completely different routes --
+    # a distance field sampled on a grid, and exact booleans on prisms. If
+    # they ever stop agreeing, one of them is lying about what you printed.
+    mod = _solid_mod()
+    from phonecase.solid import build_solid
+    spec = spec_for(model)
+    solid = build_solid(spec)
+
+    def solid_holds(p, size=0.3):
+        probe = mod.Manifold.cube([size] * 3, center=True).translate(p)
+        vol = mod.Manifold.batch_boolean(
+            [solid, probe], mod.OpType.Intersect).volume()
+        return vol > size ** 3 * 0.5
+
+    rng = random.Random(11)
+    checked = 0
+    for _ in range(400):
+        x = rng.uniform(-spec.outer_w / 2, spec.outer_w / 2)
+        y = rng.uniform(-spec.outer_l / 2, spec.outer_l / 2)
+        z = rng.uniform(0.5, spec.height - 0.5)
+        # Only compare where the answer is not a coin toss: clear of every
+        # surface in z as well as in plan.
+        ds = [section_at(spec, zz).sdf(x, y) for zz in (z - 0.4, z, z + 0.4)]
+        if min(abs(d) for d in ds) < 0.4 or len({d < 0 for d in ds}) != 1:
+            continue
+        checked += 1
+        assert (ds[1] < 0) == solid_holds((x, y, z)), \
+            f"{model}: solid and toolpath disagree at ({x:.2f},{y:.2f},{z:.2f})"
+    assert checked > 150, "the sample was too close to the surfaces to mean much"
+
+
+def test_a_test_fit_is_refused_as_a_solid():
+    _solid_mod()
+    from phonecase.solid import build_solid
+    with pytest.raises(ValueError, match="toolpath trick"):
+        build_solid(spec_for(), test_fit=True)
+
+
+def test_the_stl_is_a_well_formed_binary_stl():
+    _solid_mod()
+    from phonecase.solid import to_stl
+    data = to_stl(spec_for("iphone-17-pro"), header="hello")
+    assert data[:5] == b"hello"
+    count = struct.unpack("<I", data[80:84])[0]
+    assert count > 500
+    assert len(data) == 84 + 50 * count
+    assert not data[:80].lstrip().lower().startswith(b"solid"), \
+        "a binary STL whose header starts with 'solid' is read as ASCII"
+
+
+# --------------------------------------------------------------------------
 # the command line
 # --------------------------------------------------------------------------
 
@@ -595,6 +734,16 @@ def test_an_impossible_case_is_refused_at_the_command_line(tmp_path):
     rc = cli.main(["--phone", "iphone-15", "--wall", "0.4", "--res", "0.9",
                    "--out", str(out)])
     assert rc == 1 and not out.exists()
+
+
+def test_the_command_line_writes_an_stl(tmp_path):
+    _solid_mod()
+    out = tmp_path / "case.stl"
+    rc = cli.main(["--phone", "iphone-17-pro", "--no-gcode", "--res", "0.9",
+                   "--stl", str(out)])
+    assert rc == 0
+    assert out.stat().st_size > 50_000
+    assert not (tmp_path / "case.gcode").exists()
 
 
 def test_the_whole_thing_end_to_end(tmp_path):
