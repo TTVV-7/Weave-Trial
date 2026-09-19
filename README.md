@@ -277,7 +277,7 @@ phonecase/solid.py             the case as a mesh, and a binary STL
 phonecase/threemf.py           the case split by filament, as a 3MF
 phonecase/preview.py           SVG preview: back, plan, edges
 phonecase/profiles.py          printers, filaments, palettes, case presets
-tests/test_case.py              tests
+tests/test_case.py             207 tests
 ```
 
 The two packages share no code on purpose. They are two generators that
