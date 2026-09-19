@@ -104,7 +104,12 @@ def build_parser() -> argparse.ArgumentParser:
     w.add_argument("--stl", type=Path, metavar="FILE.stl",
                    help="also write the case as a solid, to slice yourself. "
                         "Built from the same dimensions as the g-code, not "
-                        "traced from it. Needs the manifold3d package")
+                        "traced from it. One colour: an STL cannot hold more. "
+                        "Needs the manifold3d package")
+    w.add_argument("--3mf", type=Path, metavar="FILE.3mf", dest="threemf",
+                   help="also write the case as a 3MF, with the artwork cut "
+                        "into the back plate as one part per filament, so the "
+                        "colours survive into your slicer")
     w.add_argument("--preview", type=Path, help="also write an SVG preview here")
     w.add_argument("--test-fit", nargs="?", type=float, const=7.0,
                    metavar="MM",
@@ -320,14 +325,18 @@ def main(argv: list[str] | None = None) -> int:
         args.out.write_text(text)
         print(f"wrote {args.out} ({len(text) / 1e6:.1f} MB)")
 
+    if (args.stl or args.threemf) and args.test_fit:
+        raise SystemExit(
+            "--test-fit is a toolpath trick: it leaves the middle of the back "
+            "plate unfilled, which is a thing g-code can say and a solid "
+            "cannot. Export the whole case, or take the test fit as g-code")
+
     if args.stl:
         from phonecase.solid import (MeshUnavailable, build_solid, mesh_to_stl,
                                      stats as solid_stats)
         try:
-            solid = build_solid(spec, test_fit=bool(args.test_fit))
+            solid = build_solid(spec)
         except MeshUnavailable as exc:
-            raise SystemExit(str(exc))
-        except ValueError as exc:
             raise SystemExit(str(exc))
         data = mesh_to_stl(solid, header=f"{args.phone} case - phonecase")
         args.stl.parent.mkdir(parents=True, exist_ok=True)
@@ -335,6 +344,25 @@ def main(argv: list[str] | None = None) -> int:
         ss = solid_stats(solid)
         print(f"wrote {args.stl} ({len(data) / 1e6:.2f} MB, "
               f"{ss['triangles']} triangles, {ss['volume_mm3'] / 1000:.1f} cm3)")
+
+    if args.threemf:
+        from phonecase.solid import MeshUnavailable
+        from phonecase.threemf import (colour_parts, parts_to_3mf,
+                                       stats as mf_stats)
+        try:
+            parts = colour_parts(spec, paint, wrap=args.wrap)
+        except MeshUnavailable as exc:
+            raise SystemExit(str(exc))
+        data = parts_to_3mf(parts, origin=(spec.outer_w / 2, spec.outer_l / 2),
+                            name=args.phone)
+        args.threemf.parent.mkdir(parents=True, exist_ok=True)
+        args.threemf.write_bytes(data)
+        ms = mf_stats(parts)
+        print(f"wrote {args.threemf} ({len(data) / 1e6:.2f} MB, "
+              f"{ms['parts']} parts, {ms['triangles']} triangles)")
+        for part in ms["per_part"]:
+            print(f"    T{part['slot']} {part['name']:<12} {part['hex']}  "
+                  f"{part['volume_mm3'] / 1000:5.2f} cm3")
 
     if args.preview:
         from phonecase.preview import render

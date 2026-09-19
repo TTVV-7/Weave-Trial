@@ -9,6 +9,7 @@ python case.py --list
 python case.py --phone iphone-16-pro --test-fit            # print this first
 python case.py --phone iphone-16-pro --art logo.svg --palette duo
 python case.py --phone iphone-17-pro --no-gcode --stl case.stl
+python case.py --phone iphone-17-pro --art logo.svg --3mf case.3mf
 ```
 
 There is also a browser front end, at
@@ -66,10 +67,60 @@ python case.py --phone iphone-16-pro \
 
 ---
 
+## A 3MF, if you want the colours in your slicer
+
+```bash
+python case.py --phone iphone-17-pro --art logo.svg --palette primary \
+    --no-gcode --3mf case.3mf
+```
+
+```
+wrote case.3mf (0.05 MB, 4 parts, 4792 triangles)
+    T1 ink          #1B1B1FFF  18.30 cm3
+    T0 bone         #F4F4F2FF   0.09 cm3
+    T2 red          #E03131FF   0.72 cm3
+    T3 blue         #1C7ED6FF   0.44 cm3
+```
+
+An STL is one colour by construction. A 3MF can hold several, so this is the
+one to take if you want to slice the case yourself and still have the
+artwork come out in the right filaments.
+
+**The artwork becomes real geometry.** Each SVG shape is turned into a 2-D
+region in case coordinates, the stack is walked from the top down so a shape
+is kept only where nothing drawn after it covers it -- the same painter's
+rule the raster follows -- and each colour's region is extruded to the depth
+of the artwork layers and intersected with the case. So the back plate is
+cut into inlays that *are* the picture, and the body is the case with those
+inlays taken out of it. The parts add up to exactly the whole case: no
+overlaps, no gaps, tested to a millionth.
+
+**The structure is the card generator's**, one object per colour grouped by
+`<components>` into a single object, pointing into a `<basematerials>` list
+-- copied rather than invented because it is the structure known to survive
+the trip into a real slicer.
+
+What a 3MF cannot carry is *how* the printer gets there: the purge tower,
+the tool-change ordering, the per-layer flush. None of that is geometry. The
+g-code remains the thing that prints; this is the thing you can slice.
+
+Two caveats worth reading:
+
+- **The slicer round-trip is not verified from here.** The package is checked
+  against the spec -- valid zip, well-formed XML, one material per part, the
+  components pointing at the meshes, the build item placing it on the plate
+  -- and the colours are checked against the same raster the g-code uses.
+  What has not been done is opening it in Bambu Studio. Open it once and
+  look before you commit to a print.
+- **`--wrap` extrudes the colour through the whole wall**, not just the
+  outermost perimeter the g-code paints. A wrapped case is more faithful as
+  g-code.
+
 ## An STL, if you would rather slice it yourself
 
 ```bash
 python case.py --phone iphone-17-pro --no-gcode --stl case.stl
+python case.py --phone iphone-17-pro --art logo.svg --3mf case.3mf
 ```
 
 ```
@@ -340,9 +391,10 @@ phonecase/svgart.py            SVG -> filled polygons (stdlib only)
 phonecase/paint.py             palette, rasteriser, splitting a path by colour
 phonecase/gcode.py             multi-tool writer and the purge tower
 phonecase/solid.py             the case as a mesh, and a binary STL
+phonecase/threemf.py           the case split by filament, as a 3MF
 phonecase/preview.py           SVG preview: back, plan, edges
 phonecase/profiles.py          printers, filaments, palettes, case presets
-tests/test_case.py             173 tests
+tests/test_case.py             207 tests
 ```
 
 The lamp's `weave/` package and this one share no code on purpose. They are

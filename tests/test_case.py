@@ -6,6 +6,7 @@ band on a coarse section grid and the whole file still runs in seconds.
 
 from __future__ import annotations
 
+import io
 import math
 import random
 import re
@@ -830,6 +831,165 @@ def test_the_stl_is_a_well_formed_binary_stl():
 
 
 # --------------------------------------------------------------------------
+# the 3MF
+# --------------------------------------------------------------------------
+
+def _art_plan(spec, palette=None):
+    return plan_paint(load(_SVG), palette or PALETTES["primary"],
+                      spec.outer_w, spec.outer_l)
+
+
+def test_the_parts_add_up_to_exactly_the_whole_case():
+    # The parts are the case cut up, not a pile of overlapping solids. If
+    # they overlap the slicer prints the overlap twice; if they leave a gap
+    # there is a hole in the case.
+    _solid_mod()
+    from phonecase.solid import build_solid
+    from phonecase.threemf import colour_parts
+    spec = spec_for("iphone-17-pro")
+    parts = colour_parts(spec, _art_plan(spec))
+    assert len(parts) > 1, "the artwork did not become separate parts"
+    total = sum(p.solid.volume() for p in parts)
+    assert total == pytest.approx(build_solid(spec).volume(), rel=1e-6)
+
+
+def test_no_two_parts_occupy_the_same_space():
+    mod = _solid_mod()
+    from phonecase.threemf import colour_parts
+    spec = spec_for("iphone-16-pro")
+    parts = colour_parts(spec, _art_plan(spec))
+    for i, a in enumerate(parts):
+        for b in parts[i + 1:]:
+            shared = mod.Manifold.batch_boolean(
+                [a.solid, b.solid], mod.OpType.Intersect).volume()
+            assert shared < 1e-6, f"{a.name} and {b.name} overlap"
+
+
+@pytest.mark.parametrize("model", ["iphone-16-pro", "iphone-17-pro"])
+def test_the_3mf_colours_land_where_the_g_code_puts_them(model):
+    # The g-code colours a point from the raster; the 3MF colours it by
+    # which solid holds it. Two different routes from one drawing, and if
+    # they disagree the printed case and the sliced one are different cases.
+    mod = _solid_mod()
+    from phonecase.threemf import art_top, colour_parts
+    spec = spec_for(model)
+    paint = _art_plan(spec)
+    parts = colour_parts(spec, paint)
+    by_slot = {p.slot: p.solid for p in parts}
+    z = art_top(spec) / 2
+
+    def holder(x, y, size=0.35):
+        probe = mod.Manifold.cube([size] * 3, center=True).translate([x, y, z])
+        for slot, solid in by_slot.items():
+            v = mod.Manifold.batch_boolean(
+                [solid, probe], mod.OpType.Intersect).volume()
+            if v > size ** 3 * 0.5:
+                return slot
+        return None
+
+    rng = random.Random(5)
+    checked = 0
+    for _ in range(220):
+        x = rng.uniform(-spec.outer_w / 2, spec.outer_w / 2)
+        y = rng.uniform(-spec.outer_l / 2, spec.outer_l / 2)
+        want = paint.slot_at(x, y)
+        # Away from a colour boundary, where a probe straddles two answers.
+        if any(paint.slot_at(x + dx, y + dy) != want
+               for dx, dy in ((0.6, 0), (-0.6, 0), (0, 0.6), (0, -0.6))):
+            continue
+        got = holder(x, y)
+        if got is None:
+            continue                     # off the plate, or in the camera hole
+        checked += 1
+        assert got == want, \
+            f"{model}: raster says T{want}, mesh says T{got} at ({x:.1f},{y:.1f})"
+    assert checked > 80, "too few points landed on the plate to mean anything"
+
+
+def test_a_case_with_no_artwork_is_one_part():
+    _solid_mod()
+    from phonecase.threemf import colour_parts
+    spec = spec_for()
+    paint = plan_paint(None, PALETTES["duo"], spec.outer_w, spec.outer_l)
+    parts = colour_parts(spec, paint)
+    assert len(parts) == 1
+    assert parts[0].slot == paint.palette.base
+
+
+def test_artwork_in_the_body_colour_does_not_become_its_own_part():
+    # A part in the same filament as the body is a second object the slicer
+    # has to be told about, for no difference in what comes out.
+    _solid_mod()
+    from phonecase.threemf import colour_parts
+    spec = spec_for()
+    pal = Palette.parse(["#1b1b1f:ink", "#e03131:red", "#1c7ed6:blue"], 0)
+    parts = colour_parts(spec, _art_plan(spec, pal))
+    assert [p.slot for p in parts] == [0, 1, 2]
+    assert not any(p.slot == 0 for p in parts[1:])
+
+
+def test_the_3mf_is_a_package_a_slicer_can_open():
+    _solid_mod()
+    from phonecase.threemf import colour_parts, parts_to_3mf
+    spec = spec_for("iphone-17-pro")
+    parts = colour_parts(spec, _art_plan(spec))
+    data = parts_to_3mf(parts, origin=(spec.outer_w / 2, spec.outer_l / 2),
+                        name="case")
+    import xml.etree.ElementTree as ET
+    import zipfile
+    zf = zipfile.ZipFile(io.BytesIO(data))
+    assert zf.namelist() == ["[Content_Types].xml", "_rels/.rels",
+                             "3D/3dmodel.model"]
+    for entry in zf.namelist():
+        ET.fromstring(zf.read(entry))            # well-formed, or it raises
+
+    ns = "{http://schemas.microsoft.com/3dmanufacturing/core/2015/02}"
+    root = ET.fromstring(zf.read("3D/3dmodel.model"))
+    assert root.get("unit") == "millimeter"
+    bases = root.findall(f"{ns}resources/{ns}basematerials/{ns}base")
+    assert len(bases) == len(parts)
+    for base, part in zip(bases, parts):
+        assert base.get("displaycolor") == part.hex
+
+    meshes = [o for o in root.findall(f"{ns}resources/{ns}object")
+              if o.find(f"{ns}mesh") is not None]
+    assert len(meshes) == len(parts)
+    for i, o in enumerate(meshes):
+        assert o.get("pid") == "1" and o.get("pindex") == str(i)
+        assert len(o.findall(f"{ns}mesh/{ns}triangles/{ns}triangle")) > 0
+
+    # One build item, pointing at the object that gathers the parts, so the
+    # slicer opens one case rather than four loose shells.
+    items = root.findall(f"{ns}build/{ns}item")
+    assert len(items) == 1
+    holder = [o for o in root.findall(f"{ns}resources/{ns}object")
+              if o.get("id") == items[0].get("objectid")][0]
+    comps = holder.findall(f"{ns}components/{ns}component")
+    assert [c.get("objectid") for c in comps] == [o.get("id") for o in meshes]
+
+
+def test_the_3mf_sits_in_the_positive_octant():
+    # A build item placed at the origin puts half the case off the plate.
+    _solid_mod()
+    from phonecase.threemf import colour_parts, parts_to_3mf
+    spec = spec_for()
+    parts = colour_parts(spec, _art_plan(spec))
+    data = parts_to_3mf(parts, origin=(spec.outer_w / 2, spec.outer_l / 2))
+    import xml.etree.ElementTree as ET
+    import zipfile
+    ns = "{http://schemas.microsoft.com/3dmanufacturing/core/2015/02}"
+    root = ET.fromstring(
+        zipfile.ZipFile(io.BytesIO(data)).read("3D/3dmodel.model"))
+    shift = [float(v) for v in
+             root.find(f"{ns}build/{ns}item").get("transform").split()]
+    assert shift[9] == pytest.approx(spec.outer_w / 2)
+    assert shift[10] == pytest.approx(spec.outer_l / 2)
+    xs = [float(v.get("x")) for o in root.findall(f"{ns}resources/{ns}object")
+          for v in o.findall(f"{ns}mesh/{ns}vertices/{ns}vertex")]
+    assert min(xs) + shift[9] >= -1e-3
+
+
+# --------------------------------------------------------------------------
 # the command line
 # --------------------------------------------------------------------------
 
@@ -849,6 +1009,28 @@ def test_an_impossible_case_is_refused_at_the_command_line(tmp_path):
     rc = cli.main(["--phone", "iphone-15", "--wall", "0.4", "--res", "0.9",
                    "--out", str(out)])
     assert rc == 1 and not out.exists()
+
+
+def test_the_command_line_writes_a_3mf(tmp_path):
+    _solid_mod()
+    art = tmp_path / "art.svg"
+    art.write_text(_SVG)
+    out = tmp_path / "case.3mf"
+    rc = cli.main(["--phone", "iphone-17-pro", "--art", str(art),
+                   "--palette", "primary", "--no-gcode", "--res", "0.9",
+                   "--3mf", str(out)])
+    assert rc == 0
+    import zipfile
+    assert zipfile.ZipFile(out).read("3D/3dmodel.model").startswith(b"<?xml")
+
+
+def test_a_test_fit_has_no_solid_to_export(tmp_path):
+    _solid_mod()
+    out = tmp_path / "case.3mf"
+    with pytest.raises(SystemExit, match="toolpath trick"):
+        cli.main(["--phone", "iphone-15", "--no-gcode", "--test-fit",
+                  "--res", "0.9", "--3mf", str(out)])
+    assert not out.exists()
 
 
 def test_the_command_line_writes_an_stl(tmp_path):

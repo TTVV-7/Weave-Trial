@@ -176,7 +176,7 @@ per-bead extrusion heights the fade regions need.
 python case.py --list
 python case.py --phone iphone-16-pro --test-fit            # print this first
 python case.py --phone iphone-16-pro --art logo.svg --palette duo
-python case.py --phone iphone-17-pro --no-gcode --stl case.stl
+python case.py --phone iphone-17-pro --art logo.svg --3mf case.3mf
 ```
 
 ![back, plan and edges of a painted case](docs/phone-case.png)
@@ -212,6 +212,14 @@ for free, and the skirt is the same contour at a positive level.
 downstream is going to, and a tool change leaves the old colour in the melt
 zone. Artwork on the back plate changes colour twice and never again, so the
 tower is three layers tall and costs 1.5 g rather than outweighing the case.
+
+**And a 3MF, which keeps the colours.** An STL is one colour by
+construction; a 3MF can hold several. Each SVG shape becomes a 2-D region,
+the stack is resolved top-down by the same painter's rule the raster uses,
+and each colour is extruded to the depth of the artwork layers and cut into
+the back plate. The body is the case with those inlays taken out, so the
+parts add up to exactly the whole case — tested to a millionth — and the
+slicer opens one object with a part per filament.
 
 **There is an STL too.** `--stl` builds the same case as a solid, from the
 same dimensions rather than traced off the toolpath, for slicing yourself or
@@ -266,9 +274,10 @@ phonecase/svgart.py            SVG -> filled polygons (stdlib only)
 phonecase/paint.py             palette, rasteriser, splitting a path by colour
 phonecase/gcode.py             multi-tool writer and the purge tower
 phonecase/solid.py             the case as a mesh, and a binary STL
+phonecase/threemf.py           the case split by filament, as a 3MF
 phonecase/preview.py           SVG preview: back, plan, edges
 phonecase/profiles.py          printers, filaments, palettes, case presets
-tests/test_case.py             173 tests
+tests/test_case.py             207 tests
 ```
 
 The two packages share no code on purpose. They are two generators that
