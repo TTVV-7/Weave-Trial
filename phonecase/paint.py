@@ -312,6 +312,12 @@ def plan(art: Art | None, palette: Palette, width: float, length: float, *,
         for shape in art.shapes:
             raster.draw(shape, pl, palette.match(shape.rgb))
 
+        off = _fraction_off_the_case(art, pl, width, length)
+        if off > 0.02:
+            warnings.append(
+                f"{off * 100:.0f}% of the artwork falls outside the case and "
+                "will not be printed; move it back or scale it down")
+
         collapsed: dict[int, list[tuple[int, int, int]]] = {}
         for rgb, slot, _ in mapping:
             collapsed.setdefault(slot, []).append(rgb)
@@ -321,6 +327,29 @@ def plan(art: Art | None, palette: Palette, width: float, length: float, *,
                     f"{len(rgbs)} artwork colours all land on slot {slot} "
                     f"({palette.slots[slot].name}); they will merge")
     return PaintPlan(raster, palette, pl, mapping, warnings)
+
+
+def _fraction_off_the_case(art: Art, pl: Placement,
+                           width: float, length: float) -> float:
+    """How much of the placed artwork misses the case, by area.
+
+    Worth saying out loud: nothing stops you moving a drawing off the edge,
+    and what falls off does not come back as an error -- it is simply not in
+    the g-code, and you find out when the case comes off the plate with half
+    a logo on it.
+    """
+    x0, y0, x1, y1 = art.bbox()
+    corners = [pl.apply(p) for p in ((x0, y0), (x1, y0), (x1, y1), (x0, y1))]
+    ax0 = min(c[0] for c in corners)
+    ax1 = max(c[0] for c in corners)
+    ay0 = min(c[1] for c in corners)
+    ay1 = max(c[1] for c in corners)
+    placed = (ax1 - ax0) * (ay1 - ay0)
+    if placed <= 0:
+        return 0.0
+    ox = max(0.0, min(ax1, width / 2) - max(ax0, -width / 2))
+    oy = max(0.0, min(ay1, length / 2) - max(ay0, -length / 2))
+    return max(0.0, 1.0 - (ox * oy) / placed)
 
 
 # --------------------------------------------------------------------------

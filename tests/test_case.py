@@ -498,6 +498,23 @@ def test_moving_the_artwork_goes_the_way_the_picture_does():
     assert right2 == pytest.approx(right0, abs=0.2)
 
 
+def test_artwork_pushed_off_the_case_says_so():
+    # Nothing stops you dragging a drawing off the edge, and what falls off
+    # is simply not in the g-code. Finding that out when the case comes off
+    # the plate with half a logo on it is too late.
+    spec = spec_for()
+    pal = PALETTES["primary"]
+    art = load(_SVG)
+    centred = plan_paint(art, pal, spec.outer_w, spec.outer_l)
+    assert not any("outside the case" in w for w in centred.warnings)
+
+    shoved = plan_paint(art, pal, spec.outer_w, spec.outer_l,
+                        offset=(spec.outer_w / 2, 0.0))
+    said = [w for w in shoved.warnings if "outside the case" in w]
+    assert said, "half the artwork is off the case and nothing said so"
+    assert "%" in said[0]
+
+
 def test_a_placement_with_no_art_is_the_identity():
     p = Placement(1, 1, 0, 0, 0, False)
     assert p.apply((3.0, 4.0)) == (3.0, -4.0)
