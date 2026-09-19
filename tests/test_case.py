@@ -242,6 +242,22 @@ def test_no_extrusion_runs_through_a_cutout(band):
                         f"{run.kind} at z={layer.z:.2f} is inside a cutout"
 
 
+def test_max_layers_builds_the_skin_and_stops():
+    # What the back of the case looks like is decided by the artwork layers,
+    # so a preview does not need the other fifty.
+    spec = spec_for(section_res=0.9)
+    paint = plan_paint(load(_SVG), PALETTES["primary"], spec.outer_w,
+                       spec.outer_l)
+    skin = build(spec, paint, skirt=0, max_layers=spec.art_layers)
+    assert len(skin.layers) == spec.art_layers
+    full = build(spec, paint, skirt=0)
+    assert len(full.layers) > spec.art_layers
+    # The layers it did build are the same ones the full print would lay.
+    for a, b in zip(skin.layers, full.layers):
+        assert a.z == pytest.approx(b.z)
+        assert [r.slot for r in a.runs] == [r.slot for r in b.runs]
+
+
 def test_a_test_fit_keeps_a_rim_and_drops_the_middle():
     # The point of a test fit is that it still answers every question about
     # whether the case fits, for a fraction of the filament.

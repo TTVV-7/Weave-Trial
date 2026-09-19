@@ -145,8 +145,14 @@ def section_at(spec: CaseSpec, z: float) -> Section:
 
 def build(spec: CaseSpec, plan: PaintPlan, *, wrap: bool = False,
           brim: int = 0, skirt: int = 1, skirt_gap: float = 2.5,
-          test_fit: float | None = None) -> CasePath:
+          test_fit: float | None = None,
+          max_layers: int | None = None) -> CasePath:
     """Generate the whole toolpath.
+
+    ``max_layers`` stops after that many layers. It is for previewing rather
+    than printing: the back of the case is decided by the artwork layers, so
+    building two of them answers what the finished thing looks like in a
+    fraction of the time a whole case takes.
 
     ``test_fit`` leaves the middle of the back plate out, keeping a rim of
     that width around the outline and around every hole. Every dimension
@@ -167,6 +173,8 @@ def build(spec: CaseSpec, plan: PaintPlan, *, wrap: bool = False,
     last_slot = plan.palette.base
 
     for i, (z_top, h) in enumerate(spec.layer_zs()):
+        if max_layers is not None and i >= max_layers:
+            break
         z_mid = z_top - h / 2
         sec = section_at(spec, z_mid)
         key = sec.key()
