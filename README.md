@@ -1,5 +1,13 @@
 # Weave Trial
 
+Two generators that write g-code directly, with no slicer in the loop: a
+**see-through woven lamp shade**, below, and a **parametric iPhone case** you
+paint with your AMS — [docs/phone-case.md](docs/phone-case.md).
+
+---
+
+# The lamp shade
+
 A see-through woven lamp shade, generated as g-code and printed as **one
 continuous bead** that climbs in a wave and welds to itself on the way past.
 No slicer, no layers, no supports, no vase mode.
@@ -145,21 +153,7 @@ solid and has something to stand on and something to clamp a fitting to.
 
 Use an **LED bulb.** The shade is thin plastic and it is not a heat shield.
 
-## Layout
-
-```
-generate.py                    CLI
-weave/geometry.py              the weave: centreline solver + check_support
-weave/gcode.py                 g-code writer (no dependencies)
-weave/profiles.py              printers, materials, shade presets
-weave/preview.py               SVG preview: elevation, detail, lit
-weave/fullcontrol_backend.py   optional: emit via FullControl instead
-tests/test_weave.py            34 tests, incl. the crash mode above
-```
-
-```bash
-python -m pytest tests -q
-```
+---
 
 ## Provenance
 
@@ -173,3 +167,92 @@ FullControl itself is optional and only used by `--fullcontrol`, which emits
 the same geometry through `fc.transform` for its viewer and printer library.
 The default writer is the built-in one, which is what knows about the
 per-bead extrusion heights the fade regions need.
+
+---
+
+# The phone case
+
+```bash
+python case.py --list
+python case.py --phone iphone-16-pro --test-fit            # print this first
+python case.py --phone iphone-16-pro --art logo.svg --palette duo
+```
+
+![back, plan and edges of a painted case](docs/phone-case.png)
+
+A case for any of seventeen iPhones, written straight to multi-tool g-code
+with your SVG painted onto the outside of the back by the AMS. It prints back
+face down, so the artwork is layer 1 against the build plate — the flattest
+surface the printer can make, and the one face you cannot see while it
+prints, which is why the generator mirrors the drawing for you.
+
+```
+$ python case.py --phone iphone-15-pro --art logo.svg --palette primary
+iphone-15-pro / snug: 74.7 x 150.7 x 11.1 mm
+  fit            0.35 mm gap, wall 1.70 mm (4 perimeters at 0.425 mm)
+  back plate     1.30 mm, 6 layers, artwork on the first 2
+  lip            1.20 mm tall, 0.90 mm in (37 deg overhang)
+  cutouts        camera, port, speaker-, speaker+, power, volume-up, ...
+  body colour    T1 ink #1b1b1f  (the artwork's main colour)
+  filament       19.9 g + 1.5 g purged
+  tool changes   8 (tower 46 x 40 mm, 3 layers)
+  printability   OK
+```
+
+Three things it does that are worth knowing about:
+
+**The section is solved, not drawn.** Each cross-section is a signed distance
+field and every perimeter is an isocontour of it, so the perimeters *turn and
+run around* the camera opening and the buttons instead of being severed at
+them. The wall is always filled exactly, the test fit's rim follows the holes
+for free, and the skirt is the same contour at a positive level.
+
+**It builds its own purge tower, and only where one is needed.** Nothing
+downstream is going to, and a tool change leaves the old colour in the melt
+zone. Artwork on the back plate changes colour twice and never again, so the
+tower is three layers tall and costs 1.5 g rather than outweighing the case.
+
+**The SVG reader is stdlib.** Every path command including arcs, nested
+transforms, inherited fill, and strokes converted to fills — because plenty
+of line art has no fills at all. It tells you what it could not read
+(`<text>`: convert it to paths) and which of your colours merged onto the
+same slot.
+
+The body dimensions are published specs. **The camera openings and button
+positions are estimates and have not been measured against a real phone** —
+`--test-fit` prints the walls and a rim of back plate for half the filament
+so that finding out costs twenty minutes. Full documentation:
+[docs/phone-case.md](docs/phone-case.md).
+
+---
+
+# Layout
+
+```
+generate.py                    lamp CLI
+weave/geometry.py              the weave: centreline solver + check_support
+weave/gcode.py                 g-code writer (no dependencies)
+weave/profiles.py              printers, materials, shade presets
+weave/preview.py               SVG preview: elevation, detail, lit
+weave/fullcontrol_backend.py   optional: emit via FullControl instead
+tests/test_weave.py            34 tests, incl. the crash mode above
+
+case.py                        phone case CLI
+phonecase/spec.py              phones, cases, cutouts, check_case
+phonecase/shapes.py            the little slicer: SDF, marching squares, infill
+phonecase/toolpath.py          layers, perimeters, colour, ordering
+phonecase/svgart.py            SVG -> filled polygons (stdlib only)
+phonecase/paint.py             palette, rasteriser, splitting a path by colour
+phonecase/gcode.py             multi-tool writer and the purge tower
+phonecase/preview.py           SVG preview: back, plan, edges
+phonecase/profiles.py          printers, filaments, palettes, case presets
+tests/test_case.py             132 tests
+```
+
+The two packages share no code on purpose. They are two generators that
+happen to live in one repository; coupling them would mean every change to a
+printer profile had to be right for both.
+
+```bash
+python -m pytest tests -q
+```
