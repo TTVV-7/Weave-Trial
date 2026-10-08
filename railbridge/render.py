@@ -44,10 +44,9 @@ def render(parts, dz, path, views, size=(16, 8)):
 
 
 def main(out):
-    stair = fb.east_stair()
-    bridge = fb.walkway() + stair + fb.half_turn(stair, "west")
-    site = bridge + fb.east_site() + fb.half_turn(fb.east_site(), "west")
-    render(bridge, -fb.PT, f"{out}/Rail_Footbridge_preview.png", [(22, -55), (35, 35)])
+    bridge = fb.bridge_parts()
+    site = bridge + fb.site_parts()
+    render(bridge, 0, f"{out}/Rail_Footbridge_preview.png", [(22, -55), (35, 35)])
     render(site, 0, f"{out}/Rail_Footbridge_Site_preview.png", [(40, -60), (60, 20)], size=(16, 9))
 
 
