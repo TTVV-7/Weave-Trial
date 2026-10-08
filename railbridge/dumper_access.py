@@ -23,7 +23,7 @@ import render
 
 TS = fb.TS                  # tower size
 SHED_HW = 9000              # dumper shed half-width across the track
-SHED_ROOF = 9000            # eaves of the shed roof (roof sheet 300 on top)
+SHED_ROOF = 7500            # eaves of the shed roof (roof sheet 300 on top)
 TX = SHED_HW + 1200 + TS / 2     # stair tower centre, 1.2 m off the shed's side wall
 H = SHED_ROOF + 300 + 1200  # tower top: the ramp's bottom chord clears the roof by 900
 RAMP_RISE = 600             # the ramp climbs this much over its length (about 1:35)
