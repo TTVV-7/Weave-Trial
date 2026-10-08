@@ -221,10 +221,14 @@ def tower(switchback):
     # back toward the tower in the inner (track-side) lane
     zl = (N // 2) * R
     run = (N // 2 - 1) * G
-    x_out, x_in = TX + SW2 / 2 + 60, TX - SW2 / 2 - 60
-    y_land1 = ye - run                              # near edge of the landing
-    y_land0 = y_land1 - LD                          # far edge
-    lower, _ = flight("stair_lower", x_out, SW2, ye, 0, zl, -1, 1)
+    # the lower flight stands outside the tower's outer legs and starts OFF_Y out from its face, so it
+    # is clear of the tower; the upper one stays within the tower's width to arrive on the top platform
+    OFF_Y = 600
+    x_out = TX + h + 450 + SW2 / 2 + 90
+    x_in = TX + h - SW2 / 2 - 90
+    y_land1 = ye - run                              # near edge of the landing, where the upper flight starts
+    y_land0 = y_land1 - OFF_Y - LD                  # far edge, beyond where the lower flight arrives
+    lower, _ = flight("stair_lower", x_out, SW2, ye - OFF_Y, 0, zl, -1, 1)
     upper, _ = flight("stair_upper", x_in, SW2, y_land1, zl, FL, 1, -1)
     p += lower + upper
     x0, x1 = x_in - SW2 / 2 - 90, x_out + SW2 / 2 + 90
