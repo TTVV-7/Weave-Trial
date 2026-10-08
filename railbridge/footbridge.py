@@ -1,14 +1,18 @@
-"""Industrial rail-yard crossover, bulk-terminal style: an open steel Pratt-truss walkway with a grating
-deck, safety screens and a corrugated roof, spanning four tracks between two braced steel stair towers.
-Each tower holds a switchback stair (four flights, grating treads, safety-yellow rails). The towers
-sit on opposite sides of the walkway, so the two stairs run in opposite directions along the tracks.
+"""Rail-yard crossover as built at bulk terminals: two white steel lattice towers, an arched truss walkway
+between their tops, and a long, steep straight stair up the side of each tower.
 
-Tracks run along Y; X = 0 is the middle of the yard. Units mm, Z up, ground (top of ballast) at Z = 0.
+The towers are square, with four legs, horizontal girts and X-bracing in every bay. The walkway's bottom
+chord is a parabolic arch springing from the towers, so from track level the bridge reads as an arch,
+while the deck stays flat to walk on; the side trusses double as the guards. The stairs have white
+channel stringers, open grating treads, a yellow handrail on the track side and a white guard on the
+other. They sit on opposite towers and climb in opposite directions along the tracks.
+
+Tracks run along Y; X = 0 is midway between them. Units mm, Z up, top of rail and asphalt at Z = 0.
 
     python railbridge/footbridge.py OUT_DIR
 
-writes Rail_Footbridge.step (walkway and towers) and Rail_Footbridge_Site.step (plus tracks,
-footings and covered hopper cars).
+writes Rail_Footbridge.step (towers, bridge, stairs) and Rail_Footbridge_Site.step (plus asphalt,
+embedded rails, gravel around the tower bases and two covered hopper cars).
 """
 import math
 import sys
@@ -17,39 +21,37 @@ import cadquery as cq
 
 # ---------------------------------------------------------------- yard
 GAUGE = 1435
-TRACKS = (-6750, -2250, 2250, 6750)   # 4.5 m track centres
-YARD_L = 60000
-RT = 400                    # top of rail above ground
-CLR = 7000                  # top of rail to underside of the bridge (23 ft)
+TRACKS = (-2250, 2250)
+YARD_L = 50000
+CAR_HW = 1600               # half-width of a freight car
+CLR = 7000                  # clearance over the car envelope (23 ft)
 
-# ---------------------------------------------------------------- walkway
-ZB = RT + CLR               # underside of the bottom chord
-FL = ZB + 250               # deck (walking surface)
-WW = 1500                   # clear width between the trusses
-TH = 1600                   # truss height above the deck
-ROOF = FL + 2500            # roof beams
+# ---------------------------------------------------------------- towers
+TS = 1500                   # tower size, leg centre to leg centre
+TX = TRACKS[1] + 2600 + TS / 2   # tower centre: legs 2.6 m clear of the track centre
+XI = TX - TS / 2            # inner leg line, where the arch springs
 
-# ---------------------------------------------------------------- stair towers
-TC = 11300                  # tower centre from the yard centre: 2.7 m from the outer track to the steel
-TW = 1300                   # column lines at TC +- TW
-LANE = 1000                 # clear flight width
-N = 40                      # risers, four flights of ten
+# ---------------------------------------------------------------- arched walkway
+RISE = 1500                 # rise of the arch soffit from springing to crown
+ZS = 6500                   # soffit at the springing
+FL = ZS + RISE + 250        # flat deck, just above the crown
+BW = 1200                   # clear walkway width
+GUARD = 1100                # top chord above the deck
+
+# ---------------------------------------------------------------- stairs
+N = 44                      # risers
 R = FL / N
-G = 230                     # going: about a 40 degree industrial stair
-FR = (N // 4 - 1) * G       # flight run
-LD = 1600                   # landing depth
-YN0, YN1 = -LD / 2, LD / 2  # near landings (the top one meets the walkway)
-YF0, YF1 = YN1 + FR, YN1 + FR + LD   # far landings
-TOP = FL + 2600             # tower roof beams
+G = 165                     # going: a steep (~50 degree) industrial stair, as on site
+SW = 800                    # clear stair width
+RUN = (N - 1) * G
 
-STEEL = cq.Color(0.6, 0.62, 0.64)    # galvanised
-DARK = cq.Color(0.4, 0.41, 0.42)     # grating
-YL = cq.Color(1.0, 0.78, 0.0)        # safety yellow
-SHEET = cq.Color(0.72, 0.74, 0.76)   # corrugated roofing
-SCREEN = cq.Color(0.3, 0.32, 0.34, 0.45)
-CONC = cq.Color(0.72, 0.71, 0.68)
-SLEEPER = cq.Color(0.35, 0.3, 0.27)
-RAIL = cq.Color(0.5, 0.45, 0.4)
+WH = cq.Color(0.9, 0.9, 0.87)
+YL = cq.Color(1.0, 0.8, 0.0)
+GT = cq.Color(0.55, 0.56, 0.57)
+DK = cq.Color(0.3, 0.3, 0.3)
+ASPHALT = cq.Color(0.24, 0.24, 0.25)
+GRAVEL = cq.Color(0.5, 0.46, 0.42)
+RAIL = cq.Color(0.55, 0.52, 0.5)
 CAR = (cq.Color(0.55, 0.25, 0.18), cq.Color(0.78, 0.76, 0.7))
 BOGIE = cq.Color(0.15, 0.15, 0.15)
 
@@ -70,115 +72,115 @@ def yz_plate(pts, x0, x1):
     return cq.Workplane("YZ").polyline(pts).close().extrude(x1 - x0).translate((x0, 0, 0))
 
 
-def corrugated(x0, x1, y0, y1, z0, z1, pitch=150, depth=35, t=4):
-    """Corrugated sheet over x0..x1, sloping from z0 at y0 to z1 at y1, ribs running down the slope."""
-    w, L = x1 - x0, math.hypot(y1 - y0, z1 - z0)
-    n = max(2, int(w / (pitch / 2)))
-    top = [(k * w / n, depth if k % 2 else 0) for k in range(n + 1)]
-    s = yz_plate(top + [(u, z - t) for u, z in reversed(top)], 0, L)   # profile across Y, length along X
-    s = s.rotate((0, 0, 0), (0, 0, 1), 90)                             # profile across -X, length along +Y
-    s = s.rotate((0, 0, 0), (1, 0, 0), math.degrees(math.atan2(z1 - z0, y1 - y0)))
-    return s.translate((x1, y0, z0))
+def xz_plate(pts, y0, y1):
+    """A prism whose profile is the (x, z) polygon pts, spanning y0..y1."""
+    y0, y1 = sorted((y0, y1))
+    return yz_plate(pts, 0, y1 - y0).rotate((0, 0, 0), (0, 0, 1), -90).translate((0, y1, 0))
 
 
-def walkway():
+def soffit(x):
+    """Underside of the arch: a parabola from ZS at the springings (x = +-XI) to ZS + RISE at midspan."""
+    return ZS + RISE * (1 - (x / XI) ** 2)
+
+
+def bridge():
     p = []
-    X = TC - TW                      # the trusses run between the towers' inner column lines
     nb = 10
-    xs = [-X + i * 2 * X / nb for i in range(nb + 1)]
-    lo, hi = ZB + 350, FL + TH - 200
+    xs = [-XI + i * 2 * XI / nb for i in range(nb + 1)]
+    ss = [-XI + i * 2 * XI / 40 for i in range(41)]
     for s in (1, -1):
-        y = s * (WW / 2 + 125)
-        p.append((f"bottom_chord_{s}", box(-X, X, y - 125, y + 125, ZB, lo), STEEL))
-        p.append((f"top_chord_{s}", box(-X, X, y - 100, y + 100, hi, FL + TH), STEEL))
+        y = s * (BW / 2 + 75)
+        arch = [(x, soffit(x)) for x in ss] + [(x, soffit(x) + 300) for x in reversed(ss)]
+        p.append((f"arch_chord_{s}", xz_plate(arch, y - 75, y + 75), WH))
+        p.append((f"top_chord_{s}", box(-XI, XI, y - 75, y + 75, FL + GUARD - 150, FL + GUARD), WH))
         for i, x in enumerate(xs):
-            p.append((f"truss_vertical_{s}_{i}", box(x - 90, x + 90, y - 90, y + 90, lo, hi), STEEL))
-            p.append((f"roof_post_{s}_{i}", box(x - 50, x + 50, y - 50, y + 50, FL + TH, ROOF), STEEL))
+            p.append((f"vertical_{s}_{i}", box(x - 60, x + 60, y - 60, y + 60, soffit(x) + 300, FL + GUARD - 150), WH))
         for i in range(nb):
             a, b = xs[i], xs[i + 1]
-            p0, p1 = ((a, y, hi), (b, y, lo)) if i < nb / 2 else ((a, y, lo), (b, y, hi))   # Pratt: diagonals fall toward midspan
-            p.append((f"truss_diagonal_{s}_{i}", rod(45, p0, p1), STEEL))
-            yi = s * (WW / 2 - 15)
-            p.append((f"safety_screen_{s}_{i}", box(a + 90, b - 90, yi - 3, yi + 3, FL + 150, FL + TH + 500), SCREEN))
-        yr = s * (WW / 2 - 50)
-        p.append((f"handrail_{s}", rod(24, (-X, yr, FL + 1070), (X, yr, FL + 1070)), YL))
-        p.append((f"midrail_{s}", rod(24, (-X, yr, FL + 530), (X, yr, FL + 530)), YL))
-        p.append((f"toe_plate_{s}", box(-X, X, s * (WW / 2 - 10), s * (WW / 2 - 20), FL, FL + 100), YL))
+            p0, p1 = ((a, y, soffit(a) + 300), (b, y, FL + GUARD - 150)) if i < nb / 2 else ((a, y, FL + GUARD - 150), (b, y, soffit(b) + 300))
+            p.append((f"diagonal_{s}_{i}", rod(35, p0, p1), WH))
+        yr = s * (BW / 2 - 40)
+        p.append((f"handrail_{s}", rod(21, (-XI, yr, FL + 1000), (XI, yr, FL + 1000)), YL))
+        p.append((f"toe_plate_{s}", box(-XI, XI, s * (BW / 2 - 5), s * (BW / 2 - 15), FL, FL + 100), YL))
     for i, x in enumerate(xs):
-        p.append((f"floor_beam_{i}", box(x - 100, x + 100, -WW / 2, WW / 2, ZB, FL - 40), STEEL))
-        p.append((f"roof_beam_{i}", box(x - 50, x + 50, -WW / 2 - 300, WW / 2 + 300, ROOF, ROOF + 150), STEEL))
-    p.append(("deck_grating", box(-X, X, -WW / 2, WW / 2, FL - 40, FL), DARK))
-    p.append(("roof_sheet", corrugated(-X - 300, X + 300, -WW / 2 - 450, WW / 2 + 450, ROOF + 200, ROOF + 130), SHEET))
-    return p
-
-
-def flight(k, x0, x1, climbs_far):
-    """Flight k rises from level k to level k+1 in the lane x0..x1."""
-    p = []
-    zb = k * (N // 4) * R
-    zt = zb + (N // 4) * R
-    ya, yb = (YN1, YF0) if climbs_far else (YF0, YN1)      # bottom, top of the flight
-    d = 1 if climbs_far else -1
-    for i in range(1, N // 4):
-        z = zb + i * R
-        a = ya + d * (i - 1) * G
-        p.append((f"tread_{k}_{i}", box(x0, x1, a, a + d * (G + 25), z - 40, z), DARK))
-        p.append((f"nosing_{k}_{i}", box(x0, x1, a + d * (G + 25), a + d * (G - 15), z - 42, z + 1), YL))
-    for s, x in enumerate((x0 - 60, x1 + 60)):
-        prof = [(ya, max(zb - 250, 0)), (ya, zb + 100), (yb, zt + 100), (yb, zt - 250)]
-        p.append((f"stringer_{k}_{s}", yz_plate(prof, x - 60, x + 60), STEEL))
-        xr = x0 + 40 if s == 0 else x1 - 40
-        p.append((f"flight_handrail_{k}_{s}", rod(24, (xr, ya, zb + 950), (xr, yb, zt + 950)), YL))
-        p.append((f"flight_midrail_{k}_{s}", rod(24, (xr, ya, zb + 500), (xr, yb, zt + 500)), YL))
+        z = min(soffit(x) + 300, FL - 300)
+        p.append((f"floor_beam_{i}", box(x - 60, x + 60, -BW / 2, BW / 2, z, FL - 40), WH))
+    p.append(("deck_grating", box(-XI, XI, -BW / 2, BW / 2, FL - 40, FL), GT))
     return p
 
 
 def tower():
-    """East tower: the inner column line faces the tracks; landings stack at the near (-Y) and far (+Y) ends."""
+    """East tower, centred on (TX, 0), with its stair on the -Y side climbing toward the tower."""
     p = []
-    xs, ys = (TC - TW, TC + TW), (YN0, YN1, YF0, YF1)
-    levels = [k * (N // 4) * R for k in range(1, 5)]
-    for i, x in enumerate(xs):
-        for j, y in enumerate(ys):
-            p.append((f"column_{i}_{j}", box(x - 100, x + 100, y - 100, y + 100, 0, TOP), STEEL))
-            p.append((f"base_plate_{i}_{j}", box(x - 200, x + 200, y - 200, y + 200, 0, 25), DARK))
-    for li, z in enumerate(levels + [TOP]):
-        zt = z - 40 if li < 4 else z
-        for i, x in enumerate(xs):
-            p.append((f"side_beam_{li}_{i}", box(x - 100, x + 100, YN0, YF1, z - 300, zt), STEEL))
-        for j, y in enumerate((YN0, YF1)):
-            p.append((f"end_beam_{li}_{j}", box(xs[0], xs[1], y - 100, y + 100, z - 300, zt), STEEL))
-    # landings: far at levels 1 and 3, near at 2 and 4 (4 is level with the walkway deck)
-    for k, z in enumerate(levels, 1):
-        y0, y1 = (YF0, YF1) if k % 2 else (YN0, YN1)
-        p.append((f"landing_{k}", box(xs[0] + 100, xs[1] - 100, y0, y1, z - 40, z), DARK))
-        ye = y1 if k % 2 else y0
-        rails = [((xs[1] - 150, y0), (xs[1] - 150, y1)), ((xs[0] + 150, ye), (xs[1] - 150, ye))]
-        if k != 4:                   # the top landing opens onto the walkway
-            rails.append(((xs[0] + 150, y0), (xs[0] + 150, y1)))
-        for r, ((ax, ay), (bx, by)) in enumerate(rails):
-            for h in (530, 1070):
-                p.append((f"landing_rail_{k}_{r}_{h}", rod(24, (ax, ay, z + h), (bx, by, z + h)), YL))
-            for q in range(3):
-                px, py = ax + q / 2 * (bx - ax), ay + q / 2 * (by - ay)
-                p.append((f"landing_post_{k}_{r}_{q}", rod(24, (px, py, z), (px, py, z + 1070)), YL))
-    # four flights in alternating lanes; the bottom one starts at the ground at the near end
-    lane_in = (xs[0] + 150, xs[0] + 150 + LANE)
-    lane_out = (xs[1] - 150 - LANE, xs[1] - 150)
-    for k in range(4):
-        x0, x1 = lane_out if k % 2 == 0 else lane_in
-        p += flight(k, x0, x1, climbs_far=(k % 2 == 0))
-    # X-bracing on the outer face and the far end
-    zs = [300] + levels + [TOP]
-    for li in range(len(zs) - 1):
-        za, zb = zs[li] + 150, zs[li + 1] - 300
-        for j in range(3):
-            ya, yb = ys[j], ys[j + 1]
-            p.append((f"brace_out_{li}_{j}_a", rod(30, (xs[1], ya, za), (xs[1], yb, zb)), STEEL))
-            p.append((f"brace_out_{li}_{j}_b", rod(30, (xs[1], yb, za), (xs[1], ya, zb)), STEEL))
-        p.append((f"brace_end_{li}_a", rod(30, (xs[0], YF1, za), (xs[1], YF1, zb)), STEEL))
-        p.append((f"brace_end_{li}_b", rod(30, (xs[1], YF1, za), (xs[0], YF1, zb)), STEEL))
-    p.append(("roof_sheet", corrugated(xs[0] - 400, xs[1] + 400, YN0 - 400, YF1 + 400, TOP + 300, TOP + 50), SHEET))
+    h = TS / 2
+    legs = [(TX - h, -h), (TX + h, -h), (TX + h, h), (TX - h, h)]
+    for k, (x, y) in enumerate(legs):
+        p.append((f"leg_{k}", box(x - 75, x + 75, y - 75, y + 75, 25, FL - 40), WH))
+        p.append((f"base_plate_{k}", box(x - 175, x + 175, y - 175, y + 175, 0, 25), DK))
+    levels = [25 + i * (FL - 65) / 5 for i in range(6)]
+    for li, z in enumerate(levels[1:], 1):
+        for k in range(4):
+            (x1, y1), (x2, y2) = legs[k], legs[(k + 1) % 4]
+            p.append((f"girt_{li}_{k}", rod(45, (x1, y1, z - 45), (x2, y2, z - 45)), WH))
+    for bi in range(5):
+        za, zb = levels[bi] + (150 if bi == 0 else 0), levels[bi + 1] - 90
+        for k in range(4):
+            (x1, y1), (x2, y2) = legs[k], legs[(k + 1) % 4]
+            p.append((f"brace_{bi}_{k}_a", rod(28, (x1, y1, za), (x2, y2, zb)), WH))
+            p.append((f"brace_{bi}_{k}_b", rod(28, (x2, y2, za), (x1, y1, zb)), WH))
+    # top platform, guarded on the outer face and the +Y side (the arch arrives from -X, the stair from -Y)
+    p.append(("top_platform", box(TX - h - 75, TX + h + 75, -h - 75, h + 75, FL - 40, FL), GT))
+    for r, ((ax, ay), (bx, by)) in enumerate((((TX + h, -h), (TX + h, h)), ((TX - h, h), (TX + h, h)))):
+        for hgt in (530, 1070):
+            p.append((f"top_rail_{r}_{hgt}", rod(21, (ax, ay, FL + hgt), (bx, by, FL + hgt)), YL))
+        p.append((f"top_toe_{r}", box(ax, bx if bx != ax else ax + 10, ay, by if by != ay else ay + 10, FL, FL + 100), YL))
+    for k, (x, y) in enumerate(legs):
+        p.append((f"top_post_{k}", rod(25, (x, y, FL), (x, y, FL + 1070)), WH))
+    p += stair()
+    return p
+
+
+def stair():
+    """Straight stair centred on the tower's x, climbing along +Y and arriving at the tower's -Y face."""
+    p = []
+    ye = -TS / 2 - 75                  # top of the flight
+    ys = ye - RUN                      # foot of the flight
+    slope = FL / (RUN + G)
+    SD = 300                           # stringer depth
+    for s in (1, -1):
+        x = TX + s * (SW / 2 + 6)
+        web = yz_plate([(ys - G, 0), (ye, FL), (ye, FL + SD * 0.6), (ys - G - SD / slope, 0)], x - 6, x + 6)
+        p.append((f"stringer_{s}", web, WH))
+        for k, dz in enumerate((0, SD * 0.6 - 10)):
+            fl = yz_plate([(ys - G - dz / slope, 0), (ye, FL + dz - SD * 0.0), (ye, FL + dz + 10), (ys - G - (dz + 10) / slope, 0)],
+                          x + s * 6, x + s * 80)
+            p.append((f"stringer_flange_{s}_{k}", fl, WH))
+    for i in range(1, N):
+        z = i * R
+        y0 = ys + (i - 1) * G
+        t = box(TX - SW / 2, TX + SW / 2, y0 - 15, y0 + G + 15, z - 35, z)
+        for k in range(5):
+            t = t.cut(box(TX - SW / 2 + 30, TX + SW / 2 - 30, y0 + 10 + k * 34, y0 + 26 + k * 34, z - 36, z + 1))
+        p.append((f"tread_{i:02d}", t, GT))
+        p.append((f"nosing_{i:02d}", box(TX - SW / 2, TX + SW / 2, y0 + G - 10, y0 + G + 15, z - 40, z), YL))
+    # yellow handrail on the track side (-X), white guard on the outer side, as on site
+    for s, col in ((-1, YL), (1, WH)):
+        x = TX + s * (SW / 2 + 45)
+        ya, za = ys + G * 0.5, R * 1.5
+        p.append((f"stair_top_rail_{s}", rod(21, (x, ya, za + 900), (x, ye, FL + 900)), col))
+        p.append((f"stair_mid_rail_{s}", rod(21, (x, ya, za + 450), (x, ye, FL + 450)), col))
+        for k, i in enumerate(range(1, N, 7)):
+            y = ys + (i - 1) * G + G * 0.5
+            p.append((f"stair_post_{s}_{k}", rod(21, (x, y, max(i * R - 200, 0)), (x, y, i * R + 940)), col))
+    # support frames at a third and two thirds of the way up
+    for j, f in enumerate((1 / 3, 2 / 3)):
+        ym = ys + RUN * f
+        zm = FL * f - 350
+        for s in (1, -1):
+            x = TX + s * (SW / 2 + 6)
+            p.append((f"stair_support_leg_{j}_{s}", box(x - 50, x + 50, ym - 50, ym + 50, 0, zm), WH))
+        p.append((f"stair_support_beam_{j}", box(TX - SW / 2 - 60, TX + SW / 2 + 60, ym - 50, ym + 50, zm - 150, zm), WH))
+        p.append((f"stair_support_brace_{j}", rod(25, (TX - SW / 2, ym, 200), (TX + SW / 2, ym, zm - 150)), WH))
     return p
 
 
@@ -186,32 +188,29 @@ def hopper(tag, x, y, col):
     """A simple covered hopper car on the track at x, centred on y."""
     p = []
     L, W, H = 17500, 3200, 4600
-    z0 = RT + 1100
+    z0 = 1100
     body = yz_plate([(y - L / 2, z0 + 600), (y - L / 2 + 1500, z0), (y + L / 2 - 1500, z0), (y + L / 2, z0 + 600),
-                     (y + L / 2, RT + H), (y - L / 2, RT + H)], x - W / 2, x + W / 2)
+                     (y + L / 2, H), (y - L / 2, H)], x - W / 2, x + W / 2)
     p.append((f"{tag}_body", body, col))
-    p.append((f"{tag}_roof_walk", box(x - 300, x + 300, y - L / 2 + 500, y + L / 2 - 500, RT + H, RT + H + 60), DARK))
+    p.append((f"{tag}_roof_walk", box(x - 300, x + 300, y - L / 2 + 500, y + L / 2 - 500, H, H + 60), DK))
     for s in (1, -1):
         yt = y + s * (L / 2 - 2000)
-        p.append((f"{tag}_bogie_{s}", box(x - 1100, x + 1100, yt - 1300, yt + 1300, RT + 300, RT + 900), BOGIE))
+        p.append((f"{tag}_bogie_{s}", box(x - 1100, x + 1100, yt - 1300, yt + 1300, 300, 900), BOGIE))
         for a in (-850, 850):
-            p.append((f"{tag}_wheelset_{s}_{a}", rod(450, (x - GAUGE / 2 - 60, yt + a, RT + 450), (x + GAUGE / 2 + 60, yt + a, RT + 450)), BOGIE))
+            p.append((f"{tag}_wheelset_{s}_{a}", rod(450, (x - GAUGE / 2 - 60, yt + a, 450), (x + GAUGE / 2 + 60, yt + a, 450)), BOGIE))
     return p
 
 
 def east_site():
     p = []
-    for k, x in enumerate(t for t in TRACKS if t > 0):
-        for j in range(int(YARD_L / 1200)):
-            y = -YARD_L / 2 + 600 + j * 1200
-            p.append((f"sleeper_{k}_{j:02d}", box(x - 1300, x + 1300, y - 125, y + 125, 150, 250), SLEEPER))
-        for s in (1, -1):
-            xr = x + s * (GAUGE / 2 + 35)
-            p.append((f"rail_{k}_{s}", box(xr - 35, xr + 35, -YARD_L / 2, YARD_L / 2, 250, RT), RAIL))
-    for i, x in enumerate((TC - TW, TC + TW)):
-        p.append((f"tower_footing_{i}", box(x - 500, x + 500, YN0 - 500, YF1 + 500, -300, 0), CONC))
-    for n in range(2):
-        p += hopper(f"hopper_{n}", TRACKS[-1], -14000 + n * 18500, CAR[n % 2])
+    x = TRACKS[1]
+    for s in (1, -1):
+        xr = x + s * (GAUGE / 2 + 35)
+        p.append((f"rail_{s}", box(xr - 35, xr + 35, -YARD_L / 2, YARD_L / 2, -150, 10), RAIL))
+    p.append(("asphalt", box(0, TX - TS / 2 - 600, -YARD_L / 2, YARD_L / 2, -150, 0), ASPHALT))
+    p.append(("asphalt_outer", box(TX + TS / 2 + 600, TX + 6000, -YARD_L / 2, YARD_L / 2, -150, 0), ASPHALT))
+    p.append(("gravel_strip", box(TX - TS / 2 - 600, TX + TS / 2 + 600, -YARD_L / 2, YARD_L / 2, -150, -20), GRAVEL))
+    p += hopper("hopper", x, -9500, CAR[0])
     return p
 
 
@@ -222,27 +221,29 @@ def half_turn(p, tag):
 
 def bridge_parts():
     t = tower()
-    return walkway() + [("east_" + n, w, c) for n, w, c in t] + half_turn(t, "west")
+    return bridge() + [("east_" + n, w, c) for n, w, c in t] + half_turn(t, "west")
 
 
 def site_parts():
     s = east_site()
-    return [("east_" + n, w, c) for n, w, c in s] + half_turn(s, "west")
+    west = half_turn(s, "west")
+    return [("east_" + n, w, c) for n, w, c in s] + [(n, w, CAR[1] if n.endswith("hopper_body") else c) for n, w, c in west]
 
 
 def main(out):
-    bridge = bridge_parts()
+    bridge_ = bridge_parts()
     ft = lambda v: round(v / 304.8, 1)
-    for name, parts in (("Rail_Footbridge", bridge), ("Rail_Footbridge_Site", bridge + site_parts())):
+    for name, parts in (("Rail_Footbridge", bridge_), ("Rail_Footbridge_Site", bridge_ + site_parts())):
         asm = cq.Assembly(name=name)
         for n, w, c in parts:
             asm.add(w, name=n, color=c)
         asm.export(f"{out}/{name}.step")
         bb = asm.toCompound().BoundingBox()
         print(name, "ft: X", ft(bb.xlen), "Y", ft(bb.ylen), "Z", ft(bb.zlen), "| zmin", round(bb.zmin), "| parts", len(parts))
-    print("span between towers ft", ft(2 * (TC - TW)), "| clear over rail ft", ft(CLR),
-          "| stair", N, "risers of", round(R), "mm, going", G, "mm,", round(math.degrees(math.atan(R / G)), 1), "deg",
-          "| tower", 2 * TW + 200, "x", round(YF1 - YN0 + 200), "mm")
+    clear = min(soffit(x) for x in (t + s * CAR_HW for t in TRACKS for s in (1, -1)))
+    print("arch span ft", ft(2 * XI), "rise ft", ft(RISE), "| deck ft", ft(FL),
+          "| clear over car envelope ft", ft(clear), "| stair", N, "risers of", round(R), "mm, going", G,
+          "mm,", round(math.degrees(math.atan(R / G)), 1), "deg, run ft", ft(RUN))
 
 
 if __name__ == "__main__":

@@ -46,7 +46,7 @@ def render(parts, dz, path, views, size=(16, 8)):
 def main(out):
     bridge = fb.bridge_parts()
     site = bridge + fb.site_parts()
-    render(bridge, 0, f"{out}/Rail_Footbridge_preview.png", [(22, -55), (35, 35)])
+    render(bridge, 0, f"{out}/Rail_Footbridge_preview.png", [(18, -60), (30, 30)])
     render(site, 0, f"{out}/Rail_Footbridge_Site_preview.png", [(40, -60), (60, 20)], size=(16, 9))
 
 
