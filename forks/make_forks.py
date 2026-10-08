@@ -12,12 +12,12 @@ from trimesh.creation import box, cylinder
 W, PLATE_H, PLATE_T = 170, 60, 5          # carriage plate
 BAR_T = 6                                 # carriage bars stand proud by this
 BARS = ((6, 16), (44, 56))                # y-range of bottom and top bar
-REST_H, REST_T, FRAME = 50, 4, 6          # load backrest above the plate
-N_TINES, PITCH = 4, 40                    # tines and their spacing
-SHANK_W, SHANK_T, SHANK_Y = 10, 6, (4, 58)
-BLADE_L, BLADE_T, TAPER_L, TIP_T = 70, 6, 28, 2.5
+REST_H, REST_T, FRAME = 65, 4, 6          # load backrest above the plate
+N_TINES, PITCH = 2, 96                    # two forks, set wide like on the machine
+SHANK_W, SHANK_T, SHANK_Y = 12, 7, (4, 58)
+BLADE_L, BLADE_T, TAPER_L, TIP_T = 110, 7, 40, 2.5
 TILT = 7                                  # degrees of fork tilt-back, keeps keys on
-KEYHOLE_X = (-PITCH, PITCH)               # between the tines, 80 mm screw centres
+KEYHOLE_X = (-20, 20)                     # between the forks, 40 mm screw centres
 SCREW_HEAD, SCREW_SHANK = 9.0, 4.5
 
 def hull(pts): return trimesh.convex.convex_hull(np.array(pts, float))
@@ -44,6 +44,9 @@ gap_w = (inner_x1 - inner_x0 - slat*(n_gaps - 1)) / n_gaps
 windows = [box(bounds=((inner_x0 + i*(gap_w + slat), PLATE_H + 2, -1),
                        (inner_x0 + i*(gap_w + slat) + gap_w, PLATE_H + REST_H - FRAME, 10)))
            for i in range(n_gaps)]
+# horizontal mid rail across the slats, like the backrest in the photo
+windows = [m for w in windows for m in (
+    d(w, box(bounds=((-W, PLATE_H + REST_H/2 - 3, -2), (W, PLATE_H + REST_H/2 + 3, 12)))),)]
 rest = d(rest, *windows)
 
 def keyhole(x, y):
@@ -142,6 +145,6 @@ for _, rgb, m in parts:
     m = m.copy(); m.apply_transform(wall)
     shade = np.clip(m.face_normals @ L, 0.2, 1)[:, None]
     ax.add_collection3d(Poly3DCollection(m.triangles, facecolors=np.array(rgb)/255*(0.35 + 0.65*shade), edgecolor="none"))
-ax.set_xlim(-85, 85); ax.set_ylim(-110, 20); ax.set_zlim(-10, 110); ax.set_box_aspect((170, 130, 120))
+ax.set_xlim(-85, 85); ax.set_ylim(-140, 20); ax.set_zlim(-10, 125); ax.set_box_aspect((170, 160, 135))
 ax.view_init(elev=20, azim=-60); ax.set_axis_off()
 plt.savefig("forks/preview.png", dpi=110, bbox_inches="tight")
