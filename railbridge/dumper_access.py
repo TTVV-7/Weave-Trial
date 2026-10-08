@@ -117,7 +117,15 @@ def stair():
     return p
 
 
+MIRROR = True               # mirror across the track centreline: the stair moves to the shed's other side
+
+
 def structure():
+    p = _structure()
+    return [(n, w.mirror("YZ"), c) for n, w, c in p] if MIRROR else p
+
+
+def _structure():
     p = lattice("stair_tower", TX, 0, TS / 2, TS / 2, H - 40, 7)
     p += tower_top("stair_tower_top", TX, H, open_sides=("-x", "-y"))
     p += stair()
