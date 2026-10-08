@@ -281,9 +281,20 @@ def half_turn(p, tag):
     return [(f"{tag}_{n}", w.rotate((0, 0, 0), (0, 0, 1), 180), c) for n, w, c in p]
 
 
+MIRROR = True               # mirror the layout across the yard centreline: the stairs swap ends
+
+
+def mirrored(p):
+    """Mirror parts across X = 0 when MIRROR is set, swapping their east/west names to match."""
+    if not MIRROR:
+        return p
+    swap = lambda n: n.replace("east_", "TMP_").replace("west_", "east_").replace("TMP_", "west_")
+    return [(swap(n), w.mirror("YZ"), c) for n, w, c in p]
+
+
 def bridge_parts():
-    return (bridge() + [("east_" + n, w, c) for n, w, c in tower(switchback=False)]
-            + half_turn(tower(switchback=True), "west"))
+    return mirrored(bridge() + [("east_" + n, w, c) for n, w, c in tower(switchback=False)]
+                    + half_turn(tower(switchback=True), "west"))
 
 
 def site_parts():
@@ -291,7 +302,7 @@ def site_parts():
     p = [("east_" + n, w, c) for n, w, c in s] + half_turn(s, "west")
     for i, (x, y) in enumerate(((TRACKS[3], -9500), (TRACKS[1], 9500), (TRACKS[2], 14000))):
         p += hopper(f"hopper_{i}", x, y, CAR[i % 2])
-    return p
+    return mirrored(p)
 
 
 def main(out):
