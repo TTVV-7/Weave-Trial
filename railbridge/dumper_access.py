@@ -1,6 +1,6 @@
-"""Dumper access: a two-flight stair running straight (no switchback) up to a white lattice tower, and
-from the tower top a truss ramp turning 90 degrees to cross over the dumper track, rising gently to a
-second tower. Same steelwork as the crossover in footbridge.py: square lattice towers, open grating
+"""Dumper access: a two-flight stair running straight (no switchback) up beside the dumper shed to a
+white lattice tower, and from the tower top a truss ramp turning 90 degrees to pass over the shed roof,
+rising gently to a second tower on the far side. Same steelwork as the crossover in footbridge.py: square lattice towers, open grating
 treads, white stringers and chords, safety-yellow handrails.
 
 The dumper track runs along Y at X = 0; the stair climbs along +Y beside it and the ramp runs along -X
@@ -22,10 +22,13 @@ from footbridge import GT, WH, YL, box, flight, lattice, rod, support, xz_plate
 import render
 
 TS = fb.TS                  # tower size
-TX = 4600                   # stair tower centre: legs 3.1 m clear of the dumper track
-H = fb.FL                   # tower top / ramp start, as on the crossover
-RAMP_RISE = 600             # the ramp climbs this much over its length (about 1:15)
-XB = -4600                  # far tower centre, the other side of the track
+SHED_HW = 9000              # dumper shed half-width across the track
+SHED_ROOF = 9000            # eaves of the shed roof (roof sheet 300 on top)
+TX = SHED_HW + 1200 + TS / 2     # stair tower centre, 1.2 m off the shed's side wall
+H = SHED_ROOF + 300 + 1200  # tower top: the ramp's bottom chord clears the roof by 900
+RAMP_RISE = 600             # the ramp climbs this much over its length (about 1:35)
+XB = -TX                    # far tower, off the shed's other side wall
+N = 2 * round(H / fb.R / 2) # risers, split equally between the two flights
 RW = 1200                   # clear ramp width
 GUARD = 1100
 SW = 800                    # clear stair width
@@ -58,7 +61,7 @@ def ramp():
     xa, xb = TX - TS / 2, XB + TS / 2
     za, zb = H, H + RAMP_RISE
     zf = lambda x: za + (x - xa) / (xb - xa) * (zb - za)        # deck level along the ramp
-    nb = 8
+    nb = 14
     xs = [xa + i * (xb - xa) / nb for i in range(nb + 1)]
     band = lambda z0, z1: [(xa, zf(xa) + z0), (xb, zf(xb) + z0), (xb, zf(xb) + z1), (xa, zf(xa) + z1)]
     p.append(("ramp_deck", xz_plate(band(-40, 0), -RW / 2, RW / 2), GT))
@@ -77,6 +80,15 @@ def ramp():
         p.append((f"ramp_toe_plate_{s}", xz_plate(band(0, 100), s * (RW / 2 - 15), s * (RW / 2 - 5)), YL))
     for i, x in enumerate(xs):
         p.append((f"ramp_floor_beam_{i}", box(x - 60, x + 60, -RW / 2, RW / 2, zf(x) - 300, zf(x) - 40), WH))
+    # two short frames standing on the shed roof carry the long span
+    roof_top = SHED_ROOF + 300
+    for k, x in enumerate((xs[nb // 3], xs[2 * nb // 3])):
+        zt = zf(x) - 300
+        for s in (1, -1):
+            y = s * (RW / 2 + 75)
+            p.append((f"roof_support_post_{k}_{s}", box(x - 75, x + 75, y - 75, y + 75, roof_top + 20, zt), WH))
+            p.append((f"roof_support_plate_{k}_{s}", box(x - 200, x + 200, y - 200, y + 200, roof_top, roof_top + 20), fb.DK))
+        p.append((f"roof_support_beam_{k}", box(x - 75, x + 75, -RW / 2 - 150, RW / 2 + 150, zt - 150, zt), WH))
     return p
 
 
@@ -84,9 +96,9 @@ def stair():
     """Two flights in line along +Y, with a landing on posts between them, arriving at the tower's -Y face."""
     p = []
     ye = -TS / 2 - 75
-    n = fb.N // 2
+    n = N // 2
     run = (n - 1) * fb.G
-    zl = n * fb.R
+    zl = H / 2
     y_up = ye - run                       # foot of the upper flight = near edge of the landing
     y_lo = y_up - LD - run                # foot of the lower flight
     lower, _ = flight("stair_lower", TX, SW, y_lo, 0, zl, 1, -1)
@@ -106,12 +118,12 @@ def stair():
 
 
 def structure():
-    p = lattice("stair_tower", TX, 0, TS / 2, TS / 2, H - 40, 5)
+    p = lattice("stair_tower", TX, 0, TS / 2, TS / 2, H - 40, 7)
     p += tower_top("stair_tower_top", TX, H, open_sides=("-x", "-y"))
     p += stair()
     p += ramp()
     zb = H + RAMP_RISE
-    p += lattice("far_tower", XB, 0, TS / 2, TS / 2, zb - 40, 5)
+    p += lattice("far_tower", XB, 0, TS / 2, TS / 2, zb - 40, 7)
     p += tower_top("far_tower_top", XB, zb, open_sides=("+x", "-x"))   # -x: onward access onto the dumper building
     return p
 
@@ -122,9 +134,9 @@ def site():
     for s in (1, -1):
         xr = s * (fb.GAUGE / 2 + 35)
         p.append((f"rail_{s}", box(xr - 35, xr + 35, -L / 2, L / 2, -150, 10), fb.RAIL))
-    p.append(("asphalt", box(-12000, 12000, -L / 2, L / 2, -160, 0), fb.ASPHALT))
-    # dumper shed straddling the track just beyond the ramp, open portal facing -Y
-    y0, y1, x0, x1, ht = 2500, 26000, -9000, 9000, H + RAMP_RISE + 1500
+    p.append(("asphalt", box(-TX - 4000, TX + 4000, -L / 2, L / 2, -160, 0), fb.ASPHALT))
+    # dumper shed straddling the track, with the ramp passing over its roof; open portal facing -Y
+    y0, y1, x0, x1, ht = -14000, 14000, -SHED_HW, SHED_HW, SHED_ROOF
     for s, (a, b) in enumerate(((x0, -2400), (2400, x1))):
         p.append((f"shed_wall_{s}", box(a, b, y0, y1, 0, ht), SHED))
     p.append(("shed_lintel", box(-2400, 2400, y0, y0 + 600, 5600, ht), SHED))
@@ -133,7 +145,7 @@ def site():
         x = x0 + 300 + i * 600
         if abs(x) > 2500:
             p.append((f"shed_rib_{i}", box(x - 40, x + 40, y0 - 60, y0, 0, ht), SHED_DARK))
-    p += fb.hopper("hopper", 0, -16000, fb.CAR[0])
+    p += fb.hopper("hopper", 0, -24000, fb.CAR[0])
     return p
 
 
@@ -165,7 +177,8 @@ def main(out):
     render.render(s + site(), 0, os.path.join(out, "Dumper_Access_Site_preview.png"), [(30, -60), (40, 210)], size=(16, 9))
     ft = lambda v: round(v / 304.8, 1)
     print("ramp length ft", ft(TX - XB - TS), "rise ft", ft(RAMP_RISE), "| tower top ft", ft(H),
-          "| stair two flights of", fb.N // 2, "risers, landing at ft", ft(fb.N // 2 * fb.R))
+          "| stair two flights of", N // 2, "risers of", round(H / N), "mm, landing at ft", ft(H / 2),
+          "| ramp clear over roof mm", round(H - 300 - SHED_ROOF - 300))
 
 
 if __name__ == "__main__":

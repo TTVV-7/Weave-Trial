@@ -150,6 +150,7 @@ def flight(tag, xc, w, y_bot, z_bot, z_top, d, rail_side):
     handrail, the other side a white guard. Returns (parts, y at the top)."""
     p = []
     n = round((z_top - z_bot) / R)
+    r = (z_top - z_bot) / n            # risers stay equal whatever the height
     run = (n - 1) * G
     y_top = y_bot + d * run
     slope = (z_top - z_bot) / (run + G)
@@ -163,7 +164,7 @@ def flight(tag, xc, w, y_bot, z_bot, z_top, d, rail_side):
             fl = [(y0 - d * dz / slope, z_bot), (y_top, z_top + dz), (y_top, z_top + dz + 10), (y0 - d * (dz + 10) / slope, z_bot)]
             p.append((f"{tag}_stringer_flange_{s}_{k}", yz_plate(fl, x + s * 6, x + s * 80), WH))
     for i in range(1, n):
-        z = z_bot + i * R
+        z = z_bot + i * r
         a = y_bot + d * (i - 1) * G
         t = box(xc - w / 2, xc + w / 2, a - d * 15, a + d * (G + 15), z - 35, z)
         for k in range(5):
@@ -175,12 +176,12 @@ def flight(tag, xc, w, y_bot, z_bot, z_top, d, rail_side):
     for s in (1, -1):
         col = YL if s == rail_side else WH
         x = xc + s * (w / 2 + 45)
-        ya, za = y_bot + d * G * 0.5, z_bot + R * 1.5
+        ya, za = y_bot + d * G * 0.5, z_bot + r * 1.5
         p.append((f"{tag}_top_rail_{s}", rod(21, (x, ya, za + 900), (x, y_top, z_top + 900)), col))
         p.append((f"{tag}_mid_rail_{s}", rod(21, (x, ya, za + 450), (x, y_top, z_top + 450)), col))
         for k, i in enumerate(range(1, n, 7)):
             y = y_bot + d * ((i - 1) * G + G * 0.5)
-            z = z_bot + i * R
+            z = z_bot + i * r
             p.append((f"{tag}_post_{s}_{k}", rod(21, (x, y, max(z - 200, z_bot)), (x, y, z + 940)), col))
     return p, y_top
 
