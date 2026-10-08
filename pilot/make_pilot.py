@@ -29,6 +29,36 @@ def ycyl(r, length, x, y, z):
     c.apply_translation((x, y, z))
     return c
 
+# --- Surface details (shallow recesses) ---
+D = 30  # recess depth, real mm (~0.7 mm at 1:43)
+def pts_hull(pts): return trimesh.convex.convex_hull(np.array(pts, float))
+def gh_w(z): return 975 - 115*(z-1070)/710   # greenhouse side half-width at height z
+
+# Side windows: recess the greenhouse sides, leaving B/C/D pillars
+side_prof = [(1520,1140),(2130,1700),(4430,1725),(4610,1150)]
+sides = []
+for s in (-1,1):
+    pts = [(x, s*(gh_w(z)-D), z) for x,z in side_prof] + [(x, s*1300, z) for x,z in side_prof]
+    sides.append(pts_hull(pts))
+pillars = [box(bounds=((x0,-1400,1000),(x1,1400,1900))) for x0,x1 in ((2620,2740),(3560,3680))]
+side_cut = trimesh.boolean.difference([trimesh.boolean.union(sides, engine="manifold")]+pillars, engine="manifold")
+
+def face_cut(corners, inward):
+    inward = np.array(inward)/np.linalg.norm(inward)
+    c = np.array(corners, float)
+    return pts_hull(np.vstack([c + inward*D, c - inward*300]))
+ws   = face_cut([(x,y,z) for x,z,hw in ((1440,1120,890),(2040,1700,790)) for y in (-hw,hw)], (0.692,0,-0.722))
+rear = face_cut([(x,y,z) for x,z,hw in ((4705,1180,870),(4545,1720,790)) for y in (-hw,hw)], (-0.955,0,-0.295))
+
+def front_x(z): return 70*(z-700)/180
+def front_cut(y0, y1, z0, z1):
+    return pts_hull([(front_x(z)+D, y, z) for z in (z0,z1) for y in (y0,y1)] +
+                    [(-300, y, z) for z in (z0,z1) for y in (y0,y1)])
+grille = front_cut(-470, 470, 720, 850)
+lights = [front_cut(s*560, s*880, 740, 860) for s in (-1,1)]
+tails  = [box(bounds=((4775-D, min(s*760,s*950), 620), (4900, max(s*760,s*950), 1010))) for s in (-1,1)]
+details = [side_cut, ws, rear, grille] + lights + tails
+
 axles_x = (FX, FX + WB)
 # Wheel arch cutouts (only outer part of body)
 arches = [ycyl(430, 400, x, s*(HALF_W - 150), R_T) for x in axles_x for s in (-1,1)]
@@ -37,7 +67,7 @@ hubs   = [ycyl(200, 30, x, s*(HALF_W - 10), R_T) for x in axles_x for s in (-1,1
 axles  = [ycyl(120, 2*HALF_W - 100, x, 0, R_T) for x in axles_x]
 
 shell = trimesh.boolean.union([body, green] + rails + mirrors, engine="manifold")
-shell = trimesh.boolean.difference([shell] + arches, engine="manifold")
+shell = trimesh.boolean.difference([shell] + arches + details, engine="manifold")
 car = trimesh.boolean.union([shell] + wheels + hubs + axles, engine="manifold")
 # Flatten tire bottoms slightly so it sits flat on the bed
 car = trimesh.boolean.intersection([car, box(bounds=((-100,-1200,25),(5000,1200,3000)))], engine="manifold")
@@ -54,5 +84,5 @@ fig = plt.figure(figsize=(10,6)); ax = fig.add_subplot(projection="3d")
 n = car.face_normals; light = np.clip(n @ np.array([0.4,-0.6,0.7])/np.linalg.norm([0.4,-0.6,0.7]),0.15,1)
 ax.add_collection3d(Poly3DCollection(car.triangles, facecolors=plt.cm.Blues(0.35+0.6*light), edgecolor="none"))
 e = car.extents; ax.set_xlim(0,e[0]); ax.set_ylim(-(e[0]-e[1])/2, e[1]+(e[0]-e[1])/2); ax.set_zlim(0,e[0]*0.6)
-ax.view_init(elev=18, azim=-55); ax.set_axis_off()
+ax.view_init(elev=18, azim=-125); ax.set_axis_off()
 plt.savefig("pilot/preview.png", dpi=110, bbox_inches="tight")
