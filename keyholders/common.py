@@ -40,14 +40,32 @@ def keyhole(x, y, pocket=3):
 
 _TYPES = ('<?xml version="1.0" encoding="UTF-8"?>\n<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">'
           '<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>'
-          '<Default Extension="model" ContentType="application/vnd.ms-package.3dmanufacturing-3dmodel+xml"/></Types>')
+          '<Default Extension="model" ContentType="application/vnd.ms-package.3dmanufacturing-3dmodel+xml"/>'
+          '<Default Extension="config" ContentType="text/xml"/></Types>')
 _RELS = ('<?xml version="1.0" encoding="UTF-8"?>\n<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
          '<Relationship Target="/3D/3dmodel.model" Id="rel0" Type="http://schemas.microsoft.com/3dmanufacturing/2013/01/3dmodel"/></Relationships>')
 
 def _esc(s): return s.replace("&", "&amp;").replace('"', "&quot;").replace("<", "&lt;")
 
+_MATERIAL_NS = "http://schemas.microsoft.com/3dmanufacturing/material/2015/02"
+_IDENTITY = "1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1"
+
 def write_3mf(parts, path, name):
-    """One object per filament, grouped as one, each pointing at its colour."""
+    """One object per filament, grouped as one, each pointing at its colour.
+
+    Colour alone does not get a part onto the right filament, and each slicer
+    looks for it somewhere different, so the file says it three ways:
+
+    * an ``m:colorgroup`` (3MF Materials extension) the objects point into,
+      which is what Bambu Studio maps to filaments for a 3MF it did not write,
+      and what plain 3MF viewers show. Core ``basematerials`` are ignored by
+      Bambu and Orca, which is why the colours used to go missing;
+    * ``Metadata/model_settings.config``, where Bambu Studio and Orca read a
+      filament number per part;
+    * ``Metadata/Slic3r_PE_model.config``, the same for PrusaSlicer, which
+      loads each grouped part as an object of its own and so is told per
+      part, each as one volume spanning its own triangles.
+    """
     lo = np.min([m.bounds[0] for _, _, m in parts], axis=0)
     objs, ids = [], []
     for i, (pname, rgb, m) in enumerate(parts):
@@ -61,13 +79,39 @@ def write_3mf(parts, path, name):
     gid = len(parts) + 2
     objs.append(f'<object id="{gid}" type="model" name="{_esc(name)}"><components>'
                 + "".join(f'<component objectid="{i}"/>' for i in ids) + "</components></object>")
-    bases = "".join(f'<base name="{_esc(n)}" displaycolor="#%02X%02X%02XFF"/>' % rgb for n, rgb, _ in parts)
+    colours = "".join('<m:color color="#%02X%02X%02XFF"/>' % rgb for _, rgb, _ in parts)
     model = ('<?xml version="1.0" encoding="UTF-8"?>\n<model unit="millimeter" xml:lang="en-US" '
-             'xmlns="http://schemas.microsoft.com/3dmanufacturing/core/2015/02">'
-             f'<resources><basematerials id="1">{bases}</basematerials>{"".join(objs)}</resources>'
+             'xmlns="http://schemas.microsoft.com/3dmanufacturing/core/2015/02" '
+             f'xmlns:m="{_MATERIAL_NS}">'
+             f'<metadata name="Title">{_esc(name)}</metadata>'
+             f'<resources><m:colorgroup id="1">{colours}</m:colorgroup>{"".join(objs)}</resources>'
              f'<build><item objectid="{gid}" transform="1 0 0 0 1 0 0 0 1 20 20 0"/></build></model>')
+
+    # filament 1, 2, ... in the order the parts are listed, matching the colours
+    bambu = ['<?xml version="1.0" encoding="UTF-8"?>', "<config>", f'  <object id="{gid}">',
+             f'    <metadata key="name" value="{_esc(name)}"/>', '    <metadata key="extruder" value="1"/>']
+    prusa = ['<?xml version="1.0" encoding="UTF-8"?>', "<config>"]
+    for i, ((pname, _, m), oid) in enumerate(zip(parts, ids)):
+        bambu += [f'    <part id="{oid}" subtype="normal_part">',
+                  f'      <metadata key="name" value="{_esc(pname)}"/>',
+                  f'      <metadata key="matrix" value="{_IDENTITY}"/>',
+                  f'      <metadata key="extruder" value="{i + 1}"/>', "    </part>"]
+        prusa += [f'  <object id="{oid}" instances_count="1">',
+                  f'    <metadata type="object" key="name" value="{_esc(pname)}"/>',
+                  f'    <metadata type="object" key="extruder" value="{i + 1}"/>',
+                  f'    <volume firstid="0" lastid="{len(m.faces) - 1}">',
+                  f'      <metadata type="volume" key="name" value="{_esc(pname)}"/>',
+                  '      <metadata type="volume" key="volume_type" value="ModelPart"/>',
+                  f'      <metadata type="volume" key="matrix" value="{_IDENTITY}"/>',
+                  f'      <metadata type="volume" key="extruder" value="{i + 1}"/>', "    </volume>", "  </object>"]
+    bambu += ["  </object>", "</config>"]
+    prusa += ["</config>"]
+
     with zipfile.ZipFile(path, "w", zipfile.ZIP_DEFLATED) as z:
-        z.writestr("[Content_Types].xml", _TYPES); z.writestr("_rels/.rels", _RELS); z.writestr("3D/3dmodel.model", model)
+        z.writestr("[Content_Types].xml", _TYPES); z.writestr("_rels/.rels", _RELS)
+        z.writestr("3D/3dmodel.model", model)
+        z.writestr("Metadata/model_settings.config", "\n".join(bambu) + "\n")
+        z.writestr("Metadata/Slic3r_PE_model.config", "\n".join(prusa) + "\n")
 
 def report(parts):
     for name, _, m in parts:
