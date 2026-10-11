@@ -7,7 +7,8 @@ Reads ``source_ipad_holder.3mf`` and the two logo SVGs next to this file and
 writes ``ipad_holder.3mf``, ``wing_screw.3mf`` / ``.stl`` and ``preview.png``.
 
 The thread: the original 5.2 mm hole runs along x through the left corner of
-the diamond loop, at y = 12, z = 6. The loop is a plain extrusion, so it is
+the diamond loop, at y = 12, z = 6 (y = 20 once the loop is lifted to clear
+the wings, see LOOP_RAISE). The loop is a plain extrusion, so it is
 rebuilt from its own cross-section (which fills the old hole) and an ISO-60
 degree M5 x 0.8 thread is cut back in, opened up for printing so a printed
 screw or a real steel M5 both go in.
@@ -34,7 +35,11 @@ from phonecase.threemf import Part, parts_to_3mf               # noqa: E402
 
 # --- thread ---------------------------------------------------------------
 PITCH = 0.8
-HOLE_AXIS = (12.0, 6.0)         # y, z of the clamp hole; it runs along x
+# The loop is lifted this far off the frame on a longer neck, so the wings
+# (15 mm radius) clear the top of the frame by about 3 mm all the way round.
+# In the original the axis was 10.1 mm above the frame and the wings hit it.
+LOOP_RAISE = 8.0
+HOLE_AXIS = (12.0 + LOOP_RAISE, 6.0)   # y, z of the clamp hole; it runs along x
 HOLE_X = (172.0, 188.0)         # from outside the loop to inside its opening
 # Radial limits of the two threads. ISO M5: internal minor 4.134, external
 # major 5.0, external minor 4.019. The hole is opened and the screw shrunk
@@ -173,8 +178,15 @@ def build_holder():
     src = load_source()
     names = sorted(src, key=lambda n: -src[n].volume)
     frame, loop, neck = (src[n] for n in names)
+    # The neck is a plain box; stretch it upwards and carry the loop with it.
+    (nx0, ny0, nz0), (nx1, ny1, nz1) = neck.bounds
+    # It also starts 1 mm inside the frame wall: in the source it only touches
+    # the frame face to face, which leaves it a separate solid.
+    neck_box = (m3.Manifold.cube([nx1 - nx0, ny1 - ny0 + LOOP_RAISE + 1.0, nz1 - nz0])
+                .translate([nx0, ny0 - 1.0, nz0]))
     body = m3.Manifold.batch_boolean(
-        [to_manifold(frame), rebuilt_loop(loop), to_manifold(neck)], m3.OpType.Add)
+        [to_manifold(frame), rebuilt_loop(loop).translate([0, LOOP_RAISE, 0]),
+         neck_box], m3.OpType.Add)
     body = body - hole_cutter()
 
     inlays = []
@@ -249,7 +261,7 @@ def preview(parts, screw, path):
     ax = fig.add_subplot(1, 3, 1, projection="3d"); ax.set_title("Back (logos)")
     draw(ax, meshes, (-90, 90))              # from below: the back face
     ax = fig.add_subplot(1, 3, 2, projection="3d"); ax.set_title("Clamp thread")
-    clip = m3.Manifold.cube([40, 30, 12]).translate([170, -5, 0])
+    clip = m3.Manifold.cube([40, 30 + LOOP_RAISE, 12]).translate([170, -5, 0])
     draw(ax, [(to_trimesh(parts[0].solid ^ clip ^
                           m3.Manifold.cube([40, 40, 6]).translate([170, -10, 0])),
                parts[0].rgb)], (35, -60))

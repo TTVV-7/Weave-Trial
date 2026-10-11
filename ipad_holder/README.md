@@ -22,6 +22,17 @@ The 5.2 mm hole through the left corner of the diamond loop is now an
 The wall there is about 4.3 mm, which gives roughly five turns of
 engagement. Tighten it by hand, not with a tool.
 
+## Clearance for the wings
+
+In the original, the clamp hole sat only 10.1 mm above the top of the frame.
+The wings reach 15 mm from the screw's centre, so turning it, they would hit
+the frame (and the iPad) for about 48° either side of straight down. The neck is now 8 mm
+longer (`LOOP_RAISE`), which lifts the loop and leaves about 3 mm of
+clearance all the way round. This was checked by turning the screw head
+through 360° against the model in 5° steps. The neck also now runs 1 mm into
+the frame wall. In the source file it only touched the frame, so it was a
+separate solid.
+
 ## The wing screw
 
 The thread is 15 mm long and the wings span 30 mm. Print it head down, with
