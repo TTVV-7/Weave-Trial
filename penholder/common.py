@@ -67,10 +67,13 @@ def write_3mf(parts, path, name):
       part, each as one volume spanning its own triangles.
     """
     lo = np.min([m.bounds[0] for _, _, m in parts], axis=0)
+    # parts of the same colour share a filament, numbered in order of first use
+    palette = list(dict.fromkeys(rgb for _, rgb, _ in parts))
+    fil = [palette.index(rgb) for _, rgb, _ in parts]
     objs, ids = [], []
     for i, (pname, rgb, m) in enumerate(parts):
         oid = i + 2
-        objs.append(f'<object id="{oid}" type="model" name="{_esc(pname)}" pid="1" pindex="{i}"><mesh><vertices>'
+        objs.append(f'<object id="{oid}" type="model" name="{_esc(pname)}" pid="1" pindex="{fil[i]}"><mesh><vertices>'
                     + "".join(f'<vertex x="{a:.4f}" y="{b:.4f}" z="{c:.4f}"/>' for a, b, c in m.vertices - lo)
                     + "</vertices><triangles>"
                     + "".join(f'<triangle v1="{a}" v2="{b}" v3="{c}"/>' for a, b, c in m.faces)
@@ -79,7 +82,7 @@ def write_3mf(parts, path, name):
     gid = len(parts) + 2
     objs.append(f'<object id="{gid}" type="model" name="{_esc(name)}"><components>'
                 + "".join(f'<component objectid="{i}"/>' for i in ids) + "</components></object>")
-    colours = "".join('<m:color color="#%02X%02X%02XFF"/>' % rgb for _, rgb, _ in parts)
+    colours = "".join('<m:color color="#%02X%02X%02XFF"/>' % rgb for rgb in palette)
     model = ('<?xml version="1.0" encoding="UTF-8"?>\n<model unit="millimeter" xml:lang="en-US" '
              'xmlns="http://schemas.microsoft.com/3dmanufacturing/core/2015/02" '
              f'xmlns:m="{_MATERIAL_NS}">'
@@ -87,7 +90,7 @@ def write_3mf(parts, path, name):
              f'<resources><m:colorgroup id="1">{colours}</m:colorgroup>{"".join(objs)}</resources>'
              f'<build><item objectid="{gid}" transform="1 0 0 0 1 0 0 0 1 20 20 0"/></build></model>')
 
-    # filament 1, 2, ... in the order the parts are listed, matching the colours
+    # filament 1, 2, ... in the order the colours first appear
     bambu = ['<?xml version="1.0" encoding="UTF-8"?>', "<config>", f'  <object id="{gid}">',
              f'    <metadata key="name" value="{_esc(name)}"/>', '    <metadata key="extruder" value="1"/>']
     prusa = ['<?xml version="1.0" encoding="UTF-8"?>', "<config>"]
@@ -95,15 +98,15 @@ def write_3mf(parts, path, name):
         bambu += [f'    <part id="{oid}" subtype="normal_part">',
                   f'      <metadata key="name" value="{_esc(pname)}"/>',
                   f'      <metadata key="matrix" value="{_IDENTITY}"/>',
-                  f'      <metadata key="extruder" value="{i + 1}"/>', "    </part>"]
+                  f'      <metadata key="extruder" value="{fil[i] + 1}"/>', "    </part>"]
         prusa += [f'  <object id="{oid}" instances_count="1">',
                   f'    <metadata type="object" key="name" value="{_esc(pname)}"/>',
-                  f'    <metadata type="object" key="extruder" value="{i + 1}"/>',
+                  f'    <metadata type="object" key="extruder" value="{fil[i] + 1}"/>',
                   f'    <volume firstid="0" lastid="{len(m.faces) - 1}">',
                   f'      <metadata type="volume" key="name" value="{_esc(pname)}"/>',
                   '      <metadata type="volume" key="volume_type" value="ModelPart"/>',
                   f'      <metadata type="volume" key="matrix" value="{_IDENTITY}"/>',
-                  f'      <metadata type="volume" key="extruder" value="{i + 1}"/>', "    </volume>", "  </object>"]
+                  f'      <metadata type="volume" key="extruder" value="{fil[i] + 1}"/>', "    </volume>", "  </object>"]
     bambu += ["  </object>", "</config>"]
     prusa += ["</config>"]
 
