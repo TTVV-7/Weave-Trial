@@ -1,0 +1,652 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Model Library</title>
+<style>
+  :root {
+    --bg: #f6f6f4;
+    --surface: #ffffff;
+    --surface-2: #efefec;
+    --border: #dcdcd7;
+    --text: #1d1d1b;
+    --muted: #6b6b66;
+    --accent: #2f6fd6;
+    --accent-text: #ffffff;
+    --stage: #e9e9e5;
+    --shadow: 0 1px 2px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.05);
+    --t-3mf: #2f6fd6; --t-stl: #c2571a; --t-step: #1f8a5b; --t-iges: #7a5bd1;
+    --t-obj: #b23a6b; --t-gltf: #0f8a9c; --t-ply: #8a6d12; --t-gcode: #5d6470;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #141413; --surface: #1d1d1c; --surface-2: #262624; --border: #343432;
+      --text: #ececE8; --muted: #9a9a94; --accent: #6ea0f2; --accent-text: #0e1420;
+      --stage: #222221; --shadow: none;
+      --t-3mf: #6ea0f2; --t-stl: #f0905a; --t-step: #4fc48f; --t-iges: #a891f0;
+      --t-obj: #e9799f; --t-gltf: #4cc3d3; --t-ply: #d8b64a; --t-gcode: #a3aab5;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #141413; --surface: #1d1d1c; --surface-2: #262624; --border: #343432;
+    --text: #ececE8; --muted: #9a9a94; --accent: #6ea0f2; --accent-text: #0e1420;
+    --stage: #222221; --shadow: none;
+    --t-3mf: #6ea0f2; --t-stl: #f0905a; --t-step: #4fc48f; --t-iges: #a891f0;
+    --t-obj: #e9799f; --t-gltf: #4cc3d3; --t-ply: #d8b64a; --t-gcode: #a3aab5;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--bg); color: var(--text);
+    font: 14px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  button, input, select { font: inherit; color: inherit; }
+  button { cursor: pointer; }
+  .wrap { max-width: 1280px; margin: 0 auto; padding: 0 16px; }
+
+  header { padding: 28px 0 8px; }
+  header .row { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  h1 { font-size: 22px; margin: 0; letter-spacing: -.01em; }
+  .sub { color: var(--muted); }
+
+  .toolbar {
+    position: sticky; top: 0; z-index: 5; background: var(--bg);
+    padding-top: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--border);
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .toolbar .line { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .search { flex: 1 1 260px; position: relative; }
+  .search input {
+    width: 100%; padding: 9px 12px 9px 34px; border-radius: 8px;
+    border: 1px solid var(--border); background: var(--surface); outline: none;
+  }
+  .search input:focus { border-color: var(--accent); }
+  .search svg { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--muted); }
+  select, .btn {
+    padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border);
+    background: var(--surface); white-space: nowrap;
+  }
+  a.btn { text-decoration: none; display: inline-block; }
+  .btn:hover { border-color: var(--muted); }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-text); }
+  .btn:disabled { opacity: .5; cursor: default; }
+  label.check { display: inline-flex; gap: 6px; align-items: center; color: var(--muted); user-select: none; }
+
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 5px 11px; border-radius: 999px; border: 1px solid var(--border);
+    background: var(--surface); color: var(--text);
+  }
+  .chip .n { color: var(--muted); font-variant-numeric: tabular-nums; }
+  .chip[aria-pressed="true"] { background: var(--text); color: var(--bg); border-color: var(--text); }
+  .chip[aria-pressed="true"] .n { color: inherit; opacity: .7; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--c, var(--muted)); }
+
+  main { padding: 16px 0 48px; }
+  section.group { margin-bottom: 28px; }
+  section.group h2 { font-size: 15px; margin: 4px 0 10px; display: flex; align-items: center; gap: 8px; }
+  section.group h2 .n { color: var(--muted); font-weight: 400; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; }
+
+  .card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    overflow: hidden; display: flex; flex-direction: column; box-shadow: var(--shadow);
+  }
+  .thumb {
+    aspect-ratio: 4 / 3; background: var(--stage); border: 0; padding: 0; width: 100%;
+    display: grid; place-items: center; position: relative; overflow: hidden;
+  }
+  .thumb img { width: 100%; height: 100%; object-fit: contain; display: block; }
+  .thumb .ph { color: var(--muted); font-size: 12px; }
+  .thumb:hover img { transform: scale(1.03); transition: transform .25s; }
+  .badge {
+    position: absolute; top: 8px; left: 8px; font-size: 11px; font-weight: 600;
+    padding: 2px 7px; border-radius: 5px; background: var(--c); color: #fff; letter-spacing: .02em;
+  }
+  .meta { padding: 10px 12px 12px; display: flex; flex-direction: column; gap: 2px; flex: 1; }
+  .meta .title { font-weight: 600; overflow-wrap: anywhere; text-transform: capitalize; }
+  .meta .path { color: var(--muted); font-size: 12px; overflow-wrap: anywhere; font-family: ui-monospace, Menlo, monospace; }
+  .meta .facts { color: var(--muted); font-size: 12px; margin-top: 2px; }
+  .actions { display: flex; gap: 6px; padding: 0 12px 12px; }
+  .actions .btn { flex: 1; text-align: center; text-decoration: none; padding: 7px 10px; }
+
+  .empty { text-align: center; color: var(--muted); padding: 64px 16px; border: 1px dashed var(--border); border-radius: 12px; }
+  .empty code { background: var(--surface-2); padding: 1px 5px; border-radius: 4px; }
+
+  /* viewer */
+  dialog {
+    width: min(1100px, calc(100vw - 32px)); height: min(760px, calc(100dvh - 32px));
+    padding: 0; border: 1px solid var(--border); border-radius: 14px;
+    background: var(--surface); color: var(--text); overflow: hidden;
+  }
+  dialog::backdrop { background: rgba(0,0,0,.55); }
+  .viewer { display: grid; grid-template-rows: auto 1fr auto; height: 100%; }
+  .vhead { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-bottom: 1px solid var(--border); }
+  .vhead .t { flex: 1; min-width: 0; }
+  .vhead .t b { display: block; text-transform: capitalize; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .vhead .t span { color: var(--muted); font-size: 12px; font-family: ui-monospace, Menlo, monospace; }
+  .stage { position: relative; background: var(--stage); min-height: 0; }
+  .stage canvas { display: block; width: 100%; height: 100%; touch-action: none; }
+  .stage .msg { position: absolute; inset: 0; display: grid; place-items: center; color: var(--muted); text-align: center; padding: 16px; pointer-events: none; }
+  .vfoot { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; padding: 10px 12px; border-top: 1px solid var(--border); }
+  .vfoot .stats { flex: 1 1 220px; color: var(--muted); font-size: 12px; font-variant-numeric: tabular-nums; }
+  .vfoot .btn[aria-pressed="true"] { background: var(--surface-2); border-color: var(--muted); }
+  .icon-btn { border: 0; background: transparent; padding: 6px; border-radius: 6px; color: var(--muted); }
+  .icon-btn:hover { background: var(--surface-2); color: var(--text); }
+
+  @media (max-width: 560px) {
+    header { padding-top: 18px; }
+    .grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+    .actions { flex-direction: column; }
+    dialog { width: 100vw; height: 100dvh; max-width: none; max-height: none; border-radius: 0; }
+  }
+</style>
+<script type="importmap">
+{ "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+</head>
+<body>
+<header class="wrap">
+  <div class="row">
+    <h1>Model Library</h1>
+    <span class="sub" id="summary">Loading…</span>
+  </div>
+</header>
+
+<div class="toolbar wrap">
+  <div class="line">
+    <div class="search">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="q" type="search" placeholder="Search by name, folder or file…  ( / )" autocomplete="off">
+    </div>
+    <select id="sort" aria-label="Sort">
+      <option value="name">Name A–Z</option>
+      <option value="newest">Newest</option>
+      <option value="size">Largest</option>
+      <option value="type">Type</option>
+    </select>
+    <label class="check"><input type="checkbox" id="group" checked> Group by type</label>
+    <button class="btn" id="zip" title="Download every model currently shown as one .zip">Download shown (.zip)</button>
+  </div>
+  <div class="chips" id="chips" role="group" aria-label="Filter by file type"></div>
+</div>
+
+<main class="wrap" id="main"></main>
+
+<dialog id="viewer">
+  <div class="viewer">
+    <div class="vhead">
+      <div class="t"><b id="v-title"></b><span id="v-path"></span></div>
+      <button class="icon-btn" id="v-prev" title="Previous (←)" aria-label="Previous model">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg></button>
+      <button class="icon-btn" id="v-next" title="Next (→)" aria-label="Next model">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg></button>
+      <button class="icon-btn" id="v-close" title="Close (Esc)" aria-label="Close viewer">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    </div>
+    <div class="stage" id="stage"><div class="msg" id="v-msg"></div></div>
+    <div class="vfoot">
+      <div class="stats" id="v-stats"></div>
+      <button class="btn" id="v-reset">Reset view</button>
+      <button class="btn" id="v-wire" aria-pressed="false">Wireframe</button>
+      <button class="btn" id="v-spin" aria-pressed="false">Auto-rotate</button>
+      <button class="btn" id="v-grid" aria-pressed="true">Grid</button>
+      <a class="btn primary" id="v-dl" download>Download</a>
+    </div>
+  </div>
+</dialog>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { STLLoader } from 'three/addons/loaders/STLLoader.js';
+import { ThreeMFLoader } from 'three/addons/loaders/3MFLoader.js';
+import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { PLYLoader } from 'three/addons/loaders/PLYLoader.js';
+import { GCodeLoader } from 'three/addons/loaders/GCodeLoader.js';
+import { zipSync } from 'three/addons/libs/fflate.module.js';
+
+const TYPE_ORDER = ['3MF', 'STEP', 'STL', 'IGES', 'OBJ', 'glTF', 'PLY', 'G-code'];
+const TYPE_VAR = { '3MF': '--t-3mf', STL: '--t-stl', STEP: '--t-step', IGES: '--t-iges',
+                   OBJ: '--t-obj', glTF: '--t-gltf', PLY: '--t-ply', 'G-code': '--t-gcode' };
+const REPO_ROOT = new URL('../', location.href);
+const fileURL = m => new URL(m.path, REPO_ROOT).href;
+
+const $ = s => document.querySelector(s);
+const state = { models: [], q: '', type: 'all', sort: 'name', group: true };
+
+/* ---------- formatting ---------- */
+const fmtSize = b => b < 1024 ? `${b} B` : b < 1048576 ? `${(b / 1024).toFixed(0)} KB` : `${(b / 1048576).toFixed(1)} MB`;
+const fmtDate = s => s ? new Date(s).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' }) : '';
+const fmtNum = n => n.toLocaleString();
+const typeColor = t => `var(${TYPE_VAR[t] || '--muted'})`;
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+/* ---------- loading models into three.js ---------- */
+const baseMaterial = () => new THREE.MeshStandardMaterial({ color: 0xb9bcc4, metalness: 0.05, roughness: 0.55 });
+const Z_UP = new Set(['3mf', 'stl', 'step', 'stp', 'iges', 'igs', 'ply']);
+
+let occtPromise = null;
+function loadOcct() {
+  if (!occtPromise) {
+    const base = 'https://cdn.jsdelivr.net/npm/occt-import-js@0.0.23/dist/';
+    occtPromise = new Promise((resolve, reject) => {
+      const s = document.createElement('script');
+      s.src = base + 'occt-import-js.js';
+      s.onload = () => window.occtimportjs({ locateFile: f => base + f }).then(resolve, reject);
+      s.onerror = () => reject(new Error('could not load the STEP/IGES reader'));
+      document.head.appendChild(s);
+    });
+  }
+  return occtPromise;
+}
+
+async function parseCAD(buf, ext) {
+  const occt = await loadOcct();
+  const bytes = new Uint8Array(buf);
+  const res = ext === 'iges' || ext === 'igs' ? occt.ReadIgesFile(bytes, null) : occt.ReadStepFile(bytes, null);
+  if (!res.success) throw new Error('the CAD file could not be read');
+  const group = new THREE.Group();
+  for (const m of res.meshes) {
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute(m.attributes.position.array, 3));
+    if (m.attributes.normal) g.setAttribute('normal', new THREE.Float32BufferAttribute(m.attributes.normal.array, 3));
+    if (m.index) g.setIndex(new THREE.Uint32BufferAttribute(Uint32Array.from(m.index.array), 1));
+    if (!m.attributes.normal) g.computeVertexNormals();
+    const mat = baseMaterial();
+    if (m.color) mat.color.setRGB(m.color[0], m.color[1], m.color[2]);
+    group.add(new THREE.Mesh(g, mat));
+  }
+  return group;
+}
+
+function meshFromGeometry(g) {
+  if (!g.attributes.normal) g.computeVertexNormals();
+  const mat = baseMaterial();
+  if (g.attributes.color) { mat.vertexColors = true; mat.color.set(0xffffff); }
+  return new THREE.Mesh(g, mat);
+}
+
+async function parseModel(m) {
+  const res = await fetch(fileURL(m));
+  if (!res.ok) throw new Error(`couldn't fetch the file (HTTP ${res.status})`);
+  const buf = await res.arrayBuffer();
+  const text = () => new TextDecoder().decode(buf);
+  let obj;
+  switch (m.ext) {
+    case 'stl': obj = meshFromGeometry(new STLLoader().parse(buf)); break;
+    case 'ply': obj = meshFromGeometry(new PLYLoader().parse(buf)); break;
+    case '3mf': obj = new ThreeMFLoader().parse(buf);
+      // Uncoloured 3MF parts come back plain white; give them the same grey as everything else.
+      obj.traverse(o => {
+        if (o.isMesh && !o.geometry.attributes.color && o.material.color?.getHex() === 0xffffff) o.material = baseMaterial();
+      }); break;
+    case 'obj': obj = new OBJLoader().parse(text());
+      obj.traverse(o => { if (o.isMesh) o.material = baseMaterial(); }); break;
+    case 'glb': case 'gltf': {
+      const base = fileURL(m).replace(/[^/]*$/, '');
+      obj = (await new GLTFLoader().parseAsync(m.ext === 'gltf' ? text() : buf, base)).scene; break;
+    }
+    case 'gcode': obj = new GCodeLoader().parse(text()); break;
+    case 'step': case 'stp': case 'iges': case 'igs': obj = await parseCAD(buf, m.ext); break;
+    default: throw new Error(`no viewer for .${m.ext} files`);
+  }
+  if (Z_UP.has(m.ext)) obj.rotation.x = -Math.PI / 2;
+
+  // Sit it on the floor, centred.
+  const root = new THREE.Group();
+  root.add(obj);
+  root.updateMatrixWorld(true);
+  const box = new THREE.Box3().setFromObject(root);
+  const c = box.getCenter(new THREE.Vector3());
+  obj.position.sub(new THREE.Vector3(c.x, box.min.y, c.z));
+  root.updateMatrixWorld(true);
+
+  let tris = 0;
+  root.traverse(o => {
+    if (o.isMesh && o.geometry) {
+      const g = o.geometry;
+      tris += (g.index ? g.index.count : g.attributes.position.count) / 3;
+    }
+  });
+  const size = box.getSize(new THREE.Vector3());
+  return { root, size, tris: Math.round(tris), isPath: m.ext === 'gcode' };
+}
+
+const cache = new Map();
+const getModel = m => {
+  if (!cache.has(m.path)) cache.set(m.path, parseModel(m).catch(e => { cache.delete(m.path); throw e; }));
+  return cache.get(m.path);
+};
+
+function lightScene(scene) {
+  scene.add(new THREE.HemisphereLight(0xffffff, 0x8a8a80, 1.6));
+  const key = new THREE.DirectionalLight(0xffffff, 2.2); key.position.set(1, 2, 1.4); scene.add(key);
+  const rim = new THREE.DirectionalLight(0xffffff, 0.8); rim.position.set(-1.5, 0.6, -1); scene.add(rim);
+}
+
+function frame(camera, controls, size, dir = new THREE.Vector3(1, 0.75, 1.25)) {
+  const radius = Math.max(size.length() / 2, 1e-3);
+  const dist = radius / Math.sin(THREE.MathUtils.degToRad(camera.fov / 2)) * 1.05;
+  const target = new THREE.Vector3(0, size.y / 2, 0);
+  camera.position.copy(target).add(dir.normalize().multiplyScalar(dist));
+  camera.near = dist / 100; camera.far = dist * 100; camera.updateProjectionMatrix();
+  camera.lookAt(target);
+  if (controls) { controls.target.copy(target); controls.update(); }
+}
+
+/* ---------- thumbnails (one shared offscreen renderer, one at a time) ---------- */
+const thumbs = new Map();
+let thumbRenderer = null;
+let thumbQueue = Promise.resolve();
+function renderThumb(m) {
+  if (thumbs.has(m.path)) return thumbs.get(m.path);
+  const p = (thumbQueue = thumbQueue.then(async () => {
+    const { root, size } = await getModel(m);
+    if (!thumbRenderer) {
+      thumbRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
+      thumbRenderer.setSize(480, 360, false);
+    }
+    const scene = new THREE.Scene(); lightScene(scene);
+    scene.add(root);
+    const cam = new THREE.PerspectiveCamera(35, 4 / 3);
+    frame(cam, null, size);
+    thumbRenderer.render(scene, cam);
+    scene.remove(root);
+    return thumbRenderer.domElement.toDataURL('image/png');
+  }));
+  thumbQueue = p.catch(() => {});
+  thumbs.set(m.path, p);
+  return p;
+}
+
+const io = new IntersectionObserver(entries => {
+  for (const e of entries) {
+    if (!e.isIntersecting) continue;
+    io.unobserve(e.target);
+    const m = state.models.find(x => x.path === e.target.dataset.path);
+    const slot = e.target.querySelector('.ph');
+    renderThumb(m).then(url => {
+      const img = new Image(); img.alt = ''; img.src = url; slot.replaceWith(img);
+    }, () => { slot.textContent = 'No preview'; });
+  }
+}, { rootMargin: '200px' });
+
+/* ---------- list ---------- */
+function filtered() {
+  const words = state.q.toLowerCase().split(/\s+/).filter(Boolean);
+  let list = state.models.filter(m => {
+    if (state.type !== 'all' && m.type !== state.type) return false;
+    const hay = `${m.name} ${m.file} ${m.path} ${m.type} ${m.ext}`.toLowerCase();
+    return words.every(w => hay.includes(w));
+  });
+  const by = {
+    name: (a, b) => a.name.localeCompare(b.name),
+    newest: (a, b) => (b.modified || '').localeCompare(a.modified || ''),
+    size: (a, b) => b.size - a.size,
+    type: (a, b) => TYPE_ORDER.indexOf(a.type) - TYPE_ORDER.indexOf(b.type) || a.name.localeCompare(b.name),
+  }[state.sort];
+  list.sort(by);
+  // Grouped, the page reads type by type; keep prev/next in that same order.
+  if (state.group) list.sort((a, b) => TYPE_ORDER.indexOf(a.type) - TYPE_ORDER.indexOf(b.type));
+  return list;
+}
+
+function renderChips() {
+  const counts = {};
+  for (const m of state.models) counts[m.type] = (counts[m.type] || 0) + 1;
+  const types = TYPE_ORDER.filter(t => counts[t]);
+  const chip = (val, label, n, color) =>
+    `<button class="chip" data-type="${esc(val)}" aria-pressed="${state.type === val}">
+       ${color ? `<span class="dot" style="--c:${color}"></span>` : ''}${esc(label)} <span class="n">${n}</span></button>`;
+  $('#chips').innerHTML = chip('all', 'All', state.models.length) +
+    types.map(t => chip(t, t, counts[t], typeColor(t))).join('');
+}
+
+function card(m) {
+  const dl = esc(fileURL(m));
+  return `<article class="card">
+    <button class="thumb" data-open="${esc(m.path)}" data-path="${esc(m.path)}" aria-label="View ${esc(m.name)} in 3D">
+      <span class="badge" style="--c:${typeColor(m.type)}">${esc(m.ext.toUpperCase())}</span>
+      <span class="ph">Rendering…</span>
+    </button>
+    <div class="meta">
+      <span class="title">${esc(m.name)}</span>
+      <span class="path">${esc(m.path)}</span>
+      <span class="facts">${fmtSize(m.size)}${m.modified ? ' · ' + fmtDate(m.modified) : ''}</span>
+    </div>
+    <div class="actions">
+      <button class="btn" data-open="${esc(m.path)}">View</button>
+      <a class="btn primary" href="${dl}" download="${esc(m.file)}">Download</a>
+    </div>
+  </article>`;
+}
+
+function render() {
+  const list = filtered();
+  const main = $('#main');
+  $('#zip').disabled = list.length === 0;
+  $('#zip').textContent = `Download shown (${list.length}) .zip`;
+  if (!state.models.length) {
+    main.innerHTML = `<div class="empty">No models found in the repo yet.<br>Add a .3mf, .step, .stl, .obj, .glb, .ply or .gcode file and run <code>python dashboard/build_index.py</code>.</div>`;
+    return;
+  }
+  if (!list.length) {
+    main.innerHTML = `<div class="empty">Nothing matches “${esc(state.q)}”${state.type !== 'all' ? ` in ${esc(state.type)}` : ''}.</div>`;
+    return;
+  }
+  if (state.group) {
+    const groups = TYPE_ORDER.map(t => [t, list.filter(m => m.type === t)]).filter(([, ms]) => ms.length);
+    main.innerHTML = groups.map(([t, ms]) => `<section class="group">
+      <h2><span class="dot" style="--c:${typeColor(t)}"></span>${esc(t)} <span class="n">${ms.length}</span></h2>
+      <div class="grid">${ms.map(card).join('')}</div></section>`).join('');
+  } else {
+    main.innerHTML = `<div class="grid">${list.map(card).join('')}</div>`;
+  }
+  main.querySelectorAll('.thumb').forEach(el => {
+    const m = state.models.find(x => x.path === el.dataset.path);
+    const slot = el.querySelector('.ph');
+    if (m.preview && !thumbs.has(m.path)) {
+      const img = new Image(); img.alt = ''; img.src = new URL(m.preview, REPO_ROOT).href;
+      img.onerror = () => { img.replaceWith(slot); io.observe(el); };
+      slot.replaceWith(img);
+    } else if (thumbs.has(m.path)) {
+      thumbs.get(m.path).then(url => { const img = new Image(); img.alt = ''; img.src = url; slot.replaceWith(img); },
+                              () => { slot.textContent = 'No preview'; });
+    } else io.observe(el);
+  });
+}
+
+function syncURL() {
+  const p = new URLSearchParams();
+  if (state.q) p.set('q', state.q);
+  if (state.type !== 'all') p.set('type', state.type);
+  if (state.sort !== 'name') p.set('sort', state.sort);
+  if (!state.group) p.set('group', '0');
+  history.replaceState(null, '', p.toString() ? `?${p}${location.hash}` : location.pathname + location.hash);
+}
+
+/* ---------- viewer ---------- */
+const dlg = $('#viewer');
+let vr = null; // { renderer, scene, camera, controls, grid, current }
+let current = null;
+
+function ensureViewer() {
+  if (vr) return vr;
+  const stage = $('#stage');
+  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  stage.prepend(renderer.domElement);
+  const scene = new THREE.Scene(); lightScene(scene);
+  const camera = new THREE.PerspectiveCamera(40, 1);
+  const controls = new OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true;
+  controls.autoRotateSpeed = 1.5;
+  vr = { renderer, scene, camera, controls, grid: null, holder: new THREE.Group(), size: new THREE.Vector3(1, 1, 1) };
+  scene.add(vr.holder);
+  const resize = () => {
+    const w = stage.clientWidth, h = stage.clientHeight;
+    if (!w || !h) return;
+    renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix();
+  };
+  new ResizeObserver(resize).observe(stage);
+  renderer.setAnimationLoop(() => { if (dlg.open) { controls.update(); renderer.render(scene, camera); } });
+  return vr;
+}
+
+async function openViewer(m) {
+  current = m;
+  const v = ensureViewer();
+  $('#v-title').textContent = m.name;
+  $('#v-path').textContent = m.path;
+  $('#v-dl').href = fileURL(m);
+  $('#v-dl').setAttribute('download', m.file);
+  $('#v-dl').textContent = `Download .${m.ext}`;
+  $('#v-stats').textContent = `${m.type} · ${fmtSize(m.size)}`;
+  $('#v-msg').textContent = m.ext === 'step' || m.ext === 'stp' || m.ext === 'iges' || m.ext === 'igs'
+    ? 'Loading… (first CAD file loads the STEP reader)' : 'Loading…';
+  v.holder.clear();
+  if (v.grid) { v.scene.remove(v.grid); v.grid = null; }
+  if (!dlg.open) dlg.showModal();
+  if (!location.hash.includes(encodeURIComponent(m.path))) history.replaceState(null, '', `#model=${encodeURIComponent(m.path)}`);
+
+  try {
+    const { root, size, tris, isPath } = await getModel(m);
+    if (current !== m) return;
+    v.holder.add(root);
+    v.size.copy(size);
+    applyWire();
+    const span = Math.max(size.x, size.z) * 1.6 || 10;
+    const step = Math.pow(10, Math.floor(Math.log10(span / 4)));
+    v.grid = new THREE.GridHelper(Math.ceil(span / step) * step, Math.ceil(span / step), 0x888888, 0x888888);
+    v.grid.material.opacity = 0.25; v.grid.material.transparent = true;
+    v.grid.visible = $('#v-grid').getAttribute('aria-pressed') === 'true';
+    v.scene.add(v.grid);
+    frame(v.camera, v.controls, size);
+    $('#v-msg').textContent = '';
+    const dims = `${size.x.toFixed(1)} × ${size.z.toFixed(1)} × ${size.y.toFixed(1)}`;
+    $('#v-stats').textContent = `${m.type} · ${fmtSize(m.size)} · ${dims} (W×D×H, file units)` +
+      (isPath ? '' : ` · ${fmtNum(tris)} triangles`);
+  } catch (e) {
+    if (current === m) $('#v-msg').textContent = `Couldn't display this file: ${e.message}. You can still download it.`;
+  }
+}
+
+function applyWire() {
+  const on = $('#v-wire').getAttribute('aria-pressed') === 'true';
+  vr?.holder.traverse(o => { if (o.isMesh) [].concat(o.material).forEach(mt => { mt.wireframe = on; }); });
+}
+const toggle = (btn, fn) => btn.addEventListener('click', () => {
+  const on = btn.getAttribute('aria-pressed') !== 'true';
+  btn.setAttribute('aria-pressed', on); fn(on);
+});
+toggle($('#v-wire'), applyWire);
+toggle($('#v-spin'), on => { if (vr) vr.controls.autoRotate = on; });
+toggle($('#v-grid'), on => { if (vr?.grid) vr.grid.visible = on; });
+$('#v-reset').addEventListener('click', () => vr && frame(vr.camera, vr.controls, vr.size));
+$('#v-close').addEventListener('click', () => dlg.close());
+dlg.addEventListener('close', () => {
+  current = null;
+  history.replaceState(null, '', location.pathname + location.search);
+});
+dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
+
+function step(d) {
+  const list = filtered();
+  if (!current || !list.length) return;
+  const i = list.findIndex(m => m.path === current.path);
+  openViewer(list[(i + d + list.length) % list.length]);
+}
+$('#v-prev').addEventListener('click', () => step(-1));
+$('#v-next').addEventListener('click', () => step(1));
+
+/* ---------- zip of the current view ---------- */
+$('#zip').addEventListener('click', async () => {
+  const list = filtered();
+  const btn = $('#zip');
+  btn.disabled = true;
+  try {
+    const files = {};
+    let i = 0;
+    for (const m of list) {
+      btn.textContent = `Zipping ${++i}/${list.length}…`;
+      const r = await fetch(fileURL(m));
+      if (!r.ok) throw new Error(`${m.path}: HTTP ${r.status}`);
+      files[m.path] = new Uint8Array(await r.arrayBuffer());
+    }
+    const blob = new Blob([zipSync(files, { level: 6 })], { type: 'application/zip' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = state.type === 'all' ? 'models.zip' : `models-${state.type.toLowerCase()}.zip`;
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 10000);
+  } catch (e) {
+    alert(`Couldn't build the zip: ${e.message}`);
+  } finally {
+    render();
+  }
+});
+
+/* ---------- wiring ---------- */
+$('#q').addEventListener('input', e => { state.q = e.target.value.trim(); render(); syncURL(); });
+$('#sort').addEventListener('change', e => { state.sort = e.target.value; render(); syncURL(); });
+$('#group').addEventListener('change', e => { state.group = e.target.checked; render(); syncURL(); });
+$('#chips').addEventListener('click', e => {
+  const b = e.target.closest('.chip'); if (!b) return;
+  state.type = b.dataset.type; renderChips(); render(); syncURL();
+});
+$('#main').addEventListener('click', e => {
+  const b = e.target.closest('[data-open]'); if (!b) return;
+  openViewer(state.models.find(m => m.path === b.dataset.open));
+});
+document.addEventListener('keydown', e => {
+  if (dlg.open) {
+    if (e.key === 'ArrowLeft') step(-1);
+    if (e.key === 'ArrowRight') step(1);
+    return;
+  }
+  if (e.key === '/' && document.activeElement !== $('#q')) { e.preventDefault(); $('#q').focus(); }
+});
+
+async function init() {
+  const p = new URLSearchParams(location.search);
+  state.q = p.get('q') || ''; state.type = p.get('type') || 'all';
+  state.sort = p.get('sort') || 'name'; state.group = p.get('group') !== '0';
+  $('#q').value = state.q; $('#sort').value = state.sort; $('#group').checked = state.group;
+
+  try {
+    const r = await fetch('models.json', { cache: 'no-store' });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const data = await r.json();
+    state.models = data.models;
+    const types = new Set(state.models.map(m => m.type));
+    const total = state.models.reduce((s, m) => s + m.size, 0);
+    $('#summary').textContent = `${state.models.length} model${state.models.length === 1 ? '' : 's'} · ` +
+      `${types.size} type${types.size === 1 ? '' : 's'} · ${fmtSize(total)}`;
+  } catch (e) {
+    $('#summary').textContent = '';
+    $('#main').innerHTML = `<div class="empty">Couldn't load <code>models.json</code> (${esc(e.message)}).<br>
+      Serve the repo rather than opening the file directly: <code>python dashboard/serve.py</code></div>`;
+    return;
+  }
+  if (state.type !== 'all' && !state.models.some(m => m.type === state.type)) state.type = 'all';
+  renderChips(); render();
+
+  const hash = new URLSearchParams(location.hash.slice(1)).get('model');
+  const m = hash && state.models.find(x => x.path === hash);
+  if (m) openViewer(m);
+}
+init();
+</script>
+</body>
+</html>

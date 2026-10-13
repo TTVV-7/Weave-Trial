@@ -287,3 +287,19 @@ printer profile had to be right for both.
 ```bash
 python -m pytest tests -q
 ```
+
+---
+
+# Model dashboard
+
+A browser dashboard of every 3D model in the repo: search, filter by type
+(3MF, STEP, STL, IGES, OBJ, glTF, PLY, G-code), spin each one in 3D, and
+download it singly or everything shown as a zip.
+
+```bash
+python dashboard/serve.py        # then open http://localhost:8000/dashboard/
+```
+
+It re-indexes the repo on start; after adding a model without restarting, run
+`python dashboard/build_index.py` and refresh. The viewer loads three.js (and,
+for STEP/IGES, occt-import-js) from a CDN, so it needs internet access.
