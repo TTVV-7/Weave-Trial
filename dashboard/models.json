@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-13T14:22:42+00:00",
+  "generated": "2026-10-13T16:05:44+00:00",
   "models": [
     {
       "name": "ipad holder",
@@ -9,7 +9,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 683034,
-      "modified": "2026-10-13T14:06:30+00:00",
+      "modified": "2026-10-13T14:22:43+00:00",
       "preview": null
     },
     {
@@ -20,7 +20,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 30799,
-      "modified": "2026-10-13T14:06:30+00:00",
+      "modified": "2026-10-13T14:22:43+00:00",
       "preview": null
     },
     {
@@ -31,7 +31,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 477956,
-      "modified": "2026-10-13T14:06:30+00:00",
+      "modified": "2026-10-13T14:22:43+00:00",
       "preview": null
     },
     {
@@ -42,7 +42,7 @@
       "ext": "stl",
       "type": "STL",
       "size": 2720484,
-      "modified": "2026-10-13T14:06:30+00:00",
+      "modified": "2026-10-13T14:22:43+00:00",
       "preview": null
     },
     {
@@ -53,7 +53,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 18673,
-      "modified": "2026-10-13T14:06:30+00:00",
+      "modified": "2026-10-13T14:22:43+00:00",
       "preview": "keyholders/bucket.png"
     },
     {
@@ -64,7 +64,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 15484,
-      "modified": "2026-10-13T14:06:30+00:00",
+      "modified": "2026-10-13T14:22:43+00:00",
       "preview": "keyholders/forks.png"
     },
     {
@@ -75,7 +75,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 5355015,
-      "modified": "2026-10-13T14:06:30+00:00",
+      "modified": "2026-10-13T14:22:43+00:00",
       "preview": null
     },
     {
@@ -86,7 +86,7 @@
       "ext": "stl",
       "type": "STL",
       "size": 3084,
-      "modified": "2026-10-13T14:06:30+00:00",
+      "modified": "2026-10-13T14:22:43+00:00",
       "preview": null
     },
     {
@@ -97,7 +97,7 @@
       "ext": "stl",
       "type": "STL",
       "size": 87684,
-      "modified": "2026-10-13T14:06:30+00:00",
+      "modified": "2026-10-13T14:22:43+00:00",
       "preview": null
     },
     {
@@ -108,7 +108,7 @@
       "ext": "stl",
       "type": "STL",
       "size": 288084,
-      "modified": "2026-10-13T14:06:30+00:00",
+      "modified": "2026-10-13T14:22:43+00:00",
       "preview": null
     },
     {
@@ -119,7 +119,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 30158832,
-      "modified": "2026-10-13T14:06:30+00:00",
+      "modified": "2026-10-13T14:22:43+00:00",
       "preview": "output/Industrial_Factory_3color_preview.png"
     },
     {
@@ -130,7 +130,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 29971909,
-      "modified": "2026-10-13T14:06:31+00:00",
+      "modified": "2026-10-13T14:22:43+00:00",
       "preview": "output/Industrial_Factory_GLB_colors_preview.png"
     },
     {
@@ -141,7 +141,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 30045568,
-      "modified": "2026-10-13T14:06:32+00:00",
+      "modified": "2026-10-13T14:22:43+00:00",
       "preview": "output/Industrial_Factory_blue_orange_black_preview.png"
     },
     {
@@ -152,7 +152,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 118345,
-      "modified": "2026-10-13T14:06:32+00:00",
+      "modified": "2026-10-13T14:22:43+00:00",
       "preview": null
     },
     {
@@ -163,8 +163,85 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 77097,
-      "modified": "2026-10-13T14:06:32+00:00",
+      "modified": "2026-10-13T14:22:43+00:00",
       "preview": null
+    },
+    {
+      "name": "hybrid assembly",
+      "file": "hybrid_assembly.3mf",
+      "path": "phonecases/iphone-15-pro/hybrid_assembly.3mf",
+      "folder": "phonecases/iphone-15-pro",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 192737,
+      "modified": "2026-10-13T16:02:46+00:00",
+      "preview": "phonecases/iphone-15-pro/hybrid_assembly_preview.png"
+    },
+    {
+      "name": "hybrid petg plate",
+      "file": "hybrid_petg_plate.stl",
+      "path": "phonecases/iphone-15-pro/hybrid_petg_plate.stl",
+      "folder": "phonecases/iphone-15-pro",
+      "ext": "stl",
+      "type": "STL",
+      "size": 78484,
+      "modified": "2026-10-13T16:02:46+00:00",
+      "preview": null
+    },
+    {
+      "name": "hybrid petg plate gradient",
+      "file": "hybrid_petg_plate_gradient.3mf",
+      "path": "phonecases/iphone-15-pro/hybrid_petg_plate_gradient.3mf",
+      "folder": "phonecases/iphone-15-pro",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 154777,
+      "modified": "2026-10-13T16:02:46+00:00",
+      "preview": "phonecases/iphone-15-pro/hybrid_petg_plate_gradient_preview.png"
+    },
+    {
+      "name": "hybrid tpu frame",
+      "file": "hybrid_tpu_frame.3mf",
+      "path": "phonecases/iphone-15-pro/hybrid_tpu_frame.3mf",
+      "folder": "phonecases/iphone-15-pro",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 38990,
+      "modified": "2026-10-13T16:02:46+00:00",
+      "preview": "phonecases/iphone-15-pro/hybrid_tpu_frame_preview.png"
+    },
+    {
+      "name": "hybrid tpu frame",
+      "file": "hybrid_tpu_frame.stl",
+      "path": "phonecases/iphone-15-pro/hybrid_tpu_frame.stl",
+      "folder": "phonecases/iphone-15-pro",
+      "ext": "stl",
+      "type": "STL",
+      "size": 209184,
+      "modified": "2026-10-13T16:02:46+00:00",
+      "preview": "phonecases/iphone-15-pro/hybrid_tpu_frame_preview.png"
+    },
+    {
+      "name": "tpu case",
+      "file": "tpu_case.3mf",
+      "path": "phonecases/iphone-15-pro/tpu_case.3mf",
+      "folder": "phonecases/iphone-15-pro",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 22777,
+      "modified": "2026-10-13T16:02:46+00:00",
+      "preview": "phonecases/iphone-15-pro/tpu_case_preview.png"
+    },
+    {
+      "name": "tpu case",
+      "file": "tpu_case.stl",
+      "path": "phonecases/iphone-15-pro/tpu_case.stl",
+      "folder": "phonecases/iphone-15-pro",
+      "ext": "stl",
+      "type": "STL",
+      "size": 126484,
+      "modified": "2026-10-13T16:02:46+00:00",
+      "preview": "phonecases/iphone-15-pro/tpu_case_preview.png"
     },
     {
       "name": "honda pilot 2006 1 43",
@@ -185,7 +262,7 @@
       "ext": "glb",
       "type": "glTF",
       "size": 3420648,
-      "modified": "2026-10-13T14:06:32+00:00",
+      "modified": "2026-10-13T14:22:43+00:00",
       "preview": "railbridge/Dumper_Access_preview.png"
     },
     {
@@ -196,7 +273,7 @@
       "ext": "glb",
       "type": "glTF",
       "size": 4511456,
-      "modified": "2026-10-13T14:06:32+00:00",
+      "modified": "2026-10-13T14:22:43+00:00",
       "preview": "railbridge/Rail_Footbridge_preview.png"
     },
     {
@@ -207,7 +284,7 @@
       "ext": "step",
       "type": "STEP",
       "size": 973999,
-      "modified": "2026-10-13T14:06:32+00:00",
+      "modified": "2026-10-13T14:22:43+00:00",
       "preview": null
     },
     {
@@ -218,7 +295,7 @@
       "ext": "step",
       "type": "STEP",
       "size": 972406,
-      "modified": "2026-10-13T14:06:32+00:00",
+      "modified": "2026-10-13T14:22:43+00:00",
       "preview": null
     },
     {
@@ -229,7 +306,7 @@
       "ext": "step",
       "type": "STEP",
       "size": 974252,
-      "modified": "2026-10-13T14:06:32+00:00",
+      "modified": "2026-10-13T14:22:43+00:00",
       "preview": null
     },
     {
@@ -240,7 +317,7 @@
       "ext": "step",
       "type": "STEP",
       "size": 961007,
-      "modified": "2026-10-13T14:06:32+00:00",
+      "modified": "2026-10-13T14:22:43+00:00",
       "preview": null
     }
   ]
