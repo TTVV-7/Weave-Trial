@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-13T16:05:44+00:00",
+  "generated": "2026-10-13T16:52:22+00:00",
   "models": [
     {
       "name": "ipad holder",
@@ -174,7 +174,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 192737,
-      "modified": "2026-10-13T16:02:46+00:00",
+      "modified": "2026-10-13T16:05:44+00:00",
       "preview": "phonecases/iphone-15-pro/hybrid_assembly_preview.png"
     },
     {
@@ -185,7 +185,7 @@
       "ext": "stl",
       "type": "STL",
       "size": 78484,
-      "modified": "2026-10-13T16:02:46+00:00",
+      "modified": "2026-10-13T16:05:44+00:00",
       "preview": null
     },
     {
@@ -196,7 +196,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 154777,
-      "modified": "2026-10-13T16:02:46+00:00",
+      "modified": "2026-10-13T16:05:44+00:00",
       "preview": "phonecases/iphone-15-pro/hybrid_petg_plate_gradient_preview.png"
     },
     {
@@ -207,7 +207,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 38990,
-      "modified": "2026-10-13T16:02:46+00:00",
+      "modified": "2026-10-13T16:05:44+00:00",
       "preview": "phonecases/iphone-15-pro/hybrid_tpu_frame_preview.png"
     },
     {
@@ -218,8 +218,30 @@
       "ext": "stl",
       "type": "STL",
       "size": 209184,
-      "modified": "2026-10-13T16:02:46+00:00",
+      "modified": "2026-10-13T16:05:44+00:00",
       "preview": "phonecases/iphone-15-pro/hybrid_tpu_frame_preview.png"
+    },
+    {
+      "name": "onepiece hybrid tpu petg",
+      "file": "onepiece_hybrid_tpu_petg.3mf",
+      "path": "phonecases/iphone-15-pro/onepiece_hybrid_tpu_petg.3mf",
+      "folder": "phonecases/iphone-15-pro",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 51765,
+      "modified": "2026-10-13T16:51:04+00:00",
+      "preview": "phonecases/iphone-15-pro/onepiece_hybrid_tpu_petg_preview.png"
+    },
+    {
+      "name": "onepiece hybrid tpu petg gradient",
+      "file": "onepiece_hybrid_tpu_petg_gradient.3mf",
+      "path": "phonecases/iphone-15-pro/onepiece_hybrid_tpu_petg_gradient.3mf",
+      "folder": "phonecases/iphone-15-pro",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 174723,
+      "modified": "2026-10-13T16:51:04+00:00",
+      "preview": "phonecases/iphone-15-pro/onepiece_hybrid_tpu_petg_gradient_preview.png"
     },
     {
       "name": "tpu case",
@@ -229,7 +251,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 22777,
-      "modified": "2026-10-13T16:02:46+00:00",
+      "modified": "2026-10-13T16:05:44+00:00",
       "preview": "phonecases/iphone-15-pro/tpu_case_preview.png"
     },
     {
@@ -240,7 +262,7 @@
       "ext": "stl",
       "type": "STL",
       "size": 126484,
-      "modified": "2026-10-13T16:02:46+00:00",
+      "modified": "2026-10-13T16:05:44+00:00",
       "preview": "phonecases/iphone-15-pro/tpu_case_preview.png"
     },
     {

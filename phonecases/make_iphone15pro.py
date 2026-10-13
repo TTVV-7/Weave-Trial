@@ -24,6 +24,17 @@ Two cases:
 
 TPU and PETG are printed separately (no AMS for TPU), so each part is its
 own file. ``hybrid_assembly.3mf`` is the two together, in place, to look at.
+
+And one for a **tool changer** (Snapmaker U1, Prusa XL, H2D...), where TPU and
+PETG go in the same print, each from its own toolhead:
+
+* **One-print hybrid** -- the same bumper and back, printed fused rather than
+  dropped in. The PETG back fills the window flush with the TPU rim, then
+  spreads out over the whole cavity floor as a flange above the rim. That is
+  a lap joint: the TPU rim is trapped between the bed side and the PETG
+  flange, so the two are held mechanically as well as by the bond, and the
+  flange's edge also bonds to the inside of the TPU wall. With the gradient
+  it is three toolheads (TPU, PETG A, PETG B); the plain one is two.
 """
 
 from __future__ import annotations
@@ -56,6 +67,7 @@ PLATE_T = 1.2          # PETG plate thickness (6 layers)
 PLATE_GAP = 0.2        # plate to pocket, each side
 LEDGE = 5.0            # frame ledge the plate sits on, around the window
 CAMERA_MARGIN = 0.6    # plate's camera hole is this much bigger all round
+FLANGE = 0.8           # one-print hybrid: PETG over the TPU rim (4 layers)
 
 COLOURS = {
     "tpu": (0x2B, 0x2F, 0x36),      # graphite TPU
@@ -144,6 +156,30 @@ def hybrid():
     return spec, frame, outline, plate
 
 
+def one_print():
+    """The fused hybrid: the case split into a TPU body and a PETG back.
+
+    One case with a back of ``back + flange``; the PETG is the window (from
+    the outside face up through the TPU rim) plus a flange over the whole
+    cavity floor. Taking the TPU as the case minus that means the parts tile
+    the case exactly -- no gaps, no overlaps -- which is what a slicer wants
+    from a multi-material part.
+    """
+    rim = TPU_FIT["back_thickness"]
+    spec = case(PHONE, **{**TPU_FIT, "back_thickness": rim + FLANGE})
+    whole = build_solid(spec) - grip_ribs(spec)
+    window = rrect(spec.inner_w / 2 - LEDGE, spec.inner_l / 2 - LEDGE,
+                   max(1.0, spec.inner_r - LEDGE))
+    floor = rrect(spec.inner_w / 2, spec.inner_l / 2, spec.inner_r)
+    region = slab(window, -1.0, rim + 0.01) + slab(floor, rim, spec.back_thickness)
+    petg = whole ^ region
+    tpu = whole - region
+    # The PETG's outline, for the gradient: the window, less the camera hole.
+    cam = camera(spec)
+    face = window - rrect(cam.w / 2, cam.h / 2, cam.r, cam.u, cam.v)
+    return spec, tpu, petg, face
+
+
 def dither(outline: mf.CrossSection, *, pitch=2.4, angle=35.0, min_w=0.45,
            depth=0.44) -> mf.Manifold:
     """Colour B's stripes for the plate's face: a line-dither gradient.
@@ -223,6 +259,23 @@ def main() -> int:
          Part("petg blue", 1, COLOURS["petg_a"], seat(body)),
          Part("petg orange", 2, COLOURS["petg_b"], seat(inlay))],
         origin=origin, name="hybrid assembly (view only)"))
+
+    # One print on a tool changer.
+    ospec, otpu, opetg, face = one_print()
+    stripes = dither(face) ^ opetg
+    obody = opetg - stripes
+    print(f"One-print hybrid: {ospec.outer_w:.1f} x {ospec.outer_l:.1f} x {ospec.height:.1f} mm, "
+          f"~{grams(otpu, 1.21):.0f} g TPU + ~{grams(opetg, 1.27):.0f} g PETG")
+    oorigin = (ospec.outer_w / 2, ospec.outer_l / 2)
+    write("onepiece_hybrid_tpu_petg.3mf", parts_to_3mf(
+        [Part("TPU", 1, COLOURS["tpu"], otpu),
+         Part("PETG", 2, COLOURS["petg_a"], opetg)],
+        origin=oorigin, name="iPhone 15 Pro one-print hybrid"))
+    write("onepiece_hybrid_tpu_petg_gradient.3mf", parts_to_3mf(
+        [Part("TPU", 1, COLOURS["tpu"], otpu),
+         Part("PETG blue", 2, COLOURS["petg_a"], obody),
+         Part("PETG orange", 3, COLOURS["petg_b"], stripes)],
+        origin=oorigin, name="iPhone 15 Pro one-print hybrid, gradient"))
     return 0
 
 

@@ -16,6 +16,8 @@ the top of `make_iphone15pro.py`.
 | `hybrid_petg_plate_gradient.3mf` | PETG, 2 colours (AMS) | Back plate with a line-dither gradient, ~13 g |
 | `hybrid_petg_plate.stl` | PETG, 1 colour | The same plate, plain |
 | `hybrid_assembly.3mf` | — | Frame and plate together, to look at only |
+| `onepiece_hybrid_tpu_petg.3mf` | TPU + PETG, **one print** | Tool changer (Snapmaker U1 etc.), 2 toolheads, ~12 g TPU + ~20 g PETG |
+| `onepiece_hybrid_tpu_petg_gradient.3mf` | TPU + 2 PETG, **one print** | The same with the gradient back, 3 toolheads |
 
 ## The designs
 
@@ -37,7 +39,40 @@ bottom to nearly the full pitch at the camera end. From arm's length it reads
 as a blend from one colour into the other. The stripes are the first two
 layers, the face against the bed, so they are on the smooth side.
 
-## Printing
+**One-print hybrid (tool changers).** The same bumper and back, printed
+fused instead of dropped in. The PETG back fills the window flush with the TPU
+rim, then spreads over the whole cavity floor as a 0.8 mm flange above the
+rim. That is a lap joint: the TPU rim is trapped under the PETG flange, so the
+two are held mechanically and not only by the bond. The flange's edge also
+bonds to the inside of the TPU wall. The parts tile the case exactly, with no
+gaps and no overlaps, which is what a slicer wants from a multi-material
+object.
+
+## Snapmaker U1 (one print)
+
+1. Open `onepiece_hybrid_tpu_petg.3mf` (or `_gradient`) in Snapmaker Orca. It
+   loads as one object with two (or three) parts, named `T1 TPU`, `T2 PETG`
+   and so on.
+2. Assign each part to the toolhead loaded with that filament: TPU 95A on
+   one, PETG on another (and the second PETG colour on a third for the
+   gradient).
+3. Use the slicer's own TPU 95A and PETG filament profiles. Orca slows each
+   part to its filament's volumetric limit, so the TPU runs slowly and the
+   PETG doesn't.
+4. **Bed:** textured PEI at about 70 °C is a fair compromise. That's warm for
+   TPU and on the cool side for PETG, and both stick.
+5. If your Orca version has **interlocking** under the multimaterial settings
+   ("Use beam interlocking"), turn it on. It weaves the two materials together
+   where they meet and makes the bond much stronger.
+6. Print back face down with no supports. Every layer from the first has both
+   materials in it, so expect a toolhead swap on most layers. With no purge
+   on the U1, that costs time, not filament.
+
+TPU and PETG bond reasonably well to each other, and the lap joint does the
+rest. Still, check the first print by flexing the bumper away from the back
+at a corner before you trust it on a phone.
+
+## Printing separately
 
 Everything prints **back face down**. No supports are needed: the lip
 leans in at 36°.
