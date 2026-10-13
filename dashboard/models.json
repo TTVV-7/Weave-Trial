@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-13T16:52:22+00:00",
+  "generated": "2026-10-13T17:14:57+00:00",
   "models": [
     {
       "name": "ipad holder",
@@ -174,7 +174,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 192737,
-      "modified": "2026-10-13T16:05:44+00:00",
+      "modified": "2026-10-13T16:52:22+00:00",
       "preview": "phonecases/iphone-15-pro/hybrid_assembly_preview.png"
     },
     {
@@ -196,7 +196,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 154777,
-      "modified": "2026-10-13T16:05:44+00:00",
+      "modified": "2026-10-13T16:52:22+00:00",
       "preview": "phonecases/iphone-15-pro/hybrid_petg_plate_gradient_preview.png"
     },
     {
@@ -207,7 +207,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 38990,
-      "modified": "2026-10-13T16:05:44+00:00",
+      "modified": "2026-10-13T16:52:22+00:00",
       "preview": "phonecases/iphone-15-pro/hybrid_tpu_frame_preview.png"
     },
     {
@@ -229,8 +229,19 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 51765,
-      "modified": "2026-10-13T16:51:04+00:00",
+      "modified": "2026-10-13T16:52:22+00:00",
       "preview": "phonecases/iphone-15-pro/onepiece_hybrid_tpu_petg_preview.png"
+    },
+    {
+      "name": "onepiece hybrid tpu petg covered buttons",
+      "file": "onepiece_hybrid_tpu_petg_covered_buttons.3mf",
+      "path": "phonecases/iphone-15-pro/onepiece_hybrid_tpu_petg_covered_buttons.3mf",
+      "folder": "phonecases/iphone-15-pro",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 133266,
+      "modified": "2026-10-13T17:13:19+00:00",
+      "preview": "phonecases/iphone-15-pro/onepiece_hybrid_tpu_petg_covered_buttons_preview.png"
     },
     {
       "name": "onepiece hybrid tpu petg gradient",
@@ -240,7 +251,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 174723,
-      "modified": "2026-10-13T16:51:04+00:00",
+      "modified": "2026-10-13T16:52:22+00:00",
       "preview": "phonecases/iphone-15-pro/onepiece_hybrid_tpu_petg_gradient_preview.png"
     },
     {
@@ -251,7 +262,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 22777,
-      "modified": "2026-10-13T16:05:44+00:00",
+      "modified": "2026-10-13T16:52:22+00:00",
       "preview": "phonecases/iphone-15-pro/tpu_case_preview.png"
     },
     {
@@ -264,6 +275,39 @@
       "size": 126484,
       "modified": "2026-10-13T16:05:44+00:00",
       "preview": "phonecases/iphone-15-pro/tpu_case_preview.png"
+    },
+    {
+      "name": "tpu case covered buttons",
+      "file": "tpu_case_covered_buttons.3mf",
+      "path": "phonecases/iphone-15-pro/tpu_case_covered_buttons.3mf",
+      "folder": "phonecases/iphone-15-pro",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 103258,
+      "modified": "2026-10-13T17:13:19+00:00",
+      "preview": "phonecases/iphone-15-pro/tpu_case_covered_buttons_preview.png"
+    },
+    {
+      "name": "tpu case covered buttons",
+      "file": "tpu_case_covered_buttons.stl",
+      "path": "phonecases/iphone-15-pro/tpu_case_covered_buttons.stl",
+      "folder": "phonecases/iphone-15-pro",
+      "ext": "stl",
+      "type": "STL",
+      "size": 564084,
+      "modified": "2026-10-13T17:13:19+00:00",
+      "preview": "phonecases/iphone-15-pro/tpu_case_covered_buttons_preview.png"
+    },
+    {
+      "name": "tpu case covered buttons TEST top half",
+      "file": "tpu_case_covered_buttons_TEST_top_half.stl",
+      "path": "phonecases/iphone-15-pro/tpu_case_covered_buttons_TEST_top_half.stl",
+      "folder": "phonecases/iphone-15-pro",
+      "ext": "stl",
+      "type": "STL",
+      "size": 501584,
+      "modified": "2026-10-13T17:13:19+00:00",
+      "preview": "phonecases/iphone-15-pro/tpu_case_covered_buttons_TEST_top_half_preview.png"
     },
     {
       "name": "honda pilot 2006 1 43",

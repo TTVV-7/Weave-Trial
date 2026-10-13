@@ -18,6 +18,9 @@ the top of `make_iphone15pro.py`.
 | `hybrid_assembly.3mf` | — | Frame and plate together, to look at only |
 | `onepiece_hybrid_tpu_petg.3mf` | TPU + PETG, **one print** | Tool changer (Snapmaker U1 etc.), 2 toolheads, ~12 g TPU + ~20 g PETG |
 | `onepiece_hybrid_tpu_petg_gradient.3mf` | TPU + 2 PETG, **one print** | The same with the gradient back, 3 toolheads |
+| `tpu_case_covered_buttons.stl` / `.3mf` | TPU 95A | TPU case with the side buttons covered |
+| `onepiece_hybrid_tpu_petg_covered_buttons.3mf` | TPU + PETG, **one print** | One-print hybrid with covered buttons |
+| `tpu_case_covered_buttons_TEST_top_half.stl` | TPU 95A | **Print this first**: top half only, all four buttons and the camera |
 
 ## The designs
 
@@ -47,6 +50,25 @@ two are held mechanically and not only by the bond. The flange's edge also
 bonds to the inside of the TPU wall. The parts tile the case exactly, with no
 gaps and no overlaps, which is what a slicer wants from a multi-material
 object.
+
+**Covered buttons (TPU).** Instead of holes, the TPU wall over the power,
+volume and action buttons is thinned from the inside to a 0.9 mm skin you
+press through. A small nub on the inside of each skin sits 0.1 mm off the
+button, and a 0.5 mm ridge outside lets you find it without looking. The
+buttons stay covered, so they're protected from dust and drops.
+
+The catch is that the nub has to land on the button, and the button
+positions are estimates. That's what the top-half test is for: it clips
+onto the top of the phone and has every button and the camera in it. Press
+each button through it before printing a whole case.
+
+- **Mushy, or nothing happens:** the nub is too far off. Raise `BUTTON_PROUD`
+  (0.5 mm, an estimate of how far the buttons stand off the phone) by 0.1–0.2.
+- **Button held down, or the phone reacts as you put the case on:** lower it.
+- **Too stiff:** lower `SKIN` (0.9 mm). 0.7 is about as thin as is worth
+  printing at 0.4 mm.
+- **Nub beside the button:** the position is off. Pass measured button
+  positions to the generator (see [docs/phone-case.md](../docs/phone-case.md)).
 
 ## Snapmaker U1 (one print)
 

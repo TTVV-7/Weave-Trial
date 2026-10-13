@@ -69,6 +69,15 @@ LEDGE = 5.0            # frame ledge the plate sits on, around the window
 CAMERA_MARGIN = 0.6    # plate's camera hole is this much bigger all round
 FLANGE = 0.8           # one-print hybrid: PETG over the TPU rim (4 layers)
 
+# Covered buttons (TPU only). The wall over each button is thinned from the
+# inside to a skin you press through, with a nub on the skin's inside that
+# sits just off the button, and a ridge outside so you can find it by feel.
+BUTTONS = ("power", "volume-up", "volume-down", "action")
+SKIN = 0.9             # TPU left over the button: thinner presses lighter
+BUTTON_PROUD = 0.5     # how far the button stands off the phone's side (estimate)
+NUB_GAP = 0.1          # nub to button, at rest
+RIDGE = 0.5            # outside ridge height
+
 COLOURS = {
     "tpu": (0x2B, 0x2F, 0x36),      # graphite TPU
     "petg_a": (0x1C, 0x7E, 0xD6),   # blue PETG
@@ -116,6 +125,48 @@ def grip_ribs(spec) -> mf.Manifold:
     return mf.Manifold.batch_boolean(cutters, mf.OpType.Add)
 
 
+def _side(section: mf.CrossSection, s0: float, s1: float, face: str, spec) -> mf.Manifold:
+    """A ``(u, v)`` section on a side face, from ``s0`` to ``s1`` outward of the cavity wall.
+
+    ``u`` runs along the face and ``v`` is height, the same plane the cutouts
+    use. Built for the right-hand face and turned half round for the left,
+    which mirrors ``u`` -- so a left-hand section is made at ``-u``.
+    """
+    x0 = spec.inner_w / 2
+    solid = section.extrude(s1 - s0)
+    # (u, v, s) -> (x0 + s0 + s, u, v): a cyclic swap of axes, no mirror.
+    solid = solid.transform([[0, 0, 1, x0 + s0], [1, 0, 0, 0], [0, 1, 0, 0]])
+    return solid.rotate((0, 0, 180)) if face == "left" else solid
+
+
+def covered_buttons(spec):
+    """``(cut, add)``: the pockets behind the skins, and the nubs and ridges."""
+    depth = spec.wall - SKIN                    # pocket, from the cavity wall out
+    into_wall = BUTTON_PROUD - spec.clearance   # how far the button reaches into it
+    nub = depth - into_wall - NUB_GAP
+    cuts, adds = [], []
+    for c in spec.cutouts:
+        if c.name not in BUTTONS:
+            continue
+        u = c.u if c.face == "right" else -c.u
+        pocket = rrect(c.w / 2 + 0.5, c.h / 2, min(c.r, c.h / 2), u, c.v)
+        cuts.append(_side(pocket, -0.5, depth, c.face, spec))
+        if nub > 0.05:
+            press = rrect(max(1.5, c.w / 2 - 2.0), 1.2, 1.2, u, c.v)
+            adds.append(_side(press, depth - nub, depth + 0.01, c.face, spec))
+        ridge = rrect(max(1.5, c.w / 2 - 1.0), 0.8, 0.8, u, c.v)
+        adds.append(_side(ridge, spec.wall - 0.01, spec.wall + RIDGE, c.face, spec))
+    union = lambda xs: mf.Manifold.batch_boolean(xs, mf.OpType.Add)  # noqa: E731
+    return union(cuts), union(adds)
+
+
+def with_covered_buttons(spec):
+    """The same spec without the side-button holes, and its cover features."""
+    closed = replace(spec, cutouts=[c for c in spec.cutouts if c.name not in BUTTONS])
+    cut, add = covered_buttons(spec)
+    return closed, cut, add
+
+
 def camera(spec):
     return next(c for c in spec.cutouts if c.name == "camera")
 
@@ -124,9 +175,12 @@ def camera(spec):
 # the parts
 # --------------------------------------------------------------------------
 
-def tpu_case():
+def tpu_case(buttons: bool = False):
     spec = case(PHONE, **TPU_FIT)
-    return spec, build_solid(spec) - grip_ribs(spec)
+    if not buttons:
+        return spec, build_solid(spec) - grip_ribs(spec)
+    closed, cut, add = with_covered_buttons(spec)
+    return spec, (build_solid(closed) - grip_ribs(spec) - cut) + add
 
 
 def hybrid():
@@ -156,7 +210,7 @@ def hybrid():
     return spec, frame, outline, plate
 
 
-def one_print():
+def one_print(buttons: bool = False):
     """The fused hybrid: the case split into a TPU body and a PETG back.
 
     One case with a back of ``back + flange``; the PETG is the window (from
@@ -167,7 +221,11 @@ def one_print():
     """
     rim = TPU_FIT["back_thickness"]
     spec = case(PHONE, **{**TPU_FIT, "back_thickness": rim + FLANGE})
-    whole = build_solid(spec) - grip_ribs(spec)
+    if buttons:
+        closed, cut, add = with_covered_buttons(spec)
+        whole = (build_solid(closed) - grip_ribs(spec) - cut) + add
+    else:
+        whole = build_solid(spec) - grip_ribs(spec)
     window = rrect(spec.inner_w / 2 - LEDGE, spec.inner_l / 2 - LEDGE,
                    max(1.0, spec.inner_r - LEDGE))
     floor = rrect(spec.inner_w / 2, spec.inner_l / 2, spec.inner_r)
@@ -276,6 +334,25 @@ def main() -> int:
          Part("PETG blue", 2, COLOURS["petg_a"], obody),
          Part("PETG orange", 3, COLOURS["petg_b"], stripes)],
         origin=oorigin, name="iPhone 15 Pro one-print hybrid, gradient"))
+
+    # Covered TPU buttons.
+    _, btpu = tpu_case(buttons=True)
+    print(f"Covered buttons: {SKIN} mm skin, nub {spec.wall - SKIN - (BUTTON_PROUD - spec.clearance) - NUB_GAP:.2f} mm "
+          f"(button assumed {BUTTON_PROUD} mm proud)")
+    write("tpu_case_covered_buttons.stl", mesh_to_stl(btpu, header="iPhone 15 Pro TPU case, covered buttons"))
+    write("tpu_case_covered_buttons.3mf", parts_to_3mf(
+        [Part("tpu", 0, COLOURS["tpu"], btpu)], origin=(spec.outer_w / 2, spec.outer_l / 2),
+        name="iPhone 15 Pro TPU case, covered buttons"))
+    # The top half only: every button and the camera, in about half the time.
+    top = btpu ^ mf.Manifold.cube((200, 200, 50)).translate((-100, -12, -10))
+    write("tpu_case_covered_buttons_TEST_top_half.stl",
+          mesh_to_stl(top, header="iPhone 15 Pro TPU button test, top half"))
+    bspec, btpu1, bpetg, _ = one_print(buttons=True)
+    write("onepiece_hybrid_tpu_petg_covered_buttons.3mf", parts_to_3mf(
+        [Part("TPU", 1, COLOURS["tpu"], btpu1),
+         Part("PETG", 2, COLOURS["petg_a"], bpetg)],
+        origin=(bspec.outer_w / 2, bspec.outer_l / 2),
+        name="iPhone 15 Pro one-print hybrid, covered buttons"))
     return 0
 
 
