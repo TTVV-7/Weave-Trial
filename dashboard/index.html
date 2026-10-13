@@ -124,6 +124,24 @@
   .meta .title { font-weight: 600; overflow-wrap: anywhere; text-transform: capitalize; }
   .meta .path { color: var(--muted); font-size: 12px; overflow-wrap: anywhere; font-family: ui-monospace, Menlo, monospace; }
   .meta .facts { color: var(--muted); font-size: 12px; margin-top: 2px; }
+  .card { position: relative; }
+  .archive-btn {
+    position: absolute; top: 6px; right: 6px; z-index: 1; width: 32px; height: 32px;
+    display: grid; place-items: center; border-radius: 8px; border: 1px solid var(--border);
+    background: var(--surface); color: var(--muted); padding: 0; opacity: .85;
+  }
+  .archive-btn:hover { color: var(--text); opacity: 1; }
+  .card.archived .thumb img { opacity: .55; filter: grayscale(.6); }
+  .chip.archive-chip { margin-left: auto; }
+  .toast {
+    position: fixed; left: 50%; bottom: calc(16px + env(safe-area-inset-bottom)); transform: translateX(-50%);
+    z-index: 20; display: flex; align-items: center; gap: 12px; max-width: calc(100vw - 32px);
+    padding: 10px 10px 10px 14px; border-radius: 10px; background: var(--text); color: var(--bg);
+    box-shadow: 0 6px 24px rgba(0,0,0,.2);
+  }
+  .toast[hidden] { display: none; }
+  .toast span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .toast button { border: 0; background: transparent; color: inherit; font-weight: 600; padding: 4px 8px; border-radius: 6px; text-decoration: underline; }
   .actions { display: flex; gap: 6px; padding: 0 12px 12px; }
   .actions .btn { flex: 1; text-align: center; text-decoration: none; padding: 7px 10px; }
 
@@ -213,10 +231,13 @@
       <button class="btn" id="v-wire" aria-pressed="false">Wireframe</button>
       <button class="btn" id="v-spin" aria-pressed="false">Auto-rotate</button>
       <button class="btn" id="v-grid" aria-pressed="true">Grid</button>
+      <button class="btn" id="v-archive">Archive</button>
       <a class="btn primary" id="v-dl" download>Download</a>
     </div>
   </div>
 </dialog>
+
+<div class="toast" id="toast" role="status" hidden><span id="toast-msg"></span><button id="toast-undo">Undo</button></div>
 
 <script type="module">
 import * as THREE from 'three';
@@ -237,7 +258,35 @@ let REPO_ROOT = new URL('../', location.href);
 const fileURL = m => new URL(m.path, REPO_ROOT).href;
 
 const $ = s => document.querySelector(s);
-const state = { models: [], q: '', type: 'all', sort: 'name', group: true };
+const state = { models: [], q: '', type: 'all', sort: 'name', group: true, showArchived: false };
+
+/* ---------- archive: hidden from the main list, kept on this device ---------- */
+const ARCHIVE_KEY = 'model-library:archived';
+const archived = new Set((() => {
+  try { return JSON.parse(localStorage.getItem(ARCHIVE_KEY)) || []; } catch { return []; }
+})());
+const saveArchive = () => { try { localStorage.setItem(ARCHIVE_KEY, JSON.stringify([...archived])); } catch {} };
+const isArchived = m => archived.has(m.path);
+const ARCHIVE_ICON = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="5" rx="1"/><path d="M5 9v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9M10 13h4"/></svg>';
+const UNARCHIVE_ICON = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="5" rx="1"/><path d="M5 9v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9M12 18v-6M9.5 14.5 12 12l2.5 2.5"/></svg>';
+
+let toastTimer = null, undoFn = null;
+function toast(msg, undo) {
+  $('#toast-msg').textContent = msg;
+  undoFn = undo;
+  $('#toast-undo').hidden = !undo;
+  $('#toast').hidden = false;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { $('#toast').hidden = true; undoFn = null; }, 5000);
+}
+
+function setArchived(m, on, { quiet = false } = {}) {
+  if (on) archived.add(m.path); else archived.delete(m.path);
+  saveArchive();
+  renderChips(); render();
+  if (current && current.path === m.path) syncArchiveButton();
+  if (!quiet) toast(`${on ? 'Archived' : 'Restored'} “${m.name}”`, () => setArchived(m, !on, { quiet: true }));
+}
 
 /* ---------- formatting ---------- */
 const fmtSize = b => b < 1024 ? `${b} B` : b < 1048576 ? `${(b / 1024).toFixed(0)} KB` : `${(b / 1048576).toFixed(1)} MB`;
@@ -491,6 +540,7 @@ const io = new IntersectionObserver(entries => {
 function filtered() {
   const words = state.q.toLowerCase().split(/\s+/).filter(Boolean);
   let list = state.models.filter(m => {
+    if (isArchived(m) !== state.showArchived) return false;
     if (state.type !== 'all' && m.type !== state.type) return false;
     const hay = `${m.name} ${m.file} ${m.path} ${m.type} ${m.ext}`.toLowerCase();
     return words.every(w => hay.includes(w));
@@ -509,18 +559,26 @@ function filtered() {
 
 function renderChips() {
   const counts = {};
-  for (const m of state.models) counts[m.type] = (counts[m.type] || 0) + 1;
+  const pool = state.models.filter(m => isArchived(m) === state.showArchived);
+  for (const m of pool) counts[m.type] = (counts[m.type] || 0) + 1;
   const types = TYPE_ORDER.filter(t => counts[t]);
+  const nArchived = state.models.filter(isArchived).length;
   const chip = (val, label, n, color) =>
     `<button class="chip" data-type="${esc(val)}" aria-pressed="${state.type === val}">
        ${color ? `<span class="dot" style="--c:${color}"></span>` : ''}${esc(label)} <span class="n">${n}</span></button>`;
-  $('#chips').innerHTML = chip('all', 'All', state.models.length) +
-    types.map(t => chip(t, t, counts[t], typeColor(t))).join('');
+  $('#chips').innerHTML = chip('all', 'All', pool.length) +
+    types.map(t => chip(t, t, counts[t], typeColor(t))).join('') +
+    (nArchived || state.showArchived
+      ? `<button class="chip archive-chip" id="archive-toggle" aria-pressed="${state.showArchived}">${ARCHIVE_ICON} Archived <span class="n">${nArchived}</span></button>`
+      : '');
 }
 
 function card(m) {
   const dl = esc(fileURL(m));
-  return `<article class="card">
+  const arch = isArchived(m);
+  return `<article class="card${arch ? ' archived' : ''}">
+    <button class="archive-btn" data-archive="${esc(m.path)}" title="${arch ? 'Restore' : 'Archive'}"
+      aria-label="${arch ? 'Restore' : 'Archive'} ${esc(m.name)}">${arch ? UNARCHIVE_ICON : ARCHIVE_ICON}</button>
     <button class="thumb" data-open="${esc(m.path)}" data-path="${esc(m.path)}" aria-label="View ${esc(m.name)} in 3D">
       <span class="badge" style="--c:${typeColor(m.type)}">${esc(m.ext.toUpperCase())}</span>
       <span class="ph">Rendering…</span>
@@ -544,6 +602,14 @@ function render() {
   $('#zip').textContent = `Download shown (${list.length}) .zip`;
   if (!state.models.length) {
     main.innerHTML = `<div class="empty">No models found in the repo yet.<br>Add a .3mf, .step, .stl, .obj, .glb, .ply or .gcode file and run <code>python dashboard/build_index.py</code>.</div>`;
+    return;
+  }
+  if (!list.length && state.showArchived && !state.q && state.type === 'all') {
+    main.innerHTML = `<div class="empty">Nothing archived. Use the archive button on a model to tuck it away here.</div>`;
+    return;
+  }
+  if (!list.length && !state.showArchived && !state.q && state.type === 'all') {
+    main.innerHTML = `<div class="empty">Every model is archived. Open <b>Archived</b> above to restore some.</div>`;
     return;
   }
   if (!list.length) {
@@ -578,6 +644,7 @@ function syncURL() {
   if (state.type !== 'all') p.set('type', state.type);
   if (state.sort !== 'name') p.set('sort', state.sort);
   if (!state.group) p.set('group', '0');
+  if (state.showArchived) p.set('archived', '1');
   history.replaceState(null, '', p.toString() ? `?${p}${location.hash}` : location.pathname + location.hash);
 }
 
@@ -617,6 +684,7 @@ async function openViewer(m) {
   $('#v-dl').href = fileURL(m);
   $('#v-dl').setAttribute('download', m.file);
   $('#v-dl').textContent = `Download .${m.ext}`;
+  syncArchiveButton();
   $('#v-stats').textContent = `${m.type} · ${fmtSize(m.size)}`;
   $('#v-msg').textContent = m.ext === 'step' || m.ext === 'stp' || m.ext === 'iges' || m.ext === 'igs'
     ? 'Loading… (first CAD file loads the STEP reader)' : 'Loading…';
@@ -708,11 +776,22 @@ $('#sort').addEventListener('change', e => { state.sort = e.target.value; render
 $('#group').addEventListener('change', e => { state.group = e.target.checked; render(); syncURL(); });
 $('#chips').addEventListener('click', e => {
   const b = e.target.closest('.chip'); if (!b) return;
-  state.type = b.dataset.type; renderChips(); render(); syncURL();
+  if (b.id === 'archive-toggle') { state.showArchived = !state.showArchived; state.type = 'all'; }
+  else state.type = b.dataset.type;
+  renderChips(); render(); syncURL();
 });
 $('#main').addEventListener('click', e => {
+  const a = e.target.closest('[data-archive]');
+  if (a) { const m = state.models.find(x => x.path === a.dataset.archive); setArchived(m, !isArchived(m)); return; }
   const b = e.target.closest('[data-open]'); if (!b) return;
   openViewer(state.models.find(m => m.path === b.dataset.open));
+});
+function syncArchiveButton() {
+  if (current) $('#v-archive').textContent = isArchived(current) ? 'Restore' : 'Archive';
+}
+$('#v-archive').addEventListener('click', () => current && setArchived(current, !isArchived(current)));
+$('#toast-undo').addEventListener('click', () => {
+  const fn = undoFn; $('#toast').hidden = true; undoFn = null; fn?.();
 });
 document.addEventListener('keydown', e => {
   if (dlg.open) {
@@ -726,6 +805,7 @@ document.addEventListener('keydown', e => {
 async function init() {
   const p = new URLSearchParams(location.search);
   state.q = p.get('q') || ''; state.type = p.get('type') || 'all';
+  state.showArchived = p.get('archived') === '1';
   state.sort = p.get('sort') || 'name'; state.group = p.get('group') !== '0';
   $('#q').value = state.q; $('#sort').value = state.sort; $('#group').checked = state.group;
 
