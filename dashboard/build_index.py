@@ -29,7 +29,7 @@ TYPES = {
     ".ply": "PLY",
     ".gcode": "G-code",
 }
-SKIP_DIRS = {".git", "node_modules", "__pycache__", ".venv", ".pytest_cache"}
+SKIP_DIRS = {".git", "node_modules", "__pycache__", ".venv", ".pytest_cache", "site", "out"}
 PREVIEW_EXTS = (".png", ".jpg", ".jpeg", ".webp")
 
 
@@ -45,8 +45,13 @@ def git_date(path: Path) -> str | None:
 
 
 def find_preview(path: Path) -> str | None:
-    """An image next to the model: same stem first, else a lone preview.*."""
-    for stem in (path.stem, "preview"):
+    """An image for the model: <stem>.png or <stem>_preview.png beside it, or a
+    folder-wide preview.png when the model is the only one in its folder."""
+    names = [path.stem, path.stem + "_preview"]
+    siblings = [p for p in path.parent.iterdir() if p.suffix.lower() in TYPES]
+    if len(siblings) == 1:
+        names.append("preview")
+    for stem in names:
         for ext in PREVIEW_EXTS:
             cand = path.with_name(stem + ext)
             if cand.exists():

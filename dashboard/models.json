@@ -1,6 +1,171 @@
 {
-  "generated": "2026-10-13T13:26:53+00:00",
+  "generated": "2026-10-13T14:22:42+00:00",
   "models": [
+    {
+      "name": "ipad holder",
+      "file": "ipad_holder.3mf",
+      "path": "ipad_holder/ipad_holder.3mf",
+      "folder": "ipad_holder",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 683034,
+      "modified": "2026-10-13T14:06:30+00:00",
+      "preview": null
+    },
+    {
+      "name": "source ipad holder",
+      "file": "source_ipad_holder.3mf",
+      "path": "ipad_holder/source_ipad_holder.3mf",
+      "folder": "ipad_holder",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 30799,
+      "modified": "2026-10-13T14:06:30+00:00",
+      "preview": null
+    },
+    {
+      "name": "wing screw",
+      "file": "wing_screw.3mf",
+      "path": "ipad_holder/wing_screw.3mf",
+      "folder": "ipad_holder",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 477956,
+      "modified": "2026-10-13T14:06:30+00:00",
+      "preview": null
+    },
+    {
+      "name": "wing screw",
+      "file": "wing_screw.stl",
+      "path": "ipad_holder/wing_screw.stl",
+      "folder": "ipad_holder",
+      "ext": "stl",
+      "type": "STL",
+      "size": 2720484,
+      "modified": "2026-10-13T14:06:30+00:00",
+      "preview": null
+    },
+    {
+      "name": "bucket",
+      "file": "bucket.3mf",
+      "path": "keyholders/bucket.3mf",
+      "folder": "keyholders",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 18673,
+      "modified": "2026-10-13T14:06:30+00:00",
+      "preview": "keyholders/bucket.png"
+    },
+    {
+      "name": "forks",
+      "file": "forks.3mf",
+      "path": "keyholders/forks.3mf",
+      "folder": "keyholders",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 15484,
+      "modified": "2026-10-13T14:06:30+00:00",
+      "preview": "keyholders/forks.png"
+    },
+    {
+      "name": "enlesce kit painted",
+      "file": "enlesce_kit_painted.3mf",
+      "path": "kit/enlesce_kit_painted.3mf",
+      "folder": "kit",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 5355015,
+      "modified": "2026-10-13T14:06:30+00:00",
+      "preview": null
+    },
+    {
+      "name": "washer clip",
+      "file": "washer-clip.stl",
+      "path": "models/washer-clip.stl",
+      "folder": "models",
+      "ext": "stl",
+      "type": "STL",
+      "size": 3084,
+      "modified": "2026-10-13T14:06:30+00:00",
+      "preview": null
+    },
+    {
+      "name": "washer gauge",
+      "file": "washer-gauge.stl",
+      "path": "models/washer-gauge.stl",
+      "folder": "models",
+      "ext": "stl",
+      "type": "STL",
+      "size": 87684,
+      "modified": "2026-10-13T14:06:30+00:00",
+      "preview": null
+    },
+    {
+      "name": "washer nozzle",
+      "file": "washer-nozzle.stl",
+      "path": "models/washer-nozzle.stl",
+      "folder": "models",
+      "ext": "stl",
+      "type": "STL",
+      "size": 288084,
+      "modified": "2026-10-13T14:06:30+00:00",
+      "preview": null
+    },
+    {
+      "name": "Industrial Factory 3color",
+      "file": "Industrial_Factory_3color.3mf",
+      "path": "output/Industrial_Factory_3color.3mf",
+      "folder": "output",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 30158832,
+      "modified": "2026-10-13T14:06:30+00:00",
+      "preview": "output/Industrial_Factory_3color_preview.png"
+    },
+    {
+      "name": "Industrial Factory GLB colors",
+      "file": "Industrial_Factory_GLB_colors.3mf",
+      "path": "output/Industrial_Factory_GLB_colors.3mf",
+      "folder": "output",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 29971909,
+      "modified": "2026-10-13T14:06:31+00:00",
+      "preview": "output/Industrial_Factory_GLB_colors_preview.png"
+    },
+    {
+      "name": "Industrial Factory blue orange black",
+      "file": "Industrial_Factory_blue_orange_black.3mf",
+      "path": "output/Industrial_Factory_blue_orange_black.3mf",
+      "folder": "output",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 30045568,
+      "modified": "2026-10-13T14:06:32+00:00",
+      "preview": "output/Industrial_Factory_blue_orange_black_preview.png"
+    },
+    {
+      "name": "genie pen holder",
+      "file": "genie_pen_holder.3mf",
+      "path": "penholder/genie_pen_holder.3mf",
+      "folder": "penholder",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 118345,
+      "modified": "2026-10-13T14:06:32+00:00",
+      "preview": null
+    },
+    {
+      "name": "telehandler pen holder",
+      "file": "telehandler_pen_holder.3mf",
+      "path": "penholder/telehandler_pen_holder.3mf",
+      "folder": "penholder",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 77097,
+      "modified": "2026-10-13T14:06:32+00:00",
+      "preview": null
+    },
     {
       "name": "honda pilot 2006 1 43",
       "file": "honda_pilot_2006_1-43.3mf",
@@ -13,15 +178,70 @@
       "preview": "pilot/preview.png"
     },
     {
-      "name": "honda pilot 2006 1 43",
-      "file": "honda_pilot_2006_1-43.3mf",
-      "path": "site/pilot/honda_pilot_2006_1-43.3mf",
-      "folder": "site/pilot",
-      "ext": "3mf",
-      "type": "3MF",
-      "size": 46034,
-      "modified": "2026-10-13T12:55:47+00:00",
-      "preview": "site/pilot/preview.png"
+      "name": "Dumper Access",
+      "file": "Dumper_Access.glb",
+      "path": "railbridge/Dumper_Access.glb",
+      "folder": "railbridge",
+      "ext": "glb",
+      "type": "glTF",
+      "size": 3420648,
+      "modified": "2026-10-13T14:06:32+00:00",
+      "preview": "railbridge/Dumper_Access_preview.png"
+    },
+    {
+      "name": "Rail Footbridge",
+      "file": "Rail_Footbridge.glb",
+      "path": "railbridge/Rail_Footbridge.glb",
+      "folder": "railbridge",
+      "ext": "glb",
+      "type": "glTF",
+      "size": 4511456,
+      "modified": "2026-10-13T14:06:32+00:00",
+      "preview": "railbridge/Rail_Footbridge_preview.png"
+    },
+    {
+      "name": "Genie GTH 1056 max 65deg extended 10m",
+      "file": "Genie_GTH-1056_max_65deg_extended_10m.step",
+      "path": "telehandler/step/Genie_GTH-1056_max_65deg_extended_10m.step",
+      "folder": "telehandler/step",
+      "ext": "step",
+      "type": "STEP",
+      "size": 973999,
+      "modified": "2026-10-13T14:06:32+00:00",
+      "preview": null
+    },
+    {
+      "name": "Genie GTH 1056 raised 30deg",
+      "file": "Genie_GTH-1056_raised_30deg.step",
+      "path": "telehandler/step/Genie_GTH-1056_raised_30deg.step",
+      "folder": "telehandler/step",
+      "ext": "step",
+      "type": "STEP",
+      "size": 972406,
+      "modified": "2026-10-13T14:06:32+00:00",
+      "preview": null
+    },
+    {
+      "name": "Genie GTH 1056 raised 45deg extended 5m",
+      "file": "Genie_GTH-1056_raised_45deg_extended_5m.step",
+      "path": "telehandler/step/Genie_GTH-1056_raised_45deg_extended_5m.step",
+      "folder": "telehandler/step",
+      "ext": "step",
+      "type": "STEP",
+      "size": 974252,
+      "modified": "2026-10-13T14:06:32+00:00",
+      "preview": null
+    },
+    {
+      "name": "Genie GTH 1056 stowed",
+      "file": "Genie_GTH-1056_stowed.step",
+      "path": "telehandler/step/Genie_GTH-1056_stowed.step",
+      "folder": "telehandler/step",
+      "ext": "step",
+      "type": "STEP",
+      "size": 961007,
+      "modified": "2026-10-13T14:06:32+00:00",
+      "preview": null
     }
   ]
 }

@@ -227,7 +227,7 @@ import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { PLYLoader } from 'three/addons/loaders/PLYLoader.js';
 import { GCodeLoader } from 'three/addons/loaders/GCodeLoader.js';
-import { zipSync } from 'three/addons/libs/fflate.module.js';
+import { zipSync, unzipSync } from 'three/addons/libs/fflate.module.js';
 
 const TYPE_ORDER = ['3MF', 'STEP', 'STL', 'IGES', 'OBJ', 'glTF', 'PLY', 'G-code'];
 const TYPE_VAR = { '3MF': '--t-3mf', STL: '--t-stl', STEP: '--t-step', IGES: '--t-iges',
@@ -284,6 +284,94 @@ async function parseCAD(buf, ext) {
   return group;
 }
 
+/* three.js's 3MF reader can't follow the production extension, where the
+   root model only points at meshes stored in other files of the package
+   (Bambu Studio and PrusaSlicer projects). This reads geometry only from any
+   3MF, following those references; it is the fallback when three.js fails. */
+function parse3MFComponents(buf) {
+  const files = unzipSync(new Uint8Array(buf));
+  const dec = new TextDecoder();
+  const rels = files['_rels/.rels'] ? dec.decode(files['_rels/.rels']) : '';
+  const rootPath = ((rels.match(/Target="\/?([^"]+\.model)"/) || [])[1]) || '3D/3dmodel.model';
+  const attr = (tag, name) => { const m = tag.match(new RegExp(`(?:^|\\s)${name}="([^"]*)"`)); return m ? m[1] : null; };
+  const matrix = t => {
+    const m = new THREE.Matrix4();
+    if (!t) return m;
+    const v = t.trim().split(/\s+/).map(Number);
+    return m.set(v[0], v[3], v[6], v[9], v[1], v[4], v[7], v[10], v[2], v[5], v[8], v[11], 0, 0, 0, 1);
+  };
+
+  const docs = new Map(); // path -> Map(id -> object)
+  const doc = path => {
+    path = path.replace(/^\//, '');
+    if (docs.has(path)) return docs.get(path);
+    const bytes = files[path];
+    if (!bytes) throw new Error(`3MF part ${path} is missing`);
+    const text = dec.decode(bytes);
+    const objects = new Map();
+    for (const om of text.matchAll(/<object\b([^>]*)>([\s\S]*?)<\/object>/g)) {
+      const body = om[2];
+      const obj = { components: [] };
+      if (body.includes('<mesh')) {
+        const pos = [];
+        for (const v of body.matchAll(/<vertex\b([^>]*)\/?>/g)) pos.push(+attr(v[1], 'x'), +attr(v[1], 'y'), +attr(v[1], 'z'));
+        const idx = [];
+        for (const t of body.matchAll(/<triangle\b([^>]*)\/?>/g)) idx.push(+attr(t[1], 'v1'), +attr(t[1], 'v2'), +attr(t[1], 'v3'));
+        const g = new THREE.BufferGeometry();
+        g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+        g.setIndex(idx);
+        g.computeVertexNormals();
+        obj.geometry = g;
+      }
+      for (const c of body.matchAll(/<component\b([^>]*)\/?>/g)) {
+        obj.components.push({ path: attr(c[1], 'p:path') || path, id: attr(c[1], 'objectid'), transform: attr(c[1], 'transform') });
+      }
+      objects.set(attr(om[1], 'id'), obj);
+    }
+    const entry = { text, objects };
+    docs.set(path, entry);
+    return entry;
+  };
+
+  const build = (path, id, depth = 0) => {
+    const o = doc(path).objects.get(id);
+    if (!o || depth > 16) return null;
+    const node = new THREE.Group();
+    if (o.geometry) node.add(new THREE.Mesh(o.geometry, baseMaterial()));
+    for (const c of o.components) {
+      const child = build(c.path, c.id, depth + 1);
+      if (child) { child.applyMatrix4(matrix(c.transform)); node.add(child); }
+    }
+    return node;
+  };
+
+  const root = new THREE.Group();
+  const rootDoc = doc(rootPath);
+  const buildBlock = (rootDoc.text.match(/<build\b[^>]*>([\s\S]*?)<\/build>/) || [])[1] || '';
+  for (const it of buildBlock.matchAll(/<item\b([^>]*)\/?>/g)) {
+    const node = build(rootPath, attr(it[1], 'objectid'));
+    if (node) { node.applyMatrix4(matrix(attr(it[1], 'transform'))); root.add(node); }
+  }
+  if (!root.children.length) throw new Error('no printable objects in this 3MF');
+  return root;
+}
+
+function parse3MF(buf) {
+  let obj;
+  try {
+    obj = new ThreeMFLoader().parse(buf);
+    let meshes = 0; obj.traverse(o => { if (o.isMesh) meshes++; });
+    if (!meshes) throw new Error('empty');
+  } catch {
+    return parse3MFComponents(buf);
+  }
+  // Uncoloured 3MF parts come back plain white; give them the same grey as everything else.
+  obj.traverse(o => {
+    if (o.isMesh && !o.geometry.attributes.color && o.material.color?.getHex() === 0xffffff) o.material = baseMaterial();
+  });
+  return obj;
+}
+
 function meshFromGeometry(g) {
   if (!g.attributes.normal) g.computeVertexNormals();
   const mat = baseMaterial();
@@ -300,11 +388,7 @@ async function parseModel(m) {
   switch (m.ext) {
     case 'stl': obj = meshFromGeometry(new STLLoader().parse(buf)); break;
     case 'ply': obj = meshFromGeometry(new PLYLoader().parse(buf)); break;
-    case '3mf': obj = new ThreeMFLoader().parse(buf);
-      // Uncoloured 3MF parts come back plain white; give them the same grey as everything else.
-      obj.traverse(o => {
-        if (o.isMesh && !o.geometry.attributes.color && o.material.color?.getHex() === 0xffffff) o.material = baseMaterial();
-      }); break;
+    case '3mf': obj = parse3MF(buf); break;
     case 'obj': obj = new OBJLoader().parse(text());
       obj.traverse(o => { if (o.isMesh) o.material = baseMaterial(); }); break;
     case 'glb': case 'gltf': {
@@ -379,11 +463,11 @@ function renderThumb(m) {
       thumbRenderer.setSize(480, 360, false);
     }
     const scene = new THREE.Scene(); lightScene(scene);
-    scene.add(root);
+    // A clone (sharing geometry) so the open viewer keeps its copy: an object can only have one parent.
+    scene.add(root.clone());
     const cam = new THREE.PerspectiveCamera(35, 4 / 3);
     frame(cam, null, size);
     thumbRenderer.render(scene, cam);
-    scene.remove(root);
     return thumbRenderer.domElement.toDataURL('image/png');
   }));
   thumbQueue = p.catch(() => {});

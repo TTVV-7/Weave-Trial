@@ -305,6 +305,11 @@ It is also deployed on Vercel from this repo: every push rebuilds it with
 page and the model files. On a phone, open the site and use "Add to Home
 Screen" to install it as an app; models you've opened stay viewable offline.
 
+Each project was built on its own branch, so the models are gathered onto
+this one with `python dashboard/collect_models.py`, which copies any model
+(and its preview images) that another branch has and this one doesn't. Run it
+again after a new branch adds models, then commit.
+
 Locally, `serve.py` re-indexes the repo on start; after adding a model without restarting, run
 `python dashboard/build_index.py` and refresh. The viewer loads three.js (and,
 for STEP/IGES, occt-import-js) from a CDN, so it needs internet access.
