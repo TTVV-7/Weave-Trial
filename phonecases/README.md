@@ -64,9 +64,10 @@ object.
 5. If your Orca version has **interlocking** under the multimaterial settings
    ("Use beam interlocking"), turn it on. It weaves the two materials together
    where they meet and makes the bond much stronger.
-6. Print back face down with no supports. Every layer from the first has both
-   materials in it, so expect a toolhead swap on most layers. With no purge
-   on the U1, that costs time, not filament.
+6. Print back face down with no supports. Both materials share only the
+   first 2 mm, the back, so the toolhead swaps happen there: about ten layers,
+   one or two swaps each. Above that it is TPU walls only. With no purge on
+   the U1, the swaps cost time, not filament.
 
 TPU and PETG bond reasonably well to each other, and the lap joint does the
 rest. Still, check the first print by flexing the bumper away from the back
