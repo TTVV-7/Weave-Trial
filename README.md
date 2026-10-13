@@ -300,6 +300,11 @@ download it singly or everything shown as a zip.
 python dashboard/serve.py        # then open http://localhost:8000/dashboard/
 ```
 
-It re-indexes the repo on start; after adding a model without restarting, run
+It is also deployed on Vercel from this repo: every push rebuilds it with
+`python dashboard/build_site.py` (see `vercel.json`), which publishes only the
+page and the model files. On a phone, open the site and use "Add to Home
+Screen" to install it as an app; models you've opened stay viewable offline.
+
+Locally, `serve.py` re-indexes the repo on start; after adding a model without restarting, run
 `python dashboard/build_index.py` and refresh. The viewer loads three.js (and,
 for STEP/IGES, occt-import-js) from a CDN, so it needs internet access.

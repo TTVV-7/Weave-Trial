@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-13T13:01:31+00:00",
+  "generated": "2026-10-13T13:26:53+00:00",
   "models": [
     {
       "name": "honda pilot 2006 1 43",
@@ -11,6 +11,17 @@
       "size": 46034,
       "modified": "2026-10-08T12:05:00+00:00",
       "preview": "pilot/preview.png"
+    },
+    {
+      "name": "honda pilot 2006 1 43",
+      "file": "honda_pilot_2006_1-43.3mf",
+      "path": "site/pilot/honda_pilot_2006_1-43.3mf",
+      "folder": "site/pilot",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 46034,
+      "modified": "2026-10-13T12:55:47+00:00",
+      "preview": "site/pilot/preview.png"
     }
   ]
 }
