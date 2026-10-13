@@ -333,14 +333,42 @@ async function parseCAD(buf, ext) {
   return group;
 }
 
-/* three.js's 3MF reader can't follow the production extension, where the
-   root model only points at meshes stored in other files of the package
-   (Bambu Studio and PrusaSlicer projects). This reads geometry only from any
-   3MF, following those references; it is the fallback when three.js fails. */
-function parse3MFComponents(buf) {
-  const files = unzipSync(new Uint8Array(buf));
+/* Fallback 3MF reader, for what three.js's reader can't do:
+   - the production extension, where the root model only points at meshes
+     stored in other files of the package (Bambu Studio, PrusaSlicer projects);
+   - multi-colour painting, stored per triangle as `paint_color` (Bambu) or
+     `slic3rpe:mmu_segmentation` (PrusaSlicer), coloured from the project's
+     filament colours and each object's or part's default filament. */
+function paintState(code) {
+  // The slicers' TriangleSelector encoding: hex nibbles read from the end. Each
+  // node's low 2 bits are how many sides it is split on (0 = leaf); a leaf's
+  // state is the next 2 bits, or 3 + the following nibble when those are 3.
+  // State N is filament N, 0 is the default. Split triangles take their most
+  // painted leaf state, which is close enough for a preview.
+  let i = code.length - 1;
+  const next = () => (i >= 0 ? parseInt(code[i--], 16) : 0);
+  const counts = new Map();
+  const walk = depth => {
+    const n = next();
+    const split = n & 3;
+    if (split === 0 || depth > 12) {
+      let st = n >> 2;
+      if (st === 3) st = next() + 3;
+      counts.set(st, (counts.get(st) || 0) + 1);
+      return;
+    }
+    for (let k = 0; k <= split; k++) walk(depth + 1);
+  };
+  walk(0);
+  let best = 0, bestN = -1;
+  for (const [st, n] of counts) if (n > bestN) { best = st; bestN = n; }
+  return best;
+}
+
+function parse3MFComponents(buf, files = unzipSync(new Uint8Array(buf))) {
   const dec = new TextDecoder();
-  const rels = files['_rels/.rels'] ? dec.decode(files['_rels/.rels']) : '';
+  const text = name => (files[name] ? dec.decode(files[name]) : '');
+  const rels = text('_rels/.rels');
   const rootPath = ((rels.match(/Target="\/?([^"]+\.model)"/) || [])[1]) || '3D/3dmodel.model';
   const attr = (tag, name) => { const m = tag.match(new RegExp(`(?:^|\\s)${name}="([^"]*)"`)); return m ? m[1] : null; };
   const matrix = t => {
@@ -350,45 +378,96 @@ function parse3MFComponents(buf) {
     return m.set(v[0], v[3], v[6], v[9], v[1], v[4], v[7], v[10], v[2], v[5], v[8], v[11], 0, 0, 0, 1);
   };
 
-  const docs = new Map(); // path -> Map(id -> object)
+  // Filament colours, 1-based like the paint states.
+  let filaments = [];
+  try { filaments = JSON.parse(text('Metadata/project_settings.config')).filament_colour || []; } catch {}
+  if (!filaments.length) {
+    const m = text('Metadata/Slic3r_PE.config').match(/^; (?:extruder_colour|filament_colour) = (.*)$/m);
+    if (m) filaments = m[1].split(';');
+  }
+  const palette = filaments.map(c => new THREE.Color(/^#[0-9a-f]{6}$/i.test(c) ? c : '#b9bcc4'));
+  // Default filament per object (Bambu: object id) and per part (component object id).
+  const objFilament = new Map(), partFilament = new Map();
+  const settings = text('Metadata/model_settings.config') || text('Metadata/Slic3r_PE_model.config');
+  for (const om of settings.matchAll(/<object\s+id="(\d+)"[^>]*>([\s\S]*?)<\/object>/g)) {
+    const [head, ...parts] = om[2].split(/<(?:part|volume)\b/);
+    const e = head.match(/key="extruder" value="(\d+)"/);
+    if (e) objFilament.set(om[1], +e[1]);
+    for (const part of parts) {
+      const id = (part.match(/^\s+id="(\d+)"/) || [])[1];
+      const pe = part.match(/key="extruder" value="(\d+)"/);
+      if (id && pe) partFilament.set(id, +pe[1]);
+    }
+  }
+
+  const docs = new Map(); // path -> { text, objects: Map(id -> object) }
   const doc = path => {
     path = path.replace(/^\//, '');
     if (docs.has(path)) return docs.get(path);
-    const bytes = files[path];
-    if (!bytes) throw new Error(`3MF part ${path} is missing`);
-    const text = dec.decode(bytes);
+    const body = text(path);
+    if (!body) throw new Error(`3MF part ${path} is missing`);
     const objects = new Map();
-    for (const om of text.matchAll(/<object\b([^>]*)>([\s\S]*?)<\/object>/g)) {
-      const body = om[2];
+    for (const om of body.matchAll(/<object\b([^>]*)>([\s\S]*?)<\/object>/g)) {
+      const inner = om[2];
       const obj = { components: [] };
-      if (body.includes('<mesh')) {
+      if (inner.includes('<mesh')) {
         const pos = [];
-        for (const v of body.matchAll(/<vertex\b([^>]*)\/?>/g)) pos.push(+attr(v[1], 'x'), +attr(v[1], 'y'), +attr(v[1], 'z'));
-        const idx = [];
-        for (const t of body.matchAll(/<triangle\b([^>]*)\/?>/g)) idx.push(+attr(t[1], 'v1'), +attr(t[1], 'v2'), +attr(t[1], 'v3'));
-        const g = new THREE.BufferGeometry();
-        g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
-        g.setIndex(idx);
-        g.computeVertexNormals();
-        obj.geometry = g;
+        for (const v of inner.matchAll(/<vertex\b([^>]*)\/?>/g)) pos.push(+attr(v[1], 'x'), +attr(v[1], 'y'), +attr(v[1], 'z'));
+        const idx = [], states = [];
+        let painted = false;
+        for (const t of inner.matchAll(/<triangle\b([^>]*)\/?>/g)) {
+          idx.push(+attr(t[1], 'v1'), +attr(t[1], 'v2'), +attr(t[1], 'v3'));
+          const code = attr(t[1], 'paint_color') || attr(t[1], 'slic3rpe:mmu_segmentation');
+          const st = code ? paintState(code) : 0;
+          if (st) painted = true;
+          states.push(st);
+        }
+        obj.mesh = { pos, idx, states: painted ? states : null };
       }
-      for (const c of body.matchAll(/<component\b([^>]*)\/?>/g)) {
+      for (const c of inner.matchAll(/<component\b([^>]*)\/?>/g)) {
         obj.components.push({ path: attr(c[1], 'p:path') || path, id: attr(c[1], 'objectid'), transform: attr(c[1], 'transform') });
       }
       objects.set(attr(om[1], 'id'), obj);
     }
-    const entry = { text, objects };
+    const entry = { text: body, objects };
     docs.set(path, entry);
     return entry;
   };
 
-  const build = (path, id, depth = 0) => {
+  const colourOf = filament => palette[filament - 1];
+  const meshFor = (o, filament) => {
+    const { pos, idx, states } = o.mesh;
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+    g.setIndex(idx);
+    const base = colourOf(filament);
+    if (!states && !base) { g.computeVertexNormals(); return new THREE.Mesh(g, baseMaterial()); }
+    if (!states) {
+      g.computeVertexNormals();
+      const mat = baseMaterial(); mat.color.copy(base);
+      return new THREE.Mesh(g, mat);
+    }
+    // Painted: one colour per triangle, so give each its own vertices.
+    const flat = g.toNonIndexed();
+    const col = new Float32Array(flat.attributes.position.count * 3);
+    const grey = new THREE.Color(0xb9bcc4);
+    states.forEach((st, t) => {
+      const c = colourOf(st || filament) || grey;
+      for (let k = 0; k < 3; k++) col.set([c.r, c.g, c.b], (t * 3 + k) * 3);
+    });
+    flat.setAttribute('color', new THREE.BufferAttribute(col, 3));
+    flat.computeVertexNormals();
+    const mat = baseMaterial(); mat.vertexColors = true; mat.color.set(0xffffff);
+    return new THREE.Mesh(flat, mat);
+  };
+
+  const build = (path, id, filament, depth = 0) => {
     const o = doc(path).objects.get(id);
     if (!o || depth > 16) return null;
     const node = new THREE.Group();
-    if (o.geometry) node.add(new THREE.Mesh(o.geometry, baseMaterial()));
+    if (o.mesh) node.add(meshFor(o, filament));
     for (const c of o.components) {
-      const child = build(c.path, c.id, depth + 1);
+      const child = build(c.path, c.id, partFilament.get(c.id) || filament, depth + 1);
       if (child) { child.applyMatrix4(matrix(c.transform)); node.add(child); }
     }
     return node;
@@ -398,7 +477,8 @@ function parse3MFComponents(buf) {
   const rootDoc = doc(rootPath);
   const buildBlock = (rootDoc.text.match(/<build\b[^>]*>([\s\S]*?)<\/build>/) || [])[1] || '';
   for (const it of buildBlock.matchAll(/<item\b([^>]*)\/?>/g)) {
-    const node = build(rootPath, attr(it[1], 'objectid'));
+    const id = attr(it[1], 'objectid');
+    const node = build(rootPath, id, objFilament.get(id) || 1);
     if (node) { node.applyMatrix4(matrix(attr(it[1], 'transform'))); root.add(node); }
   }
   if (!root.children.length) throw new Error('no printable objects in this 3MF');
@@ -406,6 +486,12 @@ function parse3MFComponents(buf) {
 }
 
 function parse3MF(buf) {
+  // Painted files go straight to our reader: three.js would drop the paint.
+  let files = unzipSync(new Uint8Array(buf));
+  const painted = Object.entries(files).some(([name, bytes]) => name.endsWith('.model') &&
+    /paint_color=|mmu_segmentation=/.test(new TextDecoder().decode(bytes.subarray(0, 4 << 20))));
+  if (painted) return parse3MFComponents(buf, files);
+  files = null; // let the unzipped copy go before three.js unzips its own (some files are 200+ MB)
   let obj;
   try {
     obj = new ThreeMFLoader().parse(buf);
