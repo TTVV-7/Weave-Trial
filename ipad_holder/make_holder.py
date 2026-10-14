@@ -18,7 +18,9 @@ A slot in the top wall, open to the front, clears the iPad mini's top
 (power) button in the top-right corner. The case's corners are rounded in
 plan (the pocket's two closed corners with them, so the wall stays 3 mm),
 and its front and back perimeter edges are rounded over. The source's
-front-camera keyhole in the top lip is filled in.
+front-camera keyhole in the top lip is filled in. The home-button opening is
+moved to where an iPad mini's button actually sits, made bigger, and
+sloped. White accent lines run round the four corners of the front face.
 
 The VanEye logo is cut 0.4 mm into the back face (the face on the bed) and
 kept as its own part, so a slicer opens the file with two filaments to
@@ -267,6 +269,54 @@ def camera_fill() -> m3.Manifold:
     return wall + lip
 
 
+# Where the iPad mini sits: slid in against the left wall, resting on the
+# bottom wall as it hangs. Its 7.9" 4:3 screen leaves a 21 mm bottom bezel on
+# the 203.2 mm body, and the home button (about 11 mm) is centred in it.
+IPAD_W = 134.8
+HOME_CENTRE = (POCKET_LEFT + IPAD_W / 2, POCKET_BOTTOM + 10.6)
+HOME_HOLE_D = 15.0              # at the back of the lip, against the screen
+HOME_SLOPE = 30.0               # degrees from the face: the gentle bevel out
+LIP_Z = 9.8                     # underside of the front lip
+
+
+def home_fill() -> m3.Manifold:
+    """Fill the source's home-button hole (10 mm, 4.7 mm too low) flush with
+    the bottom lip, so the new one can be cut in the right place."""
+    return m3.Manifold.cube([14.0, 9.6, 2.0]).translate([181.6, -205.2, LIP_Z])
+
+
+def home_cutter(z_top: float) -> m3.Manifold:
+    """A cone: HOME_HOLE_D at the lip's underside, widening at HOME_SLOPE to
+    the front face, so the lip slopes away on both sides of the button."""
+    r0 = HOME_HOLE_D / 2
+    h = z_top - LIP_Z
+    r1 = r0 + h / math.tan(math.radians(HOME_SLOPE))
+    cone = m3.Manifold.cylinder(h + 0.02, r0, r1 + 0.02 / math.tan(math.radians(HOME_SLOPE)), 128)
+    return cone.translate([*HOME_CENTRE, LIP_Z - 0.01])
+
+
+# --- front accent lines ---------------------------------------------------
+LINE_DEPTH = 0.4                # the last two layers, in a second filament
+LINE_W = 0.8                    # two nozzle widths
+LINE_IN = 3.0                   # from the case's outer edge
+LINE_LEN = 35.0                 # along each side from each corner
+LINE_MARGIN = 0.7               # kept clear of every edge and opening
+
+
+def front_lines(body: m3.Manifold, frame: trimesh.Trimesh) -> m3.CrossSection:
+    """Corner accents: a line following the rounded outline LINE_IN from the
+    edge, kept only within LINE_LEN of each corner, on the flat front face."""
+    (x0, y0, _), (x1, y1, z1) = frame.bounds
+    outer = rounded_rect(x0, y0, x1, y1, CORNER_R)
+    ring = (outer.offset(-LINE_IN, m3.JoinType.Round)
+            - outer.offset(-LINE_IN - LINE_W, m3.JoinType.Round))
+    keep = body.slice(z1 - 0.05).offset(-LINE_MARGIN, m3.JoinType.Round)
+    L = LINE_LEN
+    boxes = [m3.CrossSection.square([L, L]).translate([x, y])
+             for x, y in ((x0, y1 - L), (x1 - L, y1 - L), (x0, y0), (x1 - L, y0))]
+    return ring ^ keep ^ m3.CrossSection.batch_boolean(boxes, m3.OpType.Add)
+
+
 def pocket_fillets(frame: trimesh.Trimesh) -> m3.Manifold:
     """Material filling the pocket's two left corners out to POCKET_R."""
     z1 = frame.bounds[1, 2]
@@ -328,8 +378,8 @@ def build_holder(info: dict | None = None):
     z0, z1 = loop.bounds[:, 2]
     cs = loop_section(loop)
     axis = hole_axis(cs, (z0 + z1) / 2)
-    case = ((to_manifold(frame) + pocket_fillets(frame) + camera_fill())
-            ^ envelope(frame))
+    case = ((to_manifold(frame) + pocket_fillets(frame) + camera_fill()
+             + home_fill()) ^ envelope(frame)) - home_cutter(frame.bounds[1, 2])
     body = m3.Manifold.batch_boolean(
         [case, cs.extrude(z1 - z0).translate([0, 0, z0]), neck_box], m3.OpType.Add)
     body = body - hole_cutter(axis) - power_slot(frame)
@@ -344,6 +394,9 @@ def build_holder(info: dict | None = None):
             continue
         solid = body ^ region.extrude(INLAY_DEPTH)
         inlays.append((label, rgb, solid))
+    z1 = frame.bounds[1, 2]
+    lines = body ^ front_lines(body, frame).extrude(LINE_DEPTH).translate([0, 0, z1 - LINE_DEPTH])
+    inlays.append(("Front lines", (245, 245, 245), lines))
     for _, _, solid in inlays:
         body = body - solid
 

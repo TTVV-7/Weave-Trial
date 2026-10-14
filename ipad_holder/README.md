@@ -11,7 +11,7 @@ Reads `source_ipad_holder.3mf` and the two logo SVGs, and writes:
 
 | file | what |
 |---|---|
-| `ipad_holder.3mf` | the holder, as one object with two parts: the body and the VanEye logo |
+| `ipad_holder.3mf` | the holder, as one object with three parts: the body, the VanEye logo and the front accent lines |
 | `wing_screw.3mf` / `.stl` | the M5 wing screw ("butterfly key") |
 
 ## The diamond loop
@@ -55,6 +55,27 @@ The front and back perimeter edges are rounded over by 1.5 mm (`EDGE_R`).
 
 The source's front-camera keyhole in the top lip, and the notch below it in
 the top wall, are filled in flush with the wall and lip (`CAMERA_X`).
+
+## Home button
+
+The source's 10 mm hole sat 4.7 mm below where an iPad mini's home button
+is. It is filled. A new opening is cut where the button actually sits: the
+iPad slides in against the left wall and rests on the bottom wall, and its
+button is centred in the 21 mm bottom bezel, 10.6 mm up from its bottom edge
+(`HOME_CENTRE`, x 188.4, y −194.5). The opening is 15 mm across against the
+screen (`HOME_HOLE_D`), for an 11 mm button, and the lip slopes away from it
+at 30° (`HOME_SLOPE`) to 21.6 mm at the front face. That leaves 2 mm of flat
+lip below it. Apple publishes no exact button position, so this is worked
+out from the body and screen sizes.
+
+## Front accent lines
+
+White lines run round the four corners of the front face: 0.8 mm wide, 3 mm
+in from the edge, following the rounded outline for 35 mm along each side
+from each corner (`LINE_*`). They are the top 0.4 mm of the print, so they
+are the last two layers, in their own part and filament. They stay 0.7 mm
+clear of every edge and opening. `front_lines_mockup.png` shows them against
+the other styles that were considered.
 
 ## Power button
 
