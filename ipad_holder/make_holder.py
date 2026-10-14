@@ -17,7 +17,8 @@ steel M5 both go in.
 A slot in the top wall, open to the front, clears the iPad mini's top
 (power) button in the top-right corner. The case's corners are rounded in
 plan (the pocket's two closed corners with them, so the wall stays 3 mm),
-and its front and back perimeter edges are rounded over.
+and its front and back perimeter edges are rounded over. The source's
+front-camera keyhole in the top lip is filled in.
 
 The VanEye logo is cut 0.4 mm into the back face (the face on the bed) and
 kept as its own part, so a slicer opens the file with two filaments to
@@ -252,6 +253,20 @@ def envelope(frame: trimesh.Trimesh, steps: int = 10) -> m3.Manifold:
     return m3.Manifold.batch_hull(slabs)
 
 
+# The front-camera keyhole: a notch in the top wall's inside face and a hole
+# through the lip above it, around x = 189. Filling it back to the wall face
+# (y = -1.1) and the lip's edge (y = -5.4, from z = 9.8) leaves the top as
+# plain as the rest of it.
+CAMERA_X = (185.0, 193.0)
+
+
+def camera_fill() -> m3.Manifold:
+    x0, x1 = CAMERA_X
+    wall = m3.Manifold.cube([x1 - x0, 1.2, 9.85]).translate([x0, -1.1, 1.95])
+    lip = m3.Manifold.cube([x1 - x0, 4.4, 2.0]).translate([x0, -5.4, 9.8])
+    return wall + lip
+
+
 def pocket_fillets(frame: trimesh.Trimesh) -> m3.Manifold:
     """Material filling the pocket's two left corners out to POCKET_R."""
     z1 = frame.bounds[1, 2]
@@ -313,7 +328,8 @@ def build_holder(info: dict | None = None):
     z0, z1 = loop.bounds[:, 2]
     cs = loop_section(loop)
     axis = hole_axis(cs, (z0 + z1) / 2)
-    case = (to_manifold(frame) + pocket_fillets(frame)) ^ envelope(frame)
+    case = ((to_manifold(frame) + pocket_fillets(frame) + camera_fill())
+            ^ envelope(frame))
     body = m3.Manifold.batch_boolean(
         [case, cs.extrude(z1 - z0).translate([0, 0, z0]), neck_box], m3.OpType.Add)
     body = body - hole_cutter(axis) - power_slot(frame)

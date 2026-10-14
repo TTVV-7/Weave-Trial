@@ -51,6 +51,11 @@ The case's four corners are rounded to 8 mm, seen from the front
 round. The right side is open below the lip, so it has no inside corners.
 The front and back perimeter edges are rounded over by 1.5 mm (`EDGE_R`).
 
+## Camera hole
+
+The source's front-camera keyhole in the top lip, and the notch below it in
+the top wall, are filled in flush with the wall and lip (`CAMERA_X`).
+
 ## Power button
 
 A slot runs through the top wall and its lip in the top-right corner (seen
