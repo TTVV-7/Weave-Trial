@@ -6,12 +6,16 @@ two logos inlaid in the back.
 Reads ``source_ipad_holder.3mf`` and the two logo SVGs next to this file and
 writes ``ipad_holder.3mf``, ``wing_screw.3mf`` / ``.stl`` and ``preview.png``.
 
-The thread: the original 5.2 mm hole runs along x through the left corner of
-the diamond loop, at y = 12, z = 6 (y = 20 once the loop is lifted to clear
-the wings, see LOOP_RAISE). The loop is a plain extrusion, so it is
-rebuilt from its own cross-section (which fills the old hole) and an ISO-60
-degree M5 x 0.8 thread is cut back in, opened up for printing so a printed
-screw or a real steel M5 both go in.
+The diamond loop at the top is a plain extrusion, so it is rebuilt from its
+own cross-section: grown 1 mm on the outside and 1 mm into the opening, with
+the source's 5.2 mm hole (at 9 o'clock) filled. An ISO-60 degree M5 x 0.8
+thread is cut square through the upper-right wall instead, as near 2 o'clock
+as the screw can sit and still pass into the opening without scraping the
+lower-right wall. It is opened up for printing so a printed screw or a real
+steel M5 both go in.
+
+A slot in the top wall, open to the front, clears the iPad mini's top
+(power) button in the top-right corner.
 
 The logos are cut 0.4 mm into the back face (the face on the bed) and kept as
 their own parts, so a slicer opens the file with three filaments to assign.
@@ -35,12 +39,14 @@ from phonecase.threemf import Part, parts_to_3mf               # noqa: E402
 
 # --- thread ---------------------------------------------------------------
 PITCH = 0.8
-# The loop is lifted this far off the frame on a longer neck, so the wings
-# (15 mm radius) clear the top of the frame by about 3 mm all the way round.
-# In the original the axis was 10.1 mm above the frame and the wings hit it.
-LOOP_RAISE = 8.0
-HOLE_AXIS = (12.0 + LOOP_RAISE, 6.0)   # y, z of the clamp hole; it runs along x
-HOLE_X = (172.0, 188.0)         # from outside the loop to inside its opening
+# Extra neck length under the loop. With the screw at 9 o'clock this had to
+# be 8 mm for the wings to clear the frame; at 2 o'clock they point up and
+# away, so the source's neck is enough (checked in check_screw).
+LOOP_RAISE = 0.0
+LOOP_GROW = 1.0                 # added to the loop's walls, outside and in
+HOLE_CLOCK = 2.0                # where the screw goes in, seen from the front
+SCREW_GAP = 0.5                 # least gap between the screw and the walls
+                                # of the opening as it passes through
 # Radial limits of the two threads. ISO M5: internal minor 4.134, external
 # major 5.0, external minor 4.019. The hole is opened and the screw shrunk
 # so the two clear by about 0.12 mm on each flank.
@@ -58,7 +64,9 @@ LOGOS = [
 ]
 
 # --- wing screw -----------------------------------------------------------
-SHANK_LEN = 15.0                # threaded length: 4.3 mm of wall + reach
+SHANK_LEN = 10.0                # threaded length: 5 mm of wall, then the
+                                # 3.2 mm it can reach into the opening
+
 WING_SPAN = 30.0
 WING_THICK = 3.2
 HUB_D, HUB_H = 10.0, 9.0
@@ -115,11 +123,18 @@ def threaded_rod(length: float, d_minor: float, d_major: float,
     return to_manifold(mesh)
 
 
-def hole_cutter() -> m3.Manifold:
+def orient(solid: m3.Manifold, start, direction) -> m3.Manifold:
+    """Turn a solid built along +z to run along ``direction`` (in the xy
+    plane) from ``start``."""
+    deg = math.degrees(math.atan2(direction[1], direction[0]))
+    return solid.rotate([0, 90, 0]).rotate([0, 0, deg]).translate(list(start))
+
+
+def hole_cutter(axis) -> m3.Manifold:
     flank = FLANK_CLEAR * 2 / math.sqrt(3)        # radial shift for that flank gap
-    rod = threaded_rod(HOLE_X[1] - HOLE_X[0], HOLE_MINOR, HOLE_MAJOR, +flank)
-    # z -> x, then out to the hole's axis
-    return rod.rotate([0, 90, 0]).translate([HOLE_X[0], *HOLE_AXIS])
+    length = axis["wall"] + 6.0
+    rod = threaded_rod(length, HOLE_MINOR, HOLE_MAJOR, +flank)
+    return orient(rod, axis["inner"] - 0.5 * axis["n"], axis["n"])
 
 
 # --------------------------------------------------------------------------
@@ -131,13 +146,73 @@ def load_source():
     return {name: g for name, g in scene.geometry.items()}
 
 
-def rebuilt_loop(loop: trimesh.Trimesh) -> m3.Manifold:
-    """The diamond loop from its own cross-section, with the old hole filled."""
-    z0, z1 = loop.bounds[:, 2]
+def loop_section(loop: trimesh.Trimesh) -> m3.CrossSection:
+    """The diamond loop's cross-section, old hole gone, walls grown.
+
+    Offsetting the ring by LOOP_GROW moves its outside out and its opening in
+    by the same amount; mitred, so the corners stay sharp.
+    """
+    z0 = loop.bounds[0, 2]
     sec = loop.section(plane_origin=[0, 0, z0 + 0.3], plane_normal=[0, 0, 1])
     loops = [np.asarray(e)[:, :2].tolist() for e in sec.discrete]
     cs = m3.CrossSection(loops, m3.FillRule.EvenOdd)
-    return cs.extrude(z1 - z0).translate([0, 0, z0])
+    return cs.offset(LOOP_GROW, m3.JoinType.Miter, 2.0).translate([0, LOOP_RAISE])
+
+
+def hole_axis(cs: m3.CrossSection, zc: float) -> dict:
+    """Where the screw goes through the upper-right wall.
+
+    The thread runs square to the wall so the wings seat flat. Along the wall
+    it sits where a line from the opening's centre at HOLE_CLOCK meets the
+    inside face, but no further toward the right corner than lets the screw
+    clear the lower-right wall by SCREW_GAP as it passes into the opening.
+    """
+    polys = sorted((np.asarray(p) for p in cs.to_polygons()),
+                   key=lambda p: -abs(_area(p)))
+    outer, inner = polys[0], polys[1]
+    top_i, right_i, left_i = (inner[inner[:, 1].argmax()], inner[inner[:, 0].argmax()],
+                              inner[inner[:, 0].argmin()])
+    top_o = outer[outer[:, 1].argmax()]
+    centre = np.array([(left_i[0] + right_i[0]) / 2, (left_i[1] + right_i[1]) / 2])
+    along = (right_i - top_i) / np.linalg.norm(right_i - top_i)
+    n = np.array([along[1], -along[0]])          # out of the opening
+    if np.dot(n, top_i - centre) < 0:
+        n = -n
+    mid = (top_i + right_i) / 2
+    half = np.linalg.norm(right_i - top_i) / 2
+    a = math.radians(HOLE_CLOCK * 30)
+    ray = np.array([math.sin(a), math.cos(a)])   # clockwise from 12
+    t = np.dot(mid - centre, n) / np.dot(ray, n)
+    wanted = float(np.dot(centre + t * ray - mid, along))
+    s = min(wanted, half - SCREW_MAJOR / 2 - SCREW_GAP)
+    inner_pt = mid + s * along
+    wall = float(np.dot(top_o - top_i, n))
+    return {"inner": np.r_[inner_pt, zc], "n": np.r_[n, 0.0], "wall": wall,
+            "shift": s, "wanted": wanted, "face": 2 * half,
+            "clock": 3 + math.degrees(math.atan2(-(inner_pt - centre)[1],
+                                                 (inner_pt - centre)[0])) / 30}
+
+
+def _area(p) -> float:
+    x, y = p[:, 0], p[:, 1]
+    return 0.5 * float(np.dot(x, np.roll(y, -1)) - np.dot(y, np.roll(x, -1)))
+
+
+# The pocket's right-hand inside wall, and how far in from it the slot for
+# the top button runs. The iPad mini 5's button sits in this stretch; it is
+# cut generously because Apple publishes no exact position.
+POWER_SLOT = (6.0, 30.0)
+
+
+def power_slot(frame: trimesh.Trimesh) -> m3.Manifold:
+    """A slot through the top wall and its lip, from the pocket floor up and
+    open to the front, so a finger reaches the button."""
+    x_right = frame.bounds[1, 0] - 3.0           # walls are 3 mm
+    y_top = frame.bounds[1, 1]
+    floor = 2.0                                  # back plate thickness
+    x0, x1 = x_right - POWER_SLOT[1], x_right - POWER_SLOT[0]
+    return (m3.Manifold.cube([x1 - x0, 12.0, 12.0])
+            .translate([x0, y_top - 10.0, floor]))
 
 
 def logo_region(path: str, keep_dark: bool, cx: float, cy: float,
@@ -174,7 +249,7 @@ def logo_region(path: str, keep_dark: bool, cx: float, cy: float,
         [p for p in region.decompose() if p.area() > 0.05], m3.OpType.Add)
 
 
-def build_holder():
+def build_holder(info: dict | None = None):
     src = load_source()
     names = sorted(src, key=lambda n: -src[n].volume)
     frame, loop, neck = (src[n] for n in names)
@@ -184,10 +259,15 @@ def build_holder():
     # the frame face to face, which leaves it a separate solid.
     neck_box = (m3.Manifold.cube([nx1 - nx0, ny1 - ny0 + LOOP_RAISE + 1.0, nz1 - nz0])
                 .translate([nx0, ny0 - 1.0, nz0]))
+    z0, z1 = loop.bounds[:, 2]
+    cs = loop_section(loop)
+    axis = hole_axis(cs, (z0 + z1) / 2)
     body = m3.Manifold.batch_boolean(
-        [to_manifold(frame), rebuilt_loop(loop).translate([0, LOOP_RAISE, 0]),
+        [to_manifold(frame), cs.extrude(z1 - z0).translate([0, 0, z0]),
          neck_box], m3.OpType.Add)
-    body = body - hole_cutter()
+    body = body - hole_cutter(axis) - power_slot(frame)
+    if info is not None:
+        info["axis"] = axis
 
     inlays = []
     for fname, keep_dark, cx, cy, w, label, rgb in LOGOS:
@@ -232,17 +312,50 @@ def build_screw() -> m3.Manifold:
     return m3.Manifold.batch_boolean([wings, hub, collar, rod], m3.OpType.Add)
 
 
+def seat_screw(screw: m3.Manifold, axis: dict, spin: float = 0.0,
+               backoff: float = 0.0) -> m3.Manifold:
+    """The screw in the clamp, turned ``spin`` degrees, bearing face on the
+    loop (or ``backoff`` mm short of it)."""
+    face = axis["inner"] + axis["n"] * (axis["wall"] + backoff)
+    s = screw.rotate([0, 0, spin]).translate([0, 0, -(HUB_H + 1.0)])
+    return orient(s, face, -axis["n"])
+
+
+def check_screw(body: m3.Manifold, screw: m3.Manifold, axis: dict) -> dict:
+    """Does the screw turn, and does it go in?
+
+    The head is turned a full revolution in 5 degree steps against the
+    holder, 0.3 mm off its seat; then a rod the screw's full diameter is
+    pushed from the inside face across the opening until it meets the loop,
+    which is how far the screw can reach to clamp something.
+    """
+    head = screw ^ m3.Manifold.cube([40, 40, HUB_H + 1.0]).translate([-20, -20, 0])
+    hits = [deg for deg in range(0, 360, 5)
+            if (seat_screw(head, axis, deg, 0.3) ^ body).volume() > 1e-3]
+    reach = 0.0
+    while reach < axis["face"]:
+        rod = m3.Manifold.cylinder(reach + 0.1, SCREW_MAJOR / 2, SCREW_MAJOR / 2, 48)
+        if (orient(rod, axis["inner"] - 0.05 * axis["n"], -axis["n"]) ^ body).volume() > 1e-3:
+            break
+        reach += 0.1
+    lowest = min(seat_screw(head, axis, deg, 0.3).bounding_box()[1]
+                 for deg in range(0, 360, 5))
+    return {"hits": hits, "reach": reach, "lowest_wing_y": lowest}
+
+
 # --------------------------------------------------------------------------
 # output
 # --------------------------------------------------------------------------
 
-def preview(parts, screw, path):
+def preview(parts, screw, axis, reach, path):
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
+    from matplotlib.patches import PathPatch
+    from matplotlib.path import Path
     from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 
-    fig = plt.figure(figsize=(16, 9))
+    fig = plt.figure(figsize=(20, 7))
     light = np.array([0.3, -0.5, 0.8]) / np.linalg.norm([0.3, -0.5, 0.8])
 
     def draw(ax, meshes, view):
@@ -257,22 +370,41 @@ def preview(parts, screw, path):
         ax.set_xlim(c[0] - r, c[0] + r); ax.set_ylim(c[1] - r, c[1] + r)
         ax.set_zlim(c[2] - r, c[2] + r); ax.view_init(*view); ax.set_axis_off()
 
+    def fill(ax, cs, colour):
+        loops = cs.to_polygons()
+        if not loops:
+            return
+        verts = np.vstack([np.vstack([lp, lp[:1]]) for lp in loops])
+        codes = []
+        for lp in loops:
+            codes += [Path.MOVETO] + [Path.LINETO] * (len(lp) - 1) + [Path.CLOSEPOLY]
+        ax.add_patch(PathPatch(Path(verts, codes), fc=colour, ec="k", lw=0.4))
+
     meshes = [(to_trimesh(p.solid), p.rgb) for p in parts]
     ax = fig.add_subplot(1, 3, 1, projection="3d"); ax.set_title("Back (logos)")
     draw(ax, meshes, (-90, 90))              # from below: the back face
-    ax = fig.add_subplot(1, 3, 2, projection="3d"); ax.set_title("Clamp thread")
-    clip = m3.Manifold.cube([40, 30 + LOOP_RAISE, 12]).translate([170, -5, 0])
-    draw(ax, [(to_trimesh(parts[0].solid ^ clip ^
-                          m3.Manifold.cube([40, 40, 6]).translate([170, -10, 0])),
-               parts[0].rgb)], (35, -60))
+
+    # The screw as far in as it goes: through the wall and `reach` across.
+    seated = seat_screw(screw, axis, 0, SHANK_LEN - axis["wall"] - reach)
+    z = axis["inner"][2]
+    ax = fig.add_subplot(1, 3, 2)
+    ax.set_title("Front, cut through the thread: clamp at 2 o'clock, "
+                 "button slot top right", fontsize=10)
+    fill(ax, parts[0].solid.slice(z), "#%02x%02x%02x" % parts[0].rgb)
+    fill(ax, seated.slice(z), "#c8c8c8")
+    ax.set_xlim(165, 265); ax.set_ylim(-12, 42); ax.set_aspect("equal")
+    ax.set_xlabel("mm"); ax.grid(True, lw=0.3)
+
     ax = fig.add_subplot(1, 3, 3, projection="3d"); ax.set_title("Wing screw")
     draw(ax, [(to_trimesh(screw), (200, 200, 200))], (15, -60))
     plt.savefig(path, dpi=110, bbox_inches="tight")
 
 
 def main():
-    parts = build_holder()
+    info = {}
+    parts = build_holder(info)
     screw = build_screw()
+    axis = info["axis"]
     lo = np.min([p.solid.bounding_box()[:3] for p in parts], axis=0)
     with open(os.path.join(HERE, "ipad_holder.3mf"), "wb") as f:
         f.write(parts_to_3mf(parts, origin=(10 - lo[0], 10 - lo[1]),
@@ -286,7 +418,14 @@ def main():
               f"genus {p.solid.genus()}")
     print(f"{'Wing screw':20s} volume {screw.volume():9.1f} mm3  "
           f"height {screw.bounding_box()[5]:.1f} mm")
-    preview(parts, screw, os.path.join(HERE, "preview.png"))
+    print(f"loop wall {axis['wall']:.2f} mm, inside face {axis['face']:.2f} mm; "
+          f"screw at {axis['clock']:.2f} o'clock, {axis['shift']:.2f} mm off the "
+          f"face's centre ({axis['wanted']:.2f} wanted for exactly {HOLE_CLOCK:g})")
+    chk = check_screw(parts[0].solid, screw, axis)
+    print(f"wings hit the holder at {len(chk['hits'])} of 72 turns {chk['hits'][:6]}; "
+          f"screw reaches {chk['reach']:.1f} mm into the opening; lowest wing "
+          f"{chk['lowest_wing_y'] - 1.9:.1f} mm above the frame")
+    preview(parts, screw, axis, chk["reach"], os.path.join(HERE, "preview.png"))
 
 
 if __name__ == "__main__":
