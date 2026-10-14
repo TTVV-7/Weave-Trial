@@ -15,11 +15,14 @@ lower-right wall. It is opened up for printing so a printed screw or a real
 steel M5 both go in.
 
 A slot in the top wall, open to the front, clears the iPad mini's top
-(power) button in the top-right corner.
+(power) button in the top-right corner. The case's corners are rounded in
+plan (the pocket's two closed corners with them, so the wall stays 3 mm),
+and its front and back perimeter edges are rounded over.
 
-The logos are cut 0.4 mm into the back face (the face on the bed) and kept as
-their own parts, so a slicer opens the file with three filaments to assign.
-On the back they are mirrored, so they read correctly from behind.
+The VanEye logo is cut 0.4 mm into the back face (the face on the bed) and
+kept as its own part, so a slicer opens the file with two filaments to
+assign. The printyours.ca logo is etched: the same 0.4 mm recess, left
+empty. On the back both are mirrored, so they read correctly from behind.
 """
 
 from __future__ import annotations
@@ -56,12 +59,23 @@ FLANK_CLEAR = 0.12
 
 # --- logos ----------------------------------------------------------------
 INLAY_DEPTH = 0.4               # two 0.2 mm layers: enough to hide the base colour
+ETCH_DEPTH = 0.4                # an etched logo is the same recess, left empty
 # Where each logo goes, in model coordinates, and how wide its artwork is.
+# An "inlay" is its own part in its own filament; an "etch" is just a recess.
 LOGOS = [
-    # file, keep-dark?, centre x, centre y, width, part name, display colour
-    ("logo_vaneye.svg", False, 189.6, -85.0, 105.0, "VanEye logo", (240, 240, 240)),
-    ("logo_printyours.svg", True, 189.6, -172.0, 42.0, "printyours.ca logo", (20, 20, 20)),
+    # file, keep-dark?, centre x, centre y, width, part name, display colour, kind
+    ("logo_vaneye.svg", False, 189.6, -85.0, 105.0, "VanEye logo", (240, 240, 240), "inlay"),
+    ("logo_printyours.svg", True, 189.6, -172.0, 42.0, "printyours.ca logo", None, "etch"),
 ]
+
+# --- rounding -------------------------------------------------------------
+CORNER_R = 8.0                  # the case's corners, seen from the front
+EDGE_R = 1.5                    # front and back perimeter edges
+# The pocket's two closed corners (the right side is open below the lip, so
+# only the left ones are corners at all). Rounded concentric with the
+# outside so the wall stays 3 mm; an iPad mini's corners are rounder still.
+POCKET_LEFT, POCKET_BOTTOM, POCKET_TOP = 121.0, -205.1, -1.1
+POCKET_R = 5.0
 
 # --- wing screw -----------------------------------------------------------
 SHANK_LEN = 10.0                # threaded length: 5 mm of wall, then the
@@ -198,21 +212,58 @@ def _area(p) -> float:
     return 0.5 * float(np.dot(x, np.roll(y, -1)) - np.dot(y, np.roll(x, -1)))
 
 
-# The pocket's right-hand inside wall, and how far in from it the slot for
-# the top button runs. The iPad mini 5's button sits in this stretch; it is
-# cut generously because Apple publishes no exact position.
-POWER_SLOT = (6.0, 30.0)
+# How far in from the frame's right-hand outside edge the slot for the top
+# button runs. The iPad mini 5's button sits in this stretch; it is cut
+# generously because Apple publishes no exact position.
+POWER_SLOT = (9.0, 33.0)
 
 
 def power_slot(frame: trimesh.Trimesh) -> m3.Manifold:
     """A slot through the top wall and its lip, from the pocket floor up and
     open to the front, so a finger reaches the button."""
-    x_right = frame.bounds[1, 0] - 3.0           # walls are 3 mm
+    x_right = frame.bounds[1, 0]
     y_top = frame.bounds[1, 1]
     floor = 2.0                                  # back plate thickness
     x0, x1 = x_right - POWER_SLOT[1], x_right - POWER_SLOT[0]
     return (m3.Manifold.cube([x1 - x0, 12.0, 12.0])
             .translate([x0, y_top - 10.0, floor]))
+
+
+def rounded_rect(x0, y0, x1, y1, r) -> m3.CrossSection:
+    return (m3.CrossSection.square([x1 - x0 - 2 * r, y1 - y0 - 2 * r])
+            .translate([x0 + r, y0 + r]).offset(r, m3.JoinType.Round, 2.0, 96))
+
+
+def envelope(frame: trimesh.Trimesh, steps: int = 10) -> m3.Manifold:
+    """The frame's outline with rounded corners and rounded-over edges.
+
+    The outline is convex, so the rounded box is the hull of thin slices of
+    it, each inset by how far the edge round has come in at that height.
+    """
+    (x0, y0, z0), (x1, y1, z1) = frame.bounds
+    slabs = []
+    for i in range(steps + 1):
+        a = math.pi / 2 * i / steps
+        inset = EDGE_R * (1 - math.cos(a))
+        for z in (z0 + EDGE_R * (1 - math.sin(a)), z1 - EDGE_R * (1 - math.sin(a))):
+            sl = rounded_rect(x0 + inset, y0 + inset, x1 - inset, y1 - inset,
+                              CORNER_R - inset).extrude(1e-3)
+            slabs.append(sl.translate([0, 0, min(max(z, z0), z1 - 1e-3)]))
+    return m3.Manifold.batch_hull(slabs)
+
+
+def pocket_fillets(frame: trimesh.Trimesh) -> m3.Manifold:
+    """Material filling the pocket's two left corners out to POCKET_R."""
+    z1 = frame.bounds[1, 2]
+    r = POCKET_R
+    # Reaching 0.1 mm into the walls so the fill fuses with them rather
+    # than meeting them face to face.
+    fill = (m3.CrossSection.square([r + 0.1, r + 0.1]).translate([-0.1, -0.1])
+            - m3.CrossSection.circle(r, 96).translate([r, r]))
+    corners = [fill.translate([POCKET_LEFT, POCKET_BOTTOM]),
+               fill.mirror([0, 1]).translate([POCKET_LEFT, POCKET_TOP])]
+    cs = m3.CrossSection.batch_boolean(corners, m3.OpType.Add)
+    return cs.extrude(z1 - 2.0 + 1e-3).translate([0, 0, 2.0 - 1e-3])
 
 
 def logo_region(path: str, keep_dark: bool, cx: float, cy: float,
@@ -262,16 +313,19 @@ def build_holder(info: dict | None = None):
     z0, z1 = loop.bounds[:, 2]
     cs = loop_section(loop)
     axis = hole_axis(cs, (z0 + z1) / 2)
+    case = (to_manifold(frame) + pocket_fillets(frame)) ^ envelope(frame)
     body = m3.Manifold.batch_boolean(
-        [to_manifold(frame), cs.extrude(z1 - z0).translate([0, 0, z0]),
-         neck_box], m3.OpType.Add)
+        [case, cs.extrude(z1 - z0).translate([0, 0, z0]), neck_box], m3.OpType.Add)
     body = body - hole_cutter(axis) - power_slot(frame)
     if info is not None:
         info["axis"] = axis
 
     inlays = []
-    for fname, keep_dark, cx, cy, w, label, rgb in LOGOS:
+    for fname, keep_dark, cx, cy, w, label, rgb, kind in LOGOS:
         region = logo_region(os.path.join(HERE, fname), keep_dark, cx, cy, w)
+        if kind == "etch":
+            body = body - region.extrude(ETCH_DEPTH)
+            continue
         solid = body ^ region.extrude(INLAY_DEPTH)
         inlays.append((label, rgb, solid))
     for _, _, solid in inlays:

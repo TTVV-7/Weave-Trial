@@ -11,7 +11,7 @@ Reads `source_ipad_holder.3mf` and the two logo SVGs, and writes:
 
 | file | what |
 |---|---|
-| `ipad_holder.3mf` | the holder, as one object with three parts: body, VanEye logo, printyours.ca logo |
+| `ipad_holder.3mf` | the holder, as one object with two parts: the body and the VanEye logo |
 | `wing_screw.3mf` / `.stl` | the M5 wing screw ("butterfly key") |
 
 ## The diamond loop
@@ -43,12 +43,20 @@ needed has gone (`LOOP_RAISE` = 0). The neck runs 1 mm into the frame wall,
 because in the source file it only touched the frame and was a separate
 solid.
 
+## Rounded edges
+
+The case's four corners are rounded to 8 mm, seen from the front
+(`CORNER_R`). The pocket's two closed corners on the left are rounded to
+5 mm about the same centres (`POCKET_R`), so the wall stays 3 mm all the way
+round. The right side is open below the lip, so it has no inside corners.
+The front and back perimeter edges are rounded over by 1.5 mm (`EDGE_R`).
+
 ## Power button
 
 A slot runs through the top wall and its lip in the top-right corner (seen
 from the front), from the pocket floor and open to the front, so a finger
-reaches the iPad mini's top button. It spans 6 to 30 mm in from the right
-inside wall (`POWER_SLOT`). That is generous, because Apple publishes no
+reaches the iPad mini's top button. It spans 9 to 33 mm in from the frame's
+right outside edge (`POWER_SLOT`). That is generous, because Apple publishes no
 exact position for the button.
 
 ## The wing screw
@@ -61,8 +69,13 @@ freely in the printed hole.
 
 ## The logos
 
-Both logos sit in the back face, the face on the bed. They are 0.4 mm deep,
-which is two 0.2 mm layers, and they are mirrored so they read correctly
-from behind. Each logo is its own part, so in the slicer you give the body
-one filament and each logo another. Change the depth with `INLAY_DEPTH`,
-and the position or size with `LOGOS`, in `make_holder.py`.
+Both logos sit in the back face, the face on the bed, and are mirrored so
+they read correctly from behind.
+
+- **VanEye** is a 0.4 mm inlay (two 0.2 mm layers) and its own part, so in
+  the slicer you give it its own filament.
+- **printyours.ca** is etched: a 0.4 mm recess in the body's own colour
+  (`ETCH_DEPTH`). It stays 42 mm wide.
+
+Change the size, position or kind (`"inlay"` or `"etch"`) with `LOGOS` in
+`make_holder.py`.
