@@ -253,6 +253,10 @@ def build(logo):
     white, red = clean(white), clean(red)
     gaps_closed = {c: len(as_polys(raw[c])) - len(as_polys(v))
                    for c, v in (("white", white), ("red", red))}
+    # holes inside letters (the O's counter) that thickening filled in
+    holes = lambda g: sum(len(p.interiors) for p in as_polys(g))
+    counters_filled = {c: holes(raw[c]) - holes(v)
+                       for c, v in (("white", white), ("red", red))}
 
     # Base plate from the *original* art bounds, so it is exactly
     # OVERALL_WIDTH wide; thickening grows at most MIN_FEATURE/2 into margin.
@@ -277,7 +281,7 @@ def build(logo):
     art = unary_union([white, red])
     assert base.buffer(1e-6).contains(art), "artwork overhangs the base"
 
-    info = dict(gaps_closed=gaps_closed, wall=wall, scale=s, plate_h=plate_h, crop=(x0, y0, x1, y1), img=img,
+    info = dict(counters_filled=counters_filled, band_y=band_y, gaps_closed=gaps_closed, wall=wall, scale=s, plate_h=plate_h, crop=(x0, y0, x1, y1), img=img,
                 hole=(hx, hy), tab_top=hy + tab_r)
     return base, white, red, raw, report, info
 
@@ -293,19 +297,19 @@ def extrude(g, h, z0=0.0):
     return m
 
 
-def write_3mf(path, parts):
+def write_3mf(path, parts, title="Renolux mirror hanger"):
     """parts: list of (name, mesh, rgb, extruder). One object, N parts."""
     esc = lambda s: s.replace("&", "&amp;").replace('"', "&quot;")
     xml = ['<?xml version="1.0" encoding="UTF-8"?>\n<model unit="millimeter" '
            'xml:lang="en-US" xmlns="http://schemas.microsoft.com/3dmanufacturing'
            '/core/2015/02" xmlns:m="http://schemas.microsoft.com/3dmanufacturing'
-           '/material/2015/02"><metadata name="Title">Renolux mirror hanger'
+           '/material/2015/02"><metadata name="Title">' + esc(title) +
            '</metadata><resources><m:colorgroup id="1">']
     xml += ['<m:color color="#%02X%02X%02XFF"/>' % rgb for _, _, rgb, _ in parts]
     xml.append("</m:colorgroup>")
     cfg = ['<?xml version="1.0" encoding="UTF-8"?>\n<config>\n'
            f'  <object id="{len(parts) + 2}">\n'
-           '    <metadata key="name" value="Renolux mirror hanger"/>\n'
+           f'    <metadata key="name" value="{esc(title)}"/>\n'
            '    <metadata key="extruder" value="1"/>\n']
     for i, (name, mesh, _, ext) in enumerate(parts):
         oid = i + 2
@@ -324,7 +328,7 @@ def write_3mf(path, parts):
                    '    </part>\n')
     top = len(parts) + 2
     comps = "".join(f'<component objectid="{i + 2}"/>' for i in range(len(parts)))
-    xml.append(f'<object id="{top}" type="model" name="Renolux mirror hanger">'
+    xml.append(f'<object id="{top}" type="model" name="{esc(title)}">'
                f'<components>{comps}</components></object></resources>'
                f'<build><item objectid="{top}"/></build></model>')
     cfg.append("  </object>\n</config>\n")
@@ -421,6 +425,10 @@ def main():
         for colour, n in info["gaps_closed"].items():
             if n > 0:
                 print(f"  {colour}: {n} gap(s) closed, neighbouring shapes merged")
+    for colour, n in info["counters_filled"].items():
+        if n > 0:
+            print(f"WARNING: {colour}: {n} hole(s) inside letters filled in; "
+                  "make the artwork bigger to keep them")
     else:
         print(f"all features already >= {MIN_FEATURE} mm")
 
