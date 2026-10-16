@@ -1,0 +1,6 @@
+opencv-python-headless>=4.8
+numpy>=1.24
+shapely>=2.0
+trimesh>=4.0
+mapbox-earcut>=1.0   # trimesh's polygon triangulator
+matplotlib>=3.7      # preview.png only
