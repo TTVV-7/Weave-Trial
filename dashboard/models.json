@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-16T20:08:19+00:00",
+  "generated": "2026-10-16T20:18:17+00:00",
   "models": [
     {
       "name": "ipad holder",
@@ -343,37 +343,48 @@
       "preview": "railbridge/Rail_Footbridge_preview.png"
     },
     {
-      "name": "base",
-      "file": "base.3mf",
-      "path": "reviewstand/example/base.3mf",
+      "name": "review stand assembled",
+      "file": "review_stand_assembled.3mf",
+      "path": "reviewstand/example/review_stand_assembled.3mf",
+      "folder": "reviewstand/example",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 188251,
+      "modified": "2026-10-16T20:15:55+00:00",
+      "preview": "reviewstand/example/review_stand_assembled_preview.png"
+    },
+    {
+      "name": "review stand base",
+      "file": "review_stand_base.3mf",
+      "path": "reviewstand/example/review_stand_base.3mf",
       "folder": "reviewstand/example",
       "ext": "3mf",
       "type": "3MF",
       "size": 2975,
-      "modified": "2026-10-16T20:08:07+00:00",
-      "preview": null
+      "modified": "2026-10-16T20:15:55+00:00",
+      "preview": "reviewstand/example/review_stand_base_preview.png"
     },
     {
-      "name": "base",
-      "file": "base.stl",
-      "path": "reviewstand/example/base.stl",
+      "name": "review stand base",
+      "file": "review_stand_base.stl",
+      "path": "reviewstand/example/review_stand_base.stl",
       "folder": "reviewstand/example",
       "ext": "stl",
       "type": "STL",
       "size": 11284,
-      "modified": "2026-10-16T20:08:07+00:00",
-      "preview": null
+      "modified": "2026-10-16T20:15:55+00:00",
+      "preview": "reviewstand/example/review_stand_base_preview.png"
     },
     {
-      "name": "sign",
-      "file": "sign.3mf",
-      "path": "reviewstand/example/sign.3mf",
+      "name": "review stand sign",
+      "file": "review_stand_sign.3mf",
+      "path": "reviewstand/example/review_stand_sign.3mf",
       "folder": "reviewstand/example",
       "ext": "3mf",
       "type": "3MF",
       "size": 168251,
-      "modified": "2026-10-16T20:08:07+00:00",
-      "preview": null
+      "modified": "2026-10-16T20:15:55+00:00",
+      "preview": "reviewstand/example/review_stand_sign_preview.png"
     },
     {
       "name": "Genie GTH 1056 max 65deg extended 10m",

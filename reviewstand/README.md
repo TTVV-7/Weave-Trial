@@ -1,6 +1,6 @@
 # Google review stand: QR + NFC
 
-![example](example/preview.png)
+![example](example/review_stand_assembled_preview.png)
 
 A two-piece table sign: a flat plate with your logo, business name, stars and a
 real QR code generated from your review link, and a base it slots into at a
@@ -15,8 +15,8 @@ python reviewstand/make_review_stand.py \
     --logo my_logo.svg
 ```
 
-Output goes in `reviewstand/<name>/`: `sign.3mf` (multi-colour), `base.3mf`,
-`base.stl`, `preview.png`.
+Output goes in `reviewstand/<name>/`: `review_stand_sign.3mf` (multi-colour), `review_stand_base.3mf`,
+`review_stand_base.stl`, `review_stand_assembled.3mf` (the two together, to look at) and previews.
 
 **Your review link:** Google Business Profile → *Ask for reviews* (or *Get more
 reviews*) → copy the link. Short links give a coarser QR code, which prints

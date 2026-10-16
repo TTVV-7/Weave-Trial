@@ -8,9 +8,9 @@
 
 writes ``reviewstand/<name>/``:
 
-* ``sign.3mf``   -- the sign plate, one object per filament, ready for the AMS
-* ``base.3mf``   -- the stand it slots into (and ``base.stl``)
-* ``preview.png`` -- the front of the sign, to check before printing
+* ``review_stand_sign.3mf`` -- the sign plate, one object per filament, ready for the AMS
+* ``review_stand_base.3mf`` -- the stand it slots into (and ``.stl``)
+* ``review_stand_assembled.3mf`` and ``*_preview.png`` -- to check before printing
 
 Two pieces, because that is what prints well: the sign lies flat, face up,
 so every colour is on the top layers (an AMS does it in one go; without one,
@@ -411,6 +411,16 @@ def base_solid(a, s: Sign) -> mf.Manifold:
     return body - slot
 
 
+def assembled(a, s: Sign, parts: list[Part], base) -> list[Part]:
+    """The sign standing in its slot, to look at rather than to print."""
+    def place(m):
+        return (m.rotate((90, 0, 0)).translate((0, a.thickness / 2, 0))
+                .rotate((-a.tilt, 0, 0))
+                .translate((0, a.slot_y, a.base_height - a.slot_depth)))
+    out = [Part(p.name, p.slot, p.rgb, place(p.solid)) for p in parts]
+    return out + [Part("base", parts[0].slot, parts[0].rgb, base)]
+
+
 # --------------------------------------------------------------------------
 # preview
 # --------------------------------------------------------------------------
@@ -448,6 +458,27 @@ def preview(a, s: Sign, path: Path, px=8):
     # the base, seen from the front, over the part of the plate it hides
     bh = s.keepout - 1.5
     fill(rrect(bw, bh + 2, 3, 0, (bh + 2) / 2 - 2), (205, 207, 212))
+    img.save(path)
+
+
+def base_preview(a, s: Sign, base, path: Path, px=8):
+    """Top view of the base: footprint, the slot, and the ramp shaded."""
+    from PIL import Image, ImageDraw
+
+    x0, y0, _, x1, y1, _ = base.bounding_box()
+    pad = 10
+    img = Image.new("RGB", (int((x1 - x0 + 2 * pad) * px), int((y1 - y0 + 2 * pad) * px)),
+                    (236, 238, 242))
+    d = ImageDraw.Draw(img)
+
+    def to_px(x, y):
+        return ((x - x0 + pad) * px, (y1 - y + pad) * px)
+
+    top = base.slice(a.base_height - 0.01)
+    foot = base.slice(0.5)
+    for cs, rgb in ((foot, (190, 192, 198)), (top, s.slots[BODY].rgb)):
+        for loop in cs.to_polygons():
+            d.polygon([to_px(*p) for p in loop], fill=rgb, outline=(150, 152, 158))
     img.save(path)
 
 
@@ -520,14 +551,19 @@ def main(argv=None) -> int:
 
     s = layout(a)
     parts = sign_parts(a, s)
-    (out / "sign.3mf").write_bytes(parts_to_3mf(parts, origin=(s.w / 2 + 5, 5),
-                                                name="review sign"))
     base = base_solid(a, s)
+    stem = "review_stand"
+    (out / f"{stem}_sign.3mf").write_bytes(parts_to_3mf(parts, origin=(s.w / 2 + 5, 5),
+                                                        name="review sign"))
     bx0, by0, _, _, _, _ = base.bounding_box()
-    (out / "base.3mf").write_bytes(parts_to_3mf(
+    (out / f"{stem}_base.3mf").write_bytes(parts_to_3mf(
         [Part("base", 1, _hex(a.body), base)], origin=(-bx0 + 5, -by0 + 5), name="review base"))
-    (out / "base.stl").write_bytes(mesh_to_stl(base, header="review stand base"))
-    preview(a, s, out / "preview.png")
+    (out / f"{stem}_base.stl").write_bytes(mesh_to_stl(base, header="review stand base"))
+    (out / f"{stem}_assembled.3mf").write_bytes(parts_to_3mf(
+        assembled(a, s, parts, base), origin=(-bx0 + 5, -by0 + 5), name="review stand"))
+    preview(a, s, out / f"{stem}_sign_preview.png")
+    preview(a, s, out / f"{stem}_assembled_preview.png")
+    base_preview(a, s, base, out / f"{stem}_base_preview.png")
 
     print(f"wrote {out}/  sign {s.w:.0f} x {s.h:.0f} x {a.thickness:.1f} mm, "
           f"base {s.w + 2 * a.base_margin:.0f} x {a.base_depth:.0f} mm")
