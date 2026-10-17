@@ -11,7 +11,7 @@ Reads `source_ipad_holder.3mf` and the two logo SVGs, and writes:
 
 | file | what |
 |---|---|
-| `ipad_holder.3mf` | the holder, as one object with three parts: the body, the VanEye logo and the front accent lines |
+| `ipad_holder.3mf` | the holder, as one object with two parts: the black body (filament 1) and the white VanEye logo (filament 2) |
 | `wing_screw.3mf` / `.stl` | the M5 wing screw ("butterfly key") |
 
 ## The diamond loop
@@ -86,9 +86,17 @@ at 30° (`HOME_SLOPE`) to 21.6 mm at the front face. That leaves 2 mm of flat
 lip below it. Apple publishes no exact button position, so this is worked
 out from the body and screen sizes.
 
+## Colours
+
+The body is black (`BODY_RGB`) and the VanEye inlay white. The 3MF carries
+Bambu Studio / OrcaSlicer settings that put the body on filament 1 and the
+logo on filament 2 and set those filaments' colours, so it opens coloured.
+The printyours.ca logo is etched, so it is the body's colour.
+
 ## Front accent lines
 
-White lines run round the four corners of the front face: 0.8 mm wide, 3 mm
+Off by default (`FRONT_LINES = False`), so the front is plain black. Turned
+on, white lines run round the four corners of the front face: 0.8 mm wide, 3 mm
 in from the edge, following the rounded outline for 35 mm along each side
 from each corner (`LINE_*`). They are the top 0.4 mm of the print, so they
 are the last two layers, in their own part and filament. They stay 0.7 mm

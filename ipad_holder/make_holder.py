@@ -72,7 +72,7 @@ ETCH_DEPTH = 0.4                # an etched logo is the same recess, left empty
 # An "inlay" is its own part in its own filament; an "etch" is just a recess.
 LOGOS = [
     # file, keep-dark?, centre x, centre y, width, part name, display colour, kind
-    ("logo_vaneye.svg", False, 189.6, -87.5, 105.0, "VanEye logo", (240, 240, 240), "inlay"),
+    ("logo_vaneye.svg", False, 189.6, -87.5, 105.0, "VanEye logo", (255, 255, 255), "inlay"),
     ("logo_printyours.svg", True, 189.6, -177.0, 42.0, "printyours.ca logo", None, "etch"),
 ]
 
@@ -333,7 +333,13 @@ def home_cutter(z_top: float) -> m3.Manifold:
     return cone.translate([*HOME_CENTRE, LIP_Z - 0.01])
 
 
+# --- colours --------------------------------------------------------------
+BODY_RGB = (0, 0, 0)            # filament 1; the VanEye inlay is filament 2
+
 # --- front accent lines ---------------------------------------------------
+# Off: the front is plain body colour. On, the lines are their own part in
+# another filament.
+FRONT_LINES = False
 LINE_DEPTH = 0.4                # the last two layers, in a second filament
 LINE_W = 0.8                    # two nozzle widths
 LINE_IN = 3.0                   # from the case's outer edge
@@ -434,12 +440,14 @@ def build_holder(info: dict | None = None):
         solid = body ^ region.extrude(INLAY_DEPTH)
         inlays.append((label, rgb, solid))
     z1 = frame.bounds[1, 2]
-    lines = body ^ front_lines(body, frame).extrude(LINE_DEPTH).translate([0, 0, z1 - LINE_DEPTH])
-    inlays.append(("Front lines", (245, 245, 245), lines))
+    if FRONT_LINES:
+        lines = body ^ front_lines(body, frame).extrude(LINE_DEPTH).translate(
+            [0, 0, z1 - LINE_DEPTH])
+        inlays.append(("Front lines", (245, 245, 245), lines))
     for _, _, solid in inlays:
         body = body - solid
 
-    parts = [Part("Holder", 0, (90, 140, 200), body)]
+    parts = [Part("Holder", 0, BODY_RGB, body)]
     parts += [Part(label, i + 1, rgb, solid)
               for i, (label, rgb, solid) in enumerate(inlays)]
     return parts
@@ -570,7 +578,7 @@ def main():
     lo = np.min([p.solid.bounding_box()[:3] for p in parts], axis=0)
     with open(os.path.join(HERE, "ipad_holder.3mf"), "wb") as f:
         f.write(parts_to_3mf(parts, origin=(10 - lo[0], 10 - lo[1]),
-                             name="iPad holder"))
+                             name="iPad holder", slicer_config=True))
     with open(os.path.join(HERE, "wing_screw.3mf"), "wb") as f:
         f.write(parts_to_3mf([Part("Wing screw", 0, (200, 200, 200), screw)],
                              origin=(20, 20), name="M5 wing screw"))
