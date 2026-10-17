@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-16T20:18:17+00:00",
+  "generated": "2026-10-17T19:18:20+00:00",
   "models": [
     {
       "name": "ipad holder",
@@ -8,7 +8,7 @@
       "folder": "ipad_holder",
       "ext": "3mf",
       "type": "3MF",
-      "size": 683034,
+      "size": 659552,
       "modified": "2026-10-13T14:22:43+00:00",
       "preview": null
     },
@@ -30,7 +30,7 @@
       "folder": "ipad_holder",
       "ext": "3mf",
       "type": "3MF",
-      "size": 477956,
+      "size": 415038,
       "modified": "2026-10-13T14:22:43+00:00",
       "preview": null
     },
@@ -41,7 +41,7 @@
       "folder": "ipad_holder",
       "ext": "stl",
       "type": "STL",
-      "size": 2720484,
+      "size": 2360484,
       "modified": "2026-10-13T14:22:43+00:00",
       "preview": null
     },
@@ -350,7 +350,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 188251,
-      "modified": "2026-10-16T20:15:55+00:00",
+      "modified": "2026-10-16T20:18:17+00:00",
       "preview": "reviewstand/example/review_stand_assembled_preview.png"
     },
     {
@@ -361,7 +361,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 2975,
-      "modified": "2026-10-16T20:15:55+00:00",
+      "modified": "2026-10-16T20:18:17+00:00",
       "preview": "reviewstand/example/review_stand_base_preview.png"
     },
     {
@@ -372,7 +372,7 @@
       "ext": "stl",
       "type": "STL",
       "size": 11284,
-      "modified": "2026-10-16T20:15:55+00:00",
+      "modified": "2026-10-16T20:18:17+00:00",
       "preview": "reviewstand/example/review_stand_base_preview.png"
     },
     {
@@ -383,7 +383,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 168251,
-      "modified": "2026-10-16T20:15:55+00:00",
+      "modified": "2026-10-16T20:18:17+00:00",
       "preview": "reviewstand/example/review_stand_sign_preview.png"
     },
     {
