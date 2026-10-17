@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-16T20:18:17+00:00",
+  "generated": "2026-10-17T20:07:55+00:00",
   "models": [
     {
       "name": "ipad holder",
@@ -76,6 +76,94 @@
       "type": "3MF",
       "size": 5355015,
       "modified": "2026-10-13T14:22:43+00:00",
+      "preview": null
+    },
+    {
+      "name": "mascot stand assembled",
+      "file": "mascot_stand_assembled.3mf",
+      "path": "mascotstand/models/mascot_stand_assembled.3mf",
+      "folder": "mascotstand/models",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 196354,
+      "modified": "2026-10-17T20:07:42+00:00",
+      "preview": "mascotstand/models/mascot_stand_assembled_preview.png"
+    },
+    {
+      "name": "mascot stand base",
+      "file": "mascot_stand_base.3mf",
+      "path": "mascotstand/models/mascot_stand_base.3mf",
+      "folder": "mascotstand/models",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 115313,
+      "modified": "2026-10-17T20:07:42+00:00",
+      "preview": "mascotstand/models/mascot_stand_base_preview.png"
+    },
+    {
+      "name": "mascot stand base",
+      "file": "mascot_stand_base.stl",
+      "path": "mascotstand/models/mascot_stand_base.stl",
+      "folder": "mascotstand/models",
+      "ext": "stl",
+      "type": "STL",
+      "size": 584484,
+      "modified": "2026-10-17T20:07:42+00:00",
+      "preview": "mascotstand/models/mascot_stand_base_preview.png"
+    },
+    {
+      "name": "mascot stand trim",
+      "file": "mascot_stand_trim.3mf",
+      "path": "mascotstand/models/mascot_stand_trim.3mf",
+      "folder": "mascotstand/models",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 81842,
+      "modified": "2026-10-17T20:07:42+00:00",
+      "preview": "mascotstand/models/mascot_stand_trim_preview.png"
+    },
+    {
+      "name": "mascot stand trim cup rim",
+      "file": "mascot_stand_trim_cup_rim.stl",
+      "path": "mascotstand/models/mascot_stand_trim_cup_rim.stl",
+      "folder": "mascotstand/models",
+      "ext": "stl",
+      "type": "STL",
+      "size": 128084,
+      "modified": "2026-10-17T20:07:42+00:00",
+      "preview": null
+    },
+    {
+      "name": "mascot stand trim side band",
+      "file": "mascot_stand_trim_side_band.stl",
+      "path": "mascotstand/models/mascot_stand_trim_side_band.stl",
+      "folder": "mascotstand/models",
+      "ext": "stl",
+      "type": "STL",
+      "size": 105684,
+      "modified": "2026-10-17T20:07:42+00:00",
+      "preview": null
+    },
+    {
+      "name": "mascot stand trim stage ring",
+      "file": "mascot_stand_trim_stage_ring.stl",
+      "path": "mascotstand/models/mascot_stand_trim_stage_ring.stl",
+      "folder": "mascotstand/models",
+      "ext": "stl",
+      "type": "STL",
+      "size": 59884,
+      "modified": "2026-10-17T20:07:42+00:00",
+      "preview": null
+    },
+    {
+      "name": "mascot stand trim tray rim",
+      "file": "mascot_stand_trim_tray_rim.stl",
+      "path": "mascotstand/models/mascot_stand_trim_tray_rim.stl",
+      "folder": "mascotstand/models",
+      "ext": "stl",
+      "type": "STL",
+      "size": 135884,
+      "modified": "2026-10-17T20:07:42+00:00",
       "preview": null
     },
     {
@@ -350,7 +438,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 188251,
-      "modified": "2026-10-16T20:15:55+00:00",
+      "modified": "2026-10-16T20:18:17+00:00",
       "preview": "reviewstand/example/review_stand_assembled_preview.png"
     },
     {
@@ -361,7 +449,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 2975,
-      "modified": "2026-10-16T20:15:55+00:00",
+      "modified": "2026-10-16T20:18:17+00:00",
       "preview": "reviewstand/example/review_stand_base_preview.png"
     },
     {
@@ -372,7 +460,7 @@
       "ext": "stl",
       "type": "STL",
       "size": 11284,
-      "modified": "2026-10-16T20:15:55+00:00",
+      "modified": "2026-10-16T20:18:17+00:00",
       "preview": "reviewstand/example/review_stand_base_preview.png"
     },
     {
@@ -383,7 +471,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 168251,
-      "modified": "2026-10-16T20:15:55+00:00",
+      "modified": "2026-10-16T20:18:17+00:00",
       "preview": "reviewstand/example/review_stand_sign_preview.png"
     },
     {
