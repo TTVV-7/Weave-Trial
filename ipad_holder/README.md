@@ -80,9 +80,10 @@ The source's 10 mm hole sat 4.7 mm below where an iPad mini's home button
 is. It is filled. A new opening is cut where the button actually sits: the
 iPad slides in against the left wall and rests on the bottom wall, and its
 button is centred in the 21 mm bottom bezel, 10.6 mm up from its bottom edge
-(`HOME_CENTRE`, x 188.4, y −199.5). The opening is 15 mm across against the
-screen (`HOME_HOLE_D`), for an 11 mm button, and the lip slopes away from it
-at 30° (`HOME_SLOPE`) to 21.6 mm at the front face. That leaves 2 mm of flat
+(`HOME_CENTRE`, x 188.4, y −199.5). Against the screen the opening is a
+slot with rounded ends, 19 mm wide (`HOME_HOLE_W`) and 15 mm tall
+(`HOME_HOLE_D`), for an 11 mm button, and the lip slopes away from it at 30°
+(`HOME_SLOPE`) to 25.6 × 21.6 mm at the front face. That leaves 2 mm of flat
 lip below it. Apple publishes no exact button position, so this is worked
 out from the body and screen sizes.
 

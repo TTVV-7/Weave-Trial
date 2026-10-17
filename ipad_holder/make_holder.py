@@ -312,6 +312,7 @@ def camera_fill() -> m3.Manifold:
 IPAD_W = 134.8
 HOME_CENTRE = (POCKET_LEFT + IPAD_W / 2, POCKET_BOTTOM + 10.6)
 HOME_HOLE_D = 15.0              # at the back of the lip, against the screen
+HOME_HOLE_W = 19.0              # its width, side to side: a slot, rounded ends
 HOME_SLOPE = 30.0               # degrees from the face: the gentle bevel out
 LIP_Z = 9.8 + POCKET_DEEPER     # underside of the front lip
 
@@ -324,13 +325,16 @@ def home_fill() -> m3.Manifold:
 
 
 def home_cutter(z_top: float) -> m3.Manifold:
-    """A cone: HOME_HOLE_D at the lip's underside, widening at HOME_SLOPE to
-    the front face, so the lip slopes away on both sides of the button."""
+    """A slot HOME_HOLE_W wide and HOME_HOLE_D tall at the lip's underside,
+    widening at HOME_SLOPE to the front face, so the lip slopes away all round
+    the button. It is the hull of two cones, one at each rounded end."""
     r0 = HOME_HOLE_D / 2
     h = z_top - LIP_Z
     r1 = r0 + h / math.tan(math.radians(HOME_SLOPE))
     cone = m3.Manifold.cylinder(h + 0.02, r0, r1 + 0.02 / math.tan(math.radians(HOME_SLOPE)), 128)
-    return cone.translate([*HOME_CENTRE, LIP_Z - 0.01])
+    dx = (HOME_HOLE_W - HOME_HOLE_D) / 2
+    slot = m3.Manifold.batch_hull([cone.translate([-dx, 0, 0]), cone.translate([dx, 0, 0])])
+    return slot.translate([*HOME_CENTRE, LIP_Z - 0.01])
 
 
 # --- colours --------------------------------------------------------------
