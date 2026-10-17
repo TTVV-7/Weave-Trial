@@ -16,9 +16,29 @@ Reads `source_ipad_holder.3mf` and the two logo SVGs, and writes:
 
 ## The diamond loop
 
-The loop's walls are grown 1 mm on the outside and 1 mm into the opening
-(`LOOP_GROW`), taking them from 3 mm to 5 mm. The opening is now 7.2 mm per
-side instead of 9.2 mm.
+The loop is a true diamond: the opening is a square stood on its point,
+12 mm across and 12 mm tall, point to point (`DIAMOND`), about 8.5 mm along
+each inside face. Its walls are 5 mm (`LOOP_WALL`). Below the opening the
+loop is filled out to the neck's full 12 mm width, so it does not hang from
+a narrow waist. Earlier versions grew the source's loop instead, which left
+a 7.2 mm opening with a flat bottom.
+
+## Pocket size
+
+The pocket is 5 mm taller (`POCKET_LONGER`) and 1.5 mm deeper
+(`POCKET_DEEPER`) than the source's, for a looser fit:
+
+| | source | now |
+|---|---|---|
+| pocket height, inside | 204.0 mm | 209.0 mm |
+| pocket depth, floor to lip | 7.8 mm | 9.3 mm |
+| case height, without the loop | 210.5 mm | 215.5 mm |
+| case thickness | 11.8 mm | 13.3 mm |
+
+The bottom half of the frame moves down through the plain side walls, and
+the lip and front face move up, so the loop, top button slot and the home
+button's place against the bottom wall all follow. The logos move down with
+the bottom.
 
 ## The thread
 
@@ -28,17 +48,15 @@ wall so the wings seat flat. It is opened up for printing (major 5.30, minor
 4.35), so the printed wing screw fits and so does a steel M5. The 5 mm wall
 gives about six turns of engagement.
 
-It sits at about 1:50 rather than exactly 2 o'clock. The inside of that wall
-is only 7.2 mm long and the screw is 4.8 mm across. Exactly 2 o'clock would
-put the screw 0.2 mm from the lower-right wall as it goes in, so it is held
-0.5 mm clear (`SCREW_GAP`). The screw can reach 3.2 mm into the opening
-before it meets the opening's flat bottom, so it clamps anything at least
+It sits at 2 o'clock. It is still held at least 0.5 mm clear of the
+lower-right wall as it goes in (`SCREW_GAP`). The screw can reach 8.4 mm into
+the opening before it meets the far wall, so it clamps anything at least
 about 4 mm across.
 
 The script checks the fit every run. It turns the screw head a full
 revolution in 5° steps against the holder, then pushes a rod the screw's
 diameter across the opening. At 2 o'clock the wings point up and away. The
-lowest wing tip clears the frame by 7.3 mm, so the longer neck that 9 o'clock
+lowest wing tip clears the frame by 12.8 mm, so the longer neck that 9 o'clock
 needed has gone (`LOOP_RAISE` = 0). The neck runs 1 mm into the frame wall,
 because in the source file it only touched the frame and was a separate
 solid.
@@ -62,7 +80,7 @@ The source's 10 mm hole sat 4.7 mm below where an iPad mini's home button
 is. It is filled. A new opening is cut where the button actually sits: the
 iPad slides in against the left wall and rests on the bottom wall, and its
 button is centred in the 21 mm bottom bezel, 10.6 mm up from its bottom edge
-(`HOME_CENTRE`, x 188.4, y −194.5). The opening is 15 mm across against the
+(`HOME_CENTRE`, x 188.4, y −199.5). The opening is 15 mm across against the
 screen (`HOME_HOLE_D`), for an 11 mm button, and the lip slopes away from it
 at 30° (`HOME_SLOPE`) to 21.6 mm at the front face. That leaves 2 mm of flat
 lip below it. Apple publishes no exact button position, so this is worked
@@ -87,8 +105,8 @@ exact position for the button.
 
 ## The wing screw
 
-The thread is 10 mm long, which covers the 5 mm wall plus the 3.2 mm the
-screw can reach, and the wings span 30 mm. Print it head down, with the
+The thread is 13 mm long, which covers the 5 mm wall plus 8 of the 8.4 mm
+the screw can reach into the opening, and the wings span 30 mm. Print it head down, with the
 wings flat on the bed and the thread pointing up. That way the thread prints
 round, with no supports. Its thread is undersized (4.80 major) so it runs
 freely in the printed hole.

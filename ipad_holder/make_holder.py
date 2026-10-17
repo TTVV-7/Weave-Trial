@@ -6,9 +6,10 @@ two logos inlaid in the back.
 Reads ``source_ipad_holder.3mf`` and the two logo SVGs next to this file and
 writes ``ipad_holder.3mf``, ``wing_screw.3mf`` / ``.stl`` and ``preview.png``.
 
-The diamond loop at the top is a plain extrusion, so it is rebuilt from its
-own cross-section: grown 1 mm on the outside and 1 mm into the opening, with
-the source's 5.2 mm hole (at 9 o'clock) filled. An ISO-60 degree M5 x 0.8
+The pocket is stretched 5 mm taller and 1.5 mm deeper than the source's.
+The diamond loop at the top is rebuilt as a true diamond with a 12 mm
+opening, point to point, in 5 mm walls; the source's 5.2 mm hole (at
+9 o'clock) goes with the old loop. An ISO-60 degree M5 x 0.8
 thread is cut square through the upper-right wall instead, as near 2 o'clock
 as the screw can sit and still pass into the opening without scraping the
 lower-right wall. It is opened up for printing so a printed screw or a real
@@ -49,7 +50,11 @@ PITCH = 0.8
 # be 8 mm for the wings to clear the frame; at 2 o'clock they point up and
 # away, so the source's neck is enough (checked in check_screw).
 LOOP_RAISE = 0.0
-LOOP_GROW = 1.0                 # added to the loop's walls, outside and in
+# The loop is a true diamond: an opening DIAMOND mm point to point, across
+# and up, in walls LOOP_WALL thick. Its outside is cut flat where it meets
+# the neck.
+DIAMOND = 12.0
+LOOP_WALL = 5.0
 HOLE_CLOCK = 2.0                # where the screw goes in, seen from the front
 SCREW_GAP = 0.5                 # least gap between the screw and the walls
                                 # of the opening as it passes through
@@ -67,9 +72,19 @@ ETCH_DEPTH = 0.4                # an etched logo is the same recess, left empty
 # An "inlay" is its own part in its own filament; an "etch" is just a recess.
 LOGOS = [
     # file, keep-dark?, centre x, centre y, width, part name, display colour, kind
-    ("logo_vaneye.svg", False, 189.6, -85.0, 105.0, "VanEye logo", (240, 240, 240), "inlay"),
-    ("logo_printyours.svg", True, 189.6, -172.0, 42.0, "printyours.ca logo", None, "etch"),
+    ("logo_vaneye.svg", False, 189.6, -87.5, 105.0, "VanEye logo", (240, 240, 240), "inlay"),
+    ("logo_printyours.svg", True, 189.6, -177.0, 42.0, "printyours.ca logo", None, "etch"),
 ]
+
+# --- pocket size ----------------------------------------------------------
+# Taller and deeper than the source, for a looser fit. The bottom half of the
+# frame moves down POCKET_LONGER (through the plain walls at y = -100, where
+# nothing is cut), and the lip and front face move up POCKET_DEEPER (from
+# z = 9.6, just under the lip). The loop and the top stay where they were.
+POCKET_LONGER = 5.0
+POCKET_DEEPER = 1.5
+STRETCH_Y = -100.0
+STRETCH_Z = 9.6
 
 # --- rounding -------------------------------------------------------------
 CORNER_R = 8.0                  # the case's corners, seen from the front
@@ -77,12 +92,12 @@ EDGE_R = 1.5                    # front and back perimeter edges
 # The pocket's two closed corners (the right side is open below the lip, so
 # only the left ones are corners at all). Rounded concentric with the
 # outside so the wall stays 3 mm; an iPad mini's corners are rounder still.
-POCKET_LEFT, POCKET_BOTTOM, POCKET_TOP = 121.0, -205.1, -1.1
+POCKET_LEFT, POCKET_BOTTOM, POCKET_TOP = 121.0, -205.1 - POCKET_LONGER, -1.1
 POCKET_R = 5.0
 
 # --- wing screw -----------------------------------------------------------
-SHANK_LEN = 10.0                # threaded length: 5 mm of wall, then the
-                                # 3.2 mm it can reach into the opening
+SHANK_LEN = 13.0                # threaded length: 5 mm of wall, then 8 of the
+                                # 8.4 mm it can reach into the opening
 
 WING_SPAN = 30.0
 WING_THICK = 3.2
@@ -163,17 +178,39 @@ def load_source():
     return {name: g for name, g in scene.geometry.items()}
 
 
-def loop_section(loop: trimesh.Trimesh) -> m3.CrossSection:
-    """The diamond loop's cross-section, old hole gone, walls grown.
+def stretch_frame(frame: trimesh.Trimesh) -> trimesh.Trimesh:
+    """The frame made POCKET_LONGER taller and POCKET_DEEPER deeper.
 
-    Offsetting the ring by LOOP_GROW moves its outside out and its opening in
-    by the same amount; mitred, so the corners stay sharp.
+    No vertex lies near either cut, so moving everything past it stretches
+    only the plain walls that cross it.
     """
-    z0 = loop.bounds[0, 2]
-    sec = loop.section(plane_origin=[0, 0, z0 + 0.3], plane_normal=[0, 0, 1])
-    loops = [np.asarray(e)[:, :2].tolist() for e in sec.discrete]
-    cs = m3.CrossSection(loops, m3.FillRule.EvenOdd)
-    return cs.offset(LOOP_GROW, m3.JoinType.Miter, 2.0).translate([0, LOOP_RAISE])
+    v = frame.vertices.copy()
+    v[v[:, 1] < STRETCH_Y, 1] -= POCKET_LONGER
+    v[v[:, 2] > STRETCH_Z, 2] += POCKET_DEEPER
+    return trimesh.Trimesh(v, frame.faces, process=False)
+
+
+def loop_section(neck: trimesh.Trimesh) -> m3.CrossSection:
+    """The diamond loop's cross-section, centred over the neck.
+
+    The opening is a square on its point, DIAMOND across; the outside is the
+    opening grown LOOP_WALL (mitred, so the corners stay sharp). Below the
+    opening the outside's point is filled out to the neck's full width, so
+    the loop does not hang from a narrow waist.
+    """
+    (nx0, _, _), (nx1, ny1, _) = neck.bounds
+    h = DIAMOND / 2
+    hole = m3.CrossSection([[[h, 0], [0, h], [-h, 0], [0, -h]]])
+    outer = hole.offset(LOOP_WALL, m3.JoinType.Miter, 2.0)
+    flat = -h - LOOP_WALL
+    w = nx1 - nx0
+    foot = m3.CrossSection.batch_hull([
+        outer ^ m3.CrossSection.square([60, 60]).translate([-30, -h - 60]),
+        m3.CrossSection.square([w, 0.01]).translate([-w / 2, flat])])
+    ring = ((outer ^ m3.CrossSection.square([60, 60]).translate([-30, flat]))
+            + foot) - hole
+    # The flat sits 1 mm into the neck so the two fuse.
+    return ring.translate([(nx0 + nx1) / 2, ny1 - 1.0 - flat + LOOP_RAISE])
 
 
 def hole_axis(cs: m3.CrossSection, zc: float) -> dict:
@@ -228,7 +265,7 @@ def power_slot(frame: trimesh.Trimesh) -> m3.Manifold:
     y_top = frame.bounds[1, 1]
     floor = 2.0                                  # back plate thickness
     x0, x1 = x_right - POWER_SLOT[1], x_right - POWER_SLOT[0]
-    return (m3.Manifold.cube([x1 - x0, 12.0, 12.0])
+    return (m3.Manifold.cube([x1 - x0, 12.0, 14.0])
             .translate([x0, y_top - 10.0, floor]))
 
 
@@ -257,15 +294,15 @@ def envelope(frame: trimesh.Trimesh, steps: int = 10) -> m3.Manifold:
 
 # The front-camera keyhole: a notch in the top wall's inside face and a hole
 # through the lip above it, around x = 189. Filling it back to the wall face
-# (y = -1.1) and the lip's edge (y = -5.4, from z = 9.8) leaves the top as
+# (y = -1.1) and the lip's edge (y = -5.4, from LIP_Z) leaves the top as
 # plain as the rest of it.
 CAMERA_X = (185.0, 193.0)
 
 
 def camera_fill() -> m3.Manifold:
     x0, x1 = CAMERA_X
-    wall = m3.Manifold.cube([x1 - x0, 1.2, 9.85]).translate([x0, -1.1, 1.95])
-    lip = m3.Manifold.cube([x1 - x0, 4.4, 2.0]).translate([x0, -5.4, 9.8])
+    wall = m3.Manifold.cube([x1 - x0, 1.2, LIP_Z + 0.05]).translate([x0, -1.1, 1.95])
+    lip = m3.Manifold.cube([x1 - x0, 4.4, 2.0]).translate([x0, -5.4, LIP_Z])
     return wall + lip
 
 
@@ -276,13 +313,14 @@ IPAD_W = 134.8
 HOME_CENTRE = (POCKET_LEFT + IPAD_W / 2, POCKET_BOTTOM + 10.6)
 HOME_HOLE_D = 15.0              # at the back of the lip, against the screen
 HOME_SLOPE = 30.0               # degrees from the face: the gentle bevel out
-LIP_Z = 9.8                     # underside of the front lip
+LIP_Z = 9.8 + POCKET_DEEPER     # underside of the front lip
 
 
 def home_fill() -> m3.Manifold:
     """Fill the source's home-button hole (10 mm, 4.7 mm too low) flush with
     the bottom lip, so the new one can be cut in the right place."""
-    return m3.Manifold.cube([14.0, 9.6, 2.0]).translate([181.6, -205.2, LIP_Z])
+    return (m3.Manifold.cube([14.0, 9.6, 2.0])
+            .translate([181.6, -205.2 - POCKET_LONGER, LIP_Z]))
 
 
 def home_cutter(z_top: float) -> m3.Manifold:
@@ -369,6 +407,7 @@ def build_holder(info: dict | None = None):
     src = load_source()
     names = sorted(src, key=lambda n: -src[n].volume)
     frame, loop, neck = (src[n] for n in names)
+    frame = stretch_frame(frame)
     # The neck is a plain box; stretch it upwards and carry the loop with it.
     (nx0, ny0, nz0), (nx1, ny1, nz1) = neck.bounds
     # It also starts 1 mm inside the frame wall: in the source it only touches
@@ -376,7 +415,7 @@ def build_holder(info: dict | None = None):
     neck_box = (m3.Manifold.cube([nx1 - nx0, ny1 - ny0 + LOOP_RAISE + 1.0, nz1 - nz0])
                 .translate([nx0, ny0 - 1.0, nz0]))
     z0, z1 = loop.bounds[:, 2]
-    cs = loop_section(loop)
+    cs = loop_section(neck)
     axis = hole_axis(cs, (z0 + z1) / 2)
     case = ((to_manifold(frame) + pocket_fillets(frame) + camera_fill()
              + home_fill()) ^ envelope(frame)) - home_cutter(frame.bounds[1, 2])
