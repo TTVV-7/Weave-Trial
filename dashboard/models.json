@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-17T19:46:19+00:00",
+  "generated": "2026-10-18T17:57:42+00:00",
   "models": [
     {
       "name": "ipad holder",
@@ -8,8 +8,8 @@
       "folder": "ipad_holder",
       "ext": "3mf",
       "type": "3MF",
-      "size": 643296,
-      "modified": "2026-10-17T19:37:07+00:00",
+      "size": 643291,
+      "modified": "2026-10-17T19:46:19+00:00",
       "preview": null
     },
     {
@@ -30,8 +30,8 @@
       "folder": "ipad_holder",
       "ext": "3mf",
       "type": "3MF",
-      "size": 415038,
-      "modified": "2026-10-17T19:37:07+00:00",
+      "size": 410822,
+      "modified": "2026-10-17T19:46:19+00:00",
       "preview": null
     },
     {
@@ -41,7 +41,7 @@
       "folder": "ipad_holder",
       "ext": "stl",
       "type": "STL",
-      "size": 2360484,
+      "size": 2362084,
       "modified": "2026-10-17T19:18:13+00:00",
       "preview": null
     },

@@ -56,7 +56,7 @@ about 4 mm across.
 The script checks the fit every run. It turns the screw head a full
 revolution in 5° steps against the holder, then pushes a rod the screw's
 diameter across the opening. At 2 o'clock the wings point up and away. The
-lowest wing tip clears the frame by 12.8 mm, so the longer neck that 9 o'clock
+lowest wing tip clears the frame by 9.9 mm, so the longer neck that 9 o'clock
 needed has gone (`LOOP_RAISE` = 0). The neck runs 1 mm into the frame wall,
 because in the source file it only touched the frame and was a separate
 solid.
@@ -115,7 +115,9 @@ exact position for the button.
 ## The wing screw
 
 The thread is 13 mm long, which covers the 5 mm wall plus 8 of the 8.4 mm
-the screw can reach into the opening, and the wings span 30 mm. Print it head down, with the
+the screw can reach into the opening. The head is a third bigger than the
+first version's: the wings span 40 mm (`WING_SPAN`) and are 4 mm thick, on a
+13.3 mm hub, so it is easier to grip. Print it head down, with the
 wings flat on the bed and the thread pointing up. That way the thread prints
 round, with no supports. Its thread is undersized (4.80 major) so it runs
 freely in the printed hole.

@@ -99,9 +99,12 @@ POCKET_R = 5.0
 SHANK_LEN = 13.0                # threaded length: 5 mm of wall, then 8 of the
                                 # 8.4 mm it can reach into the opening
 
-WING_SPAN = 30.0
-WING_THICK = 3.2
-HUB_D, HUB_H = 10.0, 9.0
+# The head is drawn at a 30 mm span and scaled to WING_SPAN, so lobes, waist
+# and hub keep their proportions.
+WING_SPAN = 40.0
+WING_K = WING_SPAN / 30.0
+WING_THICK = 4.0
+HUB_D, HUB_H = 10.0 * WING_K, 9.0 * WING_K
 
 
 def to_manifold(mesh: trimesh.Trimesh) -> m3.Manifold:
@@ -465,15 +468,17 @@ def build_screw() -> m3.Manifold:
     """Printed head-down: wings flat on the bed, thread pointing up."""
     flank = FLANK_CLEAR * 2 / math.sqrt(3)
     # Wings: a bow-tie outline in the xz plane, extruded WING_THICK in y.
-    lobe = m3.CrossSection.circle(4.5, 64)
+    k = WING_K
+    lobe = m3.CrossSection.circle(4.5 * k, 64)
     wing = m3.CrossSection.batch_hull([
         m3.CrossSection.square([HUB_D, HUB_H]).translate([-HUB_D / 2, 0]),
-        lobe.translate([-(WING_SPAN / 2 - 4.5), 4.5]),
-        lobe.translate([+(WING_SPAN / 2 - 4.5), 4.5]),
+        lobe.translate([-(WING_SPAN / 2 - 4.5 * k), 4.5 * k]),
+        lobe.translate([+(WING_SPAN / 2 - 4.5 * k), 4.5 * k]),
     ])
     # Waist the outline between hub and lobes so it reads as two wings.
-    waist = m3.CrossSection.circle(6.0, 64)
-    wing = wing - waist.translate([-8.6, HUB_H + 3.2]) - waist.translate([8.6, HUB_H + 3.2])
+    waist = m3.CrossSection.circle(6.0 * k, 64)
+    wing = (wing - waist.translate([-8.6 * k, HUB_H + 3.2 * k])
+            - waist.translate([8.6 * k, HUB_H + 3.2 * k]))
     wings = (wing.extrude(WING_THICK).translate([0, 0, -WING_THICK / 2])
              .rotate([90, 0, 0]))
     hub = m3.Manifold.cylinder(HUB_H, HUB_D / 2, HUB_D / 2, 64)
@@ -503,7 +508,7 @@ def check_screw(body: m3.Manifold, screw: m3.Manifold, axis: dict) -> dict:
     pushed from the inside face across the opening until it meets the loop,
     which is how far the screw can reach to clamp something.
     """
-    head = screw ^ m3.Manifold.cube([40, 40, HUB_H + 1.0]).translate([-20, -20, 0])
+    head = screw ^ m3.Manifold.cube([80, 80, HUB_H + 1.0]).translate([-40, -40, 0])
     hits = [deg for deg in range(0, 360, 5)
             if (seat_screw(head, axis, deg, 0.3) ^ body).volume() > 1e-3]
     reach = 0.0
