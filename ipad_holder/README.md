@@ -12,7 +12,7 @@ Reads `source_ipad_holder.3mf` and the two logo SVGs, and writes:
 | file | what |
 |---|---|
 | `ipad_holder.3mf` | the holder, as one object with two parts: the black body (filament 1) and the white VanEye logo (filament 2) |
-| `wing_screw.3mf` / `.stl` | the M5 wing screw ("butterfly key") |
+| `wing_screw.3mf` / `.stl` | the M6 wing screw ("butterfly key") |
 
 ## The diamond loop
 
@@ -43,20 +43,28 @@ the bottom.
 ## The thread
 
 The source's 5.2 mm hole at 9 o'clock is filled. The thread is now an
-**M5 x 0.8** (60°, right hand) through the upper-right wall, square to the
-wall so the wings seat flat. It is opened up for printing (major 5.30, minor
-4.35), so the printed wing screw fits and so does a steel M5. The 5 mm wall
-gives about six turns of engagement.
+**M6 x 1.0** (60°, right hand) through the upper-right wall, square to the
+wall so the wings seat flat. It is opened up for printing (major 6.25, minor
+5.05), so the printed wing screw fits and so does a steel M6. The 5 mm wall
+gives about five turns of engagement.
 
-It sits at 2 o'clock. It is still held at least 0.5 mm clear of the
-lower-right wall as it goes in (`SCREW_GAP`). The screw can reach 8.4 mm into
+It was an M5 x 0.8 with 0.12 mm flank clearance, and the printed screw could
+be pulled straight out. The hole runs sideways through the print, so its
+thread is stepped by the layers, and a 0.8 mm pitch is only four 0.2 mm
+layers. The coarser M6 thread overlaps the hole by 0.4 mm radially (the M5
+by 0.23 mm) with 0.06 mm flank clearance (`FLANK_CLEAR`). A finer layer
+height on the case, 0.12 or 0.16 mm, makes the hole's thread cleaner still.
+
+It sits at about 1:50 rather than exactly 2 o'clock: the M6 screw is wide
+enough that exactly 2 o'clock would bring it within 0.5 mm of the lower-right
+wall as it goes in, so it is held that far clear (`SCREW_GAP`). The screw can reach 8.4 mm into
 the opening before it meets the far wall, so it clamps anything at least
 about 4 mm across.
 
 The script checks the fit every run. It turns the screw head a full
 revolution in 5° steps against the holder, then pushes a rod the screw's
 diameter across the opening. At 2 o'clock the wings point up and away. The
-lowest wing tip clears the frame by 9.9 mm, so the longer neck that 9 o'clock
+lowest wing tip clears the frame by 10.1 mm, so the longer neck that 9 o'clock
 needed has gone (`LOOP_RAISE` = 0). The neck runs 1 mm into the frame wall,
 because in the source file it only touched the frame and was a separate
 solid.
@@ -119,8 +127,8 @@ the screw can reach into the opening. The head is a third bigger than the
 first version's: the wings span 40 mm (`WING_SPAN`) and are 4 mm thick, on a
 13.3 mm hub, so it is easier to grip. Print it head down, with the
 wings flat on the bed and the thread pointing up. That way the thread prints
-round, with no supports. Its thread is undersized (4.80 major) so it runs
-freely in the printed hole.
+round, with no supports. Its thread is a little undersized (5.85 major) so it
+turns in the printed hole without binding.
 
 ## The logos
 
@@ -130,7 +138,7 @@ they read correctly from behind.
 - **VanEye** is a 0.4 mm inlay (two 0.2 mm layers) and its own part, so in
   the slicer you give it its own filament.
 - **printyours.ca** is etched: a 0.4 mm recess in the body's own colour
-  (`ETCH_DEPTH`). It stays 42 mm wide.
+  (`ETCH_DEPTH`). It is 55 mm wide, up from 42 mm so the lettering reads.
 
 Change the size, position or kind (`"inlay"` or `"etch"`) with `LOGOS` in
 `make_holder.py`.

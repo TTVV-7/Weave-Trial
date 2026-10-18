@@ -1,4 +1,4 @@
-"""The iPad holder with an M5 thread in its clamp, a wing screw for it, and
+"""The iPad holder with an M6 thread in its clamp, a wing screw for it, and
 two logos inlaid in the back.
 
     python ipad_holder/make_holder.py
@@ -9,11 +9,11 @@ writes ``ipad_holder.3mf``, ``wing_screw.3mf`` / ``.stl`` and ``preview.png``.
 The pocket is stretched 5 mm taller and 1.5 mm deeper than the source's.
 The diamond loop at the top is rebuilt as a true diamond with a 12 mm
 opening, point to point, in 5 mm walls; the source's 5.2 mm hole (at
-9 o'clock) goes with the old loop. An ISO-60 degree M5 x 0.8
+9 o'clock) goes with the old loop. An ISO-60 degree M6 x 1.0
 thread is cut square through the upper-right wall instead, as near 2 o'clock
 as the screw can sit and still pass into the opening without scraping the
 lower-right wall. It is opened up for printing so a printed screw or a real
-steel M5 both go in.
+steel M6 both go in.
 
 A slot in the top wall, open to the front, clears the iPad mini's top
 (power) button in the top-right corner. The case's corners are rounded in
@@ -45,7 +45,10 @@ from phonecase import svgart                                    # noqa: E402
 from phonecase.threemf import Part, parts_to_3mf               # noqa: E402
 
 # --- thread ---------------------------------------------------------------
-PITCH = 0.8
+# M6 x 1.0 rather than M5 x 0.8: the hole runs sideways through the print,
+# so its thread is built from layers, and the M5's was too fine to hold.
+NOMINAL_D = 6.0
+PITCH = 1.0
 # Extra neck length under the loop. With the screw at 9 o'clock this had to
 # be 8 mm for the wings to clear the frame; at 2 o'clock they point up and
 # away, so the source's neck is enough (checked in check_screw).
@@ -58,12 +61,13 @@ LOOP_WALL = 5.0
 HOLE_CLOCK = 2.0                # where the screw goes in, seen from the front
 SCREW_GAP = 0.5                 # least gap between the screw and the walls
                                 # of the opening as it passes through
-# Radial limits of the two threads. ISO M5: internal minor 4.134, external
-# major 5.0, external minor 4.019. The hole is opened and the screw shrunk
-# so the two clear by about 0.12 mm on each flank.
-HOLE_MINOR, HOLE_MAJOR = 4.35, 5.30
-SCREW_MINOR, SCREW_MAJOR = 3.95, 4.80
-FLANK_CLEAR = 0.12
+# Radial limits of the two threads. ISO M6: internal minor 4.917, external
+# major 6.0, external minor 4.773. The hole is opened and the screw shrunk
+# so the two clear by about 0.06 mm on each flank, and overlap by 0.4 mm
+# radially. (The M5's 0.12 mm and 0.23 mm let the screw pull straight out.)
+HOLE_MINOR, HOLE_MAJOR = 5.05, 6.25
+SCREW_MINOR, SCREW_MAJOR = 4.70, 5.85
+FLANK_CLEAR = 0.06
 
 # --- logos ----------------------------------------------------------------
 INLAY_DEPTH = 0.4               # two 0.2 mm layers: enough to hide the base colour
@@ -73,7 +77,7 @@ ETCH_DEPTH = 0.4                # an etched logo is the same recess, left empty
 LOGOS = [
     # file, keep-dark?, centre x, centre y, width, part name, display colour, kind
     ("logo_vaneye.svg", False, 189.6, -87.5, 105.0, "VanEye logo", (255, 255, 255), "inlay"),
-    ("logo_printyours.svg", True, 189.6, -177.0, 42.0, "printyours.ca logo", None, "etch"),
+    ("logo_printyours.svg", True, 189.6, -177.0, 55.0, "printyours.ca logo", None, "etch"),
 ]
 
 # --- pocket size ----------------------------------------------------------
@@ -131,7 +135,7 @@ def threaded_rod(length: float, d_minor: float, d_major: float,
     which is what makes it a thread rather than a stack of rings.
     """
     H = PITCH * math.sqrt(3) / 2
-    r_pitch = (5.0 - 0.6495 * PITCH) / 2          # basic M5 pitch radius
+    r_pitch = (NOMINAL_D - 0.6495 * PITCH) / 2    # basic pitch radius
     r_lo = r_pitch - H / 2 + offset
     nz = max(2, int(math.ceil(length / PITCH * steps)))
     th = np.linspace(0, 2 * math.pi, segs, endpoint=False)
@@ -590,7 +594,7 @@ def main():
                              name="iPad holder", slicer_config=True))
     with open(os.path.join(HERE, "wing_screw.3mf"), "wb") as f:
         f.write(parts_to_3mf([Part("Wing screw", 0, (200, 200, 200), screw)],
-                             origin=(20, 20), name="M5 wing screw"))
+                             origin=(20, 20), name="M6 wing screw"))
     to_trimesh(screw).export(os.path.join(HERE, "wing_screw.stl"))
     for p in parts:
         print(f"{p.name:20s} volume {p.solid.volume():9.1f} mm3  "
