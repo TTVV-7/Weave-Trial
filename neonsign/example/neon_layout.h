@@ -16,62 +16,62 @@ struct Segment {
 };
 
 enum SegmentId : uint8_t {
-  ROOF,
-  CHIMNEY,
+  STAR_6,
+  ARM_LEFT,
+  MITTEN_LEFT,
+  BRIM,
+  BEARD_RIGHT,
+  POM_LOW,
+  HAT_LOW,
+  BEARD_LEFT,
+  HAT,
+  POM,
+  MITTEN_RIGHT,
+  ARM_RIGHT,
   BRICK_1,
   BRICK_2,
+  CHIMNEY,
+  NOSE,
+  EYE_RIGHT,
+  HAT_SIDE,
+  EYE_LEFT,
+  STAR_3,
   MOON_OUTER,
   MOON_INNER,
-  HAT,
-  HAT_SIDE,
-  POM,
-  BRIM,
-  NOSE,
-  BEARD_LEFT,
-  BEARD_RIGHT,
-  ARM_LEFT,
-  ARM_RIGHT,
-  HAT_LOW,
   STAR_1,
-  STAR_2,
-  STAR_3,
-  STAR_4,
   STAR_5,
-  STAR_6,
-  EYE_LEFT,
-  EYE_RIGHT,
-  MITTEN_LEFT,
-  MITTEN_RIGHT,
-  POM_LOW,
+  ROOF,
+  STAR_4,
+  STAR_2,
   NUM_SEGMENTS
 };
 
 const Segment SEGMENTS[NUM_SEGMENTS] = {
-  {"roof",   0, 32, 0xFFF4E8, G_SCENE},  // 533 mm of flex
-  {"chimney",  32, 22, 0xFF2A2A, G_SCENE},  // 367 mm of flex
-  {"brick_1",  54,  2, 0xFF5A1F, G_SCENE},  // 33 mm of flex
-  {"brick_2",  56,  2, 0xFF5A1F, G_SCENE},  // 33 mm of flex
-  {"moon_outer",  58, 15, 0xFFB43C, G_SCENE},  // 250 mm of flex
-  {"moon_inner",  73,  8, 0xFFB43C, G_SCENE},  // 133 mm of flex
-  {"hat",  81, 16, 0xFF2A2A, G_SANTA_UP},  // 267 mm of flex
-  {"hat_side",  97,  2, 0xFF2A2A, G_SANTA_UP},  // 33 mm of flex
-  {"pom",  99,  6, 0xFFF4E8, G_SANTA_UP},  // 100 mm of flex
-  {"brim", 105,  9, 0xFFF4E8, G_SANTA_UP},  // 150 mm of flex
-  {"nose", 114,  6, 0xFF2A2A, G_SANTA_UP},  // 100 mm of flex
-  {"beard_left", 120,  7, 0xFFF4E8, G_SANTA_UP},  // 117 mm of flex
-  {"beard_right", 127,  7, 0xFFF4E8, G_SANTA_UP},  // 117 mm of flex
-  {"arm_left", 134,  7, 0xFF2A2A, G_SANTA_UP},  // 117 mm of flex
-  {"arm_right", 141,  7, 0xFF2A2A, G_SANTA_UP},  // 117 mm of flex
-  {"hat_low", 148,  6, 0xFF2A2A, G_SANTA_DOWN},  // 100 mm of flex
-  {"star_1", 154,  1, 0xBFE3FF, G_STARS},  // single pixel
-  {"star_2", 155,  1, 0xBFE3FF, G_STARS},  // single pixel
-  {"star_3", 156,  1, 0xBFE3FF, G_STARS},  // single pixel
-  {"star_4", 157,  1, 0xBFE3FF, G_STARS},  // single pixel
-  {"star_5", 158,  1, 0xBFE3FF, G_STARS},  // single pixel
-  {"star_6", 159,  1, 0xBFE3FF, G_STARS},  // single pixel
-  {"eye_left", 160,  1, 0xE8F4FF, G_SANTA_UP},  // single pixel
-  {"eye_right", 161,  1, 0xE8F4FF, G_SANTA_UP},  // single pixel
-  {"mitten_left", 162,  1, 0xFFF4E8, G_SANTA_UP},  // single pixel
-  {"mitten_right", 163,  1, 0xFFF4E8, G_SANTA_UP},  // single pixel
-  {"pom_low", 164,  1, 0xFFF4E8, G_SANTA_DOWN},  // single pixel
+  {"star_6",   0,  1, 0xBFE3FF, G_STARS},  // single pixel
+  {"arm_left",   1,  7, 0xFF2A2A, G_SANTA_UP},  // 117 mm of flex
+  {"mitten_left",   8,  1, 0xFFF4E8, G_SANTA_UP},  // single pixel
+  {"brim",   9,  9, 0xFFF4E8, G_SANTA_UP},  // 150 mm of flex
+  {"beard_right",  18,  7, 0xFFF4E8, G_SANTA_UP},  // 117 mm of flex
+  {"pom_low",  25,  1, 0xFFF4E8, G_SANTA_DOWN},  // single pixel
+  {"hat_low",  26,  6, 0xFF2A2A, G_SANTA_DOWN},  // 100 mm of flex
+  {"beard_left",  32,  7, 0xFFF4E8, G_SANTA_UP},  // 117 mm of flex
+  {"hat",  39, 16, 0xFF2A2A, G_SANTA_UP},  // 267 mm of flex
+  {"pom",  55,  6, 0xFFF4E8, G_SANTA_UP},  // 100 mm of flex
+  {"mitten_right",  61,  1, 0xFFF4E8, G_SANTA_UP},  // single pixel
+  {"arm_right",  62,  7, 0xFF2A2A, G_SANTA_UP},  // 117 mm of flex
+  {"brick_1",  69,  2, 0xFF5A1F, G_SCENE},  // 33 mm of flex
+  {"brick_2",  71,  2, 0xFF5A1F, G_SCENE},  // 33 mm of flex
+  {"chimney",  73, 22, 0xFF2A2A, G_SCENE},  // 367 mm of flex
+  {"nose",  95,  6, 0xFF2A2A, G_SANTA_UP},  // 100 mm of flex
+  {"eye_right", 101,  1, 0xE8F4FF, G_SANTA_UP},  // single pixel
+  {"hat_side", 102,  2, 0xFF2A2A, G_SANTA_UP},  // 33 mm of flex
+  {"eye_left", 104,  1, 0xE8F4FF, G_SANTA_UP},  // single pixel
+  {"star_3", 105,  1, 0xBFE3FF, G_STARS},  // single pixel
+  {"moon_outer", 106, 15, 0xFFB43C, G_SCENE},  // 250 mm of flex
+  {"moon_inner", 121,  8, 0xFFB43C, G_SCENE},  // 133 mm of flex
+  {"star_1", 129,  1, 0xBFE3FF, G_STARS},  // single pixel
+  {"star_5", 130,  1, 0xBFE3FF, G_STARS},  // single pixel
+  {"roof", 131, 32, 0xFFF4E8, G_SCENE},  // 533 mm of flex
+  {"star_4", 163,  1, 0xBFE3FF, G_STARS},  // single pixel
+  {"star_2", 164,  1, 0xBFE3FF, G_STARS},  // single pixel
 };

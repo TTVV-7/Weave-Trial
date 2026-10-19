@@ -101,6 +101,21 @@ td.num, th.num { text-align: right; font-family: var(--mono); font-variant-numer
 ol.steps { margin: 0; padding-left: 1.4em; display: grid; gap: 12px; max-width: 70ch; }
 ol.steps li::marker { font-family: var(--mono); color: var(--accent); }
 ol.steps b { font-weight: 600; }
+.stills { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin: 0; padding: 0; list-style: none; }
+@media (max-width: 640px) { .stills { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.stills figure { margin: 0; display: grid; gap: 8px; }
+.stills canvas { border-radius: 4px; background: var(--board); }
+.stills figcaption { display: grid; gap: 2px; font-size: 0.92rem; }
+.stills figcaption b { font-weight: 600; }
+.stills figcaption .mono { color: var(--muted); font-size: 0.78rem; }
+.stills figcaption span:last-child { color: var(--muted); }
+.chassis { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+@media (max-width: 820px) { .chassis { grid-template-columns: minmax(0, 1fr); } }
+.chassis .figure svg { min-width: 0; }
+.chassis h3 { font: 600 1rem var(--body); margin: 0 0 8px; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 18px; color: var(--muted); font-size: 0.85rem; margin-top: 10px; }
+.legend i { display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+.callout { border-left: 3px solid var(--gold); padding: 4px 0 4px 14px; max-width: 70ch; }
 footer { color: var(--muted); font-size: 0.9rem; border-top: 1px solid var(--line); padding-top: 18px; }
 @media (prefers-reduced-motion: reduce) { .phases button::after { transition: none; } }
 </style>
@@ -126,6 +141,43 @@ footer { color: var(--muted); font-size: 0.9rem; border-top: 1px solid var(--lin
       <dl class="spec" id="spec"></dl>
     </div>
   </div>
+
+  <section>
+    <div class="sechead">
+      <div class="eyebrow">The animation, frame by frame</div>
+      <h2>Still frames</h2>
+      <p class="lede">The five moments of the 11.2-second loop, and the board with the power off. The stars twinkle all the way through.</p>
+    </div>
+    <ul class="stills" id="stills"></ul>
+  </section>
+
+  <section>
+    <div class="sechead">
+      <div class="eyebrow">Chassis layout</div>
+      <h2>The board, front and back</h2>
+      <p class="lede">Drawn to scale from the same numbers as the print files. The back is shown as you'd see it with the board face down on the bench, so left and right are swapped.</p>
+    </div>
+    <div class="chassis">
+      <div class="figure">
+        <h3>Front: channels and holes</h3>
+        <svg id="front" viewBox="-40 -30 680 680" role="img" aria-label="Front of the board with every printed channel piece and hole"></svg>
+        <div class="legend">
+          <span><i style="background:#3a3f49"></i>printed channel piece</span>
+          <span><i style="background:#ff5b5b"></i>8 mm wire hole</span>
+          <span><i style="background:#8fd0ff"></i>12 mm pixel hole</span>
+        </div>
+      </div>
+      <div class="figure">
+        <h3>Back: controller, standoffs and data wiring</h3>
+        <svg id="back" viewBox="-40 -30 680 680" role="img" aria-label="Back of the board with the controller cover, standoffs and the data wire route"></svg>
+        <div class="legend">
+          <span><i style="background:#ffb43c"></i>data wire, in map order</span>
+          <span><i style="background:#6b7a90"></i>cover and standoffs</span>
+        </div>
+      </div>
+    </div>
+    <p class="callout" id="volts">Everything on the board runs on 5 V DC. The only mains part is the plug-in adapter, so use a sealed, certified 5 V adapter rather than an open-frame supply. Put a 10 A fuse in the 5 V line where it enters the cover. Each run gets its own pair of 5 V and GND wires from a thick bus inside the cover. Those aren't drawn here, to keep the data route readable.</p>
+  </section>
 
   <section>
     <div class="sechead">
@@ -341,7 +393,8 @@ DATA.strokes.forEach((st) => {
 });
 
 // ---- drawing ------------------------------------------------------------------
-const cv = document.getElementById("sign"), ctx = cv.getContext("2d");
+const cv = document.getElementById("sign");
+let ctx = cv.getContext("2d");
 let px = 1;
 function resize() {
   const w = cv.clientWidth * (window.devicePixelRatio || 1);
@@ -358,7 +411,7 @@ function drawPoly(poly, closed) {
 }
 function draw(unlit) {
   ctx.fillStyle = unlit ? "#2a2d33" : "#121418";
-  ctx.fillRect(0, 0, cv.width, cv.height);
+  ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
   ctx.lineCap = "round"; ctx.lineJoin = "round";
   if (unlit) {
     DATA.strokes.forEach((st) => {
@@ -433,9 +486,116 @@ function render(now) {
   });
 }
 function loop(now) { if (!playing) return; render(now); requestAnimationFrame(loop); }
-new ResizeObserver(() => { resize(); render(performance.now()); }).observe(cv);
+new ResizeObserver(() => { resize(); render(performance.now()); renderStills(); }).observe(cv);
 resize(); syncButtons(); render(performance.now());
 if (playing) requestAnimationFrame(loop);
+
+// ---- still frames ----------------------------------------------------------------
+const STILLS = [
+  { t: 1200, title: "Santa waves", time: "0 – 4 s", text: "The big Santa lights up. His mittens flash in turn, so he waves." },
+  { t: 2650, title: "The wink", time: "2.5 s", text: "One eye goes dark for a third of a second." },
+  { t: 4700, title: "Only his hat shows", time: "4 – 5.5 s", text: "The big Santa goes dark and the small hat inside his face lights. He has sunk into the chimney." },
+  { t: 6150, title: "Down the chimney", time: "5.5 – 7 s", text: "A bright spot runs from the rim down both walls." },
+  { t: 8300, title: "The fire flares", time: "7 – 10 s", text: "The chimney and bricks flicker orange. Then the hat peeks out again and he climbs back up." },
+  { t: null, title: "Lights off", time: "daytime", text: "The bare board: black channels with the white flex showing." },
+];
+const stillList = document.getElementById("stills");
+const stillCanvases = STILLS.map((st, i) => {
+  const li = document.createElement("li");
+  li.innerHTML = `<figure><canvas id="still-${i}" aria-label="${st.title}"></canvas>
+    <figcaption><b>${st.title}</b><span class="mono">${st.time}</span><span>${st.text}</span></figcaption></figure>`;
+  stillList.appendChild(li);
+  return li.querySelector("canvas");
+});
+function renderStills() {
+  const keep = [ctx, px];
+  STILLS.forEach((st, i) => {
+    const c = stillCanvases[i];
+    c.width = c.height = Math.round(c.clientWidth * (window.devicePixelRatio || 1)) || 300;
+    ctx = c.getContext("2d"); px = c.width / DATA.size;
+    if (st.t !== null) frame(st.t + 3000, st.t);
+    draw(st.t === null);
+  });
+  [ctx, px] = keep;
+}
+renderStills();
+
+// ---- chassis drawings (SVG, board millimetres) -------------------------------------
+const NS = "http://www.w3.org/2000/svg";
+function el(parent, tag, attrs, text) {
+  const e = document.createElementNS(NS, tag);
+  for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v);
+  if (text !== undefined) e.textContent = text;
+  parent.appendChild(e); return e;
+}
+const polyD = (loop, flip) => "M" + loop.map(([x, y]) => `${(flip ? 600 - x : x).toFixed(1)},${y.toFixed(1)}`).join("L") + "Z";
+function boardBase(svg) {
+  el(svg, "rect", { x: 0, y: 0, width: 600, height: 600, fill: "#1d2026", stroke: "#4b5260", "stroke-width": 1.5 });
+  // dimension lines
+  const dim = { stroke: "var(--muted)", "stroke-width": 0.8, fill: "none" };
+  el(svg, "path", { d: "M0,-14H600M0,-20V-8M600,-20V-8", ...dim });
+  el(svg, "text", { x: 300, y: -19, "text-anchor": "middle", class: "dim", "font-size": 13 }, "600 mm");
+  el(svg, "path", { d: "M-14,0V600M-20,0H-8M-20,600H-8", ...dim });
+  el(svg, "text", { x: -19, y: 300, "text-anchor": "middle", class: "dim", "font-size": 13, transform: "rotate(-90 -19 300)" }, "600 mm");
+}
+(function front() {
+  const svg = document.getElementById("front");
+  boardBase(svg);
+  DATA.pieces.forEach((pc, i) => {
+    el(svg, "path", { d: pc.outline.map((l) => polyD(l)).join(""), "fill-rule": "evenodd",
+      fill: i % 2 ? "#3a3f49" : "#454b57", stroke: "#0e0f12", "stroke-width": 0.8 });
+    pc.tabs.forEach(([x, y]) => el(svg, "circle", { cx: x, cy: y, r: 1.7, fill: "#1d2026" }));
+  });
+  DATA.pieces.forEach((pc) => {
+    const pts = pc.outline[0], m = pts[Math.floor(pts.length / 4)];
+    el(svg, "text", { x: m[0] + 6, y: m[1] - 4, class: "on-dark", "font-size": 9, opacity: 0.75 }, pc.id);
+  });
+  DATA.holes.forEach((h) => el(svg, "circle", { cx: h.x, cy: h.y, r: D.wire_hole / 2, fill: "#ff5b5b" }));
+  DATA.pixels.forEach((p) => el(svg, "circle", { cx: p.x, cy: p.y, r: D.pixel_d / 2, fill: "#8fd0ff" }));
+})();
+(function back() {
+  const svg = document.getElementById("back");
+  boardBase(svg);
+  const fx = (x) => 600 - x;
+  // channels ghosted, to show what's on the other side
+  DATA.pieces.forEach((pc) => el(svg, "path", { d: pc.outline.map((l) => polyD(l, true)).join(""),
+    "fill-rule": "evenodd", fill: "#262a31" }));
+  const B = DATA.back, c = B.cover;
+  el(svg, "rect", { x: fx(c.x) - c.w / 2, y: c.y - c.h / 2, width: c.w, height: c.h, rx: 6, fill: "#3b4553", stroke: "#6b7a90", "stroke-width": 1.5 });
+  el(svg, "text", { x: fx(c.x), y: c.y - 4, "text-anchor": "middle", class: "on-dark", "font-size": 12 }, "controller");
+  el(svg, "text", { x: fx(c.x), y: c.y + 12, "text-anchor": "middle", class: "on-dark", "font-size": 9, opacity: 0.7 }, "ESP32 · fuse");
+  B.standoffs.forEach((so, i) => {
+    el(svg, "rect", { x: fx(so.x) - so.s / 2, y: so.y - so.s / 2, width: so.s, height: so.s, rx: 5, fill: "#3b4553", stroke: "#6b7a90", "stroke-width": 1.5 });
+    el(svg, "path", { d: `M${fx(so.x)},${so.y - 6}V${so.y + 6}`, stroke: "#11141a", "stroke-width": 5.2, "stroke-linecap": "round" });
+    el(svg, "circle", { cx: fx(so.x), cy: so.y + 6, r: 5.2, fill: "#11141a" });
+    el(svg, "text", { x: fx(so.x), y: so.y + so.s / 2 + 12, "text-anchor": "middle", class: "dim", "font-size": 9 }, i < 2 ? "hangs here" : "standoff");
+  });
+  // the data route: cover -> each run's IN hole, through the flex on the front, out of its OUT hole -> next
+  const stops = [];
+  segs.forEach((sg) => {
+    const ins = DATA.holes.filter((h) => h.run === sg.name);
+    if (ins.length) {
+      const i = ins.find((h) => h.end === "in"), o = ins.find((h) => h.end === "out") || i;
+      stops.push({ name: sg.name, i, o });
+    } else {
+      const p = DATA.pixels.find((q) => q.name === sg.name);
+      stops.push({ name: sg.name, i: p, o: p });
+    }
+  });
+  let prev = { x: c.x, y: c.y };
+  const route = el(svg, "g", { fill: "none", stroke: "#ffb43c", "stroke-width": 1.6, "stroke-linejoin": "round", opacity: 0.9 });
+  stops.forEach((st) => {
+    el(route, "path", { d: `M${fx(prev.x)},${prev.y}L${fx(st.i.x)},${st.i.y}` });
+    prev = st.o;
+  });
+  DATA.holes.forEach((h) => el(svg, "circle", { cx: fx(h.x), cy: h.y, r: D.wire_hole / 2, fill: "#ff5b5b" }));
+  DATA.pixels.forEach((p) => el(svg, "circle", { cx: fx(p.x), cy: p.y, r: D.pixel_d / 2, fill: "#8fd0ff" }));
+  stops.forEach((st, n) => {
+    const g = el(svg, "g", {});
+    el(g, "circle", { cx: fx(st.i.x) + 9, cy: st.i.y - 9, r: 7.5, fill: "#ffb43c" });
+    el(g, "text", { x: fx(st.i.x) + 9, y: st.i.y - 5.6, "text-anchor": "middle", "font-size": 9, fill: "#1a1300", style: "fill:#1a1300;font-weight:600" }, n + 1);
+  });
+})();
 
 // ---- tables -------------------------------------------------------------------
 const S = DATA.stats;
@@ -466,9 +626,9 @@ table("buy", ["Part", "Notes", "Qty"], [
   ["Board", "600 × 600 mm, 6 mm MDF or birch ply. Matte black paint.", 1],
   ["ESP32 dev board", "Any small one, such as an ESP32-C3 or a WROOM DevKit.", 1],
   ["74AHCT125", "Lifts the 3.3 V data line to 5 V. Plus a 330 Ω resistor and a 1000 µF capacitor.", 1],
-  ["5 V power supply", `10 A (50 W). At full white the sign could draw ${fmt(S.leds * 0.06, 1)} A, but the firmware caps it at 6 A.`, 1],
+  ["5 V power adapter", `Sealed plug-in type, 10 A (50 W). At full white the sign could draw ${fmt(S.leds * 0.06, 1)} A, but the firmware caps it at 6 A. Plus an inline 10 A blade fuse.`, 1],
   ["Wire", "18 AWG red and black for the 5 V bus, 24 AWG for data.", "≈ 6 m"],
-  ["Screws", `3 × 8 mm pan-head wood screws for the tabs, and 3 × 12 mm for the cover and standoffs.`, "≈ 120"],
+  ["Screws", `3 × 8 mm pan-head wood screws, for the tabs, the cover and the standoffs. Nothing longer, or it comes through the 6 mm board.`, "≈ 120"],
 ], [2]);
 const groupName = { scene: "scene", stars: "stars", santa_up: "Santa waving", santa_down: "hat only" };
 table("map", ["Run", "Lights in", "LEDs", "Index", "Flex length"], segs.map((s) => [

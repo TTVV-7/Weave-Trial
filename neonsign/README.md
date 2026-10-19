@@ -14,7 +14,8 @@ python neonsign/make_neon_sign.py --check-only # just the bend and spacing check
 ```
 
 Open `example/preview.html` to watch the animation and read the full build
-sheet: a cross-section, parts to print and buy, the LED map and the build order.
+sheet: the still frames, the chassis front and back to scale, a cross-section,
+parts to print and buy, the LED map and the build order.
 
 ## What's in `example/`
 
@@ -35,8 +36,11 @@ sheet: a cross-section, parts to print and buy, the LED map and the build order.
 * **Channels:** split into bed-sized pieces that butt together. Each one is
   screwed down through tabs placed clear of the neighbouring lines.
 * **Wiring:** every run ends over an 8 mm hole, so the wires go through to the
-  back. Wire the data line in LED-map order, and feed 5 V and GND to every run
-  from a bus.
+  back. The data line visits each run in turn by short hops from the controller.
+  The preview's back view numbers every stop, and that order is the LED map.
+  Feed 5 V and GND to every run from a bus.
+* **Low voltage:** everything on the board is 5 V DC. The only mains part is a
+  sealed plug-in 5 V adapter, with a 10 A fuse where the 5 V comes in.
 * **Controller:** ESP32 + 74AHCT125 level shifter, 5 V 10 A supply. The
   firmware caps the current at 6 A.
 
