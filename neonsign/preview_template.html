@@ -1,0 +1,489 @@
+<title>Santa Chimney Neon</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800&family=Source+Sans+3:wght@400;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a sign-maker's build sheet. The lit board leads; the drawing, parts
+   and LED map follow in one readable column. Dark first, like the sign. */
+:root {
+  --bg: #0f1217;
+  --panel: #161b22;
+  --board: #1d2026;
+  --fg: #e8e5de;
+  --muted: #9aa2ae;
+  --line: #2b323d;
+  --accent: #ff4b3e;
+  --gold: #ffb43c;
+  --ink-cut: #ff7a6e;
+  --display: "Big Shoulders Display", "Arial Narrow", Impact, sans-serif;
+  --body: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg: #eef1f5; --panel: #ffffff; --board: #1d2026; --fg: #1b2029; --muted: #5a6371;
+    --line: #d6dbe3; --accent: #cf2318; --gold: #a86400; --ink-cut: #c0261b; color-scheme: light;
+  }
+}
+:root[data-theme="light"] {
+  --bg: #eef1f5; --panel: #ffffff; --board: #1d2026; --fg: #1b2029; --muted: #5a6371;
+  --line: #d6dbe3; --accent: #cf2318; --gold: #a86400; --ink-cut: #c0261b; color-scheme: light;
+}
+body {
+  background: var(--bg); color: var(--fg); font: 400 16px/1.55 var(--body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 28px 64px;
+}
+main { max-width: 1060px; margin: 0 auto; display: grid; gap: 56px; }
+h1, h2 { font-family: var(--display); font-weight: 800; letter-spacing: 0.01em; text-wrap: balance; margin: 0; line-height: 1.02; }
+h1 { font-size: clamp(2.6rem, 7vw, 4.6rem); text-transform: uppercase; }
+h1 span { color: var(--accent); }
+h2 { font-size: 2rem; text-transform: uppercase; }
+p { margin: 0; max-width: 65ch; }
+.eyebrow { font: 600 0.78rem/1 var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+.mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+header { display: grid; gap: 14px; }
+.lede { color: var(--muted); font-size: 1.12rem; }
+
+.stage { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 28px; align-items: start; }
+@media (max-width: 820px) { .stage { grid-template-columns: minmax(0, 1fr); } }
+.boardwrap { background: var(--board); border-radius: 6px; padding: 10px; box-shadow: 0 30px 60px -30px rgba(0,0,0,.6); }
+canvas { display: block; width: 100%; max-width: 100%; aspect-ratio: 1; }
+.dimline { display: flex; justify-content: space-between; color: var(--muted); font: 0.78rem var(--mono); padding: 6px 2px 0; }
+
+.controls { display: grid; gap: 18px; }
+.phases { display: grid; gap: 6px; list-style: none; margin: 0; padding: 0; }
+.phases button {
+  width: 100%; display: grid; grid-template-columns: 3.4em 1fr; gap: 10px; align-items: baseline; text-align: left;
+  background: transparent; color: var(--fg); border: 1px solid var(--line); border-radius: 4px;
+  padding: 9px 12px; font: 600 0.98rem var(--body); cursor: pointer; position: relative; overflow: hidden;
+}
+.phases button .mono { color: var(--muted); font-size: 0.8rem; font-weight: 400; }
+.phases button[aria-current="true"] { border-color: var(--accent); }
+.phases button[aria-current="true"]::after {
+  content: ""; position: absolute; left: 0; bottom: 0; height: 2px; width: var(--p, 0%); background: var(--accent);
+}
+.phases button:hover { border-color: var(--muted); }
+.row { display: flex; gap: 8px; flex-wrap: wrap; }
+.btn {
+  flex: 1 1 auto; background: var(--panel); color: var(--fg); border: 1px solid var(--line); border-radius: 4px;
+  padding: 9px 14px; font: 600 0.95rem var(--body); cursor: pointer;
+}
+.btn[aria-pressed="true"] { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+button:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+dl.spec { display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; margin: 0; font-size: 0.95rem; }
+dl.spec dt { color: var(--muted); }
+dl.spec dd { margin: 0; text-align: right; font-family: var(--mono); font-variant-numeric: tabular-nums; }
+
+section { display: grid; gap: 18px; }
+.sechead { display: grid; gap: 8px; }
+.two { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 32px; align-items: start; }
+@media (max-width: 820px) { .two { grid-template-columns: minmax(0, 1fr); } }
+.figure { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 14px; overflow-x: auto; }
+.figure svg { display: block; width: 100%; min-width: 520px; height: auto; }
+.figure .cap { color: var(--muted); font-size: 0.85rem; margin-top: 8px; }
+svg text { font-family: var(--mono); font-size: 11px; fill: var(--fg); }
+svg .dim { fill: var(--muted); }
+svg .on-dark { fill: #e8e5de; }
+ul.notes { margin: 0; padding-left: 1.1em; display: grid; gap: 8px; max-width: 60ch; }
+
+.tablewrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 6px; background: var(--panel); }
+table { border-collapse: collapse; width: 100%; font-size: 0.95rem; }
+th, td { text-align: left; padding: 9px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font: 600 0.74rem var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+tr:last-child td { border-bottom: 0; }
+td.num, th.num { text-align: right; font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.swatch { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 8px; vertical-align: 0; box-shadow: 0 0 6px currentColor; }
+.grp { color: var(--muted); font-size: 0.85rem; }
+ol.steps { margin: 0; padding-left: 1.4em; display: grid; gap: 12px; max-width: 70ch; }
+ol.steps li::marker { font-family: var(--mono); color: var(--accent); }
+ol.steps b { font-weight: 600; }
+footer { color: var(--muted); font-size: 0.9rem; border-top: 1px solid var(--line); padding-top: 18px; }
+@media (prefers-reduced-motion: reduce) { .phases button::after { transition: none; } }
+</style>
+
+<main>
+  <header>
+    <div class="eyebrow">LED neon sign · 600 × 600 mm · build sheet</div>
+    <h1>Santa <span>down the</span> chimney</h1>
+    <p class="lede" id="lede">Addressable LED neon flex in 3D-printed channels on a black board. Santa waves, sinks until only his hat shows, vanishes down the chimney, the fire flares, and he climbs back out.</p>
+  </header>
+
+  <div class="stage">
+    <div>
+      <div class="boardwrap"><canvas id="sign" aria-label="Animated preview of the lit neon sign"></canvas></div>
+      <div class="dimline"><span>0</span><span>600 mm</span></div>
+    </div>
+    <div class="controls">
+      <ul class="phases" id="phases"></ul>
+      <div class="row">
+        <button class="btn" id="play" type="button" aria-pressed="false">Pause</button>
+        <button class="btn" id="unlit" type="button" aria-pressed="false">Lights off</button>
+      </div>
+      <dl class="spec" id="spec"></dl>
+    </div>
+  </div>
+
+  <section>
+    <div class="sechead">
+      <div class="eyebrow">How it goes together</div>
+      <h2>A board, channels, and the flex</h2>
+    </div>
+    <div class="two">
+      <div class="figure">
+        <svg id="section" viewBox="0 0 640 400" role="img" aria-label="Cross-section from the wall to the front of the sign">
+          <!-- wall -->
+          <rect x="0" y="10" width="34" height="380" fill="#3a3f48"/>
+          <path d="M34 10V390" stroke="#6b7280" stroke-width="2"/>
+          <text x="6" y="398" class="dim" font-size="10">wall</text>
+          <!-- standoff, 40 mm -->
+          <rect x="34" y="280" width="200" height="90" fill="#2a2e35" stroke="#555c66"/>
+          <text class="on-dark" x="134" y="330" text-anchor="middle">standoff</text>
+          <text x="134" y="346" text-anchor="middle" class="on-dark" opacity=".7" id="d-standoff">40 mm</text>
+          <!-- cover over the controller -->
+          <path d="M234 70H74V230H234" fill="#2a2e35" stroke="#555c66" stroke-width="2"/>
+          <rect x="120" y="128" width="70" height="24" rx="2" fill="#2f6f4f"/>
+          <text class="on-dark" x="155" y="144" text-anchor="middle" font-size="10">ESP32</text>
+          <text class="on-dark" x="154" y="96" text-anchor="middle">cover</text>
+          <text x="154" y="112" text-anchor="middle" class="on-dark" opacity=".7" id="d-box">32 mm deep</text>
+          <!-- board -->
+          <rect x="234" y="10" width="30" height="380" fill="#16181c" stroke="#555c66"/>
+          <text x="249" y="398" text-anchor="middle" class="dim" font-size="10">board</text>
+          <!-- channel 1: cross-section -->
+          <g>
+            <path d="M264 92H310V100H270V140H310V148H264Z" fill="#0b0b0c" stroke="#666d78"/>
+            <rect x="270" y="105" width="60" height="30" fill="#e9e4d8"/>
+            <rect x="326" y="105" width="4" height="30" fill="#fff6e0"/>
+            <ellipse cx="342" cy="120" rx="18" ry="22" fill="var(--accent)" opacity=".28"/>
+            <path d="M264 148H277V170H264" fill="#0b0b0c" stroke="#666d78"/>
+            <path d="M262 163H230" stroke="#c9ccd2" stroke-width="3"/>
+            <path d="M277 160H284" stroke="#c9ccd2" stroke-width="5"/>
+          </g>
+          <!-- channel 2: the end of a run, wires through the board -->
+          <g>
+            <path d="M264 262H310V270H270V310H310V318H264Z" fill="#0b0b0c" stroke="#666d78"/>
+            <rect x="276" y="275" width="54" height="30" fill="#e9e4d8"/>
+            <rect x="270" y="275" width="10" height="30" fill="#8b8f96"/>
+            <rect x="234" y="282" width="36" height="16" fill="var(--bg)" stroke="#666d78" stroke-dasharray="3 2"/>
+            <path d="M270 286C230 286 228 240 200 200M270 290C226 292 222 244 192 204M270 294C222 298 216 248 184 208"
+                  fill="none" stroke-width="2" stroke="#d24" />
+          </g>
+          <!-- labels -->
+          <path d="M330 106L380 60H392" stroke="#8a919c" fill="none"/>
+          <text x="396" y="58">neon flex, lit face out</text>
+          <text x="396" y="73" class="dim" id="d-flex">6 × 12 mm</text>
+          <path d="M306 94L380 112H392" stroke="#8a919c" fill="none"/>
+          <text x="396" y="110">printed channel (black)</text>
+          <text x="396" y="125" class="dim" id="d-chan">wall 1.6, floor 1.2, 8 deep</text>
+          <path d="M284 162L380 168H392" stroke="#8a919c" fill="none"/>
+          <text x="396" y="166">screw tab</text>
+          <text x="396" y="181" class="dim" id="d-tab">2.4 mm, 3 × 8 mm screw</text>
+          <path d="M252 290L380 236H392" stroke="#8a919c" fill="none"/>
+          <text x="396" y="232">hole through the board</text>
+          <text x="396" y="247" class="dim" id="d-hole">8 mm, at every end of a run</text>
+          <path d="M276 278L380 300H392" stroke="#8a919c" fill="none"/>
+          <text x="396" y="298">end cap, wires out the back</text>
+          <path d="M200 210L380 340H392" stroke="#8a919c" fill="none"/>
+          <text x="396" y="338">5 V, GND and data back</text>
+          <text x="396" y="353">to the controller</text>
+        </svg>
+        <div class="cap">Section from the wall to the front, drawn about 5× life size. Spacing between parts is schematic.</div>
+      </div>
+      <ul class="notes">
+        <li><b>The board</b> is any flat 600 × 600 mm sheet: 6 mm MDF or birch ply painted matte black, or black acrylic or Dibond if a sign shop cuts it.</li>
+        <li><b>The channels</b> follow every line of the drawing, split into bed-sized pieces that butt together. Each one screws down through small tabs placed where they don't foul a neighbouring line.</li>
+        <li><b>The flex</b> presses into the channel with about 4 mm standing proud, so it reads as a glowing tube from the side as well as head-on.</li>
+        <li><b>Every run ends over a hole</b>, so the wires drop straight through and all the soldering happens on the back.</li>
+        <li><b>Stars, eyes and mittens</b> are single 12 mm pixels pushed through the board from behind, under printed translucent caps.</li>
+        <li><b>The standoffs</b> hold the board clear of the wall, with room behind for the cover and the wiring. Each one hangs on a screw head by a keyhole.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <div class="sechead">
+      <div class="eyebrow">Print</div>
+      <h2>Parts to print</h2>
+    </div>
+    <div class="tablewrap"><table id="prints"></table></div>
+  </section>
+
+  <section>
+    <div class="sechead">
+      <div class="eyebrow">Buy</div>
+      <h2>Parts to buy</h2>
+    </div>
+    <div class="tablewrap"><table id="buy"></table></div>
+  </section>
+
+  <section>
+    <div class="sechead">
+      <div class="eyebrow">Wiring order</div>
+      <h2>LED map</h2>
+      <p class="lede">One data line runs through every piece in this order. The firmware reads the same table from <span class="mono">neon_layout.h</span>.</p>
+    </div>
+    <div class="tablewrap"><table id="map"></table></div>
+  </section>
+
+  <section>
+    <div class="sechead">
+      <div class="eyebrow">Build order</div>
+      <h2>Putting it together</h2>
+    </div>
+    <ol class="steps">
+      <li><b>Test the flex first.</b> Before cutting anything, run the firmware with the whole reel on the bench and check every LED lights.</li>
+      <li><b>Print the template</b> (<span class="mono">template_a4.pdf</span>, actual size) and check the 100 mm scale bar. Tape the pages together using the 10 mm overlaps, then tape the template to the board.</li>
+      <li><b>Drill through the template:</b> 8 mm at every red wire hole, 12 mm for each pixel, and a small pilot at each tab crosshair. Then paint the board.</li>
+      <li><b>Screw the channels down</b> on the pilots. Their names are in the 3MF files and on the template.</li>
+      <li><b>Cut the flex</b> to the lengths in the LED map, at the cut marks. Fit end caps with the wires coming out of the bottom, and seal them with the kit's silicone.</li>
+      <li><b>Press each run into its channel</b>, feeding its wires through the hole. A few dots of clear silicone hold it if it's loose.</li>
+      <li><b>Wire the back in LED-map order:</b> each run's data out goes to the next run's data in. Bring 5 V and GND to every run from a pair of thick bus wires, rather than through the flex.</li>
+      <li><b>Mount the controller</b> under the cover: ESP32, a 74AHCT125 to lift the data line to 5 V, a 330 Ω resistor in the data line, and 1000 µF across the supply.</li>
+      <li><b>Screw on the standoffs</b>, flash the sketch, and hang it.</li>
+    </ol>
+  </section>
+
+  <footer>Generated by <span class="mono">neonsign/make_neon_sign.py</span>. Change the drawing or the sizes there, and the channels, template, firmware map and this page regenerate together.</footer>
+</main>
+
+<script>
+const DATA = /*DATA*/null;
+
+// ---- timeline: the same numbers as santa_neon.ino ---------------------------
+const T_PEEK = 4000, T_GONE = 5500, T_FIRE = 7000, T_BACK = 10000, CYCLE = 11200;
+const PHASES = [
+  { t: 0, label: "Santa waves" },
+  { t: T_PEEK, label: "Only his hat shows" },
+  { t: T_GONE, label: "Down the chimney" },
+  { t: T_FIRE, label: "The fire flares" },
+  { t: T_BACK, label: "Climbing back out" },
+];
+
+const segs = DATA.leds;
+const byName = Object.fromEntries(segs.map((s, i) => [s.name, i]));
+const NUM = segs.reduce((n, s) => n + s.count, 0);
+const hex = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
+const leds = Array.from({ length: NUM }, () => [0, 0, 0]);
+
+function fillSeg(i, c) { const s = segs[i]; for (let k = 0; k < s.count; k++) leds[s.start + k] = c.slice(); }
+function showGroup(g) { segs.forEach((s, i) => { if (s.group === g) fillSeg(i, hex(s.colour)); }); }
+const scale = (c, v) => c.map((x) => Math.round(x * v / 255));
+const sin8 = (x) => Math.round(128 + 127 * Math.sin((x % 256) / 256 * 2 * Math.PI));
+function rand(seed) { let x = Math.sin(seed * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); }
+
+function stars(now) {
+  segs.forEach((s, i) => {
+    if (s.group !== "stars") return;
+    const level = 90 + Math.round(sin8(Math.floor(now / (7 + i % 5)) + i * 40) * 165 / 255);
+    fillSeg(i, scale(hex(s.colour), level));
+  });
+}
+function santaUp(t) {
+  showGroup("santa_up");
+  const left = Math.floor(t / 350) % 2;
+  const m = segs[byName[left ? "mitten_right" : "mitten_left"]];
+  if (m) leds[m.start] = scale(leds[m.start], 40);
+  const eye = segs[byName.eye_left];
+  if (eye && t > 2500 && t < 2800) leds[eye.start] = [0, 0, 0];
+}
+function chimneyChase(p) {
+  const c = segs[byName.chimney], base = hex(c.colour);
+  const mid = (c.count - 1) / 2, head = p * (mid + 3);
+  for (let i = 0; i < c.count; i++) {
+    const d = Math.abs(i - mid) - head, g = Math.exp(-d * d / 3);
+    leds[c.start + i] = base.map((v, k) => Math.round(v + ([255, 220, 160][k] - v) * g));
+  }
+}
+function fire(now) {
+  const w = Math.floor(now / 90);
+  ["chimney", "brick_1", "brick_2"].forEach((n) => {
+    const s = segs[byName[n]];
+    for (let i = 0; i < s.count; i++) {
+      const r1 = rand(w * 977 + s.start + i), r2 = rand(w * 613 + s.start + i + 0.5);
+      leds[s.start + i] = scale([255, 40 + Math.floor(r1 * 70), 0], 150 + Math.floor(r2 * 105));
+    }
+  });
+}
+function frame(now, t) {
+  for (const c of leds) c.fill(0);
+  showGroup("scene");
+  stars(now);
+  if (t < T_PEEK) santaUp(t);
+  else if (t < T_GONE) showGroup("santa_down");
+  else if (t < T_FIRE) chimneyChase((t - T_GONE) / (T_FIRE - T_GONE));
+  else if (t < T_BACK) fire(now);
+  else showGroup("santa_down");
+}
+
+// ---- geometry: split each run of flex into its LEDs ---------------------------
+const ledPaths = [];
+DATA.strokes.forEach((st) => {
+  const seg = segs[byName[st.name]];
+  const pts = st.closed ? [...st.pts, st.pts[0]] : st.pts;
+  const cum = [0];
+  for (let i = 1; i < pts.length; i++) cum.push(cum[i - 1] + Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]));
+  const L = cum[cum.length - 1];
+  const at = (s) => {
+    let i = cum.findIndex((c) => c >= s); if (i <= 0) return pts[Math.max(0, i)];
+    const f = (s - cum[i - 1]) / (cum[i] - cum[i - 1] || 1);
+    return [pts[i - 1][0] + (pts[i][0] - pts[i - 1][0]) * f, pts[i - 1][1] + (pts[i][1] - pts[i - 1][1]) * f];
+  };
+  for (let k = 0; k < seg.count; k++) {
+    const a = k * L / seg.count, b = (k + 1) * L / seg.count, poly = [at(a)];
+    cum.forEach((c, i) => { if (c > a && c < b) poly.push(pts[i]); });
+    poly.push(at(b));
+    ledPaths.push({ index: seg.start + k, poly });
+  }
+  st.all = pts;
+});
+
+// ---- drawing ------------------------------------------------------------------
+const cv = document.getElementById("sign"), ctx = cv.getContext("2d");
+let px = 1;
+function resize() {
+  const w = cv.clientWidth * (window.devicePixelRatio || 1);
+  cv.width = cv.height = Math.round(w);
+  px = cv.width / DATA.size;
+}
+const rgb = (c, a = 1) => `rgba(${c[0]},${c[1]},${c[2]},${a})`;
+const D = DATA.dims;
+
+function drawPoly(poly, closed) {
+  ctx.beginPath();
+  poly.forEach(([x, y], i) => (i ? ctx.lineTo(x * px, y * px) : ctx.moveTo(x * px, y * px)));
+  if (closed) ctx.closePath();
+}
+function draw(unlit) {
+  ctx.fillStyle = unlit ? "#2a2d33" : "#121418";
+  ctx.fillRect(0, 0, cv.width, cv.height);
+  ctx.lineCap = "round"; ctx.lineJoin = "round";
+  if (unlit) {
+    DATA.strokes.forEach((st) => {
+      drawPoly(st.all, false); ctx.strokeStyle = "#0b0b0c"; ctx.lineWidth = D.outer_w * px; ctx.stroke();
+      ctx.strokeStyle = "#dcd7cb"; ctx.lineWidth = D.flex_w * px * 0.9; ctx.stroke();
+    });
+    DATA.pixels.forEach((p) => { drawPoly(p.outline, true); ctx.fillStyle = "#e6e2d8"; ctx.fill(); });
+    return;
+  }
+  // unlit flex faintly visible, as it is in a dim room
+  DATA.strokes.forEach((st) => {
+    drawPoly(st.all, false); ctx.strokeStyle = "rgba(255,255,255,0.05)"; ctx.lineWidth = D.flex_w * px; ctx.stroke();
+  });
+  for (const pass of [0, 1]) {
+    ledPaths.forEach(({ index, poly }) => {
+      const c = leds[index]; if (!c[0] && !c[1] && !c[2]) return;
+      drawPoly(poly, false);
+      if (pass === 0) {
+        ctx.shadowColor = rgb(c, 0.95); ctx.shadowBlur = 14 * px;
+        ctx.strokeStyle = rgb(c, 0.55); ctx.lineWidth = D.flex_w * 2.2 * px;
+      } else {
+        ctx.shadowBlur = 0;
+        ctx.strokeStyle = rgb(c.map((v) => Math.min(255, v * 0.4 + 160 * Math.max(...c) / 255)));
+        ctx.lineWidth = D.flex_w * 0.8 * px;
+      }
+      ctx.stroke();
+    });
+    DATA.pixels.forEach((p) => {
+      const c = leds[segs[byName[p.name]].start]; if (!c[0] && !c[1] && !c[2]) return;
+      drawPoly(p.outline, true);
+      if (pass === 0) { ctx.shadowColor = rgb(c); ctx.shadowBlur = 18 * px; ctx.fillStyle = rgb(c, 0.8); }
+      else { ctx.shadowBlur = 0; ctx.fillStyle = rgb(c.map((v) => Math.min(255, v * 0.5 + 130))); }
+      ctx.fill();
+    });
+  }
+  ctx.shadowBlur = 0;
+}
+
+// ---- controls -----------------------------------------------------------------
+const phaseList = document.getElementById("phases");
+PHASES.forEach((ph, i) => {
+  const li = document.createElement("li"), b = document.createElement("button");
+  b.type = "button"; b.id = "phase-" + i;
+  b.innerHTML = `<span class="mono">${(ph.t / 1000).toFixed(1)} s</span><span>${ph.label}</span>`;
+  b.addEventListener("click", () => { offset = performance.now() - ph.t; if (!playing) { pausedAt = ph.t; render(performance.now()); } });
+  li.appendChild(b); phaseList.appendChild(li);
+});
+const phaseBtns = [...phaseList.querySelectorAll("button")];
+let playing = !matchMedia("(prefers-reduced-motion: reduce)").matches, unlit = false;
+let offset = performance.now(), pausedAt = 0;
+const playBtn = document.getElementById("play"), unlitBtn = document.getElementById("unlit");
+function syncButtons() {
+  playBtn.textContent = playing ? "Pause" : "Play";
+  unlitBtn.setAttribute("aria-pressed", String(unlit));
+}
+playBtn.addEventListener("click", () => {
+  if (playing) { pausedAt = (performance.now() - offset) % CYCLE; playing = false; }
+  else { offset = performance.now() - pausedAt; playing = true; requestAnimationFrame(loop); }
+  syncButtons();
+});
+unlitBtn.addEventListener("click", () => { unlit = !unlit; syncButtons(); render(performance.now()); });
+
+function render(now) {
+  const t = playing ? (now - offset) % CYCLE : pausedAt;
+  frame(playing ? now : pausedAt + 2000, t);
+  draw(unlit);
+  let cur = 0; PHASES.forEach((ph, i) => { if (t >= ph.t) cur = i; });
+  const end = cur + 1 < PHASES.length ? PHASES[cur + 1].t : CYCLE;
+  phaseBtns.forEach((b, i) => {
+    b.setAttribute("aria-current", String(i === cur));
+    if (i === cur) b.style.setProperty("--p", ((t - PHASES[cur].t) / (end - PHASES[cur].t) * 100).toFixed(1) + "%");
+  });
+}
+function loop(now) { if (!playing) return; render(now); requestAnimationFrame(loop); }
+new ResizeObserver(() => { resize(); render(performance.now()); }).observe(cv);
+resize(); syncButtons(); render(performance.now());
+if (playing) requestAnimationFrame(loop);
+
+// ---- tables -------------------------------------------------------------------
+const S = DATA.stats;
+const fmt = (n, d = 0) => Number(n).toLocaleString("en", { minimumFractionDigits: d, maximumFractionDigits: d });
+document.getElementById("spec").innerHTML = [
+  ["Board", "600 × 600 mm"],
+  ["LEDs", fmt(S.leds)],
+  ["Neon flex", fmt(S.flex_m, 2) + " m in " + S.runs + " runs"],
+  ["Single pixels", S.pixels],
+  ["Printed channels", S.pieces + " pieces"],
+  ["Full white, max", fmt(S.leds * 0.06, 1) + " A at 5 V"],
+].map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join("");
+
+const table = (id, head, rows, numeric = []) => {
+  document.getElementById(id).innerHTML =
+    "<thead><tr>" + head.map((h, i) => `<th${numeric.includes(i) ? ' class="num"' : ""}>${h}</th>`).join("") + "</tr></thead><tbody>" +
+    rows.map((r) => "<tr>" + r.map((c, i) => `<td${numeric.includes(i) ? ' class="num"' : ""}>${c}</td>`).join("") + "</tr>").join("") + "</tbody>";
+};
+table("prints", ["File", "What", "Filament", "Qty"], [
+  ["<span class='mono'>channels_plate_1…" + S.plates + ".3mf</span>", `The channels, packed onto ${fmt(D.bed)} mm beds. No supports.`, `Black PLA or PETG, about ${fmt(S.grams)} g`, S.pieces],
+  ["<span class='mono'>pixel_caps.3mf</span>", "Stars, eyes, mittens and the small hat's pom. Printed face down for a smooth face.", "White or natural PETG", S.pixels],
+  ["<span class='mono'>back_parts.3mf</span>", "The cover for the controller, and four keyhole standoffs.", "Any, black", 5],
+], [3]);
+table("buy", ["Part", "Notes", "Qty"], [
+  ["Addressable LED neon flex", `WS2812B, 5 V, 60 LEDs/m, ${D.flex_w} × 12 mm, the kind that bends sideways for signs (sold as “top bend”). It must bend to ${D.min_bend} mm radius or tighter.`, fmt(Math.ceil(S.flex_m * 1.15 * 2) / 2, 1) + " m"],
+  ["Neon end caps", "With a bottom wire exit, and the silicone glue that comes with them.", 2 * S.runs],
+  ["12 mm pixels", "WS2811 5 V “bullet” pixels on a string. Cut them apart and rewire them in map order.", S.pixels],
+  ["Board", "600 × 600 mm, 6 mm MDF or birch ply. Matte black paint.", 1],
+  ["ESP32 dev board", "Any small one, such as an ESP32-C3 or a WROOM DevKit.", 1],
+  ["74AHCT125", "Lifts the 3.3 V data line to 5 V. Plus a 330 Ω resistor and a 1000 µF capacitor.", 1],
+  ["5 V power supply", `10 A (50 W). At full white the sign could draw ${fmt(S.leds * 0.06, 1)} A, but the firmware caps it at 6 A.`, 1],
+  ["Wire", "18 AWG red and black for the 5 V bus, 24 AWG for data.", "≈ 6 m"],
+  ["Screws", `3 × 8 mm pan-head wood screws for the tabs, and 3 × 12 mm for the cover and standoffs.`, "≈ 120"],
+], [2]);
+const groupName = { scene: "scene", stars: "stars", santa_up: "Santa waving", santa_down: "hat only" };
+table("map", ["Run", "Lights in", "LEDs", "Index", "Flex length"], segs.map((s) => [
+  `<span class="swatch" style="color:${s.colour};background:${s.colour}"></span><span class="mono">${s.name}</span>`,
+  `<span class="grp">${groupName[s.group]}</span>`, s.count,
+  s.count > 1 ? `${s.start}–${s.start + s.count - 1}` : s.start,
+  s.flex_mm ? s.flex_mm + " mm" : "pixel",
+]), [2, 3, 4]);
+
+// dimension labels in the drawing, from the generator's numbers
+const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+set("d-standoff", D.standoff_h + " mm");
+set("d-box", D.box_h + " mm deep");
+set("d-flex", `${D.flex_w} × 12 mm`);
+set("d-chan", `wall ${D.wall}, floor ${D.floor}, ${D.depth} deep`);
+set("d-tab", `${D.tab_t} mm, 3 × 8 mm screw`);
+set("d-hole", `${D.wire_hole} mm, at every end of a run`);
+</script>
