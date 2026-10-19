@@ -12,7 +12,7 @@ Reads `source_ipad_holder.3mf` and the two logo SVGs, and writes:
 | file | what |
 |---|---|
 | `ipad_holder.3mf` | the holder, as one object with two parts: the black body (filament 1) and the white VanEye logo (filament 2) |
-| `wing_screw.3mf` / `.stl` | the M6 wing screw ("butterfly key") |
+| `wing_screw.3mf` / `.stl` | a printed M5 wing screw ("butterfly key"), if you have no steel one |
 
 ## The diamond loop
 
@@ -43,21 +43,22 @@ the bottom.
 ## The thread
 
 The source's 5.2 mm hole at 9 o'clock is filled. The thread is now an
-**M6 x 1.0** (60°, right hand) through the upper-right wall, square to the
-wall so the wings seat flat. It is opened up for printing (major 6.25, minor
-5.05), so the printed wing screw fits and so does a steel M6. The 5 mm wall
-gives about five turns of engagement.
+**M5 x 0.8** (60°, right hand) through the upper-right wall, square to the
+wall so the wings seat flat. It is sized for a bought **steel M5 wing
+screw** (major 5.20, minor 4.25): a steel M5 overlaps it by 0.375 mm and
+clears its flanks by 0.05 mm (`FLANK_CLEAR`), so it bites into the printed
+thread and holds. The 5 mm wall gives about six turns of engagement. Any
+steel M5 wing screw with at least 10 mm of thread works; up to about 13 mm
+of thread can go in before the tip meets the far side of the opening.
 
-It was an M5 x 0.8 with 0.12 mm flank clearance, and the printed screw could
-be pulled straight out. The hole runs sideways through the print, so its
-thread is stepped by the layers, and a 0.8 mm pitch is only four 0.2 mm
-layers. The coarser M6 thread overlaps the hole by 0.4 mm radially (the M5
-by 0.23 mm) with 0.06 mm flank clearance (`FLANK_CLEAR`). A finer layer
-height on the case, 0.12 or 0.16 mm, makes the hole's thread cleaner still.
+The hole runs sideways through the print, so its thread is stepped by the
+layers. An earlier version opened it up (minor 4.35, 0.12 mm flanks) so a
+printed screw would turn easily, and the printed screw could be pulled
+straight out. A finer layer height on the case, 0.12 or 0.16 mm, makes the
+thread cleaner.
 
-It sits at about 1:50 rather than exactly 2 o'clock: the M6 screw is wide
-enough that exactly 2 o'clock would bring it within 0.5 mm of the lower-right
-wall as it goes in, so it is held that far clear (`SCREW_GAP`). The screw can reach 8.4 mm into
+It sits at 2 o'clock, at least 0.5 mm clear of the lower-right wall as the
+screw goes in (`SCREW_GAP`). The screw can reach 8.4 mm into
 the opening before it meets the far wall, so it clamps anything at least
 about 4 mm across.
 
@@ -127,8 +128,9 @@ the screw can reach into the opening. The head is a third bigger than the
 first version's: the wings span 40 mm (`WING_SPAN`) and are 4 mm thick, on a
 13.3 mm hub, so it is easier to grip. Print it head down, with the
 wings flat on the bed and the thread pointing up. That way the thread prints
-round, with no supports. Its thread is a little undersized (5.85 major) so it
-turns in the printed hole without binding.
+round, with no supports. Its thread is a shade under a steel M5's (4.90
+major) so it turns in the printed hole without binding. A steel wing screw
+holds better; the printed one is there if you have none.
 
 ## The logos
 
