@@ -52,6 +52,12 @@ PITCH = 0.8
 # be 8 mm for the wings to clear the frame; at 2 o'clock they point up and
 # away, so the source's neck is enough (checked in check_screw).
 LOOP_RAISE = 0.0
+# The top is what hangs on the post, so it is made stronger: the top wall
+# grows TOP_THICKER outward (3 -> 5 mm), the neck is NECK_W wide instead of
+# the source's 12 mm, and the neck and loop run the case's full thickness
+# rather than stopping 1.5 mm short of the front.
+TOP_THICKER = 2.0
+NECK_W = 16.0
 # The loop is a true diamond: an opening DIAMOND mm point to point, across
 # and up, in walls LOOP_WALL thick. Its outside is cut flat where it meets
 # the neck.
@@ -195,30 +201,30 @@ def stretch_frame(frame: trimesh.Trimesh) -> trimesh.Trimesh:
     v = frame.vertices.copy()
     v[v[:, 1] < STRETCH_Y, 1] -= POCKET_LONGER
     v[v[:, 2] > STRETCH_Z, 2] += POCKET_DEEPER
+    v[v[:, 1] > 1.0, 1] += TOP_THICKER          # only the top's outside face
     return trimesh.Trimesh(v, frame.faces, process=False)
 
 
-def loop_section(neck: trimesh.Trimesh) -> m3.CrossSection:
-    """The diamond loop's cross-section, centred over the neck.
+def loop_section(cx: float, w: float, base: float) -> m3.CrossSection:
+    """The diamond loop's cross-section, centred on ``cx`` over a neck ``w``
+    wide whose top is at ``base``.
 
     The opening is a square on its point, DIAMOND across; the outside is the
     opening grown LOOP_WALL (mitred, so the corners stay sharp). Below the
     opening the outside's point is filled out to the neck's full width, so
     the loop does not hang from a narrow waist.
     """
-    (nx0, _, _), (nx1, ny1, _) = neck.bounds
     h = DIAMOND / 2
     hole = m3.CrossSection([[[h, 0], [0, h], [-h, 0], [0, -h]]])
     outer = hole.offset(LOOP_WALL, m3.JoinType.Miter, 2.0)
     flat = -h - LOOP_WALL
-    w = nx1 - nx0
     foot = m3.CrossSection.batch_hull([
         outer ^ m3.CrossSection.square([60, 60]).translate([-30, -h - 60]),
         m3.CrossSection.square([w, 0.01]).translate([-w / 2, flat])])
     ring = ((outer ^ m3.CrossSection.square([60, 60]).translate([-30, flat]))
             + foot) - hole
     # The flat sits 1 mm into the neck so the two fuse.
-    return ring.translate([(nx0 + nx1) / 2, ny1 - 1.0 - flat + LOOP_RAISE])
+    return ring.translate([cx, base - 1.0 - flat])
 
 
 def hole_axis(cs: m3.CrossSection, zc: float) -> dict:
@@ -426,14 +432,17 @@ def build_holder(info: dict | None = None):
     names = sorted(src, key=lambda n: -src[n].volume)
     frame, loop, neck = (src[n] for n in names)
     frame = stretch_frame(frame)
-    # The neck is a plain box; stretch it upwards and carry the loop with it.
-    (nx0, ny0, nz0), (nx1, ny1, nz1) = neck.bounds
-    # It also starts 1 mm inside the frame wall: in the source it only touches
-    # the frame face to face, which leaves it a separate solid.
-    neck_box = (m3.Manifold.cube([nx1 - nx0, ny1 - ny0 + LOOP_RAISE + 1.0, nz1 - nz0])
-                .translate([nx0, ny0 - 1.0, nz0]))
-    z0, z1 = loop.bounds[:, 2]
-    cs = loop_section(neck)
+    # The neck is a plain box on the top wall, as long as the source's (plus
+    # LOOP_RAISE), NECK_W wide and the case's full thickness; the loop sits
+    # on it.
+    (nx0, ny0, _), (nx1, ny1, _) = neck.bounds
+    z0, z1 = frame.bounds[:, 2]
+    cx, top = (nx0 + nx1) / 2, frame.bounds[1, 1]
+    base = top + (ny1 - ny0) + LOOP_RAISE
+    # It also starts 1 mm inside the frame wall, so the two fuse.
+    neck_box = (m3.Manifold.cube([NECK_W, base - top + 1.0, z1 - z0])
+                .translate([cx - NECK_W / 2, top - 1.0, z0]))
+    cs = loop_section(cx, NECK_W, base)
     axis = hole_axis(cs, (z0 + z1) / 2)
     case = ((to_manifold(frame) + pocket_fillets(frame) + camera_fill()
              + home_fill()) ^ envelope(frame)) - home_cutter(frame.bounds[1, 2])
@@ -442,6 +451,7 @@ def build_holder(info: dict | None = None):
     body = body - hole_cutter(axis) - power_slot(frame)
     if info is not None:
         info["axis"] = axis
+        info["top"] = top
 
     inlays = []
     for fname, keep_dark, cx, cy, w, label, rgb, kind in LOGOS:
@@ -608,7 +618,7 @@ def main():
     chk = check_screw(parts[0].solid, screw, axis)
     print(f"wings hit the holder at {len(chk['hits'])} of 72 turns {chk['hits'][:6]}; "
           f"screw reaches {chk['reach']:.1f} mm into the opening; lowest wing "
-          f"{chk['lowest_wing_y'] - 1.9:.1f} mm above the frame")
+          f"{chk['lowest_wing_y'] - info['top']:.1f} mm above the frame")
     preview(parts, screw, axis, chk["reach"], os.path.join(HERE, "preview.png"))
 
 

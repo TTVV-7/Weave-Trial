@@ -19,9 +19,17 @@ Reads `source_ipad_holder.3mf` and the two logo SVGs, and writes:
 The loop is a true diamond: the opening is a square stood on its point,
 12 mm across and 12 mm tall, point to point (`DIAMOND`), about 8.5 mm along
 each inside face. Its walls are 5 mm (`LOOP_WALL`). Below the opening the
-loop is filled out to the neck's full 12 mm width, so it does not hang from
+loop is filled out to the neck's full 16 mm width, so it does not hang from
 a narrow waist. Earlier versions grew the source's loop instead, which left
 a 7.2 mm opening with a flat bottom.
+
+## The top
+
+The top is what hangs on the post, so it is built stronger than the source's:
+the top wall is 5 mm thick instead of 3 (`TOP_THICKER`, grown outward so the
+pocket keeps its size), the neck is 16 mm wide instead of 12 (`NECK_W`), and
+the neck and loop run the case's full 13.3 mm thickness instead of stopping
+1.5 mm short of the front.
 
 ## Pocket size
 
