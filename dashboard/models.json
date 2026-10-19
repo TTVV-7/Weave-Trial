@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-19T19:31:35+00:00",
+  "generated": "2026-10-19T19:31:44+00:00",
   "models": [
     {
       "name": "ipad holder",
@@ -119,7 +119,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 54402,
-      "modified": "2026-10-19T19:30:28+00:00",
+      "modified": "2026-10-19T19:31:35+00:00",
       "preview": null
     },
     {
@@ -130,29 +130,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 125439,
-      "modified": "2026-10-19T19:30:28+00:00",
-      "preview": null
-    },
-    {
-      "name": "channels plate 10",
-      "file": "channels_plate_10.3mf",
-      "path": "neonsign/example/channels_plate_10.3mf",
-      "folder": "neonsign/example",
-      "ext": "3mf",
-      "type": "3MF",
-      "size": 24353,
-      "modified": "2026-10-19T19:29:23+00:00",
-      "preview": null
-    },
-    {
-      "name": "channels plate 11",
-      "file": "channels_plate_11.3mf",
-      "path": "neonsign/example/channels_plate_11.3mf",
-      "folder": "neonsign/example",
-      "ext": "3mf",
-      "type": "3MF",
-      "size": 28106,
-      "modified": "2026-10-19T19:29:23+00:00",
+      "modified": "2026-10-19T19:31:35+00:00",
       "preview": null
     },
     {
@@ -163,7 +141,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 87766,
-      "modified": "2026-10-19T19:30:28+00:00",
+      "modified": "2026-10-19T19:31:35+00:00",
       "preview": null
     },
     {
@@ -174,7 +152,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 81991,
-      "modified": "2026-10-19T19:30:28+00:00",
+      "modified": "2026-10-19T19:31:35+00:00",
       "preview": null
     },
     {
@@ -185,7 +163,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 119181,
-      "modified": "2026-10-19T19:30:28+00:00",
+      "modified": "2026-10-19T19:31:35+00:00",
       "preview": null
     },
     {
@@ -196,51 +174,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 90898,
-      "modified": "2026-10-19T19:30:28+00:00",
-      "preview": null
-    },
-    {
-      "name": "channels plate 6",
-      "file": "channels_plate_6.3mf",
-      "path": "neonsign/example/channels_plate_6.3mf",
-      "folder": "neonsign/example",
-      "ext": "3mf",
-      "type": "3MF",
-      "size": 25472,
-      "modified": "2026-10-19T19:29:23+00:00",
-      "preview": null
-    },
-    {
-      "name": "channels plate 7",
-      "file": "channels_plate_7.3mf",
-      "path": "neonsign/example/channels_plate_7.3mf",
-      "folder": "neonsign/example",
-      "ext": "3mf",
-      "type": "3MF",
-      "size": 25424,
-      "modified": "2026-10-19T19:29:23+00:00",
-      "preview": null
-    },
-    {
-      "name": "channels plate 8",
-      "file": "channels_plate_8.3mf",
-      "path": "neonsign/example/channels_plate_8.3mf",
-      "folder": "neonsign/example",
-      "ext": "3mf",
-      "type": "3MF",
-      "size": 28269,
-      "modified": "2026-10-19T19:29:23+00:00",
-      "preview": null
-    },
-    {
-      "name": "channels plate 9",
-      "file": "channels_plate_9.3mf",
-      "path": "neonsign/example/channels_plate_9.3mf",
-      "folder": "neonsign/example",
-      "ext": "3mf",
-      "type": "3MF",
-      "size": 24371,
-      "modified": "2026-10-19T19:29:23+00:00",
+      "modified": "2026-10-19T19:31:35+00:00",
       "preview": null
     },
     {
@@ -251,7 +185,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 23311,
-      "modified": "2026-10-19T19:30:28+00:00",
+      "modified": "2026-10-19T19:31:35+00:00",
       "preview": null
     },
     {
