@@ -1,6 +1,61 @@
 {
-  "generated": "2026-10-16T20:18:17+00:00",
+  "generated": "2026-10-20T20:00:17+00:00",
   "models": [
+    {
+      "name": "Bulk Bag Concrete",
+      "file": "Bulk_Bag_Concrete.step",
+      "path": "bulkbag/Bulk_Bag_Concrete.step",
+      "folder": "bulkbag",
+      "ext": "step",
+      "type": "STEP",
+      "size": 326814,
+      "modified": "2026-10-20T18:45:15+00:00",
+      "preview": "bulkbag/Bulk_Bag_Concrete_preview.png"
+    },
+    {
+      "name": "Bulk Bag Concrete on Pallet",
+      "file": "Bulk_Bag_Concrete_on_Pallet.step",
+      "path": "bulkbag/Bulk_Bag_Concrete_on_Pallet.step",
+      "folder": "bulkbag",
+      "ext": "step",
+      "type": "STEP",
+      "size": 669925,
+      "modified": "2026-10-20T18:45:15+00:00",
+      "preview": "bulkbag/Bulk_Bag_Concrete_on_Pallet_preview.png"
+    },
+    {
+      "name": "Towable Generator 300kVA",
+      "file": "Towable_Generator_300kVA.step",
+      "path": "generator/Towable_Generator_300kVA.step",
+      "folder": "generator",
+      "ext": "step",
+      "type": "STEP",
+      "size": 2315332,
+      "modified": "2026-10-20T19:19:22+00:00",
+      "preview": "generator/Towable_Generator_300kVA_preview.png"
+    },
+    {
+      "name": "Rain Hoarding",
+      "file": "Rain_Hoarding.step",
+      "path": "hoarding/Rain_Hoarding.step",
+      "folder": "hoarding",
+      "ext": "step",
+      "type": "STEP",
+      "size": 3379023,
+      "modified": "2026-10-20T18:35:55+00:00",
+      "preview": "hoarding/Rain_Hoarding_preview.png"
+    },
+    {
+      "name": "Storage Enclosure",
+      "file": "Storage_Enclosure.step",
+      "path": "hoarding/Storage_Enclosure.step",
+      "folder": "hoarding",
+      "ext": "step",
+      "type": "STEP",
+      "size": 1727623,
+      "modified": "2026-10-20T19:40:50+00:00",
+      "preview": "hoarding/Storage_Enclosure_preview.png"
+    },
     {
       "name": "ipad holder",
       "file": "ipad_holder.3mf",
@@ -350,7 +405,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 188251,
-      "modified": "2026-10-16T20:15:55+00:00",
+      "modified": "2026-10-16T20:18:17+00:00",
       "preview": "reviewstand/example/review_stand_assembled_preview.png"
     },
     {
@@ -361,7 +416,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 2975,
-      "modified": "2026-10-16T20:15:55+00:00",
+      "modified": "2026-10-16T20:18:17+00:00",
       "preview": "reviewstand/example/review_stand_base_preview.png"
     },
     {
@@ -372,7 +427,7 @@
       "ext": "stl",
       "type": "STL",
       "size": 11284,
-      "modified": "2026-10-16T20:15:55+00:00",
+      "modified": "2026-10-16T20:18:17+00:00",
       "preview": "reviewstand/example/review_stand_base_preview.png"
     },
     {
@@ -383,8 +438,30 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 168251,
-      "modified": "2026-10-16T20:15:55+00:00",
+      "modified": "2026-10-16T20:18:17+00:00",
       "preview": "reviewstand/example/review_stand_sign_preview.png"
+    },
+    {
+      "name": "Batch Plant ESP Tarp",
+      "file": "Batch_Plant_ESP_Tarp.step",
+      "path": "tarp/Batch_Plant_ESP_Tarp.step",
+      "folder": "tarp",
+      "ext": "step",
+      "type": "STEP",
+      "size": 1409073,
+      "modified": "2026-10-20T18:47:34+00:00",
+      "preview": "tarp/Batch_Plant_ESP_Tarp_preview.png"
+    },
+    {
+      "name": "Small ESC Pad",
+      "file": "Small_ESC_Pad.step",
+      "path": "tarp/Small_ESC_Pad.step",
+      "folder": "tarp",
+      "ext": "step",
+      "type": "STEP",
+      "size": 994004,
+      "modified": "2026-10-20T19:37:06+00:00",
+      "preview": "tarp/Small_ESC_Pad_preview.png"
     },
     {
       "name": "Genie GTH 1056 max 65deg extended 10m",
