@@ -65,11 +65,12 @@ class Spec:
     door_height: float = 2100
 
 
-# Other uses of the same structure. `--preset storage` is a free-standing,
-# fully wrapped store about 10 ft wide, with a zip door in one end.
+# Other uses of the same structure. `--preset storage` is a free-standing
+# store about 10 ft wide, wrapped to the ground, with an open front face
+# (`--open-end none --door-width 1800` closes it with a zip door instead).
 PRESETS = {
     "storage": dict(length=6750, width=3048, wall_height=0, post_offset=0, skirt_gap=150,
-                    eaves=3000, beam_depth=300, open_end="none", door_width=1800),
+                    eaves=3000, beam_depth=300, open_end="x+"),
 }
 
 
