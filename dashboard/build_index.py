@@ -29,7 +29,9 @@ TYPES = {
     ".ply": "PLY",
     ".gcode": "G-code",
 }
-SKIP_DIRS = {".git", "node_modules", "__pycache__", ".venv", ".pytest_cache", "site", "out"}
+SKIP_DIRS = {".git", "node_modules", "__pycache__", ".venv", ".pytest_cache"}
+# build output, skipped only at the top of the repo: a project may keep its models in its own out/
+SKIP_TOP_DIRS = {"site", "out"}
 PREVIEW_EXTS = (".png", ".jpg", ".jpeg", ".webp")
 
 
@@ -62,7 +64,8 @@ def find_preview(path: Path) -> str | None:
 def scan() -> list[dict]:
     models = []
     for path in sorted(ROOT.rglob("*")):
-        if any(part in SKIP_DIRS for part in path.relative_to(ROOT).parts):
+        parts = path.relative_to(ROOT).parts
+        if any(part in SKIP_DIRS for part in parts) or parts[0] in SKIP_TOP_DIRS:
             continue
         kind = TYPES.get(path.suffix.lower())
         if kind is None or not path.is_file():

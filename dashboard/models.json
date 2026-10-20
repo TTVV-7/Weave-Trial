@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-20T18:16:14+00:00",
+  "generated": "2026-10-20T18:29:34+00:00",
   "models": [
     {
       "name": "Industrial Steel Stair 12ft",
@@ -9,7 +9,7 @@
       "ext": "glb",
       "type": "glTF",
       "size": 615384,
-      "modified": "2026-10-20T18:14:34+00:00",
+      "modified": "2026-10-20T18:17:06+00:00",
       "preview": "construction_site/Industrial_Steel_Stair_12ft_preview.png"
     },
     {
@@ -20,7 +20,7 @@
       "ext": "step",
       "type": "STEP",
       "size": 3152759,
-      "modified": "2026-10-20T18:14:34+00:00",
+      "modified": "2026-10-20T18:17:06+00:00",
       "preview": "construction_site/Industrial_Steel_Stair_12ft_preview.png"
     },
     {
@@ -31,7 +31,7 @@
       "ext": "glb",
       "type": "glTF",
       "size": 136508,
-      "modified": "2026-10-20T18:14:33+00:00",
+      "modified": "2026-10-20T18:17:06+00:00",
       "preview": "construction_site/Mixer_Stand_preview.png"
     },
     {
@@ -42,7 +42,7 @@
       "ext": "step",
       "type": "STEP",
       "size": 827628,
-      "modified": "2026-10-20T18:14:33+00:00",
+      "modified": "2026-10-20T18:17:06+00:00",
       "preview": "construction_site/Mixer_Stand_preview.png"
     },
     {
@@ -53,7 +53,7 @@
       "ext": "glb",
       "type": "glTF",
       "size": 5213744,
-      "modified": "2026-10-20T18:14:33+00:00",
+      "modified": "2026-10-20T18:17:06+00:00",
       "preview": "construction_site/Pallet_of_Concrete_Bags_preview.png"
     },
     {
@@ -64,7 +64,7 @@
       "ext": "step",
       "type": "STEP",
       "size": 2239402,
-      "modified": "2026-10-20T18:14:33+00:00",
+      "modified": "2026-10-20T18:17:06+00:00",
       "preview": "construction_site/Pallet_of_Concrete_Bags_preview.png"
     },
     {
@@ -75,7 +75,7 @@
       "ext": "glb",
       "type": "glTF",
       "size": 225820,
-      "modified": "2026-10-20T18:14:33+00:00",
+      "modified": "2026-10-20T18:17:06+00:00",
       "preview": "construction_site/Planetary_Concrete_Mixer_500L_preview.png"
     },
     {
@@ -86,7 +86,7 @@
       "ext": "step",
       "type": "STEP",
       "size": 150182,
-      "modified": "2026-10-20T18:14:33+00:00",
+      "modified": "2026-10-20T18:17:06+00:00",
       "preview": "construction_site/Planetary_Concrete_Mixer_500L_preview.png"
     },
     {
@@ -97,7 +97,7 @@
       "ext": "glb",
       "type": "glTF",
       "size": 359836,
-      "modified": "2026-10-20T18:14:33+00:00",
+      "modified": "2026-10-20T18:17:06+00:00",
       "preview": "construction_site/Planetary_Mixer_on_Stand_preview.png"
     },
     {
@@ -108,7 +108,7 @@
       "ext": "step",
       "type": "STEP",
       "size": 985202,
-      "modified": "2026-10-20T18:14:33+00:00",
+      "modified": "2026-10-20T18:17:06+00:00",
       "preview": "construction_site/Planetary_Mixer_on_Stand_preview.png"
     },
     {
@@ -119,7 +119,7 @@
       "ext": "glb",
       "type": "glTF",
       "size": 2046204,
-      "modified": "2026-10-20T18:14:34+00:00",
+      "modified": "2026-10-20T18:17:06+00:00",
       "preview": "construction_site/Rail_Crossover_Gantry_preview.png"
     },
     {
@@ -130,7 +130,7 @@
       "ext": "step",
       "type": "STEP",
       "size": 6511105,
-      "modified": "2026-10-20T18:14:34+00:00",
+      "modified": "2026-10-20T18:17:06+00:00",
       "preview": "construction_site/Rail_Crossover_Gantry_preview.png"
     },
     {
@@ -141,7 +141,7 @@
       "ext": "glb",
       "type": "glTF",
       "size": 211508,
-      "modified": "2026-10-20T18:14:33+00:00",
+      "modified": "2026-10-20T18:17:06+00:00",
       "preview": "construction_site/Roll_Off_Dumpster_20yd_preview.png"
     },
     {
@@ -152,7 +152,7 @@
       "ext": "step",
       "type": "STEP",
       "size": 787734,
-      "modified": "2026-10-20T18:14:33+00:00",
+      "modified": "2026-10-20T18:17:06+00:00",
       "preview": "construction_site/Roll_Off_Dumpster_20yd_preview.png"
     },
     {
@@ -163,7 +163,7 @@
       "ext": "glb",
       "type": "glTF",
       "size": 426952,
-      "modified": "2026-10-20T18:14:33+00:00",
+      "modified": "2026-10-20T18:17:06+00:00",
       "preview": "construction_site/Telehandler_10000lb_56ft_preview.png"
     },
     {
@@ -174,7 +174,7 @@
       "ext": "step",
       "type": "STEP",
       "size": 864323,
-      "modified": "2026-10-20T18:14:33+00:00",
+      "modified": "2026-10-20T18:17:06+00:00",
       "preview": "construction_site/Telehandler_10000lb_56ft_preview.png"
     },
     {
@@ -185,7 +185,7 @@
       "ext": "glb",
       "type": "glTF",
       "size": 998072,
-      "modified": "2026-10-20T18:14:34+00:00",
+      "modified": "2026-10-20T18:17:06+00:00",
       "preview": "construction_site/Temporary_Fence_Panel_6x10ft_preview.png"
     },
     {
@@ -196,7 +196,7 @@
       "ext": "step",
       "type": "STEP",
       "size": 512759,
-      "modified": "2026-10-20T18:14:34+00:00",
+      "modified": "2026-10-20T18:17:06+00:00",
       "preview": "construction_site/Temporary_Fence_Panel_6x10ft_preview.png"
     },
     {
@@ -207,7 +207,7 @@
       "ext": "glb",
       "type": "glTF",
       "size": 3838648,
-      "modified": "2026-10-20T18:14:34+00:00",
+      "modified": "2026-10-20T18:17:06+00:00",
       "preview": "construction_site/Temporary_Fence_Run_50ft_preview.png"
     },
     {
@@ -218,7 +218,7 @@
       "ext": "step",
       "type": "STEP",
       "size": 2631969,
-      "modified": "2026-10-20T18:14:34+00:00",
+      "modified": "2026-10-20T18:17:06+00:00",
       "preview": "construction_site/Temporary_Fence_Run_50ft_preview.png"
     },
     {
@@ -229,7 +229,7 @@
       "ext": "glb",
       "type": "glTF",
       "size": 450620,
-      "modified": "2026-10-20T18:14:33+00:00",
+      "modified": "2026-10-20T18:17:06+00:00",
       "preview": "construction_site/Towable_Air_Compressor_preview.png"
     },
     {
@@ -240,7 +240,7 @@
       "ext": "step",
       "type": "STEP",
       "size": 1127303,
-      "modified": "2026-10-20T18:14:33+00:00",
+      "modified": "2026-10-20T18:17:06+00:00",
       "preview": "construction_site/Towable_Air_Compressor_preview.png"
     },
     {
@@ -251,7 +251,7 @@
       "ext": "glb",
       "type": "glTF",
       "size": 228308,
-      "modified": "2026-10-20T18:14:33+00:00",
+      "modified": "2026-10-20T18:17:06+00:00",
       "preview": "construction_site/Traffic_Cone_28in_preview.png"
     },
     {
@@ -262,7 +262,7 @@
       "ext": "step",
       "type": "STEP",
       "size": 71720,
-      "modified": "2026-10-20T18:14:33+00:00",
+      "modified": "2026-10-20T18:17:06+00:00",
       "preview": "construction_site/Traffic_Cone_28in_preview.png"
     },
     {
@@ -273,7 +273,7 @@
       "ext": "glb",
       "type": "glTF",
       "size": 322292,
-      "modified": "2026-10-20T18:14:32+00:00",
+      "modified": "2026-10-20T18:17:06+00:00",
       "preview": "construction_site/Trailer_Concrete_Line_Pump_preview.png"
     },
     {
@@ -284,8 +284,19 @@
       "ext": "step",
       "type": "STEP",
       "size": 521536,
-      "modified": "2026-10-20T18:14:32+00:00",
+      "modified": "2026-10-20T18:17:06+00:00",
       "preview": "construction_site/Trailer_Concrete_Line_Pump_preview.png"
+    },
+    {
+      "name": "Rain Hoarding",
+      "file": "Rain_Hoarding.step",
+      "path": "hoarding/Rain_Hoarding.step",
+      "folder": "hoarding",
+      "ext": "step",
+      "type": "STEP",
+      "size": 8196667,
+      "modified": "2026-10-20T18:25:53+00:00",
+      "preview": "hoarding/Rain_Hoarding_preview.png"
     },
     {
       "name": "ipad holder",
@@ -365,6 +376,182 @@
       "preview": null
     },
     {
+      "name": "mascot stand assembled",
+      "file": "mascot_stand_assembled.3mf",
+      "path": "mascotstand/models/mascot_stand_assembled.3mf",
+      "folder": "mascotstand/models",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 196354,
+      "modified": "2026-10-20T18:25:53+00:00",
+      "preview": "mascotstand/models/mascot_stand_assembled_preview.png"
+    },
+    {
+      "name": "mascot stand base",
+      "file": "mascot_stand_base.3mf",
+      "path": "mascotstand/models/mascot_stand_base.3mf",
+      "folder": "mascotstand/models",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 115313,
+      "modified": "2026-10-20T18:25:53+00:00",
+      "preview": "mascotstand/models/mascot_stand_base_preview.png"
+    },
+    {
+      "name": "mascot stand base",
+      "file": "mascot_stand_base.stl",
+      "path": "mascotstand/models/mascot_stand_base.stl",
+      "folder": "mascotstand/models",
+      "ext": "stl",
+      "type": "STL",
+      "size": 584484,
+      "modified": "2026-10-20T18:25:53+00:00",
+      "preview": "mascotstand/models/mascot_stand_base_preview.png"
+    },
+    {
+      "name": "mascot stand trim",
+      "file": "mascot_stand_trim.3mf",
+      "path": "mascotstand/models/mascot_stand_trim.3mf",
+      "folder": "mascotstand/models",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 81842,
+      "modified": "2026-10-20T18:25:53+00:00",
+      "preview": "mascotstand/models/mascot_stand_trim_preview.png"
+    },
+    {
+      "name": "mascot stand trim cup rim",
+      "file": "mascot_stand_trim_cup_rim.stl",
+      "path": "mascotstand/models/mascot_stand_trim_cup_rim.stl",
+      "folder": "mascotstand/models",
+      "ext": "stl",
+      "type": "STL",
+      "size": 128084,
+      "modified": "2026-10-20T18:25:53+00:00",
+      "preview": "mascotstand/models/mascot_stand_trim_cup_rim_preview.png"
+    },
+    {
+      "name": "mascot stand trim side band",
+      "file": "mascot_stand_trim_side_band.stl",
+      "path": "mascotstand/models/mascot_stand_trim_side_band.stl",
+      "folder": "mascotstand/models",
+      "ext": "stl",
+      "type": "STL",
+      "size": 105684,
+      "modified": "2026-10-20T18:25:53+00:00",
+      "preview": "mascotstand/models/mascot_stand_trim_side_band_preview.png"
+    },
+    {
+      "name": "mascot stand trim stage ring",
+      "file": "mascot_stand_trim_stage_ring.stl",
+      "path": "mascotstand/models/mascot_stand_trim_stage_ring.stl",
+      "folder": "mascotstand/models",
+      "ext": "stl",
+      "type": "STL",
+      "size": 59884,
+      "modified": "2026-10-20T18:25:53+00:00",
+      "preview": "mascotstand/models/mascot_stand_trim_stage_ring_preview.png"
+    },
+    {
+      "name": "mascot stand trim tray rim",
+      "file": "mascot_stand_trim_tray_rim.stl",
+      "path": "mascotstand/models/mascot_stand_trim_tray_rim.stl",
+      "folder": "mascotstand/models",
+      "ext": "stl",
+      "type": "STL",
+      "size": 135884,
+      "modified": "2026-10-20T18:25:53+00:00",
+      "preview": "mascotstand/models/mascot_stand_trim_tray_rim_preview.png"
+    },
+    {
+      "name": "black base",
+      "file": "black_base.stl",
+      "path": "mirror_hanger/out/black_base.stl",
+      "folder": "mirror_hanger/out",
+      "ext": "stl",
+      "type": "STL",
+      "size": 60084,
+      "modified": "2026-10-20T18:25:53+00:00",
+      "preview": "mirror_hanger/out/black_base_preview.png"
+    },
+    {
+      "name": "hanger",
+      "file": "hanger.3mf",
+      "path": "mirror_hanger/out/hanger.3mf",
+      "folder": "mirror_hanger/out",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 58278,
+      "modified": "2026-10-20T18:25:53+00:00",
+      "preview": "mirror_hanger/out/hanger_preview.png"
+    },
+    {
+      "name": "red layer",
+      "file": "red_layer.stl",
+      "path": "mirror_hanger/out/red_layer.stl",
+      "folder": "mirror_hanger/out",
+      "ext": "stl",
+      "type": "STL",
+      "size": 176484,
+      "modified": "2026-10-20T18:25:53+00:00",
+      "preview": "mirror_hanger/out/red_layer_preview.png"
+    },
+    {
+      "name": "white layer",
+      "file": "white_layer.stl",
+      "path": "mirror_hanger/out/white_layer.stl",
+      "folder": "mirror_hanger/out",
+      "ext": "stl",
+      "type": "STL",
+      "size": 98084,
+      "modified": "2026-10-20T18:25:53+00:00",
+      "preview": "mirror_hanger/out/white_layer_preview.png"
+    },
+    {
+      "name": "black part",
+      "file": "black_part.stl",
+      "path": "mirror_hanger/out3d/black_part.stl",
+      "folder": "mirror_hanger/out3d",
+      "ext": "stl",
+      "type": "STL",
+      "size": 51884,
+      "modified": "2026-10-20T18:25:53+00:00",
+      "preview": "mirror_hanger/out3d/black_part_preview.png"
+    },
+    {
+      "name": "cube",
+      "file": "cube.3mf",
+      "path": "mirror_hanger/out3d/cube.3mf",
+      "folder": "mirror_hanger/out3d",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 54314,
+      "modified": "2026-10-20T18:25:53+00:00",
+      "preview": "mirror_hanger/out3d/cube_preview.png"
+    },
+    {
+      "name": "red part",
+      "file": "red_part.stl",
+      "path": "mirror_hanger/out3d/red_part.stl",
+      "folder": "mirror_hanger/out3d",
+      "ext": "stl",
+      "type": "STL",
+      "size": 159884,
+      "modified": "2026-10-20T18:25:53+00:00",
+      "preview": "mirror_hanger/out3d/red_part_preview.png"
+    },
+    {
+      "name": "white part",
+      "file": "white_part.stl",
+      "path": "mirror_hanger/out3d/white_part.stl",
+      "folder": "mirror_hanger/out3d",
+      "ext": "stl",
+      "type": "STL",
+      "size": 92084,
+      "modified": "2026-10-20T18:25:53+00:00",
+      "preview": "mirror_hanger/out3d/white_part_preview.png"
+    },
+    {
       "name": "washer clip",
       "file": "washer-clip.stl",
       "path": "models/washer-clip.stl",
@@ -396,6 +583,83 @@
       "size": 288084,
       "modified": "2026-10-13T14:22:43+00:00",
       "preview": null
+    },
+    {
+      "name": "back parts",
+      "file": "back_parts.3mf",
+      "path": "neonsign/example/back_parts.3mf",
+      "folder": "neonsign/example",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 54402,
+      "modified": "2026-10-20T18:25:53+00:00",
+      "preview": "neonsign/example/back_parts_preview.png"
+    },
+    {
+      "name": "channels plate 1",
+      "file": "channels_plate_1.3mf",
+      "path": "neonsign/example/channels_plate_1.3mf",
+      "folder": "neonsign/example",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 126266,
+      "modified": "2026-10-20T18:25:53+00:00",
+      "preview": "neonsign/example/channels_plate_1_preview.png"
+    },
+    {
+      "name": "channels plate 2",
+      "file": "channels_plate_2.3mf",
+      "path": "neonsign/example/channels_plate_2.3mf",
+      "folder": "neonsign/example",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 87766,
+      "modified": "2026-10-20T18:25:53+00:00",
+      "preview": "neonsign/example/channels_plate_2_preview.png"
+    },
+    {
+      "name": "channels plate 3",
+      "file": "channels_plate_3.3mf",
+      "path": "neonsign/example/channels_plate_3.3mf",
+      "folder": "neonsign/example",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 103287,
+      "modified": "2026-10-20T18:25:53+00:00",
+      "preview": "neonsign/example/channels_plate_3_preview.png"
+    },
+    {
+      "name": "channels plate 4",
+      "file": "channels_plate_4.3mf",
+      "path": "neonsign/example/channels_plate_4.3mf",
+      "folder": "neonsign/example",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 130016,
+      "modified": "2026-10-20T18:25:53+00:00",
+      "preview": "neonsign/example/channels_plate_4_preview.png"
+    },
+    {
+      "name": "channels plate 5",
+      "file": "channels_plate_5.3mf",
+      "path": "neonsign/example/channels_plate_5.3mf",
+      "folder": "neonsign/example",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 59156,
+      "modified": "2026-10-20T18:25:53+00:00",
+      "preview": "neonsign/example/channels_plate_5_preview.png"
+    },
+    {
+      "name": "pixel caps",
+      "file": "pixel_caps.3mf",
+      "path": "neonsign/example/pixel_caps.3mf",
+      "folder": "neonsign/example",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 23311,
+      "modified": "2026-10-20T18:25:53+00:00",
+      "preview": "neonsign/example/pixel_caps_preview.png"
     },
     {
       "name": "Industrial Factory 3color",
