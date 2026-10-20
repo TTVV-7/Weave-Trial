@@ -69,7 +69,7 @@ class Spec:
 # store about 10 ft wide, wrapped to the ground, with an open front face
 # (`--open-end none --door-width 1800` closes it with a zip door instead).
 PRESETS = {
-    "storage": dict(length=6750, width=3048, wall_height=0, post_offset=0, skirt_gap=150,
+    "storage": dict(length=5500, width=3048, wall_height=0, post_offset=0, skirt_gap=150,
                     eaves=3000, beam_depth=300, open_end="x+"),
 }
 
@@ -114,7 +114,7 @@ def build(s: Spec) -> cq.Assembly:
     span = y1 - y0
     half = span / 2
     ridge_y = y0 + half
-    nbays = max(1, round((x1 - x0) / s.bay))
+    nbays = max(1, math.ceil((x1 - x0) / s.bay - 0.01))   # no bay longer than s.bay
     xs = [x0 + i * (x1 - x0) / nbays for i in range(nbays + 1)]
 
     sole_t, plate_t = 38, 6
