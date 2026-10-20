@@ -1,6 +1,292 @@
 {
-  "generated": "2026-10-16T20:18:17+00:00",
+  "generated": "2026-10-20T18:16:14+00:00",
   "models": [
+    {
+      "name": "Industrial Steel Stair 12ft",
+      "file": "Industrial_Steel_Stair_12ft.glb",
+      "path": "construction_site/Industrial_Steel_Stair_12ft.glb",
+      "folder": "construction_site",
+      "ext": "glb",
+      "type": "glTF",
+      "size": 615384,
+      "modified": "2026-10-20T18:14:34+00:00",
+      "preview": "construction_site/Industrial_Steel_Stair_12ft_preview.png"
+    },
+    {
+      "name": "Industrial Steel Stair 12ft",
+      "file": "Industrial_Steel_Stair_12ft.step",
+      "path": "construction_site/Industrial_Steel_Stair_12ft.step",
+      "folder": "construction_site",
+      "ext": "step",
+      "type": "STEP",
+      "size": 3152759,
+      "modified": "2026-10-20T18:14:34+00:00",
+      "preview": "construction_site/Industrial_Steel_Stair_12ft_preview.png"
+    },
+    {
+      "name": "Mixer Stand",
+      "file": "Mixer_Stand.glb",
+      "path": "construction_site/Mixer_Stand.glb",
+      "folder": "construction_site",
+      "ext": "glb",
+      "type": "glTF",
+      "size": 136508,
+      "modified": "2026-10-20T18:14:33+00:00",
+      "preview": "construction_site/Mixer_Stand_preview.png"
+    },
+    {
+      "name": "Mixer Stand",
+      "file": "Mixer_Stand.step",
+      "path": "construction_site/Mixer_Stand.step",
+      "folder": "construction_site",
+      "ext": "step",
+      "type": "STEP",
+      "size": 827628,
+      "modified": "2026-10-20T18:14:33+00:00",
+      "preview": "construction_site/Mixer_Stand_preview.png"
+    },
+    {
+      "name": "Pallet of Concrete Bags",
+      "file": "Pallet_of_Concrete_Bags.glb",
+      "path": "construction_site/Pallet_of_Concrete_Bags.glb",
+      "folder": "construction_site",
+      "ext": "glb",
+      "type": "glTF",
+      "size": 5213744,
+      "modified": "2026-10-20T18:14:33+00:00",
+      "preview": "construction_site/Pallet_of_Concrete_Bags_preview.png"
+    },
+    {
+      "name": "Pallet of Concrete Bags",
+      "file": "Pallet_of_Concrete_Bags.step",
+      "path": "construction_site/Pallet_of_Concrete_Bags.step",
+      "folder": "construction_site",
+      "ext": "step",
+      "type": "STEP",
+      "size": 2239402,
+      "modified": "2026-10-20T18:14:33+00:00",
+      "preview": "construction_site/Pallet_of_Concrete_Bags_preview.png"
+    },
+    {
+      "name": "Planetary Concrete Mixer 500L",
+      "file": "Planetary_Concrete_Mixer_500L.glb",
+      "path": "construction_site/Planetary_Concrete_Mixer_500L.glb",
+      "folder": "construction_site",
+      "ext": "glb",
+      "type": "glTF",
+      "size": 225820,
+      "modified": "2026-10-20T18:14:33+00:00",
+      "preview": "construction_site/Planetary_Concrete_Mixer_500L_preview.png"
+    },
+    {
+      "name": "Planetary Concrete Mixer 500L",
+      "file": "Planetary_Concrete_Mixer_500L.step",
+      "path": "construction_site/Planetary_Concrete_Mixer_500L.step",
+      "folder": "construction_site",
+      "ext": "step",
+      "type": "STEP",
+      "size": 150182,
+      "modified": "2026-10-20T18:14:33+00:00",
+      "preview": "construction_site/Planetary_Concrete_Mixer_500L_preview.png"
+    },
+    {
+      "name": "Planetary Mixer on Stand",
+      "file": "Planetary_Mixer_on_Stand.glb",
+      "path": "construction_site/Planetary_Mixer_on_Stand.glb",
+      "folder": "construction_site",
+      "ext": "glb",
+      "type": "glTF",
+      "size": 359836,
+      "modified": "2026-10-20T18:14:33+00:00",
+      "preview": "construction_site/Planetary_Mixer_on_Stand_preview.png"
+    },
+    {
+      "name": "Planetary Mixer on Stand",
+      "file": "Planetary_Mixer_on_Stand.step",
+      "path": "construction_site/Planetary_Mixer_on_Stand.step",
+      "folder": "construction_site",
+      "ext": "step",
+      "type": "STEP",
+      "size": 985202,
+      "modified": "2026-10-20T18:14:33+00:00",
+      "preview": "construction_site/Planetary_Mixer_on_Stand_preview.png"
+    },
+    {
+      "name": "Rail Crossover Gantry",
+      "file": "Rail_Crossover_Gantry.glb",
+      "path": "construction_site/Rail_Crossover_Gantry.glb",
+      "folder": "construction_site",
+      "ext": "glb",
+      "type": "glTF",
+      "size": 2046204,
+      "modified": "2026-10-20T18:14:34+00:00",
+      "preview": "construction_site/Rail_Crossover_Gantry_preview.png"
+    },
+    {
+      "name": "Rail Crossover Gantry",
+      "file": "Rail_Crossover_Gantry.step",
+      "path": "construction_site/Rail_Crossover_Gantry.step",
+      "folder": "construction_site",
+      "ext": "step",
+      "type": "STEP",
+      "size": 6511105,
+      "modified": "2026-10-20T18:14:34+00:00",
+      "preview": "construction_site/Rail_Crossover_Gantry_preview.png"
+    },
+    {
+      "name": "Roll Off Dumpster 20yd",
+      "file": "Roll_Off_Dumpster_20yd.glb",
+      "path": "construction_site/Roll_Off_Dumpster_20yd.glb",
+      "folder": "construction_site",
+      "ext": "glb",
+      "type": "glTF",
+      "size": 211508,
+      "modified": "2026-10-20T18:14:33+00:00",
+      "preview": "construction_site/Roll_Off_Dumpster_20yd_preview.png"
+    },
+    {
+      "name": "Roll Off Dumpster 20yd",
+      "file": "Roll_Off_Dumpster_20yd.step",
+      "path": "construction_site/Roll_Off_Dumpster_20yd.step",
+      "folder": "construction_site",
+      "ext": "step",
+      "type": "STEP",
+      "size": 787734,
+      "modified": "2026-10-20T18:14:33+00:00",
+      "preview": "construction_site/Roll_Off_Dumpster_20yd_preview.png"
+    },
+    {
+      "name": "Telehandler 10000lb 56ft",
+      "file": "Telehandler_10000lb_56ft.glb",
+      "path": "construction_site/Telehandler_10000lb_56ft.glb",
+      "folder": "construction_site",
+      "ext": "glb",
+      "type": "glTF",
+      "size": 426952,
+      "modified": "2026-10-20T18:14:33+00:00",
+      "preview": "construction_site/Telehandler_10000lb_56ft_preview.png"
+    },
+    {
+      "name": "Telehandler 10000lb 56ft",
+      "file": "Telehandler_10000lb_56ft.step",
+      "path": "construction_site/Telehandler_10000lb_56ft.step",
+      "folder": "construction_site",
+      "ext": "step",
+      "type": "STEP",
+      "size": 864323,
+      "modified": "2026-10-20T18:14:33+00:00",
+      "preview": "construction_site/Telehandler_10000lb_56ft_preview.png"
+    },
+    {
+      "name": "Temporary Fence Panel 6x10ft",
+      "file": "Temporary_Fence_Panel_6x10ft.glb",
+      "path": "construction_site/Temporary_Fence_Panel_6x10ft.glb",
+      "folder": "construction_site",
+      "ext": "glb",
+      "type": "glTF",
+      "size": 998072,
+      "modified": "2026-10-20T18:14:34+00:00",
+      "preview": "construction_site/Temporary_Fence_Panel_6x10ft_preview.png"
+    },
+    {
+      "name": "Temporary Fence Panel 6x10ft",
+      "file": "Temporary_Fence_Panel_6x10ft.step",
+      "path": "construction_site/Temporary_Fence_Panel_6x10ft.step",
+      "folder": "construction_site",
+      "ext": "step",
+      "type": "STEP",
+      "size": 512759,
+      "modified": "2026-10-20T18:14:34+00:00",
+      "preview": "construction_site/Temporary_Fence_Panel_6x10ft_preview.png"
+    },
+    {
+      "name": "Temporary Fence Run 50ft",
+      "file": "Temporary_Fence_Run_50ft.glb",
+      "path": "construction_site/Temporary_Fence_Run_50ft.glb",
+      "folder": "construction_site",
+      "ext": "glb",
+      "type": "glTF",
+      "size": 3838648,
+      "modified": "2026-10-20T18:14:34+00:00",
+      "preview": "construction_site/Temporary_Fence_Run_50ft_preview.png"
+    },
+    {
+      "name": "Temporary Fence Run 50ft",
+      "file": "Temporary_Fence_Run_50ft.step",
+      "path": "construction_site/Temporary_Fence_Run_50ft.step",
+      "folder": "construction_site",
+      "ext": "step",
+      "type": "STEP",
+      "size": 2631969,
+      "modified": "2026-10-20T18:14:34+00:00",
+      "preview": "construction_site/Temporary_Fence_Run_50ft_preview.png"
+    },
+    {
+      "name": "Towable Air Compressor",
+      "file": "Towable_Air_Compressor.glb",
+      "path": "construction_site/Towable_Air_Compressor.glb",
+      "folder": "construction_site",
+      "ext": "glb",
+      "type": "glTF",
+      "size": 450620,
+      "modified": "2026-10-20T18:14:33+00:00",
+      "preview": "construction_site/Towable_Air_Compressor_preview.png"
+    },
+    {
+      "name": "Towable Air Compressor",
+      "file": "Towable_Air_Compressor.step",
+      "path": "construction_site/Towable_Air_Compressor.step",
+      "folder": "construction_site",
+      "ext": "step",
+      "type": "STEP",
+      "size": 1127303,
+      "modified": "2026-10-20T18:14:33+00:00",
+      "preview": "construction_site/Towable_Air_Compressor_preview.png"
+    },
+    {
+      "name": "Traffic Cone 28in",
+      "file": "Traffic_Cone_28in.glb",
+      "path": "construction_site/Traffic_Cone_28in.glb",
+      "folder": "construction_site",
+      "ext": "glb",
+      "type": "glTF",
+      "size": 228308,
+      "modified": "2026-10-20T18:14:33+00:00",
+      "preview": "construction_site/Traffic_Cone_28in_preview.png"
+    },
+    {
+      "name": "Traffic Cone 28in",
+      "file": "Traffic_Cone_28in.step",
+      "path": "construction_site/Traffic_Cone_28in.step",
+      "folder": "construction_site",
+      "ext": "step",
+      "type": "STEP",
+      "size": 71720,
+      "modified": "2026-10-20T18:14:33+00:00",
+      "preview": "construction_site/Traffic_Cone_28in_preview.png"
+    },
+    {
+      "name": "Trailer Concrete Line Pump",
+      "file": "Trailer_Concrete_Line_Pump.glb",
+      "path": "construction_site/Trailer_Concrete_Line_Pump.glb",
+      "folder": "construction_site",
+      "ext": "glb",
+      "type": "glTF",
+      "size": 322292,
+      "modified": "2026-10-20T18:14:32+00:00",
+      "preview": "construction_site/Trailer_Concrete_Line_Pump_preview.png"
+    },
+    {
+      "name": "Trailer Concrete Line Pump",
+      "file": "Trailer_Concrete_Line_Pump.step",
+      "path": "construction_site/Trailer_Concrete_Line_Pump.step",
+      "folder": "construction_site",
+      "ext": "step",
+      "type": "STEP",
+      "size": 521536,
+      "modified": "2026-10-20T18:14:32+00:00",
+      "preview": "construction_site/Trailer_Concrete_Line_Pump_preview.png"
+    },
     {
       "name": "ipad holder",
       "file": "ipad_holder.3mf",
@@ -350,7 +636,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 188251,
-      "modified": "2026-10-16T20:15:55+00:00",
+      "modified": "2026-10-16T20:18:17+00:00",
       "preview": "reviewstand/example/review_stand_assembled_preview.png"
     },
     {
@@ -361,7 +647,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 2975,
-      "modified": "2026-10-16T20:15:55+00:00",
+      "modified": "2026-10-16T20:18:17+00:00",
       "preview": "reviewstand/example/review_stand_base_preview.png"
     },
     {
@@ -372,7 +658,7 @@
       "ext": "stl",
       "type": "STL",
       "size": 11284,
-      "modified": "2026-10-16T20:15:55+00:00",
+      "modified": "2026-10-16T20:18:17+00:00",
       "preview": "reviewstand/example/review_stand_base_preview.png"
     },
     {
@@ -383,7 +669,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 168251,
-      "modified": "2026-10-16T20:15:55+00:00",
+      "modified": "2026-10-16T20:18:17+00:00",
       "preview": "reviewstand/example/review_stand_sign_preview.png"
     },
     {
