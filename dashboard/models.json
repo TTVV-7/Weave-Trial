@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-20T23:57:11+00:00",
+  "generated": "2026-10-20T23:57:47+00:00",
   "models": [
     {
       "name": "hook test",
@@ -9,7 +9,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 7160,
-      "modified": "2026-10-20T23:56:50+00:00",
+      "modified": "2026-10-20T23:57:11+00:00",
       "preview": null
     },
     {
@@ -20,7 +20,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 643974,
-      "modified": "2026-10-19T03:07:53+00:00",
+      "modified": "2026-10-20T23:57:11+00:00",
       "preview": null
     },
     {
@@ -35,6 +35,28 @@
       "preview": null
     },
     {
+      "name": "test post",
+      "file": "test_post.3mf",
+      "path": "ipad_holder/test_post.3mf",
+      "folder": "ipad_holder",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 1163,
+      "modified": "2026-10-20T23:57:46+00:00",
+      "preview": null
+    },
+    {
+      "name": "test post",
+      "file": "test_post.stl",
+      "path": "ipad_holder/test_post.stl",
+      "folder": "ipad_holder",
+      "ext": "stl",
+      "type": "STL",
+      "size": 684,
+      "modified": "2026-10-20T23:57:47+00:00",
+      "preview": null
+    },
+    {
       "name": "wing screw",
       "file": "wing_screw.3mf",
       "path": "ipad_holder/wing_screw.3mf",
@@ -42,7 +64,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 412010,
-      "modified": "2026-10-19T03:07:53+00:00",
+      "modified": "2026-10-20T23:57:11+00:00",
       "preview": null
     },
     {
