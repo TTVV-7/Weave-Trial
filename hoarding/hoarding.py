@@ -38,6 +38,8 @@ ALU = cq.Color(0.78, 0.80, 0.82)        # aluminium lattice beams
 WRAP = cq.Color(0.95, 0.96, 0.98)       # white shrink wrap
 TIMBER = cq.Color(0.70, 0.55, 0.35)
 CONCRETE = cq.Color(0.55, 0.55, 0.52)
+DOOR = cq.Color(0.20, 0.40, 0.70)       # heavier blue zip-door sheet
+ZIP = cq.Color(0.10, 0.10, 0.10)
 
 R = 48.3 / 2                            # scaffold tube, 48.3 x 4.0
 WALL = 4.0
@@ -59,6 +61,16 @@ class Spec:
     skirt_gap: float = 300     # gap between top of wall and bottom of the wrap
     lift: float = 2000         # max vertical spacing of ledgers
     open_end: str = "x+"       # gable left open for trailer access: x+, x- or none
+    door_width: float = 0      # zip door in the x+ end wrap, when that end is closed
+    door_height: float = 2100
+
+
+# Other uses of the same structure. `--preset storage` is a free-standing,
+# fully wrapped store about 10 ft wide, with a zip door in one end.
+PRESETS = {
+    "storage": dict(length=6750, width=3048, wall_height=0, post_offset=0, skirt_gap=150,
+                    eaves=3000, beam_depth=300, open_end="none", door_width=1800),
+}
 
 
 def tube(p1, p2, r=R, t=WALL):
@@ -116,7 +128,12 @@ def build(s: Spec) -> cq.Assembly:
     gap = eaves - wrap_bot
     extra = math.ceil(gap / s.lift) - 1
     lifts += [wrap_bot + gap * (k + 1) / (extra + 1) for k in range(extra)]
-    lifts.sort()
+    lifts = sorted({round(z) for z in lifts})   # the kicker may be the wrap bottom too
+
+    # zip door in the x+ end: the end ledgers and bracing stop either side
+    door = s.door_width > 0 and s.open_end not in ("x+",)
+    dy0, dy1 = ridge_y - s.door_width / 2, ridge_y + s.door_width / 2
+    door_top = wrap_bot + s.door_height if door else 0
 
     # standards, base plates, sole boards, kentledge
     for i, x in enumerate(xs):
@@ -190,21 +207,48 @@ def build(s: Spec) -> cq.Assembly:
         if key == s.open_end:
             continue
         xl = x + out * D
+        has_door = door and key == "x+"
         for z in lifts:
-            asm.add(tube((xl, y0 - R, z), (xl, y1 + R, z)), name=f"end_ledger_{key}_{int(z)}", color=TUBE)
+            if has_door and z < door_top:
+                asm.add(tube((xl, y0 - R, z), (xl, dy0 - R, z)), name=f"end_ledger_{key}_{int(z)}_a", color=TUBE)
+                asm.add(tube((xl, dy1 + R, z), (xl, y1 + R, z)), name=f"end_ledger_{key}_{int(z)}_b", color=TUBE)
+            else:
+                asm.add(tube((xl, y0 - R, z), (xl, y1 + R, z)), name=f"end_ledger_{key}_{int(z)}", color=TUBE)
         for k in range(len(lifts) - 1):
-            lo, hi = (y0, ridge_y) if k % 2 == 0 else (ridge_y, y0)
-            asm.add(tube((x + out * 2 * D, lo, lifts[k]), (x + out * 2 * D, hi, lifts[k + 1])),
-                    name=f"end_brace_{key}_{k}", color=TUBE)
+            if has_door:
+                # brace each side of the doorway instead of across it
+                for side, (ya_, yb_) in (("a", (y0, dy0 - 150)), ("b", (y1, dy1 + 150))):
+                    lo, hi = (ya_, yb_) if k % 2 == 0 else (yb_, ya_)
+                    asm.add(tube((x + out * 2 * D, lo, lifts[k]), (x + out * 2 * D, hi, lifts[k + 1])),
+                            name=f"end_brace_{key}_{k}_{side}", color=TUBE)
+            else:
+                lo, hi = (y0, ridge_y) if k % 2 == 0 else (ridge_y, y0)
+                asm.add(tube((x + out * 2 * D, lo, lifts[k]), (x + out * 2 * D, hi, lifts[k + 1])),
+                        name=f"end_brace_{key}_{k}", color=TUBE)
         # end wall and gable in one piece, welded to the roof and side wrap
         xw = end_x[key] - (WRAP_T if out > 0 else 0)
-        end = (cq.Workplane("YZ").polyline(outer).close().extrude(WRAP_T).translate((xw, 0, 0)).val())
-        asm.add(end, name=f"shrink_wrap_end_{key}", color=WRAP)
+        end = (cq.Workplane("YZ").polyline(outer).close().extrude(WRAP_T).translate((xw, 0, 0)))
+        if has_door:
+            # door posts and header, the doorway cut out of the wrap, and a
+            # zip door in a heavier sheet taped round the frame
+            for side, y in (("a", dy0 - R), ("b", dy1 + R)):
+                asm.add(tube((xl, y, foot), (xl, y, door_top + R)), name=f"door_post_{side}", color=TUBE)
+            asm.add(tube((xl, dy0 - 2 * R, door_top + R), (xl, dy1 + 2 * R, door_top + R)),
+                    name="door_header", color=TUBE)
+            end = end.cut(cq.Workplane().box(50, s.door_width, door_top - wrap_bot, centered=(True, True, False))
+                          .translate((xw, ridge_y, wrap_bot)))
+            panel = cq.Workplane().box(2, s.door_width + 100, door_top - wrap_bot + 50, centered=(True, True, False))
+            asm.add(panel.translate((xw + out * 2, ridge_y, wrap_bot)).val(), name="zip_door", color=DOOR)
+            for side, y in (("a", dy0 + 60), ("b", dy1 - 60), ("c", ridge_y)):
+                h = door_top - wrap_bot - (0 if side == "c" else 100)
+                asm.add(cq.Workplane().box(4, 12, h, centered=(True, True, False))
+                        .translate((xw + out * 4, y, wrap_bot)).val(), name=f"zip_{side}", color=ZIP)
+        asm.add(end.val(), name=f"shrink_wrap_end_{key}", color=WRAP)
 
     return asm
 
 
-def preview(asm: cq.Assembly, s: Spec, out: Path) -> None:
+def preview(asm: cq.Assembly, s: Spec, out: Path, context: bool = True) -> None:
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
@@ -228,20 +272,25 @@ def preview(asm: cq.Assembly, s: Spec, out: Path) -> None:
         ax.add_collection3d(Poly3DCollection([[v[i].toTuple() for i in tri] for tri in t],
                                              facecolor=c, edgecolor="k", linewidths=0.2, alpha=0.9))
     L, W, H = s.length, s.width, s.wall_height
-    for args in ((-200, -200, 0, L + 400, 200, H), (-200, W, 0, L + 400, 200, H),
-                 (-200, 0, 0, 200, W, H)):
-        ghost(*args, (0.6, 0.6, 0.6))
-    ghost(0.18 * L, 0.62 * W, 0, 2000, 1800, 2600, (0.85, 0.4, 0.15))    # tank
-    ghost(0.43 * L, 0.62 * W, 0, 3600, 2000, 2300, (0.95, 0.75, 0.1))    # generator
-    ghost(0.30 * L, 0.25 * W, 0, 3200, 1700, 2100, (0.85, 0.6, 0.1))     # generator
+    if context and H > 0:
+        for args in ((-200, -200, 0, L + 400, 200, H), (-200, W, 0, L + 400, 200, H),
+                     (-200, 0, 0, 200, W, H)):
+            ghost(*args, (0.6, 0.6, 0.6))
+    if context:
+        ghost(0.18 * L, 0.62 * W, 0, 2000, 1800, 2600, (0.85, 0.4, 0.15))    # tank
+        ghost(0.43 * L, 0.62 * W, 0, 3600, 2000, 2300, (0.95, 0.75, 0.1))    # generator
+        ghost(0.30 * L, 0.25 * W, 0, 3200, 1700, 2100, (0.85, 0.6, 0.1))     # generator
     span = max(L, W) + 2000
     ax.set_xlim(-1000, -1000 + span); ax.set_ylim(-1000 - (span - W - 2000) / 2, -1000 + span - (span - W - 2000) / 2)
     ax.set_zlim(0, span * 0.6)
     ax.set_box_aspect((1, 1, 0.6))
-    ax.view_init(elev=24, azim=-58)
+    ax.view_init(elev=24, azim=-58 if context else 35)
     ax.set_axis_off()
-    ax.set_title(f"Shrink-wrapped scaffold rain hoarding  {L/1000:.1f} x {W/1000:.1f} m compound, "
-                 f"eaves {s.eaves/1000:.1f} m, {s.pitch:g} deg duo-pitch, {s.open_end} end open")
+    ends = f"{s.open_end} end open" if s.open_end != "none" else "both ends closed"
+    if s.door_width > 0 and s.open_end != "x+":
+        ends += f", {s.door_width/1000:.1f} m zip door"
+    ax.set_title(f"Shrink-wrapped scaffold enclosure  {L/1000:.2f} x {W/1000:.2f} m, "
+                 f"eaves {s.eaves/1000:.1f} m, {s.pitch:g} deg duo-pitch, {ends}")
     fig.tight_layout()
     fig.savefig(out)
     plt.close(fig)
@@ -251,16 +300,22 @@ def main() -> None:
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     for f, v in Spec.__dataclass_fields__.items():
         p.add_argument("--" + f.replace("_", "-"), type=type(v.default), default=v.default)
-    p.add_argument("--out", type=Path, default=HERE / "Rain_Hoarding.step")
+    p.add_argument("--preset", choices=sorted(PRESETS), help="start from a preset; other flags override it")
+    p.add_argument("--out", type=Path)
     p.add_argument("--no-preview", action="store_true")
     a = p.parse_args()
+    if a.preset:
+        p.set_defaults(**PRESETS[a.preset])
+        a = p.parse_args()
+    if a.out is None:
+        a.out = HERE / ("Storage_Enclosure.step" if a.preset == "storage" else "Rain_Hoarding.step")
     s = Spec(**{f: getattr(a, f) for f in Spec.__dataclass_fields__})
     asm = build(s)
     asm.export(str(a.out))
     print(f"wrote {a.out} ({len(asm.objects) - 1} parts)")
     if not a.no_preview:
         png = a.out.with_name(a.out.stem + "_preview.png")
-        preview(asm, s, png)
+        preview(asm, s, png, context=a.preset is None)
         print(f"wrote {png}")
 
 
