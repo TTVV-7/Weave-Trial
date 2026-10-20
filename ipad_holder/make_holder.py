@@ -58,10 +58,12 @@ LOOP_RAISE = 0.0
 # rather than stopping 1.5 mm short of the front.
 TOP_THICKER = 2.0
 NECK_W = 16.0
-# The loop is a true diamond: an opening DIAMOND mm point to point, across
-# and up, in walls LOOP_WALL thick. Its outside is cut flat where it meets
-# the neck.
-DIAMOND = 12.0
+# The loop is a true diamond: a square opening DIAMOND_SIDE mm along each
+# side, stood on its point, so it drops over a 12 mm square post turned 45
+# degrees. Walls LOOP_WALL thick. HOOK_TEST_SIDES go in hook_test.3mf, to
+# check the fit on the post before printing the whole case.
+DIAMOND_SIDE = 12.0
+HOOK_TEST_SIDES = (11.0, 12.0, 13.0)
 LOOP_WALL = 5.0
 HOLE_CLOCK = 2.0                # where the screw goes in, seen from the front
 SCREW_GAP = 0.5                 # least gap between the screw and the walls
@@ -205,16 +207,18 @@ def stretch_frame(frame: trimesh.Trimesh) -> trimesh.Trimesh:
     return trimesh.Trimesh(v, frame.faces, process=False)
 
 
-def loop_section(cx: float, w: float, base: float) -> m3.CrossSection:
+def loop_section(cx: float, w: float, base: float,
+                 side: float = DIAMOND_SIDE) -> m3.CrossSection:
     """The diamond loop's cross-section, centred on ``cx`` over a neck ``w``
     wide whose top is at ``base``.
 
-    The opening is a square on its point, DIAMOND across; the outside is the
+    The opening is a square on its point, ``side`` along each side; the
+    outside is the
     opening grown LOOP_WALL (mitred, so the corners stay sharp). Below the
     opening the outside's point is filled out to the neck's full width, so
     the loop does not hang from a narrow waist.
     """
-    h = DIAMOND / 2
+    h = side / math.sqrt(2)                      # centre to point
     hole = m3.CrossSection([[[h, 0], [0, h], [-h, 0], [0, -h]]])
     outer = hole.offset(LOOP_WALL, m3.JoinType.Miter, 2.0)
     flat = -h - LOOP_WALL
@@ -594,6 +598,38 @@ def preview(parts, screw, axis, reach, path):
     plt.savefig(path, dpi=110, bbox_inches="tight")
 
 
+HOOK_TEST_THICK = 5.0           # the test pieces only need to drop over the post
+HOOK_TEST_LABEL = 0.6           # depth of the size etched in each tab
+
+
+def build_hook_test() -> list:
+    """One loop per HOOK_TEST_SIDES, each on a short neck and a tab with its
+    size etched in the top, side by side."""
+    from matplotlib.font_manager import FontProperties
+    from matplotlib.textpath import TextPath
+    tab_w, tab_h = 24.0, 12.0
+    pieces, x = [], 0.0
+    for side in HOOK_TEST_SIDES:
+        h = side / math.sqrt(2)
+        half = h + LOOP_WALL * math.sqrt(2)
+        cx = x + max(half, tab_w / 2)
+        tab = m3.CrossSection.square([tab_w, tab_h]).translate([cx - tab_w / 2, -tab_h])
+        neck = m3.CrossSection.square([NECK_W, 6.0]).translate([cx - NECK_W / 2, -1.0])
+        cs = loop_section(cx, NECK_W, 5.0, side) + tab + neck
+        solid = cs.extrude(HOOK_TEST_THICK)
+        tp = TextPath((0, 0), f"{side:g}", size=7.0,
+                      prop=FontProperties(family="DejaVu Sans", weight="bold"))
+        loops = [p for p in tp.to_polygons() if len(p) >= 3]
+        text = m3.CrossSection(loops, m3.FillRule.EvenOdd)
+        tx0, ty0, tx1, ty1 = text.bounds()
+        text = text.translate([cx - (tx0 + tx1) / 2, -tab_h / 2 - (ty0 + ty1) / 2])
+        solid = solid - text.extrude(HOOK_TEST_LABEL + 0.01).translate(
+            [0, 0, HOOK_TEST_THICK - HOOK_TEST_LABEL])
+        pieces.append(Part(f"Hook {side:g} mm", 0, BODY_RGB, solid))
+        x = cx + max(half, tab_w / 2) + 6.0
+    return pieces
+
+
 def main():
     info = {}
     parts = build_holder(info)
@@ -607,6 +643,9 @@ def main():
         f.write(parts_to_3mf([Part("Wing screw", 0, (200, 200, 200), screw)],
                              origin=(20, 20), name="M5 wing screw"))
     to_trimesh(screw).export(os.path.join(HERE, "wing_screw.stl"))
+    hooks = build_hook_test()
+    with open(os.path.join(HERE, "hook_test.3mf"), "wb") as f:
+        f.write(parts_to_3mf(hooks, origin=(20, 30), name="Hook fit test"))
     for p in parts:
         print(f"{p.name:20s} volume {p.solid.volume():9.1f} mm3  "
               f"genus {p.solid.genus()}")

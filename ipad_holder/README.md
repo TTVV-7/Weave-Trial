@@ -12,16 +12,22 @@ Reads `source_ipad_holder.3mf` and the two logo SVGs, and writes:
 | file | what |
 |---|---|
 | `ipad_holder.3mf` | the holder, as one object with two parts: the black body (filament 1) and the white VanEye logo (filament 2) |
+| `hook_test.3mf` | three test loops, 11, 12 and 13 mm a side, for the fit on the post |
 | `wing_screw.3mf` / `.stl` | a printed M5 wing screw ("butterfly key"), if you have no steel one |
 
 ## The diamond loop
 
-The loop is a true diamond: the opening is a square stood on its point,
-12 mm across and 12 mm tall, point to point (`DIAMOND`), about 8.5 mm along
-each inside face. Its walls are 5 mm (`LOOP_WALL`). Below the opening the
-loop is filled out to the neck's full 16 mm width, so it does not hang from
-a narrow waist. Earlier versions grew the source's loop instead, which left
-a 7.2 mm opening with a flat bottom.
+The loop is a true diamond: a square opening 12 mm along each side
+(`DIAMOND_SIDE`), stood on its point, so it drops over a 12 × 12 mm square
+post turned 45°. Point to point it is 17 mm across and tall. Its walls are
+5 mm (`LOOP_WALL`). Below the opening the loop is filled out to the neck's
+full 16 mm width, so it does not hang from a narrow waist. (An earlier
+version made the opening 12 mm point to point, only 8.5 mm a side, which was
+too small for the post.)
+
+`hook_test.3mf` holds three loops, 11, 12 and 13 mm a side
+(`HOOK_TEST_SIDES`), each 5 mm thick on a tab with its size etched in, to
+try on the post before printing the whole case.
 
 ## The top
 
@@ -66,9 +72,8 @@ straight out. A finer layer height on the case, 0.12 or 0.16 mm, makes the
 thread cleaner.
 
 It sits at 2 o'clock, at least 0.5 mm clear of the lower-right wall as the
-screw goes in (`SCREW_GAP`). The screw can reach 8.4 mm into
-the opening before it meets the far wall, so it clamps anything at least
-about 4 mm across.
+screw goes in (`SCREW_GAP`). The screw can reach 11.9 mm into
+the opening before it meets the far wall.
 
 The script checks the fit every run. It turns the screw head a full
 revolution in 5° steps against the holder, then pushes a rod the screw's
@@ -131,7 +136,7 @@ exact position for the button.
 
 ## The wing screw
 
-The thread is 13 mm long, which covers the 5 mm wall plus 8 of the 8.4 mm
+The thread is 13 mm long, which covers the 5 mm wall plus 8 of the 11.9 mm
 the screw can reach into the opening. The head is a third bigger than the
 first version's: the wings span 40 mm (`WING_SPAN`) and are 4 mm thick, on a
 13.3 mm hub, so it is easier to grip. Print it head down, with the
