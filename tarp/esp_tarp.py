@@ -49,6 +49,13 @@ class Spec:
     sandbag_spacing: float = 1500
 
 
+# `--preset small` is a smaller pad of the same build, for a single piece of
+# kit such as the pump or compressor.
+PRESETS = {
+    "small": dict(length=4000, width=3000, ramp_width=2500, sandbag_spacing=1200),
+}
+
+
 def frame(x_in, y_in, w, h, z=0.0):
     """A rectangular ring: inside x_in by y_in, `w` wide, `h` tall."""
     outer = cq.Workplane().rect(x_in + 2 * w, y_in + 2 * w).extrude(h)
@@ -183,7 +190,7 @@ def preview(asm: cq.Assembly, s: Spec, out: Path) -> None:
     ax.view_init(elev=30, azim=-60)
     ax.set_axis_off()
     vol = s.length * s.width * s.berm / 1e9
-    ax.set_title(f"Batch plant ESP tarp  {s.length/1000:.1f} x {s.width/1000:.1f} m inside, "
+    ax.set_title(f"Bunded ESC / spill tarp  {s.length/1000:.1f} x {s.width/1000:.1f} m inside, "
                  f"{s.berm:g} mm bund (~{vol:.1f} m3), drive-over ramp {s.ramp_width/1000:.1f} m")
     fig.tight_layout()
     fig.savefig(out)
@@ -194,9 +201,15 @@ def main() -> None:
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     for f, v in Spec.__dataclass_fields__.items():
         p.add_argument("--" + f.replace("_", "-"), type=type(v.default), default=v.default)
-    p.add_argument("--out", type=Path, default=HERE / "Batch_Plant_ESP_Tarp.step")
+    p.add_argument("--preset", choices=sorted(PRESETS), help="start from a preset; other flags override it")
+    p.add_argument("--out", type=Path)
     p.add_argument("--no-preview", action="store_true")
     a = p.parse_args()
+    if a.preset:
+        p.set_defaults(**PRESETS[a.preset])
+        a = p.parse_args()
+    if a.out is None:
+        a.out = HERE / ("Small_ESC_Pad.step" if a.preset == "small" else "Batch_Plant_ESP_Tarp.step")
     s = Spec(**{f: getattr(a, f) for f in Spec.__dataclass_fields__})
     asm = build(s)
     asm.export(str(a.out))
