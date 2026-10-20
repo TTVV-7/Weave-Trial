@@ -47,8 +47,8 @@ WRAP_T = 0.3                            # 300 micron shrink wrap
 
 @dataclass
 class Spec:
-    length: float = 12000      # inside length of the compound (X)
-    width: float = 8000        # inside width of the compound (Y)
+    length: float = 9000       # inside length of the compound (X)
+    width: float = 10000       # inside width of the compound (Y)
     wall_height: float = 1200  # existing compound wall; the wrap stops above it
     post_offset: float = 400   # standards sit this far outside the wall line
     eaves: float = 4000        # underside of the lattice beams, clears the tank flue
@@ -231,9 +231,9 @@ def preview(asm: cq.Assembly, s: Spec, out: Path) -> None:
     for args in ((-200, -200, 0, L + 400, 200, H), (-200, W, 0, L + 400, 200, H),
                  (-200, 0, 0, 200, W, H)):
         ghost(*args, (0.6, 0.6, 0.6))
-    ghost(2200, 5600, 0, 2000, 1800, 2600, (0.85, 0.4, 0.15))    # tank
-    ghost(5200, 5400, 0, 3600, 2000, 2300, (0.95, 0.75, 0.1))    # generator
-    ghost(3600, 2400, 0, 3200, 1700, 2100, (0.85, 0.6, 0.1))     # generator
+    ghost(0.18 * L, 0.62 * W, 0, 2000, 1800, 2600, (0.85, 0.4, 0.15))    # tank
+    ghost(0.43 * L, 0.62 * W, 0, 3600, 2000, 2300, (0.95, 0.75, 0.1))    # generator
+    ghost(0.30 * L, 0.25 * W, 0, 3200, 1700, 2100, (0.85, 0.6, 0.1))     # generator
     span = max(L, W) + 2000
     ax.set_xlim(-1000, -1000 + span); ax.set_ylim(-1000 - (span - W - 2000) / 2, -1000 + span - (span - W - 2000) / 2)
     ax.set_zlim(0, span * 0.6)
