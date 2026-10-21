@@ -63,7 +63,7 @@ NECK_W = 16.0
 # degrees. Walls LOOP_WALL thick. HOOK_TEST_SIDES go in hook_test.3mf, to
 # check the fit on the post before printing the whole case.
 DIAMOND_SIDE = 12.0
-HOOK_TEST_SIDES = (12.2, 12.5)
+HOOK_TEST_SIDES = (10.0, 10.2, 10.5, 10.75)
 LOOP_WALL = 5.0
 HOLE_CLOCK = 2.0                # where the screw goes in, seen from the front
 SCREW_GAP = 0.5                 # least gap between the screw and the walls
