@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-21T02:16:32+00:00",
+  "generated": "2026-10-21T23:26:40+00:00",
   "models": [
     {
       "name": "hook test",
@@ -41,8 +41,8 @@
       "folder": "ipad_holder",
       "ext": "3mf",
       "type": "3MF",
-      "size": 1597,
-      "modified": "2026-10-20T23:57:47+00:00",
+      "size": 200588,
+      "modified": "2026-10-21T02:16:32+00:00",
       "preview": null
     },
     {
@@ -53,7 +53,7 @@
       "ext": "stl",
       "type": "STL",
       "size": 1484,
-      "modified": "2026-10-21T02:16:21+00:00",
+      "modified": "2026-10-21T02:16:32+00:00",
       "preview": null
     },
     {
@@ -64,7 +64,7 @@
       "ext": "stl",
       "type": "STL",
       "size": 1884,
-      "modified": "2026-10-21T02:16:21+00:00",
+      "modified": "2026-10-21T02:16:32+00:00",
       "preview": null
     },
     {

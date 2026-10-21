@@ -13,7 +13,7 @@ Reads `source_ipad_holder.3mf` and the two logo SVGs, and writes:
 |---|---|
 | `ipad_holder.3mf` | the holder, as one object with two parts: the black body (filament 1) and the white VanEye logo (filament 2) |
 | `hook_test.3mf` | four test loops, 10, 10.2, 10.5 and 10.75 mm a side, for the fit on the post |
-| `test_post.3mf`, `test_post_male.stl`, `test_post_female.stl` | a 10 × 10 mm square bar 400 mm long, a stand-in for the post, in two 200 mm halves joined by a square peg (`make_post.py`) |
+| `test_post.3mf`, `test_post_male.stl`, `test_post_female.stl` | a 10 × 10 mm square bar 400 mm long, a stand-in for the post, in two 200 mm halves joined by a square peg, with a 0–40 cm scale: black inlay on top, engraved ticks on the two sides (`make_post.py`) |
 | `wing_screw.3mf` / `.stl` | a printed M5 wing screw ("butterfly key"), if you have no steel one |
 
 ## The diamond loop
