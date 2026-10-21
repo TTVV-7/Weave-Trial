@@ -4,7 +4,10 @@ Six stylized trees generated with hi3D (`*.png` source image → `*.glb` texture
 cut in half front to back by `make_magnets.py` so they lie flat on the fridge, with
 hidden magnets in the flat back.
 
-![front and back of each half-tree](magnet-preview.png)
+Each half comes as a **painted 3MF for a 4-toolhead printer** (Snapmaker U1) and as a
+plain single-colour STL.
+
+![front in filament colours, and back of each half-tree](magnet-preview.png)
 
 | Files | W × H (mm) | Sticks out | Magnets | Cut moved back | Plastic (solid) |
 |---|---|---|---|---|---|
@@ -17,6 +20,41 @@ hidden magnets in the flat back.
 
 **Magnets to buy:** 14 × 6×3 mm and 3 × 5×2 mm neodymium discs (the spruce is too slim
 for 6 mm). The hemlock only has solid plastic for one; it's light enough that one holds it.
+
+## Colour (`stl/*-half.3mf`)
+
+Every triangle carries its filament (`paint_color`, the per-triangle painting that
+OrcaSlicer and Snapmaker Orca read), taken from the hi3D texture nearest it. The texture
+has shadows baked into its crevices; those triangles take the colour of the surface around
+them instead of turning black. Lone specks are smoothed away, so the printer isn't swapping
+toolheads for single triangles.
+
+All six trees share one set of 8 filaments, and each tree uses the 4 that suit it best:
+
+| Filament | Hex | Used by |
+|---|---|---|
+| Dark forest green | `#2A442C` | fir, cedar, spruce, hemlock, madrone |
+| Dark brown | `#573821` | all six |
+| Brick red | `#7E311A` | madrone (bark, berries) |
+| Pine green | `#3D5A3E` | fir, spruce, hemlock, maple |
+| Mid brown | `#8B572F` | cedar, madrone, maple |
+| Moss green | `#53724F` | fir, cedar, hemlock |
+| Grey-green | `#6B8987` | spruce (bark, needle tips) |
+| Golden ochre / amber | `#BD7524` | maple leaves |
+
+| Tree | T1 | T2 | T3 | T4 |
+|---|---|---|---|---|
+| Douglas fir | dark forest green | dark brown | pine green | moss green |
+| Western red cedar | dark forest green | dark brown | mid brown | moss green |
+| Sitka spruce | dark forest green | dark brown (barely used) | pine green | grey-green |
+| Western hemlock | dark forest green | dark brown | pine green | moss green |
+| Pacific madrone | dark forest green | dark brown | brick red | mid brown |
+| Bigleaf maple | dark brown | pine green | mid brown | golden ochre |
+
+Open the 3MF in Snapmaker Orca and set filaments 1–4 as listed (the hex values are
+in the file, but your loaded filaments decide what prints). The texture is darker than
+hi3D's lit renders, so filaments a shade brighter than the hex values will look closer to
+the pictures; a bright yellow in the maple's T4 slot works well.
 
 ## How it goes together
 
@@ -42,9 +80,7 @@ was moved 1–2 mm towards the back to leave enough plastic in front of the magn
   0.12 mm layers for the needle detail, 15% infill is plenty.
 - Lids: flat, no supports.
 
-They're single-colour STLs; the `.glb` files keep the full colour textures if you want to paint
-to match.
-
-To change the size or the magnets, edit the constants at the top of `make_magnets.py` and run
-`python3 make_magnets.py`, then `python3 preview.py` for the preview sheet (needs
-`pip install trimesh manifold3d shapely fast-simplification matplotlib`).
+To change the size, the magnets or the palette (`TOOLHEADS`, `PALETTE_SIZE`), edit the
+constants at the top of `make_magnets.py` and run `python3 make_magnets.py`, then
+`python3 preview.py` for the preview sheet, which is drawn from the 3MFs themselves (needs
+`pip install trimesh manifold3d shapely fast-simplification scipy matplotlib`).
