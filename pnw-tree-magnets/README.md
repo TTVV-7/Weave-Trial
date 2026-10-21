@@ -1,48 +1,50 @@
 # Pacific Northwest tree magnets (3D print files)
 
 Six stylized trees generated with hi3D (`*.png` source image → `*.glb` textured model),
-turned into two-part printable STLs that hide a magnet in the base by `make_magnets.py`.
+cut in half front to back by `make_magnets.py` so they lie flat on the fridge, with
+hidden magnets in the flat back.
 
-![side view, tree underside and cap](magnet-preview.png)
+![front and back of each half-tree](magnet-preview.png)
 
-| Files | Assembled W × D × H (mm) | Wall around pocket | Base thickened (mm) |
-|---|---|---|---|
-| `stl/douglas-fir-tree.stl` + `-cap.stl` | 39 × 41 × 75 | 3.8 mm | — |
-| `stl/western-red-cedar-tree.stl` + `-cap.stl` | 64 × 47 × 77 | 12.9 mm | 2 |
-| `stl/sitka-spruce-tree.stl` + `-cap.stl` | 27 × 27 × 76 | 6.4 mm | 1 |
-| `stl/western-hemlock-tree.stl` + `-cap.stl` | 47 × 29 × 78 | 4.0 mm | 3 |
-| `stl/pacific-madrone-tree.stl` + `-cap.stl` | 65 × 42 × 75 | 11.5 mm | — |
-| `stl/bigleaf-maple-tree.stl` + `-cap.stl` | 74 × 45 × 75 | 12.6 mm | — |
+| Files | W × H (mm) | Sticks out | Magnets | Cut moved back | Plastic (solid) |
+|---|---|---|---|---|---|
+| `stl/douglas-fir-half.stl` + `-lids.stl` | 39 × 75 | 21 mm | 3 × 6×3 mm | 0 mm | 13.7 cm³ |
+| `stl/western-red-cedar-half.stl` + `-lids.stl` | 60 × 75 | 24 mm | 3 × 6×3 mm | 0 mm | 10.3 cm³ |
+| `stl/sitka-spruce-half.stl` + `-lids.stl` | 27 × 75 | 14 mm | 3 × 5×2 mm | 1 mm | 4.7 cm³ |
+| `stl/western-hemlock-half.stl` + `-lids.stl` | 46 × 75 | 20 mm | 1 × 6×3 mm | 2 mm | 7.6 cm³ |
+| `stl/pacific-madrone-half.stl` + `-lids.stl` | 65 × 75 | 23 mm | 2 × 6×3 mm | 2 mm | 10.1 cm³ |
+| `stl/bigleaf-maple-half.stl` + `-lids.stl` | 69 × 73 | 23 mm | 3 × 6×3 mm | 0 mm | 21.1 cm³ |
+
+**Magnets to buy:** 14 × 6×3 mm and 3 × 5×2 mm neodymium discs (the spruce is too slim
+for 6 mm). The hemlock only has solid plastic for one; it's light enough that one holds it.
 
 ## How it goes together
 
-Each base is split 1 mm above the bottom:
+- **`-half.stl`** is the front half of the tree. Its flat back has a pocket for each magnet:
+  0.3 mm wider than the magnet, and 1.2 mm deeper (a 1 mm lid plus 0.2 mm for glue), with at
+  least 1.2 mm of plastic left in front of it.
+- **`-lids.stl`** is one thin disc per pocket.
 
-- **`-tree.stl`** has a 10.3 × 3.2 mm pocket for a **10 × 3 mm disc magnet** opening on its
-  underside, with at least 1.2 mm of solid plastic above it, plus two pin holes.
-- **`-cap.stl`** is the 1 mm slice that was cut away, with two 2 mm locating pins. The pins are
-  off-centre, so the cap only fits one way round and its outline lines up with the base.
+1. Mark which face of each magnet is "out" and put them all in the same way up, so trees next
+   to each other don't push apart.
+2. Drop a magnet into each pocket with a dot of CA glue, then glue a lid on top. It sits flush
+   with the back, so the magnets are hidden and the back sits flat on the fridge.
 
-1. Drop the magnet into the pocket. If they'll sit side by side, mark which face is "out" and
-   put every magnet in the same way up.
-2. Glue the cap on (CA glue or two-part epoxy on the flat faces, not in the pocket), pins into
-   their holes. Clamp or weigh it down until set.
+Where the cut went through gaps between branches the back is open; only the solid areas
+touch the fridge, which is enough.
 
-The magnet ends up fully enclosed behind 1 mm of plastic, which costs a little pull. A
-grade N52 magnet is recommended for the larger trees.
-
-The cedar, spruce and hemlock bases were extended straight down (2, 1 and 3 mm) so the pocket
-fits above the cap line. Every bottom is shaved flat.
+The cut goes through the middle of each tree's base. For the spruce, hemlock and madrone it
+was moved 1–2 mm towards the back to leave enough plastic in front of the magnets.
 
 ## Printing
 
-- Tree: base down. The overhanging branches need supports (tree supports work best); 0.12 mm
-  layers for the needle detail, 15% infill is plenty.
-- Cap: flat, pins up, no supports.
+- Half: flat back down on the bed. Most of the relief faces up, so it needs few supports;
+  0.12 mm layers for the needle detail, 15% infill is plenty.
+- Lids: flat, no supports.
 
 They're single-colour STLs; the `.glb` files keep the full colour textures if you want to paint
 to match.
 
-To change the size, the magnet or the cap, edit the constants at the top of `make_magnets.py`
-and run `python3 make_magnets.py`, then `python3 preview.py` for the preview sheet (needs
+To change the size or the magnets, edit the constants at the top of `make_magnets.py` and run
+`python3 make_magnets.py`, then `python3 preview.py` for the preview sheet (needs
 `pip install trimesh manifold3d shapely fast-simplification matplotlib`).
