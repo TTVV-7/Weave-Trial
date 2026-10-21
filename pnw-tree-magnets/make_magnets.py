@@ -1,4 +1,8 @@
-"""Turn the hi3D tree GLBs into printable STLs with a magnet pocket in the base.
+"""Turn the hi3D tree GLBs into two-part printable STLs that hide a magnet in the base.
+
+Each tree is split CAP mm above its bottom. The tree gets a magnet pocket opening
+on its new underside; the cap is the slice cut away, with two locating pins, and
+is glued on after the magnet goes in.
 
 Run: python3 make_magnets.py   (needs trimesh, manifold3d, shapely, fast-simplification)
 All dimensions are in millimetres; tweak the constants below and re-run.
@@ -8,6 +12,7 @@ import numpy as np
 import trimesh
 import manifold3d
 from shapely.geometry import Polygon
+from shapely import contains_xy
 from shapely.ops import unary_union, polylabel
 
 HERE = pathlib.Path(__file__).parent
@@ -23,6 +28,11 @@ FLATTEN = 0.4          # shave this off the bottom so the base is dead flat
 MIN_WALL = 2.0         # plastic required around the pocket
 CEILING = 1.2          # solid plastic required above the pocket
 MAX_PLINTH = 4         # mm the base may be thickened to fit the pocket
+CAP = 1.0              # thickness of the glue-on cap (plastic between magnet and fridge)
+PIN_D = 2.0            # locating pins on the cap
+PIN_H = 1.5
+PIN_CLEARANCE = 0.3    # added to the pin hole diameter
+PIN_MARGIN = 0.8       # plastic required around each pin hole
 FACES = 400_000        # decimate the 2M-face scans to this
 RES = 96               # pocket circle smoothness
 
@@ -102,6 +112,35 @@ def place_pocket(solid):
     return c, sides.boundary.distance(c) - POCKET_R
 
 
+def place_pins(solid, pocket):
+    """Two pin positions, away from the pocket and not opposite each other so the cap
+    only fits one way round. None if the base has no room for them."""
+    hole_r = (PIN_D + PIN_CLEARANCE) / 2
+    keep = hole_r + PIN_MARGIN
+    region = _common(solid, np.linspace(0.05, PIN_H + 0.3 + CEILING, 4)).buffer(-keep)
+    region = region.difference(pocket.buffer(POCKET_R + keep))
+    xs, ys = np.meshgrid(*(np.arange(lo, hi, 0.25) for lo, hi in
+                           zip(region.bounds[:2], region.bounds[2:])))
+    pts = np.column_stack([xs.ravel(), ys.ravel()])
+    pts = pts[contains_xy(region, pts[:, 0], pts[:, 1])]
+    if len(pts) == 0:
+        return None
+    rel = pts - [pocket.x, pocket.y]
+    a = pts[np.argmax(np.hypot(*rel.T))]
+    ang = np.degrees(np.arctan2(*rel[:, ::-1].T) - np.arctan2(*(a - [pocket.x, pocket.y])[::-1]))
+    turn = np.abs((ang + 180) % 360 - 180)
+    ok = (turn > 90) & (turn < 150)
+    if not ok.any():
+        return None
+    b = pts[ok][np.argmax(np.hypot(*(pts[ok] - a).T))]
+    return a, b
+
+
+def pins(points, d, h, z=0.0):
+    return sum((manifold3d.Manifold.cylinder(h, d / 2, d / 2, 48).translate([x, y, z])
+                for x, y in points), manifold3d.Manifold())
+
+
 def make(name):
     m = load(name)
     if not m.is_watertight:
@@ -115,25 +154,31 @@ def make(name):
     # Shave the bottom flat, then drop it back onto z=0.
     solid = solid.trim_by_plane([0, 0, 1], FLATTEN).translate([0, 0, -FLATTEN])
 
-    # Thicken the base from below, a millimetre at a time, until it can hold the pocket.
+    # Thicken the base from below, a millimetre at a time, until the part above
+    # the cap line can hold the pocket.
     for plinth in range(MAX_PLINTH + 1):
         thick = add_plinth(solid, plinth)
-        placed = place_pocket(thick)
+        tree = thick.trim_by_plane([0, 0, 1], CAP).translate([0, 0, -CAP])
+        placed = place_pocket(tree)
         if placed:
             break
     else:
         raise SystemExit(f"{name}: base too small for a {MAGNET_D:g} mm magnet")
-    (c, wall), r, depth = placed, POCKET_R, POCKET_DEPTH
+    c, wall = placed
+    cap = thick.trim_by_plane([0, 0, -1], -CAP)
 
-    pocket = (manifold3d.Manifold.cylinder(depth + 1, r, r, RES)
-              .translate([c.x, c.y, -1]))
-    solid = thick - pocket
+    pin_xy = place_pins(tree, c)
+    if pin_xy is None:
+        raise SystemExit(f"{name}: no room for the locating pins")
+    tree -= manifold3d.Manifold.cylinder(POCKET_DEPTH + 1, POCKET_R, POCKET_R, RES).translate([c.x, c.y, -1])
+    tree -= pins(pin_xy, PIN_D + PIN_CLEARANCE, PIN_H + 0.3 + 1, -1)
+    cap += pins(pin_xy, PIN_D, PIN_H + 0.05, CAP - 0.05)
 
-    out = trimesh.Trimesh(**_arrays(solid))
-    out.export(OUT / f"{name}-magnet.stl")
-    w, d, h = out.extents
-    return f"| `stl/{name}-magnet.stl` | {w:.0f} × {d:.0f} × {h:.0f} | {wall:.1f} mm | {plinth or '—'} |"
-
+    for part, solid_part in (("tree", tree), ("cap", cap)):
+        trimesh.Trimesh(**_arrays(solid_part)).export(OUT / f"{name}-{part}.stl")
+    w, d, h = trimesh.Trimesh(**_arrays(tree)).extents
+    return (f"| `stl/{name}-tree.stl` + `-cap.stl` | {w:.0f} × {d:.0f} × {h + CAP:.0f} "
+            f"| {wall:.1f} mm | {plinth or '—'} |")
 
 if __name__ == "__main__":
     for t in TREES:
