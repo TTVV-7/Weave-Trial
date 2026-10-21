@@ -12,7 +12,7 @@ Reads `source_ipad_holder.3mf` and the two logo SVGs, and writes:
 | file | what |
 |---|---|
 | `ipad_holder.3mf` | the holder, as one object with two parts: the black body (filament 1) and the white VanEye logo (filament 2) |
-| `hook_test.3mf` | four test loops, 11, 12, 12.5 and 13 mm a side, for the fit on the post |
+| `hook_test.3mf` | two test loops, 12.2 and 12.5 mm a side, for the fit on the post |
 | `test_post.3mf` / `.stl` | a 12 × 12 × 200 mm square bar with flat ends, a stand-in for the post (`make_post.py`) |
 | `wing_screw.3mf` / `.stl` | a printed M5 wing screw ("butterfly key"), if you have no steel one |
 
@@ -26,7 +26,7 @@ full 16 mm width, so it does not hang from a narrow waist. (An earlier
 version made the opening 12 mm point to point, only 8.5 mm a side, which was
 too small for the post.)
 
-`hook_test.3mf` holds four loops, 11, 12, 12.5 and 13 mm a side
+`hook_test.3mf` holds two loops, 12.2 and 12.5 mm a side (an earlier round tried 11, 12, 12.5 and 13)
 (`HOOK_TEST_SIDES`), each 5 mm thick on a tab with its size etched in, to
 try on the post before printing the whole case.
 
