@@ -71,22 +71,18 @@ def earring():
     return extrude(unary_union([logo, loop]), t)
 
 
-# 2. Necklace pendant: filled disc, raised ring + X, bail on top for a cord/jump ring.
+# 2. Necklace pendant: open ring + X (the shirt shows through), bail on top for a cord/jump ring.
 def pendant():
-    r, ring, base, relief = 12.0, 2.2, 1.8, 1.2
-    disc = extrude(circle(r), base)
-    logo = extrude(x_logo(r, r, ring, 3.0, 4.0), relief, base)
-    bail = extrude(circle(3.2, 0, r + 2.2).difference(circle(1.5, 0, r + 2.2)), base + relief)
-    return union(disc, logo, bail)
+    r, ring, t = 12.0, 2.2, 3.0
+    logo = x_logo(r, r, ring, 3.0, 4.0)
+    bail = circle(3.2, 0, r + 2.2).difference(circle(1.5, 0, r + 2.2))
+    return extrude(unary_union([logo, bail]), t)
 
 
-# 3. Chest pin / button badge: filled disc, raised ring + X, recess on back for a glue-on pin back.
+# 3. Chest pin: open ring + X (the shirt shows through); glue a pin back along one X arm.
 def pin_badge():
-    r, ring, base, relief = 16.0, 2.6, 2.4, 1.4
-    disc = extrude(circle(r), base)
-    logo = extrude(x_logo(r, r, ring, 4.0, 5.4), relief, base)
-    recess = extrude(box(-13, -3.5, 13, 3.5), 0.8, -0.01)  # fits a standard 25 mm pin back
-    return diff(union(disc, logo), recess)
+    r, ring, t = 16.0, 2.6, 3.5
+    return extrude(x_logo(r, r, ring, 5.0, 6.0), t)
 
 
 # 4. Belt buckle: X medallion flanked by two bar frames with slots for the belt.
