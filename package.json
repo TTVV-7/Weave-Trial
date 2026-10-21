@@ -1,0 +1,8 @@
+{
+  "private": true,
+  "type": "module",
+  "description": "Only for the hosted dashboard: api/file.js and dashboard/upload_blobs.mjs read and write the Vercel Blob store.",
+  "dependencies": {
+    "@vercel/blob": "2.8.0"
+  }
+}

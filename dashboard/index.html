@@ -254,8 +254,9 @@ const TYPE_ORDER = ['3MF', 'STEP', 'STL', 'IGES', 'OBJ', 'glTF', 'PLY', 'G-code'
 const TYPE_VAR = { '3MF': '--t-3mf', STL: '--t-stl', STEP: '--t-step', IGES: '--t-iges',
                    OBJ: '--t-obj', glTF: '--t-gltf', PLY: '--t-ply', 'G-code': '--t-gcode' };
 // Where model paths are relative to: the repo root locally, the site root when deployed.
+// A model with a `url` is served from elsewhere (the Blob store, via api/file).
 let REPO_ROOT = new URL('../', location.href);
-const fileURL = m => new URL(m.path, REPO_ROOT).href;
+const fileURL = m => m.url ? new URL(m.url, location.href).href : new URL(m.path, REPO_ROOT).href;
 
 const $ = s => document.querySelector(s);
 const state = { models: [], q: '', type: 'all', sort: 'name', group: true, showArchived: false };
