@@ -11,20 +11,20 @@ Reads `source_ipad_holder.3mf` and the two logo SVGs, and writes:
 
 | file | what |
 |---|---|
-| `ipad_holder.3mf` | the holder, as one object with two parts: the black body (filament 1) and the white VanEye logo (filament 2) |
+| `ipad_holder.3mf` | the holder, as one object with three parts: the black body (filament 1), and the white VanEye logo and front accent lines (both filament 2) |
 | `hook_test.3mf` | four test loops, 10, 10.2, 10.5 and 10.75 mm a side, for the fit on the post |
 | `test_post.3mf`, `test_post_male.stl`, `test_post_female.stl` | a 10 × 10 mm square bar 400 mm long, a stand-in for the post, in two 200 mm halves joined by a square peg, with a 0–40 cm scale: black inlay on top, engraved ticks on the two sides (`make_post.py`) |
 | `wing_screw.3mf` / `.stl` | a printed M5 wing screw ("butterfly key"), if you have no steel one |
 
 ## The diamond loop
 
-The loop is a true diamond: a square opening 12 mm along each side
-(`DIAMOND_SIDE`), stood on its point, so it drops over a 12 × 12 mm square
-post turned 45°. Point to point it is 17 mm across and tall. Its walls are
-5 mm (`LOOP_WALL`). Below the opening the loop is filled out to the neck's
-full 16 mm width, so it does not hang from a narrow waist. (An earlier
-version made the opening 12 mm point to point, only 8.5 mm a side, which was
-too small for the post.)
+The loop is a true diamond: a square opening 10.25 mm along each side
+(`DIAMOND_SIDE`), stood on its point, so it slides along the 10 × 10 mm
+square bar turned 45°. In the hook test, 10.2 mm fit best; 10.25 gives a
+touch more room. Its walls are 5 mm (`LOOP_WALL`). Below the opening the
+loop is filled out to the neck's full 16 mm width, so it does not hang from
+a narrow waist. (Earlier versions sized the opening for a 12 mm post, before
+the bar was measured with calipers.)
 
 `hook_test.3mf` holds four loops, 10, 10.2, 10.5 and 10.75 mm a side, for a post measured at 10 × 10 mm (earlier rounds tried 11 to 13)
 (`HOOK_TEST_SIDES`), each 5 mm thick on a tab with its size etched in, to
@@ -112,15 +112,16 @@ out from the body and screen sizes.
 
 ## Colours
 
-The body is black (`BODY_RGB`) and the VanEye inlay white. The 3MF carries
-Bambu Studio / OrcaSlicer settings that put the body on filament 1 and the
-logo on filament 2 and set those filaments' colours, so it opens coloured.
+The body is black (`BODY_RGB`); the VanEye inlay and the front accent lines
+are white. The 3MF carries Bambu Studio / OrcaSlicer settings that put the
+body on filament 1 and both white parts on filament 2 and set those
+filaments' colours, so it opens coloured.
 The printyours.ca logo is etched, so it is the body's colour.
 
 ## Front accent lines
 
-Off by default (`FRONT_LINES = False`), so the front is plain black. Turned
-on, white lines run round the four corners of the front face: 0.8 mm wide, 3 mm
+On (`FRONT_LINES = True`; set it False for a plain black front). White lines
+run round the four corners of the front face: 0.8 mm wide, 3 mm
 in from the edge, following the rounded outline for 35 mm along each side
 from each corner (`LINE_*`). They are the top 0.4 mm of the print, so they
 are the last two layers, in their own part and filament. They stay 0.7 mm

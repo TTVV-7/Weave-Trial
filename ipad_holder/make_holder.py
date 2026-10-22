@@ -59,10 +59,10 @@ LOOP_RAISE = 0.0
 TOP_THICKER = 2.0
 NECK_W = 16.0
 # The loop is a true diamond: a square opening DIAMOND_SIDE mm along each
-# side, stood on its point, so it drops over a 12 mm square post turned 45
-# degrees. Walls LOOP_WALL thick. HOOK_TEST_SIDES go in hook_test.3mf, to
+# side, stood on its point, so it slides along a 10 mm square bar turned 45
+# degrees. 10.25 follows the hook test, where 10.2 fit best. Walls LOOP_WALL thick. HOOK_TEST_SIDES go in hook_test.3mf, to
 # check the fit on the post before printing the whole case.
-DIAMOND_SIDE = 12.0
+DIAMOND_SIDE = 10.25
 HOOK_TEST_SIDES = (10.0, 10.2, 10.5, 10.75)
 LOOP_WALL = 5.0
 HOLE_CLOCK = 2.0                # where the screw goes in, seen from the front
@@ -356,12 +356,12 @@ def home_cutter(z_top: float) -> m3.Manifold:
 
 
 # --- colours --------------------------------------------------------------
-BODY_RGB = (0, 0, 0)            # filament 1; the VanEye inlay is filament 2
+BODY_RGB = (0, 0, 0)            # filament 1; the white inlays are filament 2
 
 # --- front accent lines ---------------------------------------------------
-# Off: the front is plain body colour. On, the lines are their own part in
-# another filament.
-FRONT_LINES = False
+# On, the lines are their own part, in the same white filament as the
+# VanEye logo. Off, the front is plain body colour.
+FRONT_LINES = True
 LINE_DEPTH = 0.4                # the last two layers, in a second filament
 LINE_W = 0.8                    # two nozzle widths
 LINE_IN = 3.0                   # from the case's outer edge
@@ -380,7 +380,11 @@ def front_lines(body: m3.Manifold, frame: trimesh.Trimesh) -> m3.CrossSection:
     L = LINE_LEN
     boxes = [m3.CrossSection.square([L, L]).translate([x, y])
              for x, y in ((x0, y1 - L), (x1 - L, y1 - L), (x0, y0), (x1 - L, y0))]
-    return ring ^ keep ^ m3.CrossSection.batch_boolean(boxes, m3.OpType.Add)
+    lines = ring ^ keep ^ m3.CrossSection.batch_boolean(boxes, m3.OpType.Add)
+    # Drop stubs left where an opening cuts a line short (the button slot
+    # leaves one by the top-right corner): too short to read as a line.
+    return m3.CrossSection.batch_boolean(
+        [p for p in lines.decompose() if p.area() > 4.0], m3.OpType.Add)
 
 
 def pocket_fillets(frame: trimesh.Trimesh) -> m3.Manifold:
@@ -469,13 +473,13 @@ def build_holder(info: dict | None = None):
     if FRONT_LINES:
         lines = body ^ front_lines(body, frame).extrude(LINE_DEPTH).translate(
             [0, 0, z1 - LINE_DEPTH])
-        inlays.append(("Front lines", (245, 245, 245), lines))
+        inlays.append(("Front lines", (255, 255, 255), lines))
     for _, _, solid in inlays:
         body = body - solid
 
     parts = [Part("Holder", 0, BODY_RGB, body)]
-    parts += [Part(label, i + 1, rgb, solid)
-              for i, (label, rgb, solid) in enumerate(inlays)]
+    # Every inlay is white, so they share filament 2.
+    parts += [Part(label, 1, rgb, solid) for label, rgb, solid in inlays]
     return parts
 
 
