@@ -6,14 +6,13 @@ magnets. Each pocket is closed by a thin glue-in lid that sits flush with the
 back, so the magnets are hidden.
 
 The half is also written as a painted 3MF for a 4-toolhead printer: every
-triangle takes the colour of the hi3D texture nearest it, snapped to the
-TOOLHEADS filaments (out of one shared palette of PALETTE_SIZE) that fit that
-tree best.
+triangle takes the colour of the hi3D texture nearest it, snapped to the nearest
+of FILAMENTS. Every tree uses the same four in the same slots, so the printer is
+loaded once for the whole set and different trees can share a plate.
 
 Run: python3 make_magnets.py   (needs trimesh, manifold3d, shapely, fast-simplification)
 All dimensions are in millimetres; tweak the constants below and re-run.
 """
-import itertools
 import pathlib
 import zipfile
 import numpy as np
@@ -43,10 +42,18 @@ MIN_SPACING = 10.0     # centre to centre, so the magnets spread the load
 FACES = 400_000        # decimate the 2M-face scans to this
 RES = 64               # pocket circle smoothness
 TOOLHEADS = 4          # filaments per print (Snapmaker U1)
-PALETTE_SIZE = 7       # filaments shared across the trees painted from their texture
 SMOOTHING = 3          # passes of majority vote, so lone triangles don't cost a tool change
 NEIGHBOURS = 32        # texture samples averaged for each triangle
 SHADOW_L = 22          # samples darker than this (CIELAB lightness) are baked-in shadow
+
+# The four filaments, T1-T4, for every tree.
+FILAMENTS = np.array([
+    [0x29, 0x43, 0x29],   # T1 dark forest green: needles, leaves
+    [0x48, 0x68, 0x43],   # T2 moss green: lighter needles, moss
+    [0x5D, 0x34, 0x1E],   # T3 dark brown: trunks, bark, bases
+    [0xBA, 0x74, 0x26],   # T4 golden amber: maple leaves, madrone bark and berries
+])
+FOREST, MOSS, BROWN, AMBER = range(4)
 
 TREES = ["douglas-fir", "western-red-cedar", "sitka-spruce",
          "western-hemlock", "pacific-madrone", "bigleaf-maple"]
@@ -212,7 +219,7 @@ def make(name):
     return dict(name=name, mesh=out, rgb=rgb, row=row)
 
 
-# ---------- colour: shared palette, 4 filaments per tree, painted 3MF ----------
+# ---------- colour: the same 4 filaments for every tree, painted 3MF ----------
 
 def to_lab(rgb):
     """sRGB 0-255 -> CIELAB, so colour distances match what the eye sees."""
@@ -225,46 +232,11 @@ def to_lab(rgb):
                      200 * (f[..., 1] - f[..., 2])], -1)
 
 
-def kmeans(x, weights, k, iters=30, seed=0):
-    rng = np.random.default_rng(seed)
-    centres = x[rng.choice(len(x), k, replace=False, p=weights / weights.sum())]
-    for _ in range(iters):
-        label = np.argmin(((x[:, None] - centres[None]) ** 2).sum(-1), 1)
-        for j in range(k):
-            sel = label == j
-            if sel.any():
-                centres[j] = np.average(x[sel], axis=0, weights=weights[sel])
-    return centres
-
-
-def shared_palette(parts):
-    """PALETTE_SIZE filament colours covering every tree painted from its texture,
-    weighted by visible area."""
-    parts = [p for p in parts if p["name"] not in PAINT_BY_SHAPE]
-    rgb = np.concatenate([p["rgb"] for p in parts])
-    area = np.concatenate([p["mesh"].area_faces for p in parts])
-    rgb, area = rgb[np.isfinite(rgb[:, 0])], area[np.isfinite(rgb[:, 0])]
-    pick = np.random.default_rng(1).choice(len(rgb), 60_000, p=area / area.sum())
-    centres = kmeans(rgb[pick], np.ones(len(pick)), PALETTE_SIZE)
-    return centres[np.argsort(to_lab(centres)[:, 0])].round()       # dark to light
-
-
-def best_filaments(part, palette):
-    """The TOOLHEADS palette entries that paint this tree with the least error."""
-    known = np.isfinite(part["rgb"][:, 0])
-    lab, pal = to_lab(part["rgb"][known]), to_lab(palette)
-    dist = np.sqrt(((lab[:, None] - pal[None]) ** 2).sum(-1)) * part["mesh"].area_faces[known, None]
-    # Every tree has a brown trunk, however little of its area that is: keep a brown.
-    brown = {i for i, (L, a, b) in enumerate(pal) if a > 5}
-    combos = [c for c in itertools.combinations(range(len(palette)), TOOLHEADS) if brown & set(c)]
-    return min(combos, key=lambda c: dist[:, list(c)].min(1).sum())
-
-
-def paint(part, palette, chosen):
+def paint(part):
     """Filament index (0..TOOLHEADS-1) for every triangle. Shadowed triangles take the
     filament of the surface around them, then lone specks are voted away."""
     known = np.isfinite(part["rgb"][:, 0])
-    pal = to_lab(palette[list(chosen)])
+    pal = to_lab(FILAMENTS)
     label = np.full(len(known), -1)
     label[known] = np.argmin(((to_lab(part["rgb"][known])[:, None] - pal[None]) ** 2).sum(-1), 1)
     pairs = part["mesh"].face_adjacency
@@ -288,28 +260,24 @@ def paint(part, palette, chosen):
     return label
 
 
-def paint_sitka_spruce(part, palette):
+def paint_sitka_spruce(part):
     """The spruce's texture is one blue-teal throughout, bark and needles alike, so
-    colouring by texture can't separate them. Paint it by shape instead: grey bark on
-    the trunk and the stone base, moss on the base and root flare, and the needles in
-    three greens by how light the texture is there. Only the grey isn't shared with
-    the other trees."""
+    colouring by texture can't separate them. Paint it by shape instead: a brown
+    trunk and stone base, moss on the base and root flare, and needles in the two
+    greens by how light the texture is there."""
     mesh = part["mesh"]
     x, y = mesh.triangles_center[:, 0], mesh.triangles_center[:, 1]
     up = mesh.face_normals[:, 1]
     BASE_TOP, FLARE_TOP, TRUNK_TOP = 6.0, 9.0, 21.5   # mm, measured off the model
     TRUNK_X, TRUNK_HALF = -0.3, 4.8                   # trunk centre line and half-width
-    dark, pine, moss, bark = 0, 1, 2, 3
     known = np.isfinite(part["rgb"][:, 0])
     light = np.full(len(y), np.nan)
     light[known] = to_lab(part["rgb"][known])[:, 0]
-    lo, hi = np.nanpercentile(light, [30, 75])
-    label = np.full(len(y), pine)
-    label[light < lo] = dark
-    label[light > hi] = moss
+    label = np.full(len(y), FOREST)
+    label[light > np.nanpercentile(light, 70)] = MOSS
     trunk = (y < TRUNK_TOP) & (np.abs(x - TRUNK_X) < TRUNK_HALF)
-    label[trunk | (y < BASE_TOP)] = bark
-    label[(y < FLARE_TOP) & (up > 0.3)] = moss          # moss on the base and root flare
+    label[trunk | (y < BASE_TOP)] = BROWN
+    label[(y < FLARE_TOP) & (up > 0.3)] = MOSS          # moss on the base and root flare
     pairs = mesh.face_adjacency
     for _ in range(SMOOTHING):                # same speck removal as paint()
         votes = np.zeros((len(label), TOOLHEADS))
@@ -317,12 +285,8 @@ def paint_sitka_spruce(part, palette):
         for a, b in (pairs.T, pairs[:, ::-1].T):
             np.add.at(votes, (a, label[b]), 1)
         label = votes.argmax(1)
-    lab = to_lab(palette)                     # the shared palette's greens, dark to light
-    greens = [i for i in np.argsort(lab[:, 0]) if lab[i, 1] < -5][:3]
-    return label, np.vstack([palette[greens], ASH_GREY])
+    return label
 
-
-ASH_GREY = np.array([0x80, 0x7C, 0x76])   # spruce bark and stone, the one extra filament
 
 # Trees painted by shape rather than from their texture.
 PAINT_BY_SHAPE = {"sitka-spruce": paint_sitka_spruce}
@@ -367,17 +331,9 @@ def write_3mf(path, mesh, label, colours):
 
 
 if __name__ == "__main__":
-    parts = [make(t) for t in TREES]
-    palette = shared_palette(parts)
-    print("palette:", " ".join(f"#{int(r):02X}{int(g):02X}{int(b):02X}" for r, g, b in palette))
-    for p in parts:
-        if p["name"] in PAINT_BY_SHAPE:
-            chosen = "by shape"
-            label, colours = PAINT_BY_SHAPE[p["name"]](p, palette)
-        else:
-            chosen = best_filaments(p, palette)
-            label = paint(p, palette, chosen)
-            colours = palette[list(chosen)]
-        write_3mf(OUT / f"{p['name']}-half.3mf", p["mesh"], label, colours)
+    for t in TREES:
+        p = make(t)
+        label = PAINT_BY_SHAPE.get(t, paint)(p)
+        write_3mf(OUT / f"{t}-half.3mf", p["mesh"], label, FILAMENTS)
         share = np.bincount(label, weights=p["mesh"].area_faces, minlength=TOOLHEADS)
-        print(p["row"], "filaments", chosen if isinstance(chosen, str) else list(chosen), "share", (share / share.sum()).round(2).tolist(), flush=True)
+        print(p["row"], "T1-T4 share", (share / share.sum()).round(2).tolist(), flush=True)

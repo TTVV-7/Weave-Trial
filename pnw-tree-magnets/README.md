@@ -29,36 +29,23 @@ has shadows baked into its crevices; those triangles take the colour of the surf
 them instead of turning black. Lone specks are smoothed away, so the printer isn't swapping
 toolheads for single triangles.
 
-## Filaments to buy
+## Filaments: the same four for every tree
 
-Eight colours cover all six trees; each tree uses four. Seven are shared, and the ash grey
-is only for the spruce's bark. Matte PLA suits the clay look of the models. A set of six
-uses about 40–50 g of filament.
+All six trees print from one set of four filaments, always in the same slots, so the
+printer is loaded once for the whole set and different trees can share a plate. Matte PLA
+suits the clay look of the models. A set of six uses about 40–50 g of filament.
 
-| # | Filament | Hex | Used by |
+| Slot | Filament | Hex | Paints |
 |---|---|---|---|
-| 1 | Dark forest green | `#294329` | all but the maple |
-| 2 | Pine green | `#375436` | fir, spruce, hemlock, maple |
-| 3 | Moss green | `#486843` | cedar, spruce, hemlock, madrone |
-| 4 | Sage / olive green | `#607A50` | fir, cedar |
-| 5 | Dark brown | `#5D341E` | all but the spruce |
-| 6 | Rust brown | `#894B28` | madrone (bark, berries), maple (trunk) |
-| 7 | Golden yellow / amber | `#BA7426` | maple leaves |
-| 8 | Ash grey | `#807C76` | spruce (bark, stone base) |
+| T1 | Dark forest green | `#294329` | needles and leaves |
+| T2 | Moss green | `#486843` | lighter needles, moss on the bases |
+| T3 | Dark brown | `#5D341E` | trunks, bark, bases, madrone berries |
+| T4 | Golden amber | `#BA7426` | maple leaves, madrone bark |
 
-| Tree | T1 | T2 | T3 | T4 |
-|---|---|---|---|---|
-| Douglas fir | dark forest green | dark brown | pine green | sage green |
-| Western red cedar | dark forest green | dark brown | moss green | sage green |
-| Sitka spruce | dark forest green | pine green | moss green | ash grey |
-| Western hemlock | dark forest green | dark brown | pine green | moss green |
-| Pacific madrone | dark forest green | dark brown | rust brown | moss green |
-| Bigleaf maple | dark brown | pine green | rust brown | golden yellow |
-
-Every tree keeps at least one brown for its trunk, however little of its area that is.
-The spruce is painted by shape rather than from its texture (`PAINT_BY_SHAPE`): its texture
-is one blue-teal throughout, bark and needles alike. It gets grey bark on the trunk and stone
-base, moss on the base and root flare, and needles in the three shared greens.
+Only the madrone and maple use T4. The spruce is painted by shape rather than from its
+texture (`PAINT_BY_SHAPE`), because its texture is one blue-teal throughout, bark and
+needles alike. It gets a brown trunk and stone base, moss on the base and root flare, and
+needles in the two greens. To change the colours, edit `FILAMENTS` in `make_magnets.py`.
 
 ## Printing in batches
 
@@ -76,10 +63,9 @@ waste than one tree. Copies per 256 × 256 mm P1S plate, 5 mm apart:
 | Pacific madrone | 9 |
 | Bigleaf maple | 9 |
 
-Open the 3MF in Snapmaker Orca and set filaments 1–4 as listed (the hex values are
-in the file, but your loaded filaments decide what prints). The texture is darker than
-hi3D's lit renders, so filaments a shade brighter than the hex values will look closer to
-the pictures; a bright yellow in the maple's T4 slot works well.
+Load T1–T4 as listed (the hex values are in the file, but your loaded filaments decide what
+prints). The texture is darker than hi3D's lit renders, so filaments a shade brighter than
+the hex values will look closer to the pictures; a bright yellow-orange works well for T4.
 
 ## How it goes together
 
@@ -105,7 +91,7 @@ was moved 1–2 mm towards the back to leave enough plastic in front of the magn
   0.12 mm layers for the needle detail, 15% infill is plenty.
 - Lids: flat, no supports.
 
-To change the size, the magnets or the palette (`TOOLHEADS`, `PALETTE_SIZE`), edit the
+To change the size, the magnets or the filaments (`FILAMENTS`), edit the
 constants at the top of `make_magnets.py` and run `python3 make_magnets.py`, then
 `python3 preview.py` for the preview sheet, which is drawn from the 3MFs themselves (needs
 `pip install trimesh manifold3d shapely fast-simplification scipy matplotlib`).
