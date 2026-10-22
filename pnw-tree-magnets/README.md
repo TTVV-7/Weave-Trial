@@ -29,27 +29,37 @@ has shadows baked into its crevices; those triangles take the colour of the surf
 them instead of turning black. Lone specks are smoothed away, so the printer isn't swapping
 toolheads for single triangles.
 
-All six trees share one set of 8 filaments, and each tree uses the 4 that suit it best:
+## Filaments to buy
 
-| Filament | Hex | Used by |
-|---|---|---|
-| Dark forest green | `#2A442C` | fir, cedar, spruce, hemlock, madrone |
-| Dark brown | `#573821` | all six |
-| Brick red | `#7E311A` | madrone (bark, berries) |
-| Pine green | `#3D5A3E` | fir, spruce, hemlock, maple |
-| Mid brown | `#8B572F` | cedar, madrone, maple |
-| Moss green | `#53724F` | fir, cedar, hemlock |
-| Grey-green | `#6B8987` | spruce (bark, needle tips) |
-| Golden ochre / amber | `#BD7524` | maple leaves |
+Ten colours cover all six trees; each tree uses four. Matte PLA suits the clay look of the
+models. The whole set of six uses only about 40–50 g of filament, so the smallest spools
+you can get are plenty.
+
+| # | Filament | Hex | Used by |
+|---|---|---|---|
+| 1 | Dark forest green | `#2A442C` | fir, cedar, hemlock, madrone |
+| 2 | Pine green | `#3D5A3E` | fir, hemlock, maple |
+| 3 | Moss green | `#53724F` | fir, cedar, hemlock, spruce (base) |
+| 4 | Blue-green / spruce teal | `#3E6266` | spruce needles |
+| 5 | Grey-green / sage | `#6B8987` | spruce needle tips |
+| 6 | Dark brown | `#573821` | fir, cedar, hemlock, madrone, maple |
+| 7 | Mid brown / tan | `#8B572F` | cedar, madrone, maple |
+| 8 | Grey-brown / taupe | `#6E6258` | spruce bark and base |
+| 9 | Brick red / terracotta | `#7E311A` | madrone bark and berries |
+| 10 | Golden yellow / amber | `#BD7524` | maple leaves |
 
 | Tree | T1 | T2 | T3 | T4 |
 |---|---|---|---|---|
 | Douglas fir | dark forest green | dark brown | pine green | moss green |
 | Western red cedar | dark forest green | dark brown | mid brown | moss green |
-| Sitka spruce | dark forest green | dark brown (barely used) | pine green | grey-green |
+| Sitka spruce | blue-green | grey-green | grey-brown | moss green |
 | Western hemlock | dark forest green | dark brown | pine green | moss green |
 | Pacific madrone | dark forest green | dark brown | brick red | mid brown |
-| Bigleaf maple | dark brown | pine green | mid brown | golden ochre |
+| Bigleaf maple | dark brown | pine green | mid brown | golden yellow |
+
+The spruce is painted by shape rather than from its texture (`PAINT_BY_SHAPE`): its texture
+is one blue-teal throughout, bark and needles alike. It gets a mossy stone base, a grey-brown
+trunk and blue-green needles with lighter tips.
 
 Open the 3MF in Snapmaker Orca and set filaments 1–4 as listed (the hex values are
 in the file, but your loaded filaments decide what prints). The texture is darker than

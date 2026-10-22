@@ -284,6 +284,35 @@ def paint(part, palette, chosen):
     return label
 
 
+def paint_sitka_spruce(part):
+    """The spruce's texture is one blue-teal throughout, bark and needles alike, so
+    colouring by texture can't separate them. Paint it by shape instead: a mossy
+    stone base, a grey-brown trunk and blue-green needles with frosty tips."""
+    mesh = part["mesh"]
+    y, up = mesh.triangles_center[:, 1], mesh.face_normals[:, 1]
+    BASE_TOP, TRUNK_TOP = 6.0, 21.5          # mm, measured off the model
+    needles, frost, bark, moss = 0, 1, 2, 3
+    label = np.full(len(mesh.faces), needles)
+    known = np.isfinite(part["rgb"][:, 0]) & (y >= TRUNK_TOP)
+    light = to_lab(part["rgb"][known])[:, 0]
+    label[np.flatnonzero(known)[light > np.percentile(light, 70)]] = frost
+    label[y < TRUNK_TOP] = bark
+    label[(y < BASE_TOP) & (up > 0.5)] = moss
+    pairs = mesh.face_adjacency
+    for _ in range(SMOOTHING):                # same speck removal as paint()
+        votes = np.zeros((len(label), TOOLHEADS))
+        votes[np.arange(len(label)), label] += 1.5
+        for a, b in (pairs.T, pairs[:, ::-1].T):
+            np.add.at(votes, (a, label[b]), 1)
+        label = votes.argmax(1)
+    colours = np.array([[0x3E, 0x62, 0x66], [0x6B, 0x89, 0x87], [0x6E, 0x62, 0x58], [0x53, 0x72, 0x4F]])
+    return label, colours
+
+
+# Trees painted by shape rather than from their texture.
+PAINT_BY_SHAPE = {"sitka-spruce": paint_sitka_spruce}
+
+
 # OrcaSlicer / Bambu Studio / Snapmaker Orca per-triangle filament codes.
 PAINT_CODE = ["4", "8", "0C", "1C"]
 
@@ -327,8 +356,13 @@ if __name__ == "__main__":
     palette = shared_palette(parts)
     print("palette:", " ".join(f"#{int(r):02X}{int(g):02X}{int(b):02X}" for r, g, b in palette))
     for p in parts:
-        chosen = best_filaments(p, palette)
-        label = paint(p, palette, chosen)
-        write_3mf(OUT / f"{p['name']}-half.3mf", p["mesh"], label, palette[list(chosen)])
+        if p["name"] in PAINT_BY_SHAPE:
+            chosen = "by shape"
+            label, colours = PAINT_BY_SHAPE[p["name"]](p)
+        else:
+            chosen = best_filaments(p, palette)
+            label = paint(p, palette, chosen)
+            colours = palette[list(chosen)]
+        write_3mf(OUT / f"{p['name']}-half.3mf", p["mesh"], label, colours)
         share = np.bincount(label, weights=p["mesh"].area_faces, minlength=TOOLHEADS)
-        print(p["row"], "filaments", list(chosen), "share", (share / share.sum()).round(2).tolist(), flush=True)
+        print(p["row"], "filaments", chosen if isinstance(chosen, str) else list(chosen), "share", (share / share.sum()).round(2).tolist(), flush=True)
