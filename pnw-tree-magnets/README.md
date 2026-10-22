@@ -31,35 +31,50 @@ toolheads for single triangles.
 
 ## Filaments to buy
 
-Ten colours cover all six trees; each tree uses four. Matte PLA suits the clay look of the
-models. The whole set of six uses only about 40–50 g of filament, so the smallest spools
-you can get are plenty.
+Eight colours cover all six trees; each tree uses four. Seven are shared, and the ash grey
+is only for the spruce's bark. Matte PLA suits the clay look of the models. A set of six
+uses about 40–50 g of filament.
 
 | # | Filament | Hex | Used by |
 |---|---|---|---|
-| 1 | Dark forest green | `#2A442C` | fir, cedar, hemlock, madrone |
-| 2 | Pine green | `#3D5A3E` | fir, hemlock, maple |
-| 3 | Moss green | `#53724F` | fir, cedar, hemlock, spruce (base) |
-| 4 | Blue-green / spruce teal | `#3E6266` | spruce needles |
-| 5 | Grey-green / sage | `#6B8987` | spruce needle tips |
-| 6 | Dark brown | `#573821` | fir, cedar, hemlock, madrone, maple |
-| 7 | Mid brown / tan | `#8B572F` | cedar, madrone, maple |
-| 8 | Grey-brown / taupe | `#6E6258` | spruce bark and base |
-| 9 | Brick red / terracotta | `#7E311A` | madrone bark and berries |
-| 10 | Golden yellow / amber | `#BD7524` | maple leaves |
+| 1 | Dark forest green | `#294329` | all but the maple |
+| 2 | Pine green | `#375436` | fir, spruce, hemlock, maple |
+| 3 | Moss green | `#486843` | cedar, spruce, hemlock, madrone |
+| 4 | Sage / olive green | `#607A50` | fir, cedar |
+| 5 | Dark brown | `#5D341E` | all but the spruce |
+| 6 | Rust brown | `#894B28` | madrone (bark, berries), maple (trunk) |
+| 7 | Golden yellow / amber | `#BA7426` | maple leaves |
+| 8 | Ash grey | `#807C76` | spruce (bark, stone base) |
 
 | Tree | T1 | T2 | T3 | T4 |
 |---|---|---|---|---|
-| Douglas fir | dark forest green | dark brown | pine green | moss green |
-| Western red cedar | dark forest green | dark brown | mid brown | moss green |
-| Sitka spruce | blue-green | grey-green | grey-brown | moss green |
+| Douglas fir | dark forest green | dark brown | pine green | sage green |
+| Western red cedar | dark forest green | dark brown | moss green | sage green |
+| Sitka spruce | dark forest green | pine green | moss green | ash grey |
 | Western hemlock | dark forest green | dark brown | pine green | moss green |
-| Pacific madrone | dark forest green | dark brown | brick red | mid brown |
-| Bigleaf maple | dark brown | pine green | mid brown | golden yellow |
+| Pacific madrone | dark forest green | dark brown | rust brown | moss green |
+| Bigleaf maple | dark brown | pine green | rust brown | golden yellow |
 
+Every tree keeps at least one brown for its trunk, however little of its area that is.
 The spruce is painted by shape rather than from its texture (`PAINT_BY_SHAPE`): its texture
-is one blue-teal throughout, bark and needles alike. It gets a mossy stone base, a grey-brown
-trunk and blue-green needles with lighter tips.
+is one blue-teal throughout, bark and needles alike. It gets grey bark on the trunk and stone
+base, moss on the base and root flare, and needles in the three shared greens.
+
+## Printing in batches
+
+The 3MFs use Bambu Studio's own painting format, so they open the same in Bambu Studio for a
+P1S with an AMS (4 slots) as in Snapmaker Orca for the U1. On the P1S every colour change
+purges filament, but the purge is per layer, not per tree, so a full plate costs little more
+waste than one tree. Copies per 256 × 256 mm P1S plate, 5 mm apart:
+
+| Tree | Copies per plate |
+|---|---|
+| Douglas fir | 15 |
+| Western red cedar | 12 |
+| Sitka spruce | 24 |
+| Western hemlock | 15 |
+| Pacific madrone | 9 |
+| Bigleaf maple | 9 |
 
 Open the 3MF in Snapmaker Orca and set filaments 1–4 as listed (the hex values are
 in the file, but your loaded filaments decide what prints). The texture is darker than

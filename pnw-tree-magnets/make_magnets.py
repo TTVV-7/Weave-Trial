@@ -43,7 +43,7 @@ MIN_SPACING = 10.0     # centre to centre, so the magnets spread the load
 FACES = 400_000        # decimate the 2M-face scans to this
 RES = 64               # pocket circle smoothness
 TOOLHEADS = 4          # filaments per print (Snapmaker U1)
-PALETTE_SIZE = 8       # filaments shared across all the trees
+PALETTE_SIZE = 7       # filaments shared across the trees painted from their texture
 SMOOTHING = 3          # passes of majority vote, so lone triangles don't cost a tool change
 NEIGHBOURS = 32        # texture samples averaged for each triangle
 SHADOW_L = 22          # samples darker than this (CIELAB lightness) are baked-in shadow
@@ -238,7 +238,9 @@ def kmeans(x, weights, k, iters=30, seed=0):
 
 
 def shared_palette(parts):
-    """PALETTE_SIZE filament colours covering every tree, weighted by visible area."""
+    """PALETTE_SIZE filament colours covering every tree painted from its texture,
+    weighted by visible area."""
+    parts = [p for p in parts if p["name"] not in PAINT_BY_SHAPE]
     rgb = np.concatenate([p["rgb"] for p in parts])
     area = np.concatenate([p["mesh"].area_faces for p in parts])
     rgb, area = rgb[np.isfinite(rgb[:, 0])], area[np.isfinite(rgb[:, 0])]
@@ -252,8 +254,10 @@ def best_filaments(part, palette):
     known = np.isfinite(part["rgb"][:, 0])
     lab, pal = to_lab(part["rgb"][known]), to_lab(palette)
     dist = np.sqrt(((lab[:, None] - pal[None]) ** 2).sum(-1)) * part["mesh"].area_faces[known, None]
-    return min(itertools.combinations(range(len(palette)), TOOLHEADS),
-               key=lambda c: dist[:, list(c)].min(1).sum())
+    # Every tree has a brown trunk, however little of its area that is: keep a brown.
+    brown = {i for i, (L, a, b) in enumerate(pal) if a > 5}
+    combos = [c for c in itertools.combinations(range(len(palette)), TOOLHEADS) if brown & set(c)]
+    return min(combos, key=lambda c: dist[:, list(c)].min(1).sum())
 
 
 def paint(part, palette, chosen):
@@ -284,20 +288,28 @@ def paint(part, palette, chosen):
     return label
 
 
-def paint_sitka_spruce(part):
+def paint_sitka_spruce(part, palette):
     """The spruce's texture is one blue-teal throughout, bark and needles alike, so
-    colouring by texture can't separate them. Paint it by shape instead: a mossy
-    stone base, a grey-brown trunk and blue-green needles with frosty tips."""
+    colouring by texture can't separate them. Paint it by shape instead: grey bark on
+    the trunk and the stone base, moss on the base and root flare, and the needles in
+    three greens by how light the texture is there. Only the grey isn't shared with
+    the other trees."""
     mesh = part["mesh"]
-    y, up = mesh.triangles_center[:, 1], mesh.face_normals[:, 1]
-    BASE_TOP, TRUNK_TOP = 6.0, 21.5          # mm, measured off the model
-    needles, frost, bark, moss = 0, 1, 2, 3
-    label = np.full(len(mesh.faces), needles)
-    known = np.isfinite(part["rgb"][:, 0]) & (y >= TRUNK_TOP)
-    light = to_lab(part["rgb"][known])[:, 0]
-    label[np.flatnonzero(known)[light > np.percentile(light, 70)]] = frost
-    label[y < TRUNK_TOP] = bark
-    label[(y < BASE_TOP) & (up > 0.5)] = moss
+    x, y = mesh.triangles_center[:, 0], mesh.triangles_center[:, 1]
+    up = mesh.face_normals[:, 1]
+    BASE_TOP, FLARE_TOP, TRUNK_TOP = 6.0, 9.0, 21.5   # mm, measured off the model
+    TRUNK_X, TRUNK_HALF = -0.3, 4.8                   # trunk centre line and half-width
+    dark, pine, moss, bark = 0, 1, 2, 3
+    known = np.isfinite(part["rgb"][:, 0])
+    light = np.full(len(y), np.nan)
+    light[known] = to_lab(part["rgb"][known])[:, 0]
+    lo, hi = np.nanpercentile(light, [30, 75])
+    label = np.full(len(y), pine)
+    label[light < lo] = dark
+    label[light > hi] = moss
+    trunk = (y < TRUNK_TOP) & (np.abs(x - TRUNK_X) < TRUNK_HALF)
+    label[trunk | (y < BASE_TOP)] = bark
+    label[(y < FLARE_TOP) & (up > 0.3)] = moss          # moss on the base and root flare
     pairs = mesh.face_adjacency
     for _ in range(SMOOTHING):                # same speck removal as paint()
         votes = np.zeros((len(label), TOOLHEADS))
@@ -305,9 +317,12 @@ def paint_sitka_spruce(part):
         for a, b in (pairs.T, pairs[:, ::-1].T):
             np.add.at(votes, (a, label[b]), 1)
         label = votes.argmax(1)
-    colours = np.array([[0x3E, 0x62, 0x66], [0x6B, 0x89, 0x87], [0x6E, 0x62, 0x58], [0x53, 0x72, 0x4F]])
-    return label, colours
+    lab = to_lab(palette)                     # the shared palette's greens, dark to light
+    greens = [i for i in np.argsort(lab[:, 0]) if lab[i, 1] < -5][:3]
+    return label, np.vstack([palette[greens], ASH_GREY])
 
+
+ASH_GREY = np.array([0x80, 0x7C, 0x76])   # spruce bark and stone, the one extra filament
 
 # Trees painted by shape rather than from their texture.
 PAINT_BY_SHAPE = {"sitka-spruce": paint_sitka_spruce}
@@ -358,7 +373,7 @@ if __name__ == "__main__":
     for p in parts:
         if p["name"] in PAINT_BY_SHAPE:
             chosen = "by shape"
-            label, colours = PAINT_BY_SHAPE[p["name"]](p)
+            label, colours = PAINT_BY_SHAPE[p["name"]](p, palette)
         else:
             chosen = best_filaments(p, palette)
             label = paint(p, palette, chosen)
