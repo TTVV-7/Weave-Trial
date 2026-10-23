@@ -15,6 +15,12 @@ OUT.mkdir(exist_ok=True)
 BELT_WIDTH = 38.0      # width of the belt strap the buckle must accept (1.5" = 38 mm)
 RES = 128              # circle smoothness
 
+# How much wider AND longer to make each piece than the original design (mm).
+# The ring and X thicken in proportion; hanging loops and thickness stay the same.
+GROW_EARRING = 13.0
+GROW_PENDANT = 3.0
+GROW_PIN = 23.0
+
 
 def circle(r, x=0, y=0):
     return Point(x, y).buffer(r, resolution=RES)
@@ -65,24 +71,27 @@ def save(mesh, name):
 
 # 1. Earrings: open oval ring with X and a hanging loop on top (print 2).
 def earring():
-    rx, ry, ring, t = 10.0, 14.0, 2.2, 2.4
-    logo = x_logo(rx, ry, ring, 2.6, 3.4)
+    rx, ry, t = 10.0 + GROW_EARRING / 2, 14.0 + GROW_EARRING / 2, 2.4
+    k = (rx / 10.0 + ry / 14.0) / 2
+    logo = x_logo(rx, ry, 2.2 * k, 2.6 * k, 3.4 * k)
     loop = circle(2.6, 0, ry + 1.6).difference(circle(1.1, 0, ry + 1.6))
     return extrude(unary_union([logo, loop]), t)
 
 
 # 2. Necklace pendant: open ring + X (the shirt shows through), bail on top for a cord/jump ring.
 def pendant():
-    r, ring, t = 12.0, 2.2, 3.0
-    logo = x_logo(r, r, ring, 3.0, 4.0)
+    r, t = 12.0 + GROW_PENDANT / 2, 3.0
+    k = r / 12.0
+    logo = x_logo(r, r, 2.2 * k, 3.0 * k, 4.0 * k)
     bail = circle(3.2, 0, r + 2.2).difference(circle(1.5, 0, r + 2.2))
     return extrude(unary_union([logo, bail]), t)
 
 
 # 3. Chest pin: open ring + X (the shirt shows through); glue a pin back along one X arm.
 def pin_badge():
-    r, ring, t = 16.0, 2.6, 3.5
-    return extrude(x_logo(r, r, ring, 5.0, 6.0), t)
+    r, t = 16.0 + GROW_PIN / 2, 3.5
+    k = r / 16.0
+    return extrude(x_logo(r, r, 2.6 * k, 5.0 * k, 6.0 * k), t)
 
 
 # 4. Belt buckle: X medallion flanked by two bar frames with slots for the belt.
@@ -107,7 +116,7 @@ def belt_buckle():
 
 if __name__ == "__main__":
     e = save(earring(), "earring_x_oval")
-    e2 = e.copy(); e2.apply_translation((25, 0, 0))
+    e2 = e.copy(); e2.apply_translation((e.extents[0] + 5, 0, 0))
     save(union(e, e2), "earrings_pair")
     save(pendant(), "necklace_pendant_x")
     save(pin_badge(), "chest_pin_x")
