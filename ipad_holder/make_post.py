@@ -1,6 +1,5 @@
-"""A stand-in for the post the holder hangs on: a 10 x 10 mm square bar with
-flat, square-cut ends, 400 mm long, to check the hook's fit without the real
-one.
+"""A copy of the bar the holder slides along: 10 x 10 mm square, 400 mm long,
+with the real bar's cut-down tip at one end and a millimetre scale.
 
     python ipad_holder/make_post.py
 
@@ -9,13 +8,19 @@ that join with a square peg: the male half carries the peg on its inner end,
 the female half a socket to take it. Square, so the halves cannot turn. A
 drop of glue in the socket makes it permanent.
 
-The top face carries a centimetre scale, 0 to 40 along the joined bar, as a
-black inlay: the top 0.4 mm, in its own part and filament. The two side faces
-carry the same tick marks engraved 0.4 mm deep, without numbers.
+The tip: over the last TIP_LEN mm at the 0 end, the top face is cut down,
+with a small step where the cut starts, so the bar is TIP_BASE thick there,
+tapering to TIP_END at the very end -- measured off the real bar.
+
+The scale runs 0 to 40 cm from the tip along the bed face, as a black inlay
+(the first 0.4 mm, in its own part and filament), mirrored so it reads from
+below: a tick every mm, longer every 5 mm, longest every cm, and each cm
+numbered. The two side faces carry the cm and 5 mm ticks engraved 0.4 mm
+deep, without numbers. The top face is plain.
 
 Writes ``test_post.3mf`` (both halves, with the scale) and
-``test_post_male.stl`` / ``test_post_female.stl`` (plain, one colour). Print
-both lying on the unmarked long face: no supports.
+``test_post_male.stl`` / ``test_post_female.stl`` (one colour, no scale).
+Print both as they lie, scale on the bed: no supports.
 """
 
 from __future__ import annotations
@@ -40,12 +45,31 @@ SOCKET_EXTRA = 0.5              # socket deeper than the peg, so the faces meet
 
 # --- scale ------------------------------------------------------------------
 MARK_DEPTH = 0.4                # two 0.2 mm layers, inlaid or engraved
-TICK_W = 0.8                    # two nozzle widths
-TICK_LEN = {1: 3.5, 5: 5.0, 10: 5.0}    # by what the cm is a multiple of
-TICK_W10 = 1.6                  # every 10 cm, a heavier tick
-NUM_H = 3.2                     # numeral height
+TICK_W = 0.45                   # one nozzle width: the mm ticks are 1 mm apart
+TICK_LEN = {1: 2.5, 5: 3.8, 10: 5.0}    # mm, by what the mm is a multiple of
+NUM_H = 2.8                     # numeral height
+NUM_Y = 5.8                     # numerals start this far from the ticks' edge
+SIDE_TICK_W = 0.8               # the engraved side ticks: cm and 5 mm only
 BODY_RGB = (225, 225, 228)
 MARK_RGB = (0, 0, 0)
+
+
+# --- the tip ---------------------------------------------------------------
+TIP_LEN = 24.0                  # how far back from the end the cut runs
+TIP_BASE = 9.3                  # thickness where the cut starts, after the step
+TIP_END = 7.8                   # thickness at the very end
+
+
+def tip_cutter() -> m3.Manifold:
+    """What comes off the top face over the last TIP_LEN mm at x = 0: a wedge
+    from TIP_END thick at the end to TIP_BASE at x = TIP_LEN, then a straight
+    step up to the full bar."""
+    S, e = POST_SIDE, 1.0
+    at_end = (m3.Manifold.cube([0.01, S + 2 * e, S - TIP_END + e])
+              .translate([-e, -e, TIP_END]))
+    at_step = (m3.Manifold.cube([0.01, S + 2 * e, S - TIP_BASE + e])
+               .translate([TIP_LEN, -e, TIP_BASE]))
+    return m3.Manifold.batch_hull([at_end, at_step])
 
 
 def bar(length: float) -> m3.Manifold:
@@ -68,56 +92,49 @@ def build_halves() -> tuple[m3.Manifold, m3.Manifold]:
     tip = (centred_square(PEG_SIDE - 2 * c, 0.01)
            .translate([PEG_LEN - 0.01, 0, 0]))
     peg = m3.Manifold.batch_hull([body, tip])
-    male = bar(half) + peg.translate([half - 0.01, 0, 0])
+    male = bar(half) + peg.translate([half - 0.01, 0, 0]) - tip_cutter()
     socket = centred_square(PEG_SIDE + 2 * FIT, PEG_LEN + SOCKET_EXTRA + 0.01)
     female = bar(half) - socket.translate([-0.01, 0, 0])
     return male, female
 
 
-def ticks(start_cm: int, end_cm: int, x0: float) -> list[tuple[int, float]]:
-    """(cm, local x) for each centimetre from start_cm to end_cm, where the
-    half's local x = 0 sits at x0 mm along the joined bar. (Ticks on the very
-    ends are pulled in by half their width, in tick_marks, to stay whole.)"""
-    out = []
-    for cm in range(start_cm, end_cm + 1):
-        x = cm * 10.0 - x0
-        out.append((cm, x))
-    return out
-
-
-def tick_marks(marks, with_numbers: bool) -> m3.CrossSection:
-    """Ticks rising from the y = 0 edge of a 10 mm wide face: 3.5 mm every cm,
-    5 mm every 5 cm, 5 mm and twice as heavy every 10 cm. With numbers, each
-    cm's number sits above its tick, except on the bar's ends (0, 20, 40)."""
+def tick_marks(x0: float, every: int, with_numbers: bool) -> m3.CrossSection:
+    """The scale on one half, on a POST_SIDE-wide face: x along the half,
+    y from the ticks' edge. ``x0`` is where the half's x = 0 falls along the
+    joined bar; ``every`` the tick spacing in mm (1, or 5 for the sides).
+    Ticks on a half's ends are pulled in to stay whole; numbers go on every
+    cm except the bar's two ends and the joint."""
     from matplotlib.font_manager import FontProperties
     from matplotlib.textpath import TextPath
     font = FontProperties(family="DejaVu Sans", weight="bold")
+    half = POST_LEN / 2
+    w = TICK_W if every == 1 else SIDE_TICK_W
     shapes = []
-    for cm, x in marks:
-        L = TICK_LEN[10 if cm % 10 == 0 else 5 if cm % 5 == 0 else 1]
-        w = TICK_W10 if cm % 10 == 0 else TICK_W
-        x = min(max(x, w / 2), POST_LEN / 2 - w / 2)
+    for mm in range(int(x0), int(x0 + half) + 1, every):
+        x = min(max(mm - x0, w / 2), half - w / 2)
+        L = TICK_LEN[10 if mm % 10 == 0 else 5 if mm % 5 == 0 else 1]
         shapes.append(m3.CrossSection.square([w, L]).translate([x - w / 2, 0]))
-        if with_numbers and cm % int(POST_LEN / 20) != 0:
-            tp = TextPath((0, 0), str(cm), size=NUM_H * 1.37, prop=font)
-            loops = [q for q in tp.to_polygons() if len(q) >= 3]
-            text = m3.CrossSection(loops, m3.FillRule.EvenOdd)
+        if with_numbers and mm % 10 == 0 and mm % int(half) != 0:
+            tp = TextPath((0, 0), str(mm // 10), size=10, prop=font)
+            text = m3.CrossSection([q for q in tp.to_polygons() if len(q) >= 3],
+                                   m3.FillRule.EvenOdd)
             tx0, ty0, tx1, ty1 = text.bounds()
             text = text.scale([NUM_H / (ty1 - ty0)] * 2)
             tx0, ty0, tx1, ty1 = text.bounds()
-            top = TICK_LEN[5] + 0.8             # clear of the 5 cm ticks
-            shapes.append(text.translate([x - (tx0 + tx1) / 2, top - ty0]))
+            shapes.append(text.translate([x - (tx0 + tx1) / 2, NUM_Y - ty0]))
     return m3.CrossSection.batch_boolean(shapes, m3.OpType.Add)
 
 
-def scale_parts(solid: m3.Manifold, marks):
-    """The half with its scale: (body, black inlay on top). The side faces'
-    ticks are engraved into the body."""
+def scale_parts(solid: m3.Manifold, x0: float):
+    """The half with its scale: (body, black inlay). The inlay is in the bed
+    face, mirrored across the bar (y -> S - y) so it reads from below; the
+    side faces' ticks are engraved into the body."""
     S, d = POST_SIDE, MARK_DEPTH
-    top = tick_marks(marks, True).extrude(d + 0.01).translate([0, 0, S - d])
-    inlay = solid ^ top
-    side = tick_marks(marks, False).extrude(d + 0.01)
-    # Ticks rise from the top edge down each side face: x along the bar, the
+    bed = (tick_marks(x0, 1, True).mirror([0, 1]).translate([0, S])
+           .extrude(d + 0.01).translate([0, 0, -0.01]))
+    inlay = solid ^ bed
+    side = tick_marks(x0, 5, False).extrude(d + 0.01)
+    # Ticks hang from the top edge down each side face: x along the bar, the
     # 2-D y running down from z = S.
     front = side.rotate([90, 0, 0]).mirror([0, 0, 1]).translate([0, d, S])
     back = side.rotate([90, 0, 0]).mirror([0, 0, 1]).translate([0, S + 0.01, S])
@@ -127,9 +144,9 @@ def scale_parts(solid: m3.Manifold, marks):
 
 def main():
     male, female = build_halves()
-    half_cm = int(POST_LEN / 20)
-    m_body, m_ink = scale_parts(male, ticks(0, half_cm, 0.0))
-    f_body, f_ink = scale_parts(female, ticks(half_cm, 2 * half_cm, POST_LEN / 2))
+    half = POST_LEN / 2
+    m_body, m_ink = scale_parts(male, 0.0)
+    f_body, f_ink = scale_parts(female, half)
     # Side by side on the bed, 10 mm apart.
     gap = POST_SIDE + 10.0
     f_body, f_ink = f_body.translate([0, gap, 0]), f_ink.translate([0, gap, 0])
@@ -148,6 +165,8 @@ def main():
         b = solid.bounding_box()
         print(f"{name:6s} {b[3] - b[0]:.1f} x {b[4] - b[1]:.1f} x {b[5] - b[2]:.1f} mm, "
               f"genus {solid.genus()}, {len(solid.decompose())} piece")
+    print(f"scale inlay {m_ink.volume() + f_ink.volume():.0f} mm3, "
+          f"{len(m_ink.decompose()) + len(f_ink.decompose())} pieces")
 
 
 if __name__ == "__main__":
