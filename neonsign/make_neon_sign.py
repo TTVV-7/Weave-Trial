@@ -207,6 +207,7 @@ class Pixel:
     shape: str = "star"   # star / dot
     colour: str = "#bfe3ff"
     group: str = "stars"
+    footprint: object = None   # what its printed box covers, set once it's built
 
 
 RED, WHITE, GOLD, ICE, BRICK = "#ff2a2a", "#fff4e8", "#ffb43c", "#bfe3ff", "#ff5a1f"
@@ -333,8 +334,8 @@ def back_layout(a) -> dict:
     m = a.standoff_x
     return {
         "cover": {"x": a.cover_x, "y": a.cover_y, "w": a.box_w + 8, "h": a.box_d + 8},
-        "standoffs": [{"x": x, "y": y, "s": 48} for y in a.standoff_y
-                      for x in (m, SIZE - m)],
+        "standoffs": [] if a.mount == "glass" else [
+            {"x": x, "y": y, "s": 48} for y in a.standoff_y for x in (m, SIZE - m)],
     }
 
 
@@ -394,6 +395,8 @@ def check(a, strokes, pixels) -> list[str]:
             g = gap(p1, p2) - h1 - h2
             if g < a.min_gap:
                 problems.append(f"{n1} / {n2}: {max(g, 0):.0f} mm apart, need {a.min_gap:.0f}")
+    if a.mount == "glass":            # nothing is behind the parts but the room
+        return problems
     back = back_layout(a)
     holes = [(h["x"], h["y"], a.wire_hole / 2, h["run"]) for h in wire_holes(a, strokes, pixels)]
     boxes = [("cover", back["cover"]["x"], back["cover"]["y"], back["cover"]["w"],
@@ -453,6 +456,7 @@ class Piece:
     solid: object = None
     cap: object = None
     outline: object = None   # what it covers on the board, board coordinates
+    wide: object = None      # glass: its outline grown by the flange
 
 
 def split(s: Stroke, bed: float, pad: float) -> list[tuple[np.ndarray, bool, bool]]:
@@ -520,12 +524,51 @@ def lid(a, cavity: mf.CrossSection, outer: mf.CrossSection) -> mf.Manifold:
     return body.rotate((0, 180, 0))
 
 
-def channel_solid(a, pc: Piece) -> mf.Manifold:
+def board_to3d(cs: mf.CrossSection, centre=None) -> mf.CrossSection:
+    """A board-coordinate outline in print coordinates: absolute, or centred on
+    `centre` for a part that is built round 0."""
+    if centre is not None:
+        return cs.translate((-centre[0], -centre[1])).mirror((0, 1))
+    return cs.mirror((0, 1)).translate((0, SIZE))
+
+
+def flange_keeps(a, items: list[tuple]) -> list[mf.CrossSection]:
+    """Where each part's flange may go: out to `flange_w` round its outline,
+    but never over another part, and never over the flange of a part earlier
+    in the list. So close neighbours share the gap instead of colliding."""
+    outers = [o.offset(0.6, mf.JoinType.Round) for o, _ in items]
+    wides = [w.offset(0.6, mf.JoinType.Round) for _, w in items]
+    keeps = []
+    for i, (_, wide) in enumerate(items):
+        block = [o for j, o in enumerate(outers) if j != i] + wides[:i]
+        keeps.append(wide - mf.CrossSection.batch_boolean(block, mf.OpType.Add) if block else wide)
+    return keeps
+
+
+def flange(a, wide: mf.CrossSection, keep: mf.CrossSection, top: float) -> mf.Manifold:
+    """A flat flange round the open top, flush with it, for sticking to glass.
+    Underneath it is hollow: a thin skirt runs from its edge back to the wall
+    at 45 degrees, so the part still prints open side up without supports,
+    without a solid wedge of plastic."""
+    w, n = a.flange_w, max(1, round(a.flange_w / 0.5))
+    layers = [keep.extrude(a.flange_t).translate((0, 0, top - a.flange_t))]
+    for k in range(1, n + 1):
+        region = wide.offset(-w * k / n, mf.JoinType.Round) ^ keep
+        skirt = region - region.offset(-a.skirt, mf.JoinType.Round)
+        if not skirt.is_empty():
+            layers.append(skirt.extrude(w / n).translate((0, 0, top - a.flange_t - w * k / n)))
+    return mf.Manifold.batch_boolean(layers, mf.OpType.Add)
+
+
+def channel_solid(a, pc: Piece, fl=None) -> mf.Manifold:
     p = to3d(pc.pts)
     wall = a.wall
     outer = band(p, a.outer_w, pc.closed, wall if pc.end0 else 0, wall if pc.end1 else 0)
     cavity = band(p, a.inner_w, pc.closed)
-    body = outer.extrude(a.floor + a.depth) - cavity.extrude(a.depth + 1).translate((0, 0, a.floor))
+    body = outer.extrude(a.floor + a.depth)
+    if fl is not None:
+        body = body + fl
+    body = body - cavity.extrude(a.depth + 1).translate((0, 0, a.floor))
     tabs, holes = [], []
     for root, c in pc.tabs:
         r3, c3 = to3d(np.array([root]))[0], to3d(np.array([c]))[0]
@@ -569,21 +612,23 @@ def countersunk(a, x: float, y: float, top: float) -> mf.Manifold:
     return hole + sink
 
 
-def box_solid(a, cavity: mf.CrossSection, depth: float, holes: list, screws: list):
+def box_solid(a, cavity: mf.CrossSection, depth: float, holes: list, screws: list, fl=None):
     """A shaped box: walls round `cavity`, a floor with wire holes and
     countersunk screw holes. All in print coordinates."""
     outer = cavity.offset(a.wall, mf.JoinType.Round)
-    body = outer.extrude(a.lamp_floor + depth) - cavity.extrude(depth + 1).translate(
-        (0, 0, a.lamp_floor))
+    body = outer.extrude(a.lamp_floor + depth)
+    if fl is not None:
+        body = body + fl
+    body = body - cavity.extrude(depth + 1).translate((0, 0, a.lamp_floor))
     for x, y in holes:
         body = body - mf.Manifold.cylinder(a.lamp_floor + 2, a.slot_w / 2 + 0.75,
                                            circular_segments=32).translate((x, y, -1))
-    for x, y in screws:
+    for x, y in screws if a.mount == "board" else ():
         body = body - countersunk(a, x, y, a.lamp_floor)
     return body
 
 
-def housing_parts(a, s: Stroke, hole_xy: list) -> tuple[mf.Manifold, mf.Manifold]:
+def housing_parts(a, s: Stroke, hole_xy: list, fl=None) -> tuple[mf.Manifold, mf.Manifold]:
     """The moon: a crescent box with the strip round its outer wall, and its lid."""
     cav = poly3d(s.housing)
     # two screws in the fat middle of the crescent, clear of the strip
@@ -592,44 +637,87 @@ def housing_parts(a, s: Stroke, hole_xy: list) -> tuple[mf.Manifold, mf.Manifold
     mid = back + (centre - back) * 0.55
     screws = to3d(np.array([mid + (0, -14), mid + (0, 14)]))
     holes = to3d(np.array(hole_xy))
-    body = box_solid(a, cav, a.depth, [tuple(h) for h in holes], [tuple(q) for q in screws])
+    body = box_solid(a, cav, a.depth, [tuple(h) for h in holes], [tuple(q) for q in screws], fl)
     return body, lid(a, cav, cav.offset(a.wall, mf.JoinType.Round))
 
 
-def lamp_parts(a, px: Pixel) -> tuple[mf.Manifold, mf.Manifold]:
+def lamp_parts(a, px: Pixel, fl=None) -> tuple[mf.Manifold, mf.Manifold]:
     """A star or dot box (print coordinates, centred on 0) and its lid."""
     cav = lamp_cavity(a, px, board=False)
     hole, screws = lamp_holes(a, px)
-    body = box_solid(a, cav, a.lamp_depth, [hole], screws)
+    body = box_solid(a, cav, a.lamp_depth, [hole], screws, fl)
     return body, lid(a, cav, cav.offset(a.wall, mf.JoinType.Round))
 
 
-def pieces(a, strokes, pixels) -> list[Piece]:
+@dataclass
+class Lamp:
+    """A built star or dot box."""
+
+    pixel: Pixel
+    solid: object
+    cap: object
+    outline: object       # what it covers, flange included, board coordinates
+
+
+def pieces(a, strokes, pixels) -> tuple[list[Piece], list[Lamp]]:
+    """Every printed part. On glass, each gets a flange, and the flanges are
+    worked out together so neighbours don't overlap."""
+    glass = a.mount == "glass"
     all_pts = np.vstack([p for _, p, _ in footprints(a, strokes, pixels)])
     holes = wire_holes(a, strokes)
-    out = []
+    w = a.flange_w
+
+    pcs = []
     for s in strokes:
         if s.housing is not None:
             pc = Piece(s.name, s, s.pts, False, True, True)
-            pc.solid, pc.cap = housing_parts(
-                a, s, [(h["x"], h["y"]) for h in holes if h["run"] == s.name])
             pc.outline = mf.CrossSection([ccw(s.housing).tolist()]).offset(
                 a.wall, mf.JoinType.Round)
-            out.append(pc)
+            pc.wide = pc.outline.offset(w, mf.JoinType.Round)
+            pcs.append(pc)
             continue
-        cut = split(s, a.bed, a.outer_w / 2 + 2 * a.tab_r + 4)
+        cut = split(s, a.bed, a.outer_w / 2 + (w + 2 if glass else 2 * a.tab_r + 4))
         for k, (q, e0, e1) in enumerate(cut):
             pid = s.name if len(cut) == 1 else f"{s.name}_{k + 1}"
             pc = Piece(pid, s, q, s.closed, e0, e1)
-            place_tabs(a, pc, all_pts)
-            pc.solid = channel_solid(a, pc)
+            if not glass:
+                place_tabs(a, pc, all_pts)
+            ext = lambda on, more=0.0: a.wall + more if on else 0.0   # noqa: E731
+            pc.outline = band(q, a.outer_w, s.closed, ext(e0), ext(e1))
+            pc.wide = band(q, a.outer_w + 2 * w, s.closed, ext(e0, w), ext(e1, w))
+            pcs.append(pc)
+    lamp_outlines = [lamp_outline(a, px) for px in pixels]
+
+    keeps = flange_keeps(a, [(pc.outline, pc.wide) for pc in pcs] + [
+        (o, o.offset(w, mf.JoinType.Round)) for o in lamp_outlines]) if glass else None
+    for i, pc in enumerate(pcs):
+        fl = None
+        if glass:
+            top = (a.lamp_floor if pc.stroke.housing is not None else a.floor) + a.depth
+            fl = flange(a, board_to3d(pc.wide), board_to3d(keeps[i]), top)
+        if pc.stroke.housing is not None:
+            pc.solid, pc.cap = housing_parts(
+                a, pc.stroke, [(h["x"], h["y"]) for h in holes if h["run"] == pc.stroke.name], fl)
+        else:
+            pc.solid = channel_solid(a, pc, fl)
             pc.cap = channel_cap(a, pc)
+        if glass:
+            pc.outline = pc.outline + keeps[i]
+        elif pc.tabs:
             pc.outline = mf.CrossSection.batch_boolean(
-                [band(q, a.outer_w, s.closed, a.wall if e0 else 0, a.wall if e1 else 0)] + [
-                    mf.CrossSection.circle(a.tab_r, 24).translate(c) for _, c in pc.tabs],
-                mf.OpType.Add)
-            out.append(pc)
-    return out
+                [pc.outline] + [mf.CrossSection.circle(a.tab_r, 24).translate(c)
+                                for _, c in pc.tabs], mf.OpType.Add)
+    lamps = []
+    for i, (px, o) in enumerate(zip(pixels, lamp_outlines)):
+        fl = None
+        if glass:
+            keep = keeps[len(pcs) + i]
+            centre = (px.x, px.y)
+            fl = flange(a, board_to3d(o.offset(w, mf.JoinType.Round), centre),
+                        board_to3d(keep, centre), a.lamp_floor + a.lamp_depth)
+            o = o + keep
+        lamps.append(Lamp(px, *lamp_parts(a, px, fl), o))
+    return pcs, lamps
 
 
 # --------------------------------------------------------------------------
@@ -820,39 +908,50 @@ def svg_loops(cs: mf.CrossSection) -> str:
 
 
 def template_svg(a, strokes, pixels, pcs) -> str:
+    """The layout at 1:1. On glass it is drawn as seen from inside, mirrored,
+    because that's the side the parts go on."""
+    inside = a.mount == "glass"
+    fx = (lambda x: SIZE - x) if inside else (lambda x: x)   # noqa: E731
+    shapes, texts = [], []
+    for pc in pcs:
+        shapes.append(f'<path d="{svg_loops(pc.outline)}" fill="#eee" fill-rule="evenodd" '
+                      f'stroke="#888" stroke-width="0.4"/>')
+        for _, (cx, cy) in pc.tabs:
+            shapes.append(f'<circle cx="{cx:.2f}" cy="{cy:.2f}" r="{a.screw_d / 2}" fill="none" '
+                          f'stroke="#000" stroke-width="0.3"/>'
+                          f'<path d="M{cx - 2:.2f},{cy:.2f}h4M{cx:.2f},{cy - 2:.2f}v4" '
+                          f'stroke="#000" stroke-width="0.2"/>')
+        m = pc.pts[len(pc.pts) // 2]
+        texts.append((fx(m[0]) + 10, m[1] - 10, pc.id))
+    for px in pixels:
+        shapes.append(f'<path d="{svg_loops(px.footprint or lamp_outline(a, px))}" fill="#eee" '
+                      f'fill-rule="evenodd" stroke="#888" stroke-width="0.4"/>')
+        texts.append((fx(px.x) + lamp_r(a, px) + 2, px.y + 2, px.name))
+    for h in wire_holes(a, strokes, pixels):
+        shapes.append(f'<circle cx="{h["x"]:.2f}" cy="{h["y"]:.2f}" r="{a.wire_hole / 2}" '
+                      f'fill="#ffd0d0" stroke="#d00" stroke-width="0.4"/>')
+    back = back_layout(a)
+    if not inside:                     # on the back: dashed, for placing them
+        for r in [back["cover"]] + [dict(so, w=so["s"], h=so["s"]) for so in back["standoffs"]]:
+            shapes.append(f'<rect x="{r["x"] - r["w"] / 2:.1f}" y="{r["y"] - r["h"] / 2:.1f}" '
+                          f'width="{r["w"]:.1f}" height="{r["h"]:.1f}" fill="none" stroke="#06c" '
+                          f'stroke-width="0.4" stroke-dasharray="3 2"/>')
+        texts.append((back["cover"]["x"] - 30, back["cover"]["y"],
+                      "controller cover (on the back)"))
+    flip = f' transform="translate({SIZE:.0f},0) scale(-1,1)"' if inside else ""
+    key = ("INSIDE VIEW, mirrored: the side you stick the parts on. grey: each part with "
+           "its flange   red: where its wires come out the back") if inside else \
+        (f"red: drill {a.wire_hole:.0f} mm through (wires)   crosshairs: tab screws   "
+         "grey: where each printed part sits")
     out = [f'<svg xmlns="http://www.w3.org/2000/svg" width="{SIZE}mm" height="{SIZE}mm" '
            f'viewBox="0 0 {SIZE} {SIZE}" font-family="Helvetica, Arial, sans-serif">',
            f'<rect x="0" y="0" width="{SIZE}" height="{SIZE}" fill="none" stroke="#000" '
-           f'stroke-width="0.5"/>']
-    for pc in pcs:
-        out.append(f'<path d="{svg_loops(pc.outline)}" fill="#eee" fill-rule="evenodd" '
-                   f'stroke="#888" stroke-width="0.4"/>')
-        for _, (cx, cy) in pc.tabs:
-            out.append(f'<circle cx="{cx:.2f}" cy="{cy:.2f}" r="{a.screw_d / 2}" fill="none" '
-                       f'stroke="#000" stroke-width="0.3"/>'
-                       f'<path d="M{cx - 2:.2f},{cy:.2f}h4M{cx:.2f},{cy - 2:.2f}v4" '
-                       f'stroke="#000" stroke-width="0.2"/>')
-        m = pc.pts[len(pc.pts) // 2]
-        out.append(f'<text x="{m[0] + 10:.1f}" y="{m[1] - 10:.1f}" font-size="5">{pc.id}</text>')
-    for px in pixels:
-        out.append(f'<path d="{svg_loops(lamp_outline(a, px))}" fill="#eee" stroke="#888" '
-                   f'stroke-width="0.4"/><text x="{px.x + lamp_r(a, px) + 2:.1f}" '
-                   f'y="{px.y + 2:.1f}" font-size="5">{px.name}</text>')
-    for h in wire_holes(a, strokes, pixels):     # drill these through the board
-        out.append(f'<circle cx="{h["x"]:.2f}" cy="{h["y"]:.2f}" r="{a.wire_hole / 2}" '
-                   f'fill="#ffd0d0" stroke="#d00" stroke-width="0.4"/>')
-    back = back_layout(a)               # on the back: dashed, for placing them
-    for r in [back["cover"]] + [dict(so, w=so["s"], h=so["s"]) for so in back["standoffs"]]:
-        out.append(f'<rect x="{r["x"] - r["w"] / 2:.1f}" y="{r["y"] - r["h"] / 2:.1f}" '
-                   f'width="{r["w"]:.1f}" height="{r["h"]:.1f}" fill="none" stroke="#06c" '
-                   f'stroke-width="0.4" stroke-dasharray="3 2"/>')
-    out.append(f'<text x="{back["cover"]["x"] - 30:.0f}" y="{back["cover"]["y"]:.0f}" '
-               f'font-size="5" fill="#06c">controller cover (on the back)</text>')
+           f'stroke-width="0.5"/>', f"<g{flip}>", *shapes, "</g>"]
+    out += [f'<text x="{x:.1f}" y="{y:.1f}" font-size="5">{t}</text>' for x, y, t in texts]
     # a scale bar, to check the print came out 1:1
     out.append('<path d="M20,585h100M20,582v6M120,582v6" stroke="#000" stroke-width="0.5"/>'
                '<text x="20" y="579" font-size="5">100 mm -- measure me</text>'
-               f'<text x="200" y="590" font-size="5">red: drill {a.wire_hole:.0f} mm through '
-               '(wires)   crosshairs: tab screws   grey: where each printed part sits</text>')
+               f'<text x="140" y="590" font-size="5">{key}</text>')
     out.append("</svg>")
     return "\n".join(out)
 
@@ -882,6 +981,7 @@ def raster(a, strokes, pixels, pcs, px: float, lit: bool, on=None):
                    if pc.stroke.housing is not None else band(pc.pts, a.outer_w, pc.closed))
             _fill(img, cap, px, CLEAR)
         for st in pixels:
+            _fill(img, st.footprint or lamp_outline(a, st), px, (205, 205, 200))
             _fill(img, lamp_outline(a, st), px, CLEAR)
         return img
     glow = Image.new("RGB", (W, W), (0, 0, 0))
@@ -916,11 +1016,11 @@ def tiled_pdf(a, strokes, pixels, pcs, path: Path, dpi=150):
     lw = max(1, int(0.4 * px))
     d.rectangle([0, 0, full.width - 1, full.height - 1], outline="black", width=lw)
     shapes = [(pc.outline, pc.id, pc.pts[len(pc.pts) // 2]) for pc in pcs]
-    shapes += [(lamp_outline(a, st), st.name, (st.x + lamp_r(a, st), st.y)) for st in pixels]
+    shapes += [(st.footprint or lamp_outline(a, st), st.name, (st.x + lamp_r(a, st), st.y))
+               for st in pixels]
     for cs, name, at in shapes:
         for loop in cs.to_polygons():
             d.polygon([(x * px, y * px) for x, y in loop], outline=(120, 120, 120), width=lw)
-        d.text((at[0] * px + 8 * px, at[1] * px - 10 * px), name, fill="black")
     for pc in pcs:
         for _, (cx, cy) in pc.tabs:
             r = a.screw_d / 2 * px
@@ -933,8 +1033,20 @@ def tiled_pdf(a, strokes, pixels, pcs, path: Path, dpi=150):
         r = a.wire_hole / 2 * px
         d.ellipse([h[0] - r, h[1] - r, h[0] + r, h[1] + r], fill=(255, 190, 190),
                   outline=(200, 0, 0), width=lw)
+    inside = a.mount == "glass"
+    if inside:                         # seen from the side the parts go on
+        from PIL import ImageOps
+        full = ImageOps.mirror(full)
+        d = ImageDraw.Draw(full)
+    fx = (lambda x: SIZE - x) if inside else (lambda x: x)   # noqa: E731
+    for _, name, at in shapes:
+        d.text(((fx(at[0]) + 8) * px, (at[1] - 10) * px), name, fill="black")
     d.line([(20 * px, 585 * px), (120 * px, 585 * px)], fill="black", width=lw)
-    d.text((20 * px, 575 * px), "100 mm -- check this before you drill", fill="black")
+    d.text((20 * px, 575 * px), "100 mm -- check this before you " +
+           ("stick anything" if inside else "drill"), fill="black")
+    if inside:
+        d.text((140 * px, 585 * px), "INSIDE VIEW (mirrored): the side of the glass you "
+               "stick the parts on", fill="black")
 
     pw, ph = 210 * px, 297 * px
     cw, ch = 180.0, 267.0                         # content per page, mm
@@ -969,7 +1081,10 @@ def preview_html(a, strokes, pixels, pcs, rows, stats) -> str:
                          a.wall, mf.JoinType.Round).to_polygons()[0])
                      if s.housing is not None else None} for s in strokes],
         "pixels": [{"name": st.name, "x": st.x, "y": st.y,
-                    "outline": rd(lamp_outline(a, st).to_polygons()[0])} for st in pixels],
+                    "outline": rd(lamp_outline(a, st).to_polygons()[0]),
+                    "footprint": [rd(loop) for loop in
+                                  (st.footprint or lamp_outline(a, st)).to_polygons()]}
+                   for st in pixels],
         "leds": rows,
         "pieces": [{"id": pc.id, "run": pc.stroke.name,
                     "outline": [rd(loop) for loop in pc.outline.to_polygons()],
@@ -980,7 +1095,8 @@ def preview_html(a, strokes, pixels, pcs, rows, stats) -> str:
         "dims": {k: round(getattr(a, k), 1) for k in (
             "strip_w", "strip_t", "pitch", "inner_w", "outer_w", "wall", "floor", "depth",
             "cap_t", "tab_t", "screw_d", "wire_hole", "standoff_h", "box_h", "min_bend", "bed",
-            "star_size", "dot_size", "lamp_depth")},
+            "star_size", "dot_size", "lamp_depth", "flange_w", "flange_t")},
+        "mount": a.mount,
         "stats": stats,
     }
     return (HERE / "preview_template.html").read_text().replace(
@@ -1024,6 +1140,18 @@ def build_parser():
     g.add_argument("--slot-w", type=float, default=5.5, help="wire slot in the floor")
     g.add_argument("--slot-len", type=float, default=9)
     g.add_argument("--wire-hole", type=float, default=8, help="hole through the board")
+    g = p.add_argument_group("mounting")
+    g.add_argument("--mount", choices=["glass", "board"], default="glass",
+                   help="glass: every part sticks open side first to a frosted window or "
+                        "door, which diffuses the light. board: parts screw to a 600 mm "
+                        "board under printed caps")
+    g.add_argument("--flange-w", type=float, default=8,
+                   help="glass: how far the flange reaches out round each part, for tape")
+    g.add_argument("--flange-t", type=float, default=1.2, help="glass: flange thickness")
+    g.add_argument("--skirt", type=float, default=1.6,
+                   help="glass: thickness of the sloping skirt under the flange")
+    g.add_argument("--caps", action="store_true",
+                   help="glass: print the translucent caps anyway")
     g = p.add_argument_group("printer")
     g.add_argument("--bed", type=float, default=220, help="usable bed size, mm")
     g = p.add_argument_group("lamps, back parts (mm)")
@@ -1072,12 +1200,15 @@ def main(argv=None) -> int:
     out = a.out
     out.mkdir(parents=True, exist_ok=True)
     for old in list(out.glob("channels_plate_*.3mf")) + list(out.glob("diffusers_plate_*.3mf")) \
-            + list(out.glob("pixel_caps.3mf")):
+            + list(out.glob("pixel_caps.3mf")) + list(out.glob("back_parts*.3mf")):
         old.unlink()                             # so a smaller run leaves no stale plates
     chain = data_chain(a, strokes, pixels)       # may turn runs round, so first
-    pcs = pieces(a, strokes, pixels)
-    lamps = [(st.name, *lamp_parts(a, st)) for st in pixels]
-    print(f"  parts          {len(pcs)} channel pieces and shapes, {len(lamps)} lamp boxes")
+    pcs, lamp_list = pieces(a, strokes, pixels)
+    lamps = [(lp.pixel.name, lp.solid, lp.cap) for lp in lamp_list]
+    for lp in lamp_list:
+        lp.pixel.footprint = lp.outline
+    print(f"  parts          {len(pcs)} channel pieces and shapes, {len(lamps)} lamp boxes"
+          + (f", {a.flange_w:.0f} mm flanges for the glass" if a.mount == "glass" else ""))
 
     holders = [(pc.id, pc.solid) for pc in pcs] + [(n, b) for n, b, _ in lamps]
     plates = pack(holders, a.bed)
@@ -1085,14 +1216,16 @@ def main(argv=None) -> int:
         (out / f"channels_plate_{k}.3mf").write_bytes(parts_to_3mf(
             [Part(n, 1, WHITE_PLA, m) for n, m in plate], name=f"neon channels {k}"))
     covers = [(pc.id + "_cap", pc.cap) for pc in pcs] + [(n + "_lid", c) for n, _, c in lamps]
-    dplates = pack(covers, a.bed)
+    if a.mount == "glass" and not a.caps:
+        covers = []                              # the glass is the diffuser
+    dplates = pack(covers, a.bed) if covers else []
     for k, plate in enumerate(dplates, 1):
         (out / f"diffusers_plate_{k}.3mf").write_bytes(parts_to_3mf(
             [Part(n, 1, CLEAR, m) for n, m in plate], name=f"neon diffusers {k}"))
     print(f"  plates         {len(plates)} white + {len(dplates)} translucent, "
           f"{a.bed:.0f} mm bed")
-    back = pack([("cover", cover(a))] + [(f"standoff{i}", standoff(a)) for i in range(1, 5)],
-                a.bed)
+    back = pack([("cover", cover(a))] + [(f"standoff{i}", standoff(a)) for i in range(1, 5)
+                                          if a.mount == "board"], a.bed)
     for k, plate in enumerate(back, 1):
         name = "back_parts.3mf" if len(back) == 1 else f"back_parts_{k}.3mf"
         (out / name).write_bytes(parts_to_3mf([Part(n, 1, BLACK, m) for n, m in plate],
@@ -1107,11 +1240,11 @@ def main(argv=None) -> int:
         out / "preview.png")
     raster(a, strokes, pixels, pcs, 1.6, lit=False).save(out / "board_preview.png")
     grams = sum(float(m.volume()) for _, m in holders) * 1.24 / 1000
-    grams_d = sum(float(m.volume()) for _, m in covers) * 1.27 / 1000
+    grams_d = sum(float(m.volume()) for _, m in covers) * 1.27 / 1000 if covers else 0
     stats = {"leds": total, "strip_m": round(strip, 2), "runs": len(strokes),
              "pixels": len(pixels), "pieces": len(pcs), "plates": len(plates),
              "dplates": len(dplates), "grams": round(grams), "grams_d": round(grams_d),
-             "pages": n}
+             "pages": n, "mount": a.mount}
     (out / "preview.html").write_text(preview_html(a, strokes, pixels, pcs, rows, stats))
     print(f"  filament       ~{grams:.0f} g white, ~{grams_d:.0f} g translucent")
     print(f"  template       template.svg, template_a4.pdf ({n} pages)")

@@ -31,6 +31,7 @@
   --bg: #eef1f5; --panel: #ffffff; --board: #1d2026; --fg: #1b2029; --muted: #5a6371;
   --line: #d6dbe3; --accent: #cf2318; --gold: #a86400; --ink-cut: #c0261b; color-scheme: light;
 }
+[hidden] { display: none !important; }
 body {
   background: var(--bg); color: var(--fg); font: 400 16px/1.55 var(--body);
   padding-left: max(16px, env(safe-area-inset-left, 0px));
@@ -122,9 +123,9 @@ footer { color: var(--muted); font-size: 0.9rem; border-top: 1px solid var(--lin
 
 <main>
   <header>
-    <div class="eyebrow">LED neon sign · 600 × 600 mm · build sheet</div>
+    <div class="eyebrow">LED neon sign · 600 × 600 mm · for a glass door · build sheet</div>
     <h1>Santa <span>down the</span> chimney</h1>
-    <p class="lede" id="lede">A WS2812B LED strip standing on its edge in 3D-printed channels under translucent caps, on a black board. Santa waves, sinks until only his hat shows, vanishes down the chimney, the fire flares, and he climbs back out.</p>
+    <p class="lede" id="lede">A WS2812B LED strip standing on its edge in 3D-printed channels, stuck open side first to the inside of a frosted glass door, which diffuses the light. Santa waves, sinks until only his hat shows, vanishes down the chimney, the fire flares, and he climbs back out.</p>
   </header>
 
   <div class="stage">
@@ -154,38 +155,88 @@ footer { color: var(--muted); font-size: 0.9rem; border-top: 1px solid var(--lin
   <section>
     <div class="sechead">
       <div class="eyebrow">Chassis layout</div>
-      <h2>The board, front and back</h2>
-      <p class="lede">Drawn to scale from the same numbers as the print files. The back is shown as you'd see it with the board face down on the bench, so left and right are swapped.</p>
+      <h2>The layout, outside and inside</h2>
+      <p class="lede" data-mount="glass">Drawn to scale from the same numbers as the print files, each part with its flange. The inside view is the side you stick the parts on, so left and right are swapped.</p>
+      <p class="lede" data-mount="board">Drawn to scale from the same numbers as the print files. The back is shown as you'd see it with the board face down on the bench, so left and right are swapped.</p>
     </div>
     <div class="chassis">
       <div class="figure">
-        <h3>Front: channels and holes</h3>
+        <h3 data-mount="glass">Outside: what people see through the door</h3>
+        <h3 data-mount="board">Front: channels and holes</h3>
         <svg id="front" viewBox="-40 -30 680 680" role="img" aria-label="Front of the board with every printed channel piece and hole"></svg>
         <div class="legend">
           <span><i style="background:#3a3f49"></i>printed channel piece</span>
-          <span><i style="background:#ff5b5b"></i>8 mm wire hole</span>
+          <span><i style="background:#ff5b5b"></i>where wires come out</span>
           <span><i style="background:#7c6f4f"></i>star, dot and moon boxes</span>
         </div>
       </div>
       <div class="figure">
-        <h3>Back: controller, standoffs and data wiring</h3>
+        <h3 data-mount="glass">Inside: where the parts stick, and the data wiring</h3>
+        <h3 data-mount="board">Back: controller, standoffs and data wiring</h3>
         <svg id="back" viewBox="-40 -30 680 680" role="img" aria-label="Back of the board with the controller cover, standoffs and the data wire route"></svg>
         <div class="legend">
           <span><i style="background:#ffb43c"></i>data wire, in map order</span>
-          <span><i style="background:#6b7a90"></i>cover and standoffs</span>
+          <span><i style="background:#6b7a90"></i>controller</span>
         </div>
       </div>
     </div>
-    <p class="callout" id="volts">Everything on the board runs on 5 V DC. The only mains part is the plug-in adapter, so use a sealed, certified 5 V adapter rather than an open-frame supply. Put a 10 A fuse in the 5 V line where it enters the cover. Each run gets its own pair of 5 V and GND wires from a thick bus inside the cover. Those aren't drawn here, to keep the data route readable.</p>
+    <p class="callout" id="volts">Everything on the sign runs on 5 V DC. The only mains part is the plug-in adapter, so use a sealed, certified 5 V adapter rather than an open-frame supply. Put a 10 A fuse in the 5 V line where it enters the cover. Each run gets its own pair of 5 V and GND wires from a thick bus inside the cover. Those aren't drawn here, to keep the data route readable.</p>
   </section>
 
   <section>
     <div class="sechead">
       <div class="eyebrow">How it goes together</div>
-      <h2>A board, channels, and the strip</h2>
+      <h2 data-mount="glass">Channels on the glass</h2>
+      <h2 data-mount="board">A board, channels, and the strip</h2>
     </div>
     <div class="two">
-      <div class="figure">
+      <div class="figure" data-mount="glass">
+        <svg viewBox="0 0 640 300" role="img" aria-label="Cross-section of a channel stuck open side first to frosted glass">
+          <!-- outside, past the glass -->
+          <ellipse cx="500" cy="150" rx="70" ry="80" fill="var(--accent)" opacity=".18"/>
+          <!-- glass, 4 mm, at 5 px per mm -->
+          <rect x="425" y="20" width="20" height="260" fill="#cfe3ee" opacity=".85"/>
+          <ellipse cx="435" cy="150" rx="16" ry="48" fill="#ffe7c2" opacity=".85"/>
+          <!-- tape on the flange -->
+          <rect x="420" y="72" width="5" height="40" fill="#f2c94c"/>
+          <rect x="420" y="188" width="5" height="40" fill="#f2c94c"/>
+          <!-- the channel, open side to the glass: floor, two walls, flange, skirts -->
+          <g fill="#e2e3df" stroke="#8a8f98">
+            <path d="M351.5 112H420V120H357.5V180H420V188H351.5Z"/>
+            <rect x="414" y="72" width="6" height="40"/>
+            <rect x="414" y="188" width="6" height="40"/>
+            <path d="M414 72L374 112H382L414 80Z"/>
+            <path d="M414 228L374 188H382L414 220Z"/>
+          </g>
+          <!-- strip on its edge against one wall, light across to the other -->
+          <rect x="357.5" y="120" width="50" height="15" fill="#2f7d4a" stroke="#1d4d2e"/>
+          <rect x="378" y="133" width="8" height="5" fill="#fff6c8"/>
+          <path d="M382 138L392 176L418 150M382 138L405 172L418 165" stroke="#ffd36b" stroke-width="1.5" fill="none" opacity=".9"/>
+          <!-- wires out of the floor, into the room -->
+          <path d="M352 170C320 175 300 210 250 250M352 174C318 180 296 214 244 256M352 178C316 186 292 218 238 262" fill="none" stroke="#d24" stroke-width="2"/>
+          <!-- labels -->
+          <text x="455" y="38">frosted glass:</text>
+          <text x="455" y="53" class="dim">it diffuses the light</text>
+          <text x="520" y="250" class="dim" text-anchor="middle">outside</text>
+          <text x="40" y="250" class="dim">inside, in the room</text>
+          <path d="M422 92L300 40H230" stroke="#8a919c" fill="none"/>
+          <text x="10" y="38">flange, taped to the glass</text>
+          <text x="10" y="53" class="dim" id="g-flange">8 mm wide, flush with the open side</text>
+          <path d="M392 96L300 82H230" stroke="#8a919c" fill="none"/>
+          <text x="10" y="80">hollow underneath</text>
+          <text x="10" y="95" class="dim">45° skirt: prints without support</text>
+          <path d="M370 128L300 124H230" stroke="#8a919c" fill="none"/>
+          <text x="10" y="122">LED strip on its edge</text>
+          <text x="10" y="137" class="dim">10 mm, LEDs face across</text>
+          <path d="M380 186L300 172H230" stroke="#8a919c" fill="none"/>
+          <text x="10" y="170">white printed channel</text>
+          <text x="10" y="185" class="dim" id="g-chan">12 wide inside, 1.6 walls</text>
+          <path d="M300 200L230 214" stroke="#8a919c" fill="none"/>
+          <text x="10" y="212">wires out the back</text>
+        </svg>
+        <div class="cap">Section across one channel, at 5× life size. The light bounces off the white wall and comes out through the open side, straight into the glass.</div>
+      </div>
+      <div class="figure" data-mount="board">
         <svg id="section" viewBox="0 0 640 400" role="img" aria-label="Cross-section from the wall to the front of the sign">
           <!-- wall -->
           <rect x="0" y="10" width="34" height="380" fill="#3a3f48"/>
@@ -252,7 +303,15 @@ footer { color: var(--muted); font-size: 0.9rem; border-top: 1px solid var(--lin
         </svg>
         <div class="cap">Section from the wall to the front, at 5× life size, through the channel and across it. The strip stands on the board-side wall here so it shows; it can sit against either wall. Spacing between parts is schematic.</div>
       </div>
-      <ul class="notes">
+      <ul class="notes" data-mount="glass">
+        <li><b>The strip stands on its edge.</b> A flat strip won't bend sideways while it lies flat, but on its edge it follows any smooth curve. It sticks to one wall with its own tape, LEDs facing across the channel.</li>
+        <li><b>The open side goes on the glass.</b> Light bounces off the white wall opposite and straight out into the frosted glass, which spreads it into a glowing line about 15 mm wide. No caps needed.</li>
+        <li><b>The flange</b> is a flat rim round the open side, flush with it, for double-sided tape. Where two parts sit close, their flanges are trimmed to share the gap.</li>
+        <li><b>Long lines come in pieces</b> that fit your printer bed and butt together on the glass. The strip runs straight through the joins.</li>
+        <li><b>Stars, eyes and mittens</b> are shaped boxes: one LED cut from the strip lies in the bottom, facing the glass. The <b>moon</b> is a crescent box with strip round the inside of its outer wall.</li>
+        <li><b>Wires come out the back</b> of each part, through a slot at each end of a run, and run across the inside of the door to the controller.</li>
+      </ul>
+      <ul class="notes" data-mount="board">
         <li><b>The board</b> is any flat 600 × 600 mm sheet: 6 mm MDF or birch ply painted matte black, or black acrylic or Dibond if a sign shop cuts it.</li>
         <li><b>The strip stands on its edge.</b> A flat strip won't bend sideways while it lies flat, but on its edge it follows any smooth curve. It sticks to one wall with its own tape, LEDs facing across the channel.</li>
         <li><b>The light bounces</b> off the white wall opposite and comes out through the translucent cap. The cap covers the whole channel, so each line glows as one band about 15 mm wide, like neon.</li>
@@ -294,7 +353,18 @@ footer { color: var(--muted); font-size: 0.9rem; border-top: 1px solid var(--lin
       <div class="eyebrow">Build order</div>
       <h2>Putting it together</h2>
     </div>
-    <ol class="steps">
+    <ol class="steps" data-mount="glass">
+      <li><b>Test the strip first.</b> Before cutting anything, run the firmware with the whole reel on the bench and check every LED lights.</li>
+      <li><b>Print a test.</b> Print <span class="mono">brick_1</span> first, stand a piece of strip in it, and hold it against the glass in the dark. Check you like the glow before printing the rest.</li>
+      <li><b>Mark out the glass.</b> Print <span class="mono">template_a4.pdf</span> at actual size and check the 100 mm scale bar. It's drawn as seen from inside. Tape the pages together and tape the sheet to the outside of the door, where you can see it through the glass, or mark each part's corners on the inside with masking tape.</li>
+      <li><b>Cut the strip</b> to the LED counts in the LED map, on the copper pads between LEDs. Solder three wires to each end, keeping track of the arrows: data goes in at the end the map says.</li>
+      <li><b>Fit the strip into each part</b> before it goes on the glass. Stand each run against one wall with its own tape, and feed its wires out through the slot in the floor. On a curve, put it against the outside wall of the bend. In the stars and dots, lay a single LED flat in the middle, facing the open side.</li>
+      <li><b>Clean the glass</b> with isopropyl alcohol where the parts go.</li>
+      <li><b>Stick each part on, open side first,</b> with clear double-sided mounting tape on the flange. Press it firmly for 30 seconds. Start from the middle of the drawing and work outwards.</li>
+      <li><b>Wire it up in LED-map order:</b> each run's data out goes to the next run's data in. Bring 5 V and GND to every run from a pair of thick bus wires, rather than through the strip. Clip the wires to the door so they don't pull on the parts.</li>
+      <li><b>Mount the controller</b> in its cover on the inside of the door or the frame: ESP32, a 74AHCT125 to lift the data line to 5 V, a 330 Ω resistor in the data line, and 1000 µF across the supply. Then flash the sketch.</li>
+    </ol>
+    <ol class="steps" data-mount="board">
       <li><b>Test the strip first.</b> Before cutting anything, run the firmware with the whole reel on the bench and check every LED lights.</li>
       <li><b>Print a test.</b> Print <span class="mono">brick_1</span> and its cap first. Stand a piece of strip in it and press the cap on. The cap should click in snugly, and the strip should glow evenly through it.</li>
       <li><b>Print the template</b> (<span class="mono">template_a4.pdf</span>, actual size) and check the 100 mm scale bar. Tape the pages together using the 10 mm overlaps, then tape the template to the board.</li>
@@ -314,6 +384,7 @@ footer { color: var(--muted); font-size: 0.9rem; border-top: 1px solid var(--lin
 
 <script>
 const DATA = /*DATA*/null;
+document.querySelectorAll("[data-mount]").forEach((el) => { el.hidden = el.dataset.mount !== DATA.mount; });
 
 // ---- timeline: the same numbers as santa_neon.ino ---------------------------
 const T_PEEK = 4000, T_GONE = 5500, T_FIRE = 7000, T_BACK = 10000, CYCLE = 11200;
@@ -519,7 +590,7 @@ const STILLS = [
   { t: 4700, title: "Only his hat shows", time: "4 – 5.5 s", text: "The big Santa goes dark and the small hat inside his face lights. He has sunk into the chimney." },
   { t: 6150, title: "Down the chimney", time: "5.5 – 7 s", text: "A bright spot runs from the rim down both walls." },
   { t: 8300, title: "The fire flares", time: "7 – 10 s", text: "The chimney and bricks flicker orange. Then the hat peeks out again and he climbs back up." },
-  { t: null, title: "Lights off", time: "daytime", text: "The bare board: white channels under their translucent caps." },
+  { t: null, title: "Lights off", time: "daytime", text: "The parts with the power off." },
 ];
 const stillList = document.getElementById("stills");
 const stillCanvases = STILLS.map((st, i) => {
@@ -574,7 +645,8 @@ function boardBase(svg) {
     el(svg, "text", { x: m[0] + 6, y: m[1] - 4, class: "on-dark", "font-size": 9, opacity: 0.75 }, pc.id);
   });
   DATA.pixels.forEach((p) => {
-    el(svg, "path", { d: polyD(p.outline), fill: "#7c6f4f", stroke: "#0e0f12", "stroke-width": 0.8 });
+    el(svg, "path", { d: p.footprint.map((l) => polyD(l)).join(""), "fill-rule": "evenodd", fill: "#5b5240", stroke: "#0e0f12", "stroke-width": 0.8 });
+    el(svg, "path", { d: polyD(p.outline), fill: "#7c6f4f" });
   });
   DATA.holes.forEach((h) => el(svg, "circle", { cx: h.x, cy: h.y, r: D.wire_hole / 2, fill: "#ff5b5b" }));
 })();
@@ -585,7 +657,7 @@ function boardBase(svg) {
   // channels ghosted, to show what's on the other side
   DATA.pieces.forEach((pc) => el(svg, "path", { d: pc.outline.map((l) => polyD(l, true)).join(""),
     "fill-rule": "evenodd", fill: "#262a31" }));
-  DATA.pixels.forEach((p) => el(svg, "path", { d: polyD(p.outline, true), fill: "#262a31" }));
+  DATA.pixels.forEach((p) => el(svg, "path", { d: p.footprint.map((l) => polyD(l, true)).join(""), "fill-rule": "evenodd", fill: "#262a31" }));
   const B = DATA.back, c = B.cover;
   el(svg, "rect", { x: fx(c.x) - c.w / 2, y: c.y - c.h / 2, width: c.w, height: c.h, rx: 6, fill: "#3b4553", stroke: "#6b7a90", "stroke-width": 1.5 });
   el(svg, "text", { x: fx(c.x), y: c.y - 4, "text-anchor": "middle", class: "on-dark", "font-size": 12 }, "controller");
@@ -625,7 +697,7 @@ document.getElementById("spec").innerHTML = [
   ["LED strip", fmt(S.strip_m, 2) + " m, " + D.pitch + " mm per LED"],
   ["Lit lines", S.runs - 1 + " runs, plus the moon"],
   ["Stars, eyes, mittens", S.pixels + " boxes, 1 LED each"],
-  ["Printed parts", S.pieces + S.pixels + " + their caps"],
+  ["Printed parts", S.pieces + S.pixels + (S.dplates ? " + their caps" : "")],
   ["Full white, max", fmt(S.leds * 0.06, 1) + " A at 5 V"],
 ].map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join("");
 
@@ -635,18 +707,24 @@ const table = (id, head, rows, numeric = []) => {
     rows.map((r) => "<tr>" + r.map((c, i) => `<td${numeric.includes(i) ? ' class="num"' : ""}>${c}</td>`).join("") + "</tr>").join("") + "</tbody>";
 };
 table("prints", ["File", "What", "Filament", "Qty"], [
-  ["<span class='mono'>channels_plate_1…" + S.plates + ".3mf</span>", `The channels, the moon box, and the star and dot boxes, packed onto ${fmt(D.bed)} mm beds. No supports.`, `White PLA, about ${fmt(S.grams)} g. White bounces the light; black would swallow it.`, S.pieces + S.pixels],
-  ["<span class='mono'>diffusers_plate_1…" + S.dplates + ".3mf</span>", `A cap or lid for every one of those, printed face down so the lit face is the smooth side. ${D.cap_t} mm thick.`, `Natural (clear) PETG, or white PLA, about ${fmt(S.grams_d)} g`, S.pieces + S.pixels],
-  ["<span class='mono'>back_parts.3mf</span>", "The cover for the controller, and four keyhole standoffs.", "Any, black", 5],
-], [3]);
+  ["<span class='mono'>channels_plate_1…" + S.plates + ".3mf</span>", `The channels, the moon box, and the star and dot boxes${DATA.mount === "glass" ? `, each with an ${D.flange_w} mm flange` : ""}, packed onto ${fmt(D.bed)} mm beds. Open side up, no supports.`, `White PLA, about ${fmt(S.grams)} g. White bounces the light; black would swallow it.`, S.pieces + S.pixels],
+  S.dplates && ["<span class='mono'>diffusers_plate_1…" + S.dplates + ".3mf</span>", `A cap or lid for every one of those, printed face down so the lit face is the smooth side. ${D.cap_t} mm thick.`, `Natural (clear) PETG, or white PLA, about ${fmt(S.grams_d)} g`, S.pieces + S.pixels],
+  DATA.mount === "glass"
+    ? ["<span class='mono'>back_parts.3mf</span>", "The cover for the controller.", "Any", 1]
+    : ["<span class='mono'>back_parts.3mf</span>", "The cover for the controller, and four keyhole standoffs.", "Any, black", 5],
+].filter(Boolean), [3]);
 table("buy", ["Part", "Notes", "Qty"], [
   ["WS2812B LED strip", `5 V, ${D.strip_w} mm wide, LEDs ${D.pitch} mm apart: the strip you have. Includes the stars, eyes and mittens, one LED each, and about 15% spare.`, fmt(Math.ceil(S.strip_m * 1.15 * 2) / 2, 1) + " m"],
-  ["Board", "600 × 600 mm, 6 mm MDF or birch ply. Matte black paint.", 1],
+  DATA.mount === "glass"
+    ? ["Mounting tape", `Clear double-sided acrylic foam tape (VHB type), about ${D.flange_w} mm wide, for the flanges. Plus isopropyl alcohol to clean the glass.`, "≈ 8 m"]
+    : ["Board", "600 × 600 mm, 6 mm MDF or birch ply. Matte black paint.", 1],
   ["ESP32 dev board", "Any small one, such as an ESP32-C3 or a WROOM DevKit.", 1],
   ["74AHCT125", "Lifts the 3.3 V data line to 5 V. Plus a 330 Ω resistor and a 1000 µF capacitor.", 1],
   ["5 V power adapter", `Sealed plug-in type, 10 A (50 W). At full white the sign could draw ${fmt(S.leds * 0.06, 1)} A, but the firmware caps it at 6 A. Plus an inline 10 A blade fuse.`, 1],
   ["Wire", "18 AWG red and black for the 5 V bus, 24 AWG for data.", "≈ 6 m"],
-  ["Screws", `3 × 8 mm pan-head wood screws, for the tabs, the cover and the standoffs. Nothing longer, or it comes through the 6 mm board.`, "≈ 120"],
+  DATA.mount === "glass"
+    ? ["Wire clips", "Small adhesive cable clips, to hold the wiring to the door.", "≈ 20"]
+    : ["Screws", `3 × 8 mm pan-head wood screws, for the tabs, the cover and the standoffs. Nothing longer, or it comes through the 6 mm board.`, "≈ 120"],
 ], [2]);
 const groupName = { scene: "scene", stars: "stars", santa_up: "Santa waving", santa_down: "hat only" };
 table("map", ["Run", "Lights in", "LEDs", "Index", "Strip to cut"], segs.map((s) => [
@@ -665,4 +743,6 @@ set("d-cap", `${D.cap_t} mm, rim presses in`);
 set("d-chan", `wall ${D.wall}, ${D.inner_w} wide inside`);
 set("d-tab", `${D.tab_t} mm, 3 × 8 mm screw`);
 set("d-hole", `${D.wire_hole} mm, at every end of a run`);
+set("g-flange", `${D.flange_w} mm wide, flush with the open side`);
+set("g-chan", `${D.inner_w} wide inside, ${D.wall} walls`);
 </script>

@@ -2,8 +2,9 @@
 
 ![lit](example/preview.png)
 
-A neon-style sign made from an ordinary 10 mm WS2812B LED strip, in 3D-printed
-channels under translucent caps on a flat black board. Santa waves, sinks until
+A neon-style sign made from an ordinary 10 mm WS2812B LED strip in 3D-printed
+channels, stuck open side first to the inside of a frosted glass door, which
+diffuses the light. Santa waves, sinks until
 only his hat shows, vanishes down the chimney, the fire flares, and he climbs
 back out. 177 LEDs, about 2.7 m of strip with LEDs 15 mm apart.
 
@@ -21,25 +22,28 @@ parts to print and buy, the LED map and the build order.
 
 | file | what |
 |---|---|
-| `channels_plate_1…5.3mf` | everything that holds LEDs: the line channels, the moon, the star and dot boxes. White PLA, no supports |
-| `diffusers_plate_1…5.3mf` | a translucent cap or lid for each of those, printed face down. Natural PETG or white PLA |
-| `back_parts.3mf` | controller cover and four keyhole standoffs |
-| `template.svg`, `template_a4.pdf` | the board at 1:1: where every part sits, wire holes, pilot holes |
+| `channels_plate_1…7.3mf` | everything that holds LEDs: the line channels, the moon, the star and dot boxes, each with a flange for taping to the glass. White PLA, open side up, no supports |
+| `back_parts.3mf` | the controller cover |
+| `template.svg`, `template_a4.pdf` | the layout at 1:1, drawn from inside (mirrored): where every part sticks |
 | `neon_layout.h` | LED index of every run (also copied into `firmware/santa_neon/`) |
 | `board_preview.png` | the board with the lights off |
 
 ## How it is built
 
-* **Board:** 600 × 600 mm, 6 mm MDF or ply, painted matte black.
+* **Glass:** every part sticks open side first to the inside of a frosted
+  door, which does the diffusing. A flat 8 mm flange round the open side,
+  flush with it, takes clear double-sided mounting tape. Underneath it is a
+  hollow 45° skirt, so the parts print open side up without supports. Where
+  parts sit close, their flanges are trimmed to share the gap.
 * **Lines:** a flat strip can't bend sideways while it lies flat, so it stands
   on its edge against one wall of a 12 mm channel, LEDs facing across. Light
-  bounces off the white wall opposite and out through a translucent cap whose
-  rim presses into the channel. Each line glows as a band about 15 mm wide.
+  bounces off the white wall opposite and out into the glass, as a band about
+  15 mm wide.
 * **Shapes:** the stars, eyes and mittens are boxes of that shape with one LED
-  cut from the strip lying in the bottom, 16 mm under a lid. The moon is a
+  cut from the strip lying in the bottom, facing the glass. The moon is a
   crescent box with strip round the inside of its outer wall.
-* **Wiring:** every run ends over an 8 mm hole, so the wires go through to the
-  back. The data line visits each run in turn by short hops from the controller.
+* **Wiring:** each run's wires come out through a slot in the floor at each
+  end, on the room side. The data line visits each run in turn by short hops from the controller.
   The preview's back view numbers every stop, and that order is the LED map.
   Feed 5 V and GND to every run from a bus.
 * **Low voltage:** everything on the board is 5 V DC. The only mains part is a
@@ -48,6 +52,10 @@ parts to print and buy, the LED map and the build order.
   firmware caps the current at 6 A.
 
 ## Changing it
+
+`--mount board` builds the earlier version instead: parts with screw tabs on a
+600 mm board, under printed translucent caps, with wall standoffs. `--caps`
+adds the caps on glass too, and `--flange-w` sets the flange width.
 
 The drawing is `artwork()` in `make_neon_sign.py`: strokes in board millimetres
 (y down). Every stroke is checked against `--min-bend` (default 20 mm), and every
