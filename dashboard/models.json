@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-19T20:11:03+00:00",
+  "generated": "2026-10-24T17:36:22+00:00",
   "models": [
     {
       "name": "ipad holder",
@@ -119,7 +119,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 54402,
-      "modified": "2026-10-19T19:31:35+00:00",
+      "modified": "2026-10-19T20:11:03+00:00",
       "preview": null
     },
     {
@@ -129,8 +129,8 @@
       "folder": "neonsign/example",
       "ext": "3mf",
       "type": "3MF",
-      "size": 126266,
-      "modified": "2026-10-19T19:31:35+00:00",
+      "size": 115371,
+      "modified": "2026-10-19T20:11:03+00:00",
       "preview": null
     },
     {
@@ -140,8 +140,8 @@
       "folder": "neonsign/example",
       "ext": "3mf",
       "type": "3MF",
-      "size": 87766,
-      "modified": "2026-10-19T19:31:35+00:00",
+      "size": 124765,
+      "modified": "2026-10-19T20:11:03+00:00",
       "preview": null
     },
     {
@@ -151,8 +151,8 @@
       "folder": "neonsign/example",
       "ext": "3mf",
       "type": "3MF",
-      "size": 103287,
-      "modified": "2026-10-19T19:31:35+00:00",
+      "size": 139939,
+      "modified": "2026-10-19T20:11:03+00:00",
       "preview": null
     },
     {
@@ -162,8 +162,8 @@
       "folder": "neonsign/example",
       "ext": "3mf",
       "type": "3MF",
-      "size": 130016,
-      "modified": "2026-10-19T19:31:35+00:00",
+      "size": 120622,
+      "modified": "2026-10-19T20:11:03+00:00",
       "preview": null
     },
     {
@@ -173,19 +173,63 @@
       "folder": "neonsign/example",
       "ext": "3mf",
       "type": "3MF",
-      "size": 59156,
-      "modified": "2026-10-19T19:31:35+00:00",
+      "size": 102082,
+      "modified": "2026-10-19T20:11:03+00:00",
       "preview": null
     },
     {
-      "name": "pixel caps",
-      "file": "pixel_caps.3mf",
-      "path": "neonsign/example/pixel_caps.3mf",
+      "name": "diffusers plate 1",
+      "file": "diffusers_plate_1.3mf",
+      "path": "neonsign/example/diffusers_plate_1.3mf",
       "folder": "neonsign/example",
       "ext": "3mf",
       "type": "3MF",
-      "size": 23311,
-      "modified": "2026-10-19T19:31:35+00:00",
+      "size": 118231,
+      "modified": "2026-10-24T17:35:38+00:00",
+      "preview": null
+    },
+    {
+      "name": "diffusers plate 2",
+      "file": "diffusers_plate_2.3mf",
+      "path": "neonsign/example/diffusers_plate_2.3mf",
+      "folder": "neonsign/example",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 158704,
+      "modified": "2026-10-24T17:35:38+00:00",
+      "preview": null
+    },
+    {
+      "name": "diffusers plate 3",
+      "file": "diffusers_plate_3.3mf",
+      "path": "neonsign/example/diffusers_plate_3.3mf",
+      "folder": "neonsign/example",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 138040,
+      "modified": "2026-10-24T17:35:38+00:00",
+      "preview": null
+    },
+    {
+      "name": "diffusers plate 4",
+      "file": "diffusers_plate_4.3mf",
+      "path": "neonsign/example/diffusers_plate_4.3mf",
+      "folder": "neonsign/example",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 192272,
+      "modified": "2026-10-24T17:35:38+00:00",
+      "preview": null
+    },
+    {
+      "name": "diffusers plate 5",
+      "file": "diffusers_plate_5.3mf",
+      "path": "neonsign/example/diffusers_plate_5.3mf",
+      "folder": "neonsign/example",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 11184,
+      "modified": "2026-10-24T17:35:38+00:00",
       "preview": null
     },
     {

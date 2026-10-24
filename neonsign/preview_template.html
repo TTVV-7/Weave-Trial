@@ -124,7 +124,7 @@ footer { color: var(--muted); font-size: 0.9rem; border-top: 1px solid var(--lin
   <header>
     <div class="eyebrow">LED neon sign · 600 × 600 mm · build sheet</div>
     <h1>Santa <span>down the</span> chimney</h1>
-    <p class="lede" id="lede">Addressable LED neon flex in 3D-printed channels on a black board. Santa waves, sinks until only his hat shows, vanishes down the chimney, the fire flares, and he climbs back out.</p>
+    <p class="lede" id="lede">A WS2812B LED strip standing on its edge in 3D-printed channels under translucent caps, on a black board. Santa waves, sinks until only his hat shows, vanishes down the chimney, the fire flares, and he climbs back out.</p>
   </header>
 
   <div class="stage">
@@ -164,7 +164,7 @@ footer { color: var(--muted); font-size: 0.9rem; border-top: 1px solid var(--lin
         <div class="legend">
           <span><i style="background:#3a3f49"></i>printed channel piece</span>
           <span><i style="background:#ff5b5b"></i>8 mm wire hole</span>
-          <span><i style="background:#8fd0ff"></i>12 mm pixel hole</span>
+          <span><i style="background:#7c6f4f"></i>star, dot and moon boxes</span>
         </div>
       </div>
       <div class="figure">
@@ -182,7 +182,7 @@ footer { color: var(--muted); font-size: 0.9rem; border-top: 1px solid var(--lin
   <section>
     <div class="sechead">
       <div class="eyebrow">How it goes together</div>
-      <h2>A board, channels, and the flex</h2>
+      <h2>A board, channels, and the strip</h2>
     </div>
     <div class="two">
       <div class="figure">
@@ -204,32 +204,40 @@ footer { color: var(--muted); font-size: 0.9rem; border-top: 1px solid var(--lin
           <!-- board -->
           <rect x="234" y="10" width="30" height="380" fill="#16181c" stroke="#555c66"/>
           <text x="249" y="398" text-anchor="middle" class="dim" font-size="10">board</text>
-          <!-- channel 1: cross-section -->
+          <!-- channel 1: section across it, 5 px per mm: floor 1.2, walls 1.6, 12 inside, 12.5 deep -->
           <g>
-            <path d="M264 92H310V100H270V140H310V148H264Z" fill="#0b0b0c" stroke="#666d78"/>
-            <rect x="270" y="105" width="60" height="30" fill="#e9e4d8"/>
-            <rect x="326" y="105" width="4" height="30" fill="#fff6e0"/>
-            <ellipse cx="342" cy="120" rx="18" ry="22" fill="var(--accent)" opacity=".28"/>
-            <path d="M264 148H277V170H264" fill="#0b0b0c" stroke="#666d78"/>
-            <path d="M262 163H230" stroke="#c9ccd2" stroke-width="3"/>
-            <path d="M277 160H284" stroke="#c9ccd2" stroke-width="5"/>
+            <path d="M264 82H333.5V90H270V150H333.5V158H264Z" fill="#d9dad6" stroke="#8a8f98"/>
+            <rect x="270" y="90" width="50" height="15" fill="#2f7d4a"/>
+            <rect x="270" y="90" width="50" height="15" fill="none" stroke="#1d4d2e"/>
+            <rect x="296" y="93" width="8" height="9" fill="#fff6c8"/>
+            <path d="M302 105L314 140M302 105L312 120" stroke="#ffd36b" stroke-width="1.5" opacity=".9"/>
+            <rect x="333.5" y="82" width="5" height="76" fill="#efe9da" stroke="#b9ae92"/>
+            <rect x="325.5" y="91" width="8" height="5" fill="#efe9da" stroke="#b9ae92"/>
+            <rect x="325.5" y="144" width="8" height="5" fill="#efe9da" stroke="#b9ae92"/>
+            <ellipse cx="350" cy="120" rx="14" ry="40" fill="var(--accent)" opacity=".25"/>
+            <path d="M264 158H276V174H264" fill="#d9dad6" stroke="#8a8f98"/>
+            <path d="M262 168H230" stroke="#c9ccd2" stroke-width="3"/>
+            <path d="M276 165H283" stroke="#c9ccd2" stroke-width="5"/>
           </g>
           <!-- channel 2: the end of a run, wires through the board -->
           <g>
-            <path d="M264 262H310V270H270V310H310V318H264Z" fill="#0b0b0c" stroke="#666d78"/>
-            <rect x="276" y="275" width="54" height="30" fill="#e9e4d8"/>
-            <rect x="270" y="275" width="10" height="30" fill="#8b8f96"/>
+            <path d="M264 262H333.5V270H270V310H333.5V318H264Z" fill="#d9dad6" stroke="#8a8f98"/>
+            <rect x="333.5" y="262" width="5" height="56" fill="#efe9da" stroke="#b9ae92"/>
+            <rect x="270" y="275" width="50" height="15" fill="#2f7d4a"/>
             <rect x="234" y="282" width="36" height="16" fill="var(--bg)" stroke="#666d78" stroke-dasharray="3 2"/>
-            <path d="M270 286C230 286 228 240 200 200M270 290C226 292 222 244 192 204M270 294C222 298 216 248 184 208"
+            <path d="M272 284C230 286 228 240 200 200M272 288C226 292 222 244 192 204M272 292C222 298 216 248 184 208"
                   fill="none" stroke-width="2" stroke="#d24" />
           </g>
           <!-- labels -->
-          <path d="M330 106L380 60H392" stroke="#8a919c" fill="none"/>
-          <text x="396" y="58">neon flex, lit face out</text>
-          <text x="396" y="73" class="dim" id="d-flex">6 × 12 mm</text>
-          <path d="M306 94L380 112H392" stroke="#8a919c" fill="none"/>
-          <text x="396" y="110">printed channel (black)</text>
-          <text x="396" y="125" class="dim" id="d-chan">wall 1.6, floor 1.2, 8 deep</text>
+          <path d="M338 86L380 40H392" stroke="#8a919c" fill="none"/>
+          <text x="396" y="38">translucent cap, the lit face</text>
+          <text x="396" y="53" class="dim" id="d-cap">1 mm, rim presses in</text>
+          <path d="M300 97L380 78H392" stroke="#8a919c" fill="none"/>
+          <text x="396" y="76">LED strip on its edge</text>
+          <text x="396" y="91" class="dim" id="d-flex">10 mm, LEDs face across</text>
+          <path d="M318 150L380 116H392" stroke="#8a919c" fill="none"/>
+          <text x="396" y="114">printed channel (white)</text>
+          <text x="396" y="129" class="dim" id="d-chan">wall 1.6, 12 wide inside</text>
           <path d="M284 162L380 168H392" stroke="#8a919c" fill="none"/>
           <text x="396" y="166">screw tab</text>
           <text x="396" y="181" class="dim" id="d-tab">2.4 mm, 3 × 8 mm screw</text>
@@ -237,19 +245,20 @@ footer { color: var(--muted); font-size: 0.9rem; border-top: 1px solid var(--lin
           <text x="396" y="232">hole through the board</text>
           <text x="396" y="247" class="dim" id="d-hole">8 mm, at every end of a run</text>
           <path d="M276 278L380 300H392" stroke="#8a919c" fill="none"/>
-          <text x="396" y="298">end cap, wires out the back</text>
+          <text x="396" y="298">wires soldered to the strip end</text>
           <path d="M200 210L380 340H392" stroke="#8a919c" fill="none"/>
           <text x="396" y="338">5 V, GND and data back</text>
           <text x="396" y="353">to the controller</text>
         </svg>
-        <div class="cap">Section from the wall to the front, drawn about 5× life size. Spacing between parts is schematic.</div>
+        <div class="cap">Section from the wall to the front, at 5× life size, through the channel and across it. The strip stands on the board-side wall here so it shows; it can sit against either wall. Spacing between parts is schematic.</div>
       </div>
       <ul class="notes">
         <li><b>The board</b> is any flat 600 × 600 mm sheet: 6 mm MDF or birch ply painted matte black, or black acrylic or Dibond if a sign shop cuts it.</li>
+        <li><b>The strip stands on its edge.</b> A flat strip won't bend sideways while it lies flat, but on its edge it follows any smooth curve. It sticks to one wall with its own tape, LEDs facing across the channel.</li>
+        <li><b>The light bounces</b> off the white wall opposite and comes out through the translucent cap. The cap covers the whole channel, so each line glows as one band about 15 mm wide, like neon.</li>
         <li><b>The channels</b> follow every line of the drawing, split into bed-sized pieces that butt together. Each one screws down through small tabs placed where they don't foul a neighbouring line.</li>
-        <li><b>The flex</b> presses into the channel with about 4 mm standing proud, so it reads as a glowing tube from the side as well as head-on.</li>
+        <li><b>Stars, eyes and mittens</b> are shaped boxes: one LED cut from the strip lies in the bottom, under a lid of the same shape. The <b>moon</b> is a crescent box with strip running round the inside of its outer wall.</li>
         <li><b>Every run ends over a hole</b>, so the wires drop straight through and all the soldering happens on the back.</li>
-        <li><b>Stars, eyes and mittens</b> are single 12 mm pixels pushed through the board from behind, under printed translucent caps.</li>
         <li><b>The standoffs</b> hold the board clear of the wall, with room behind for the cover and the wiring. Each one hangs on a screw head by a keyhole.</li>
       </ul>
     </div>
@@ -286,13 +295,15 @@ footer { color: var(--muted); font-size: 0.9rem; border-top: 1px solid var(--lin
       <h2>Putting it together</h2>
     </div>
     <ol class="steps">
-      <li><b>Test the flex first.</b> Before cutting anything, run the firmware with the whole reel on the bench and check every LED lights.</li>
+      <li><b>Test the strip first.</b> Before cutting anything, run the firmware with the whole reel on the bench and check every LED lights.</li>
+      <li><b>Print a test.</b> Print <span class="mono">brick_1</span> and its cap first. Stand a piece of strip in it and press the cap on. The cap should click in snugly, and the strip should glow evenly through it.</li>
       <li><b>Print the template</b> (<span class="mono">template_a4.pdf</span>, actual size) and check the 100 mm scale bar. Tape the pages together using the 10 mm overlaps, then tape the template to the board.</li>
-      <li><b>Drill through the template:</b> 8 mm at every red wire hole, 12 mm for each pixel, and a small pilot at each tab crosshair. Then paint the board.</li>
-      <li><b>Screw the channels down</b> on the pilots. Their names are in the 3MF files and on the template.</li>
-      <li><b>Cut the flex</b> to the lengths in the LED map, at the cut marks. Fit end caps with the wires coming out of the bottom, and seal them with the kit's silicone.</li>
-      <li><b>Press each run into its channel</b>, feeding its wires through the hole. A few dots of clear silicone hold it if it's loose.</li>
-      <li><b>Wire the back in LED-map order:</b> each run's data out goes to the next run's data in. Bring 5 V and GND to every run from a pair of thick bus wires, rather than through the flex.</li>
+      <li><b>Drill through the template:</b> 8 mm at every red wire hole, and a small pilot at each tab crosshair. Then paint the board.</li>
+      <li><b>Screw the channels and shapes down</b> on the pilots. The moon, stars and dots screw through their floors, with countersunk 3 mm screws. Their names are in the 3MF files and on the template.</li>
+      <li><b>Cut the strip</b> to the LED counts in the LED map, on the copper pads between LEDs. Solder three wires to each end, keeping track of the arrows: data goes in at the end the map says.</li>
+      <li><b>Stand each run in its channel</b> against one wall, with its own tape, and feed its wires through the hole. On a curve, put it against the outside wall of the bend. In the stars and dots, lay a single LED flat in the middle, facing up.</li>
+      <li><b>Press the caps on.</b> Do this last, after everything has lit up on test, since they're snug.</li>
+      <li><b>Wire the back in LED-map order:</b> each run's data out goes to the next run's data in. Bring 5 V and GND to every run from a pair of thick bus wires, rather than through the strip.</li>
       <li><b>Mount the controller</b> under the cover: ESP32, a 74AHCT125 to lift the data line to 5 V, a 330 Ω resistor in the data line, and 1000 µF across the supply.</li>
       <li><b>Screw on the standoffs</b>, flash the sketch, and hang it.</li>
     </ol>
@@ -370,7 +381,7 @@ function frame(now, t) {
   else showGroup("santa_down");
 }
 
-// ---- geometry: split each run of flex into its LEDs ---------------------------
+// ---- geometry: split each run of strip into its LEDs ---------------------------
 const ledPaths = [];
 DATA.strokes.forEach((st) => {
   const seg = segs[byName[st.name]];
@@ -387,7 +398,7 @@ DATA.strokes.forEach((st) => {
     const a = k * L / seg.count, b = (k + 1) * L / seg.count, poly = [at(a)];
     cum.forEach((c, i) => { if (c > a && c < b) poly.push(pts[i]); });
     poly.push(at(b));
-    ledPaths.push({ index: seg.start + k, poly });
+    ledPaths.push({ index: seg.start + k, poly, filled: !!st.fill });
   }
   st.all = pts;
 });
@@ -413,31 +424,42 @@ function draw(unlit) {
   ctx.fillStyle = unlit ? "#2a2d33" : "#121418";
   ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
   ctx.lineCap = "round"; ctx.lineJoin = "round";
+  const capCol = "#e6e2d8";
   if (unlit) {
     DATA.strokes.forEach((st) => {
-      drawPoly(st.all, false); ctx.strokeStyle = "#0b0b0c"; ctx.lineWidth = D.outer_w * px; ctx.stroke();
-      ctx.strokeStyle = "#dcd7cb"; ctx.lineWidth = D.flex_w * px * 0.9; ctx.stroke();
+      if (st.fill) { drawPoly(st.fill, true); ctx.fillStyle = capCol; ctx.fill(); return; }
+      drawPoly(st.all, false); ctx.strokeStyle = capCol; ctx.lineWidth = D.outer_w * px; ctx.lineCap = "butt"; ctx.stroke();
     });
-    DATA.pixels.forEach((p) => { drawPoly(p.outline, true); ctx.fillStyle = "#e6e2d8"; ctx.fill(); });
+    DATA.pixels.forEach((p) => { drawPoly(p.outline, true); ctx.fillStyle = capCol; ctx.fill(); });
     return;
   }
-  // unlit flex faintly visible, as it is in a dim room
+  // the caps faintly visible, as they are in a dim room
   DATA.strokes.forEach((st) => {
-    drawPoly(st.all, false); ctx.strokeStyle = "rgba(255,255,255,0.05)"; ctx.lineWidth = D.flex_w * px; ctx.stroke();
+    if (st.fill) { drawPoly(st.fill, true); ctx.fillStyle = "rgba(255,255,255,0.05)"; ctx.fill(); return; }
+    drawPoly(st.all, false); ctx.strokeStyle = "rgba(255,255,255,0.05)"; ctx.lineWidth = D.outer_w * px; ctx.stroke();
   });
+  const pale = (c) => rgb(c.map((v) => Math.min(255, v * 0.4 + 160 * Math.max(...c) / 255)));
   for (const pass of [0, 1]) {
-    ledPaths.forEach(({ index, poly }) => {
-      const c = leds[index]; if (!c[0] && !c[1] && !c[2]) return;
+    ledPaths.forEach(({ index, poly, filled }) => {
+      const c = leds[index]; if (filled || (!c[0] && !c[1] && !c[2])) return;
       drawPoly(poly, false);
       if (pass === 0) {
         ctx.shadowColor = rgb(c, 0.95); ctx.shadowBlur = 14 * px;
-        ctx.strokeStyle = rgb(c, 0.55); ctx.lineWidth = D.flex_w * 2.2 * px;
+        ctx.strokeStyle = rgb(c, 0.6); ctx.lineWidth = D.outer_w * 1.15 * px;
       } else {
-        ctx.shadowBlur = 0;
-        ctx.strokeStyle = rgb(c.map((v) => Math.min(255, v * 0.4 + 160 * Math.max(...c) / 255)));
-        ctx.lineWidth = D.flex_w * 0.8 * px;
+        ctx.shadowBlur = 0; ctx.strokeStyle = pale(c); ctx.lineWidth = D.outer_w * 0.7 * px;
       }
       ctx.stroke();
+    });
+    DATA.strokes.forEach((st) => {        // a filled shape glows all over, in its LEDs' colour
+      if (!st.fill) return;
+      const sg = segs[byName[st.name]], c = [0, 1, 2].map((k) => {
+        let t = 0; for (let i = 0; i < sg.count; i++) t += leds[sg.start + i][k]; return t / sg.count; });
+      if (!c[0] && !c[1] && !c[2]) return;
+      drawPoly(st.fill, true);
+      if (pass === 0) { ctx.shadowColor = rgb(c); ctx.shadowBlur = 18 * px; ctx.fillStyle = rgb(c, 0.8); }
+      else { ctx.shadowBlur = 0; ctx.fillStyle = pale(c); }
+      ctx.fill();
     });
     DATA.pixels.forEach((p) => {
       const c = leds[segs[byName[p.name]].start]; if (!c[0] && !c[1] && !c[2]) return;
@@ -497,7 +519,7 @@ const STILLS = [
   { t: 4700, title: "Only his hat shows", time: "4 – 5.5 s", text: "The big Santa goes dark and the small hat inside his face lights. He has sunk into the chimney." },
   { t: 6150, title: "Down the chimney", time: "5.5 – 7 s", text: "A bright spot runs from the rim down both walls." },
   { t: 8300, title: "The fire flares", time: "7 – 10 s", text: "The chimney and bricks flicker orange. Then the hat peeks out again and he climbs back up." },
-  { t: null, title: "Lights off", time: "daytime", text: "The bare board: black channels with the white flex showing." },
+  { t: null, title: "Lights off", time: "daytime", text: "The bare board: white channels under their translucent caps." },
 ];
 const stillList = document.getElementById("stills");
 const stillCanvases = STILLS.map((st, i) => {
@@ -542,16 +564,19 @@ function boardBase(svg) {
   const svg = document.getElementById("front");
   boardBase(svg);
   DATA.pieces.forEach((pc, i) => {
+    const filled = DATA.strokes.find((st) => st.name === pc.run)?.fill;
     el(svg, "path", { d: pc.outline.map((l) => polyD(l)).join(""), "fill-rule": "evenodd",
-      fill: i % 2 ? "#3a3f49" : "#454b57", stroke: "#0e0f12", "stroke-width": 0.8 });
+      fill: filled ? "#7c6f4f" : i % 2 ? "#3a3f49" : "#454b57", stroke: "#0e0f12", "stroke-width": 0.8 });
     pc.tabs.forEach(([x, y]) => el(svg, "circle", { cx: x, cy: y, r: 1.7, fill: "#1d2026" }));
   });
   DATA.pieces.forEach((pc) => {
     const pts = pc.outline[0], m = pts[Math.floor(pts.length / 4)];
     el(svg, "text", { x: m[0] + 6, y: m[1] - 4, class: "on-dark", "font-size": 9, opacity: 0.75 }, pc.id);
   });
+  DATA.pixels.forEach((p) => {
+    el(svg, "path", { d: polyD(p.outline), fill: "#7c6f4f", stroke: "#0e0f12", "stroke-width": 0.8 });
+  });
   DATA.holes.forEach((h) => el(svg, "circle", { cx: h.x, cy: h.y, r: D.wire_hole / 2, fill: "#ff5b5b" }));
-  DATA.pixels.forEach((p) => el(svg, "circle", { cx: p.x, cy: p.y, r: D.pixel_d / 2, fill: "#8fd0ff" }));
 })();
 (function back() {
   const svg = document.getElementById("back");
@@ -560,6 +585,7 @@ function boardBase(svg) {
   // channels ghosted, to show what's on the other side
   DATA.pieces.forEach((pc) => el(svg, "path", { d: pc.outline.map((l) => polyD(l, true)).join(""),
     "fill-rule": "evenodd", fill: "#262a31" }));
+  DATA.pixels.forEach((p) => el(svg, "path", { d: polyD(p.outline, true), fill: "#262a31" }));
   const B = DATA.back, c = B.cover;
   el(svg, "rect", { x: fx(c.x) - c.w / 2, y: c.y - c.h / 2, width: c.w, height: c.h, rx: 6, fill: "#3b4553", stroke: "#6b7a90", "stroke-width": 1.5 });
   el(svg, "text", { x: fx(c.x), y: c.y - 4, "text-anchor": "middle", class: "on-dark", "font-size": 12 }, "controller");
@@ -570,17 +596,11 @@ function boardBase(svg) {
     el(svg, "circle", { cx: fx(so.x), cy: so.y + 6, r: 5.2, fill: "#11141a" });
     el(svg, "text", { x: fx(so.x), y: so.y + so.s / 2 + 12, "text-anchor": "middle", class: "dim", "font-size": 9 }, i < 2 ? "hangs here" : "standoff");
   });
-  // the data route: cover -> each run's IN hole, through the flex on the front, out of its OUT hole -> next
-  const stops = [];
-  segs.forEach((sg) => {
+  // the data route: cover -> each run's IN hole, through the strip on the front, out of its OUT hole -> next
+  const stops = segs.map((sg) => {
     const ins = DATA.holes.filter((h) => h.run === sg.name);
-    if (ins.length) {
-      const i = ins.find((h) => h.end === "in"), o = ins.find((h) => h.end === "out") || i;
-      stops.push({ name: sg.name, i, o });
-    } else {
-      const p = DATA.pixels.find((q) => q.name === sg.name);
-      stops.push({ name: sg.name, i: p, o: p });
-    }
+    const i = ins.find((h) => h.end === "in"), o = ins.find((h) => h.end === "out") || i;
+    return { name: sg.name, i, o };
   });
   let prev = { x: c.x, y: c.y };
   const route = el(svg, "g", { fill: "none", stroke: "#ffb43c", "stroke-width": 1.6, "stroke-linejoin": "round", opacity: 0.9 });
@@ -589,7 +609,6 @@ function boardBase(svg) {
     prev = st.o;
   });
   DATA.holes.forEach((h) => el(svg, "circle", { cx: fx(h.x), cy: h.y, r: D.wire_hole / 2, fill: "#ff5b5b" }));
-  DATA.pixels.forEach((p) => el(svg, "circle", { cx: fx(p.x), cy: p.y, r: D.pixel_d / 2, fill: "#8fd0ff" }));
   stops.forEach((st, n) => {
     const g = el(svg, "g", {});
     el(g, "circle", { cx: fx(st.i.x) + 9, cy: st.i.y - 9, r: 7.5, fill: "#ffb43c" });
@@ -603,9 +622,10 @@ const fmt = (n, d = 0) => Number(n).toLocaleString("en", { minimumFractionDigits
 document.getElementById("spec").innerHTML = [
   ["Board", "600 × 600 mm"],
   ["LEDs", fmt(S.leds)],
-  ["Neon flex", fmt(S.flex_m, 2) + " m in " + S.runs + " runs"],
-  ["Single pixels", S.pixels],
-  ["Printed channels", S.pieces + " pieces"],
+  ["LED strip", fmt(S.strip_m, 2) + " m, " + D.pitch + " mm per LED"],
+  ["Lit lines", S.runs - 1 + " runs, plus the moon"],
+  ["Stars, eyes, mittens", S.pixels + " boxes, 1 LED each"],
+  ["Printed parts", S.pieces + S.pixels + " + their caps"],
   ["Full white, max", fmt(S.leds * 0.06, 1) + " A at 5 V"],
 ].map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join("");
 
@@ -615,14 +635,12 @@ const table = (id, head, rows, numeric = []) => {
     rows.map((r) => "<tr>" + r.map((c, i) => `<td${numeric.includes(i) ? ' class="num"' : ""}>${c}</td>`).join("") + "</tr>").join("") + "</tbody>";
 };
 table("prints", ["File", "What", "Filament", "Qty"], [
-  ["<span class='mono'>channels_plate_1…" + S.plates + ".3mf</span>", `The channels, packed onto ${fmt(D.bed)} mm beds. No supports.`, `Black PLA or PETG, about ${fmt(S.grams)} g`, S.pieces],
-  ["<span class='mono'>pixel_caps.3mf</span>", "Stars, eyes, mittens and the small hat's pom. Printed face down for a smooth face.", "White or natural PETG", S.pixels],
+  ["<span class='mono'>channels_plate_1…" + S.plates + ".3mf</span>", `The channels, the moon box, and the star and dot boxes, packed onto ${fmt(D.bed)} mm beds. No supports.`, `White PLA, about ${fmt(S.grams)} g. White bounces the light; black would swallow it.`, S.pieces + S.pixels],
+  ["<span class='mono'>diffusers_plate_1…" + S.dplates + ".3mf</span>", `A cap or lid for every one of those, printed face down so the lit face is the smooth side. ${D.cap_t} mm thick.`, `Natural (clear) PETG, or white PLA, about ${fmt(S.grams_d)} g`, S.pieces + S.pixels],
   ["<span class='mono'>back_parts.3mf</span>", "The cover for the controller, and four keyhole standoffs.", "Any, black", 5],
 ], [3]);
 table("buy", ["Part", "Notes", "Qty"], [
-  ["Addressable LED neon flex", `WS2812B, 5 V, 60 LEDs/m, ${D.flex_w} × 12 mm, the kind that bends sideways for signs (sold as “top bend”). It must bend to ${D.min_bend} mm radius or tighter.`, fmt(Math.ceil(S.flex_m * 1.15 * 2) / 2, 1) + " m"],
-  ["Neon end caps", "With a bottom wire exit, and the silicone glue that comes with them.", 2 * S.runs],
-  ["12 mm pixels", "WS2811 5 V “bullet” pixels on a string. Cut them apart and rewire them in map order.", S.pixels],
+  ["WS2812B LED strip", `5 V, ${D.strip_w} mm wide, LEDs ${D.pitch} mm apart: the strip you have. Includes the stars, eyes and mittens, one LED each, and about 15% spare.`, fmt(Math.ceil(S.strip_m * 1.15 * 2) / 2, 1) + " m"],
   ["Board", "600 × 600 mm, 6 mm MDF or birch ply. Matte black paint.", 1],
   ["ESP32 dev board", "Any small one, such as an ESP32-C3 or a WROOM DevKit.", 1],
   ["74AHCT125", "Lifts the 3.3 V data line to 5 V. Plus a 330 Ω resistor and a 1000 µF capacitor.", 1],
@@ -631,19 +649,20 @@ table("buy", ["Part", "Notes", "Qty"], [
   ["Screws", `3 × 8 mm pan-head wood screws, for the tabs, the cover and the standoffs. Nothing longer, or it comes through the 6 mm board.`, "≈ 120"],
 ], [2]);
 const groupName = { scene: "scene", stars: "stars", santa_up: "Santa waving", santa_down: "hat only" };
-table("map", ["Run", "Lights in", "LEDs", "Index", "Flex length"], segs.map((s) => [
+table("map", ["Run", "Lights in", "LEDs", "Index", "Strip to cut"], segs.map((s) => [
   `<span class="swatch" style="color:${s.colour};background:${s.colour}"></span><span class="mono">${s.name}</span>`,
   `<span class="grp">${groupName[s.group]}</span>`, s.count,
   s.count > 1 ? `${s.start}–${s.start + s.count - 1}` : s.start,
-  s.flex_mm ? s.flex_mm + " mm" : "pixel",
+  s.strip_mm ? s.strip_mm + " mm" : "1 LED",
 ]), [2, 3, 4]);
 
 // dimension labels in the drawing, from the generator's numbers
 const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
 set("d-standoff", D.standoff_h + " mm");
 set("d-box", D.box_h + " mm deep");
-set("d-flex", `${D.flex_w} × 12 mm`);
-set("d-chan", `wall ${D.wall}, floor ${D.floor}, ${D.depth} deep`);
+set("d-flex", `${D.strip_w} mm, LEDs face across`);
+set("d-cap", `${D.cap_t} mm, rim presses in`);
+set("d-chan", `wall ${D.wall}, ${D.inner_w} wide inside`);
 set("d-tab", `${D.tab_t} mm, 3 × 8 mm screw`);
 set("d-hole", `${D.wire_hole} mm, at every end of a run`);
 </script>

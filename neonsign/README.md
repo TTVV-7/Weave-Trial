@@ -2,10 +2,10 @@
 
 ![lit](example/preview.png)
 
-Addressable LED neon flex in 3D-printed channels on a flat black board. Santa
-waves, sinks until only his hat shows, vanishes down the chimney, the fire
-flares, and he climbs back out. 165 LEDs: 2.6 m of flex in 16 runs, plus 11
-single pixels for the stars, eyes, mittens and pom.
+A neon-style sign made from an ordinary 10 mm WS2812B LED strip, in 3D-printed
+channels under translucent caps on a flat black board. Santa waves, sinks until
+only his hat shows, vanishes down the chimney, the fire flares, and he climbs
+back out. 177 LEDs, about 2.7 m of strip with LEDs 15 mm apart.
 
 ```bash
 pip install manifold3d pillow numpy
@@ -21,20 +21,23 @@ parts to print and buy, the LED map and the build order.
 
 | file | what |
 |---|---|
-| `channels_plate_1…5.3mf` | the channels that hold the flex, on 220 mm beds. Black, no supports |
-| `pixel_caps.3mf` | translucent stars and dots for the single pixels. White/natural PETG, face down |
+| `channels_plate_1…5.3mf` | everything that holds LEDs: the line channels, the moon, the star and dot boxes. White PLA, no supports |
+| `diffusers_plate_1…5.3mf` | a translucent cap or lid for each of those, printed face down. Natural PETG or white PLA |
 | `back_parts.3mf` | controller cover and four keyhole standoffs |
-| `template.svg`, `template_a4.pdf` | the board at 1:1: channel positions, wire holes, pilot holes |
+| `template.svg`, `template_a4.pdf` | the board at 1:1: where every part sits, wire holes, pilot holes |
 | `neon_layout.h` | LED index of every run (also copied into `firmware/santa_neon/`) |
 | `board_preview.png` | the board with the lights off |
 
 ## How it is built
 
 * **Board:** 600 × 600 mm, 6 mm MDF or ply, painted matte black.
-* **Flex:** WS2812B 5 V, 60 LEDs/m, 6 × 12 mm, the kind that bends sideways
-  for signs ("top bend"). It sits 8 mm deep in the channel with 4 mm proud.
-* **Channels:** split into bed-sized pieces that butt together. Each one is
-  screwed down through tabs placed clear of the neighbouring lines.
+* **Lines:** a flat strip can't bend sideways while it lies flat, so it stands
+  on its edge against one wall of a 12 mm channel, LEDs facing across. Light
+  bounces off the white wall opposite and out through a translucent cap whose
+  rim presses into the channel. Each line glows as a band about 15 mm wide.
+* **Shapes:** the stars, eyes and mittens are boxes of that shape with one LED
+  cut from the strip lying in the bottom, 16 mm under a lid. The moon is a
+  crescent box with strip round the inside of its outer wall.
 * **Wiring:** every run ends over an 8 mm hole, so the wires go through to the
   back. The data line visits each run in turn by short hops from the controller.
   The preview's back view numbers every stop, and that order is the LED map.
@@ -47,8 +50,8 @@ parts to print and buy, the LED map and the build order.
 ## Changing it
 
 The drawing is `artwork()` in `make_neon_sign.py`: strokes in board millimetres
-(y down). Every stroke is checked against `--min-bend` (default 20 mm; check your
-flex's datasheet) and for clearance from every other channel. Nothing is written
-if a check fails, and the output tells you which strokes are too tight or too
-close. `--bed` sets your printer's bed size, and `--flex-w` and `--fit` set the
-channel to your flex.
+(y down). Every stroke is checked against `--min-bend` (default 20 mm), and every
+part for clearance from every other. Nothing is written if a check fails, and the
+output tells you which parts are too tight or too close. `--bed` sets your
+printer's bed size. `--strip-w`, `--strip-t` and `--pitch` describe your strip,
+and `--inner-w`, `--depth` and `--fit` set the channel and cap.

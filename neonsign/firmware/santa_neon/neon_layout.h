@@ -4,7 +4,7 @@
 #pragma once
 #include <stdint.h>
 
-#define NUM_LEDS 165
+#define NUM_LEDS 177
 
 enum Group : uint8_t { G_SCENE, G_STARS, G_SANTA_UP, G_SANTA_DOWN };
 
@@ -21,57 +21,53 @@ enum SegmentId : uint8_t {
   MITTEN_LEFT,
   BRIM,
   BEARD_RIGHT,
-  POM_LOW,
   HAT_LOW,
   BEARD_LEFT,
   HAT,
+  HAT_SIDE,
+  EYE_RIGHT,
+  NOSE,
+  EYE_LEFT,
+  STAR_3,
+  MOON,
+  STAR_1,
   POM,
   MITTEN_RIGHT,
   ARM_RIGHT,
+  STAR_4,
+  ROOF,
+  STAR_5,
   BRICK_1,
   BRICK_2,
   CHIMNEY,
-  NOSE,
-  EYE_RIGHT,
-  HAT_SIDE,
-  EYE_LEFT,
-  STAR_3,
-  MOON_OUTER,
-  MOON_INNER,
-  STAR_1,
-  STAR_5,
-  ROOF,
-  STAR_4,
   STAR_2,
   NUM_SEGMENTS
 };
 
 const Segment SEGMENTS[NUM_SEGMENTS] = {
-  {"star_6",   0,  1, 0xBFE3FF, G_STARS},  // single pixel
-  {"arm_left",   1,  7, 0xFF2A2A, G_SANTA_UP},  // 117 mm of flex
-  {"mitten_left",   8,  1, 0xFFF4E8, G_SANTA_UP},  // single pixel
-  {"brim",   9,  9, 0xFFF4E8, G_SANTA_UP},  // 150 mm of flex
-  {"beard_right",  18,  7, 0xFFF4E8, G_SANTA_UP},  // 117 mm of flex
-  {"pom_low",  25,  1, 0xFFF4E8, G_SANTA_DOWN},  // single pixel
-  {"hat_low",  26,  6, 0xFF2A2A, G_SANTA_DOWN},  // 100 mm of flex
-  {"beard_left",  32,  7, 0xFFF4E8, G_SANTA_UP},  // 117 mm of flex
-  {"hat",  39, 16, 0xFF2A2A, G_SANTA_UP},  // 267 mm of flex
-  {"pom",  55,  6, 0xFFF4E8, G_SANTA_UP},  // 100 mm of flex
-  {"mitten_right",  61,  1, 0xFFF4E8, G_SANTA_UP},  // single pixel
-  {"arm_right",  62,  7, 0xFF2A2A, G_SANTA_UP},  // 117 mm of flex
-  {"brick_1",  69,  2, 0xFF5A1F, G_SCENE},  // 33 mm of flex
-  {"brick_2",  71,  2, 0xFF5A1F, G_SCENE},  // 33 mm of flex
-  {"chimney",  73, 22, 0xFF2A2A, G_SCENE},  // 367 mm of flex
-  {"nose",  95,  6, 0xFF2A2A, G_SANTA_UP},  // 100 mm of flex
-  {"eye_right", 101,  1, 0xE8F4FF, G_SANTA_UP},  // single pixel
-  {"hat_side", 102,  2, 0xFF2A2A, G_SANTA_UP},  // 33 mm of flex
-  {"eye_left", 104,  1, 0xE8F4FF, G_SANTA_UP},  // single pixel
-  {"star_3", 105,  1, 0xBFE3FF, G_STARS},  // single pixel
-  {"moon_outer", 106, 15, 0xFFB43C, G_SCENE},  // 250 mm of flex
-  {"moon_inner", 121,  8, 0xFFB43C, G_SCENE},  // 133 mm of flex
-  {"star_1", 129,  1, 0xBFE3FF, G_STARS},  // single pixel
-  {"star_5", 130,  1, 0xBFE3FF, G_STARS},  // single pixel
-  {"roof", 131, 32, 0xFFF4E8, G_SCENE},  // 533 mm of flex
-  {"star_4", 163,  1, 0xBFE3FF, G_STARS},  // single pixel
-  {"star_2", 164,  1, 0xBFE3FF, G_STARS},  // single pixel
+  {"star_6",   0,  1, 0xBFE3FF, G_STARS},  // 1 LED in a lamp box
+  {"arm_left",   1,  9, 0xFF2A2A, G_SANTA_UP},  // 9 LEDs, 135 mm of strip
+  {"mitten_left",  10,  1, 0xFFF4E8, G_SANTA_UP},  // 1 LED in a lamp box
+  {"brim",  11, 11, 0xFFF4E8, G_SANTA_UP},  // 11 LEDs, 165 mm of strip
+  {"beard_right",  22,  9, 0xFFF4E8, G_SANTA_UP},  // 9 LEDs, 135 mm of strip
+  {"hat_low",  31,  8, 0xFF2A2A, G_SANTA_DOWN},  // 8 LEDs, 120 mm of strip
+  {"beard_left",  39,  9, 0xFFF4E8, G_SANTA_UP},  // 9 LEDs, 135 mm of strip
+  {"hat",  48, 18, 0xFF2A2A, G_SANTA_UP},  // 18 LEDs, 270 mm of strip
+  {"hat_side",  66,  2, 0xFF2A2A, G_SANTA_UP},  // 2 LEDs, 30 mm of strip
+  {"eye_right",  68,  1, 0xE8F4FF, G_SANTA_UP},  // 1 LED in a lamp box
+  {"nose",  69,  8, 0xFF2A2A, G_SANTA_UP},  // 8 LEDs, 120 mm of strip
+  {"eye_left",  77,  1, 0xE8F4FF, G_SANTA_UP},  // 1 LED in a lamp box
+  {"star_3",  78,  1, 0xBFE3FF, G_STARS},  // 1 LED in a lamp box
+  {"moon",  79, 14, 0xFFB43C, G_SCENE},  // 14 LEDs, 210 mm of strip
+  {"star_1",  93,  1, 0xBFE3FF, G_STARS},  // 1 LED in a lamp box
+  {"pom",  94,  8, 0xFFF4E8, G_SANTA_UP},  // 8 LEDs, 120 mm of strip
+  {"mitten_right", 102,  1, 0xFFF4E8, G_SANTA_UP},  // 1 LED in a lamp box
+  {"arm_right", 103,  8, 0xFF2A2A, G_SANTA_UP},  // 8 LEDs, 120 mm of strip
+  {"star_4", 111,  1, 0xBFE3FF, G_STARS},  // 1 LED in a lamp box
+  {"roof", 112, 35, 0xFFF4E8, G_SCENE},  // 35 LEDs, 525 mm of strip
+  {"star_5", 147,  1, 0xBFE3FF, G_STARS},  // 1 LED in a lamp box
+  {"brick_1", 148,  3, 0xFF5A1F, G_SCENE},  // 3 LEDs, 45 mm of strip
+  {"brick_2", 151,  3, 0xFF5A1F, G_SCENE},  // 3 LEDs, 45 mm of strip
+  {"chimney", 154, 22, 0xFF2A2A, G_SCENE},  // 22 LEDs, 330 mm of strip
+  {"star_2", 176,  1, 0xBFE3FF, G_STARS},  // 1 LED in a lamp box
 };
