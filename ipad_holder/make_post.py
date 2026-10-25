@@ -8,10 +8,9 @@ that join with a square peg: the male half carries the peg on its inner end,
 the female half a socket to take it. Square, so the halves cannot turn. A
 drop of glue in the socket makes it permanent.
 
-The tip: over the last TIP_LEN mm at the 0 end, the top face is cut down
-with a square step, leaving the bar TIP_BASE thick where the cut starts and
-TIP_END at the very end -- both 7.8 mm now, so it is flat, 20.3 mm long
-inside to inside, measured off the real bar. (Set them apart for a taper.)
+The tip: over the last TIP_LEN mm at the 0 end, the top face is cut down,
+with a small step where the cut starts, so the bar is TIP_BASE thick there,
+tapering to TIP_END at the very end -- measured off the real bar.
 
 The scale runs 0 to 40 cm from the tip along the bed face, as a black inlay
 (the first 0.4 mm, in its own part and filament), mirrored so it reads from
@@ -56,8 +55,8 @@ MARK_RGB = (0, 0, 0)
 
 
 # --- the tip ---------------------------------------------------------------
-TIP_LEN = 20.3                  # how far back from the end the cut runs
-TIP_BASE = 7.8                  # thickness where the cut starts, after the step
+TIP_LEN = 24.0                  # how far back from the end the cut runs
+TIP_BASE = 9.3                  # thickness where the cut starts, after the step
 TIP_END = 7.8                   # thickness at the very end
 
 
