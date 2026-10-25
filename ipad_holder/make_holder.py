@@ -270,21 +270,72 @@ def _area(p) -> float:
     return 0.5 * float(np.dot(x, np.roll(y, -1)) - np.dot(y, np.roll(x, -1)))
 
 
-# How far in from the frame's right-hand outside edge the slot for the top
-# button runs. The iPad mini 5's button sits in this stretch; it is cut
-# generously because Apple publishes no exact position.
-POWER_SLOT = (9.0, 33.0)
+# The window in the top wall for the iPad mini's top button: centred
+# POWER_CENTRE in from the frame's right-hand outside edge, POWER_LEN long and
+# POWER_H tall inside to inside, from the pocket floor up. The front lip runs
+# unbroken above it. Measured off a print: the first version was a 24 mm slot
+# open to the front, and longer than it needed to be.
+POWER_CENTRE = 21.0
+POWER_LEN = 20.3
+POWER_H = 7.8
 
 
 def power_slot(frame: trimesh.Trimesh) -> m3.Manifold:
-    """A slot through the top wall and its lip, from the pocket floor up and
-    open to the front, so a finger reaches the button."""
+    """The window through the top wall, so a finger reaches the button."""
     x_right = frame.bounds[1, 0]
     y_top = frame.bounds[1, 1]
     floor = 2.0                                  # back plate thickness
-    x0, x1 = x_right - POWER_SLOT[1], x_right - POWER_SLOT[0]
-    return (m3.Manifold.cube([x1 - x0, 12.0, 14.0])
+    x0 = x_right - POWER_CENTRE - POWER_LEN / 2
+    return (m3.Manifold.cube([POWER_LEN, 12.0, POWER_H])
             .translate([x0, y_top - 10.0, floor]))
+
+
+# --- floor art --------------------------------------------------------------
+# Contour lines, like a topographic map, engraved into the pocket floor: the
+# face the iPad rests on, seen whenever it is out. Kept inside the front
+# lip's shadow (so supports under the lip never sit in the grooves) and clear
+# of the walls. FLOOR_SEED picks the landscape.
+FLOOR_ART = True
+FLOOR_SEED = 7
+FLOOR_DEPTH = 0.4
+FLOOR_LINE_W = 0.8
+FLOOR_LEVELS = 14
+FLOOR_BOX = (129.0, -196.0, 247.0, -10.0)       # x0, y0, x1, y1
+
+
+def floor_art() -> m3.Manifold:
+    """The contour grooves, as a solid to cut from the floor's top face."""
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    rng = np.random.default_rng(FLOOR_SEED)
+    x0, y0, x1, y1 = FLOOR_BOX
+    X, Y = np.meshgrid(np.linspace(x0, x1, 240), np.linspace(y0, y1, 380))
+    Z = np.zeros_like(X)
+    for _ in range(9):                           # a few hills and hollows
+        cx, cy = rng.uniform(x0, x1), rng.uniform(y0, y1)
+        r = rng.uniform(25, 60)
+        Z += rng.uniform(-1, 1) * np.exp(-((X - cx) ** 2 + (Y - cy) ** 2) / (2 * r * r))
+    fig = plt.figure()
+    cs = plt.contour(X, Y, Z, levels=FLOOR_LEVELS)
+    paths = [p for level in cs.allsegs for p in level if len(p) >= 2]
+    plt.close(fig)
+    r = FLOOR_LINE_W / 2
+    dot = m3.CrossSection.circle(r, 12)
+    strokes = []
+    for path in paths:
+        # Resample every 1.5 mm or so; each stretch is the hull of two dots.
+        d = np.r_[0, np.cumsum(np.linalg.norm(np.diff(path, axis=0), axis=1))]
+        if d[-1] < 3.0:
+            continue
+        t = np.linspace(0, d[-1], max(2, int(d[-1] / 1.5) + 1))
+        pts = np.c_[np.interp(t, d, path[:, 0]), np.interp(t, d, path[:, 1])]
+        strokes += [m3.CrossSection.batch_hull([dot.translate(list(a)), dot.translate(list(b))])
+                    for a, b in zip(pts[:-1], pts[1:])]
+    art = m3.CrossSection.batch_boolean(strokes, m3.OpType.Add)
+    art = art ^ m3.CrossSection.square([x1 - x0, y1 - y0]).translate([x0, y0])
+    floor = 2.0
+    return art.extrude(FLOOR_DEPTH + 0.01).translate([0, 0, floor - FLOOR_DEPTH])
 
 
 def rounded_rect(x0, y0, x1, y1, r) -> m3.CrossSection:
@@ -457,6 +508,8 @@ def build_holder(info: dict | None = None):
     body = m3.Manifold.batch_boolean(
         [case, cs.extrude(z1 - z0).translate([0, 0, z0]), neck_box], m3.OpType.Add)
     body = body - hole_cutter(axis) - power_slot(frame)
+    if FLOOR_ART:
+        body = body - floor_art()
     if info is not None:
         info["axis"] = axis
         info["top"] = top

@@ -130,11 +130,19 @@ the other styles that were considered.
 
 ## Power button
 
-A slot runs through the top wall and its lip in the top-right corner (seen
-from the front), from the pocket floor and open to the front, so a finger
-reaches the iPad mini's top button. It spans 9 to 33 mm in from the frame's
-right outside edge (`POWER_SLOT`). That is generous, because Apple publishes no
-exact position for the button.
+A window through the top wall in the top-right corner (seen from the front)
+lets a finger reach the iPad mini's top button: 20.3 mm long and 7.8 mm tall
+inside to inside, from the pocket floor up, centred 21 mm in from the
+frame's right outside edge (`POWER_*`). The front lip runs unbroken above
+it. It was a 24 mm slot open to the front, measured on a print as longer
+than it needed to be.
+
+## Floor art
+
+The pocket floor, the face the iPad rests on, has contour lines engraved
+0.4 mm deep, like a topographic map (`FLOOR_ART`; `FLOOR_SEED` picks a
+different landscape). They stay inside the front lip's shadow, so supports
+under the lip never sit in the grooves.
 
 ## The wing screw
 
