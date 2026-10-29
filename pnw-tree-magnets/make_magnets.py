@@ -60,13 +60,13 @@ TREES = ["douglas-fir", "western-red-cedar", "sitka-spruce",
 
 
 
-def load(name):
+def load(path, height=HEIGHT):
     """GLB (Y up, front +Z, 1 unit tall) -> merged Z-up mesh, front facing -Y,
-    scaled to HEIGHT with its base at z=0.
+    scaled to `height` with its base at z=0.
 
     Also returns the GLB's own vertices with their texture colour, already
     moved into the same frame, for painting the finished part."""
-    g = trimesh.load(HERE / f"{name}.glb").to_geometry()
+    g = trimesh.load(path).to_geometry()
     tex = np.asarray(g.visual.material.baseColorTexture.convert("RGB"))
     uv = np.clip(g.visual.uv, 0, 1)
     px = (uv[:, 0] * (tex.shape[1] - 1)).round().astype(int)
@@ -77,7 +77,7 @@ def load(name):
     m.merge_vertices(digits_vertex=6)
     frame = trimesh.transformations.rotation_matrix(np.pi / 2, [1, 0, 0])
     m.apply_transform(frame)
-    scale = trimesh.transformations.scale_matrix(HEIGHT / m.extents[2])
+    scale = trimesh.transformations.scale_matrix(height / m.extents[2])
     m.apply_transform(scale)
     shift = trimesh.transformations.translation_matrix(-np.array([*m.centroid[:2], m.bounds[0][2]]))
     m.apply_transform(shift)
@@ -170,8 +170,10 @@ def lids(n, pocket_r):
     return cylinders([(i * (2 * r + 3), 0) for i in range(n)], r, LID)
 
 
-def make(name):
-    m, painted = load(name)
+def make(name, folder=HERE, out=OUT, height=HEIGHT):
+    """The half of folder/name.glb with its magnet pockets, written to out/ as
+    name-half.stl and name-lids.stl, plus what paint() needs to colour it."""
+    m, painted = load(folder / f"{name}.glb", height)
     if not m.is_watertight:
         raise SystemExit(f"{name}: mesh is not watertight after merging")
     if len(m.faces) > FACES:
@@ -198,20 +200,11 @@ def make(name):
     r, depth = pocket_size(magnet)
     tree -= cylinders(pockets, r, depth + 1, -1)
 
-    out = trimesh.Trimesh(**_arrays(tree))
-    out.export(OUT / f"{name}-half.stl")
-    trimesh.Trimesh(**_arrays(lids(len(pockets), r))).export(OUT / f"{name}-lids.stl")
+    out_dir, out = out, trimesh.Trimesh(**_arrays(tree))
+    out.export(out_dir / f"{name}-half.stl")
+    trimesh.Trimesh(**_arrays(lids(len(pockets), r))).export(out_dir / f"{name}-lids.stl")
 
-    # Colour of the nearest textured hi3D vertices, for every triangle of the half.
-    # The texture has shadows baked into its crevices, near black, which must not
-    # become a black filament: average only the neighbours that are out of shadow,
-    # and leave a triangle with none of those (NaN) for paint() to fill from around it.
-    from scipy.spatial import cKDTree
-    where, colours = painted
-    _, near = cKDTree(trimesh.transform_points(where, lay)).query(out.triangles_center, k=NEIGHBOURS)
-    rgb = colours[near].astype(float)
-    lit = (to_lab(rgb)[..., 0] > SHADOW_L)[..., None]
-    rgb = np.where(lit.any(1), (rgb * lit).sum(1) / np.maximum(lit.sum(1), 1), np.nan)
+    rgb = texture_colours(out, painted, lay)
     w, h, d = out.extents
     row = (f"| `stl/{name}-half.stl` + `-lids.stl` | {w:.0f} × {h:.0f} | {d:.0f} mm "
            f"| {len(pockets)} × {magnet[0]:g}×{magnet[1]:g} mm | {back:g} mm "
@@ -220,6 +213,23 @@ def make(name):
 
 
 # ---------- colour: the same 4 filaments for every tree, painted 3MF ----------
+
+def texture_colours(mesh, painted, transform=None, k=NEIGHBOURS, shadow_l=SHADOW_L):
+    """Colour of the nearest textured hi3D vertices, for every triangle of mesh.
+    The texture has shadows baked into its crevices, near black, which must not
+    become a black filament: average only the neighbours that are out of shadow
+    (lighter than shadow_l), and leave a triangle with none of those (NaN) for
+    paint() to fill from around it. `transform` takes the GLB's vertices into
+    the mesh's frame."""
+    from scipy.spatial import cKDTree
+    where, colours = painted
+    if transform is not None:
+        where = trimesh.transform_points(where, transform)
+    _, near = cKDTree(where).query(mesh.triangles_center, k=k)
+    rgb = colours[near].astype(float)
+    lit = (to_lab(rgb)[..., 0] > shadow_l)[..., None]
+    return np.where(lit.any(1), (rgb * lit).sum(1) / np.maximum(lit.sum(1), 1), np.nan)
+
 
 def to_lab(rgb):
     """sRGB 0-255 -> CIELAB, so colour distances match what the eye sees."""
@@ -232,17 +242,17 @@ def to_lab(rgb):
                      200 * (f[..., 1] - f[..., 2])], -1)
 
 
-def paint(part):
-    """Filament index (0..TOOLHEADS-1) for every triangle. Shadowed triangles take the
-    filament of the surface around them, then lone specks are voted away."""
+def paint(part, filaments=FILAMENTS):
+    """Filament index (0..len(filaments)-1) for every triangle. Shadowed triangles take
+    the filament of the surface around them, then lone specks are voted away."""
     known = np.isfinite(part["rgb"][:, 0])
-    pal = to_lab(FILAMENTS)
+    pal = to_lab(filaments)
     label = np.full(len(known), -1)
     label[known] = np.argmin(((to_lab(part["rgb"][known])[:, None] - pal[None]) ** 2).sum(-1), 1)
     pairs = part["mesh"].face_adjacency
 
     def vote(label, self_weight):
-        votes = np.zeros((len(label), TOOLHEADS))
+        votes = np.zeros((len(label), len(filaments)))
         has = label >= 0
         votes[np.flatnonzero(has), label[has]] += self_weight
         for a, b in (pairs.T, pairs[:, ::-1].T):
