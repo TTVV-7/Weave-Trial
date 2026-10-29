@@ -1,0 +1,37 @@
+{
+  "name": "Construction Site Pack 1:50 - 14 painted multi-colour models",
+  "description": "14 construction site models at 1:50, the scale of diecast construction equipment, for dioramas, model railways and desk display.\n\nEvery model comes as a painted 3MF for multi-colour printers (Bambu AMS, Snapmaker U1, Prusa MMU), with up to four filaments per model, and as a plain STL for single-colour printing. Thin parts such as handrails, ladders and forks are thickened so they print on a 0.4 mm nozzle, and the fence mesh is drawn as single 0.5 mm lines.\n\nIncluded:\n- Telehandler (10,000 lb class), 175 x 52 x 52 mm\n- Trailer concrete line pump, 122 x 48 x 52 mm\n- Towable air compressor, 101 x 37 x 46 mm\n- Roll-off dumpster (20 yd), 122 x 49 x 31 mm\n- Planetary concrete mixer on stand, 43 x 43 x 67 mm\n- Planetary concrete mixer (500 L), 34 x 35 x 40 mm\n- Mixer stand, 43 x 43 x 31 mm\n- Pallet of concrete bags, 25 x 20 x 16 mm\n- Industrial steel stair (12 ft), 94 x 21 x 94 mm\n- Rail crossover gantry, 177 x 158 x 168 mm\n- Temporary fence panel (6 x 10 ft), 65 x 12 x 37 mm\n- Traffic cone (28 in), 7 x 7 x 14 mm\n- Carry deck crane, 165 x 131 x 173 mm\n- Bulk bag of concrete mix (1 t) on pallet, 24 x 22 x 26 mm\n\nFilaments used across the set: Black, Blue, Construction yellow, Dark green, Light grey, Safety orange, Sand, Signal red, Silver grey, White, Wood brown.\n\nPrint with 0.12-0.16 mm layers and tree supports. A print guide with each model's size and filament slots is in the zip.\n",
+  "price": 9.0,
+  "currency": "USD",
+  "locale": "EN",
+  "made_with_ai": true,
+  "tags": [
+    "construction",
+    "diorama",
+    "scale model",
+    "1:50",
+    "telehandler",
+    "dumpster",
+    "concrete mixer",
+    "multicolor",
+    "AMS",
+    "model railway"
+  ],
+  "category_id": null,
+  "license_code": null,
+  "files": [
+    "construction-site-1-50.zip"
+  ],
+  "images": [
+    "images/00_cover.png",
+    "images/Telehandler_10000lb_56ft.png",
+    "images/Carry_Deck_Crane.png",
+    "images/Trailer_Concrete_Line_Pump.png",
+    "images/Towable_Air_Compressor.png",
+    "images/Roll_Off_Dumpster_20yd.png",
+    "images/Temporary_Fence_Panel_6x10ft.png",
+    "images/Rail_Crossover_Gantry.png",
+    "images/Bulk_Bag_Concrete_on_Pallet.png",
+    "images/Planetary_Mixer_on_Stand.png"
+  ]
+}

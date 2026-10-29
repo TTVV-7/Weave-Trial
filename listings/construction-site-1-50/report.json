@@ -1,0 +1,347 @@
+{
+  "scale": "1:50",
+  "min_feature_mm": 0.8,
+  "models": {
+    "Telehandler_10000lb_56ft": {
+      "name": "Telehandler (10,000 lb class)",
+      "file": "Telehandler_10000lb_56ft_1-50.stl",
+      "painted": "Telehandler_10000lb_56ft_1-50.3mf",
+      "filaments": [
+        "T1 Blue #0066C0",
+        "T2 Black #1A1A1A",
+        "T3 Silver grey #8C8F92",
+        "T4 Light grey #C8CACC"
+      ],
+      "size_mm": [
+        174.9,
+        52.1,
+        51.9
+      ],
+      "volume_cm3": 99.69,
+      "triangles": 18288,
+      "watertight": true,
+      "loose_pieces": 1,
+      "pieces_thickened": 9,
+      "pieces_total": 59,
+      "pieces_closed_by_hull": 0,
+      "thinnest_wall_mm": 8.82,
+      "surface_too_thin": 0.0
+    },
+    "Trailer_Concrete_Line_Pump": {
+      "name": "Trailer concrete line pump",
+      "file": "Trailer_Concrete_Line_Pump_1-50.stl",
+      "painted": "Trailer_Concrete_Line_Pump_1-50.3mf",
+      "filaments": [
+        "T1 Black #1A1A1A",
+        "T2 Construction yellow #FFC200",
+        "T3 Silver grey #8C8F92",
+        "T4 White #F2F2F0"
+      ],
+      "size_mm": [
+        122.1,
+        48.2,
+        52.3
+      ],
+      "volume_cm3": 72.73,
+      "triangles": 15260,
+      "watertight": true,
+      "loose_pieces": 1,
+      "pieces_thickened": 12,
+      "pieces_total": 40,
+      "pieces_closed_by_hull": 0,
+      "thinnest_wall_mm": 6.7,
+      "surface_too_thin": 0.0
+    },
+    "Towable_Air_Compressor": {
+      "name": "Towable air compressor",
+      "file": "Towable_Air_Compressor_1-50.stl",
+      "painted": "Towable_Air_Compressor_1-50.3mf",
+      "filaments": [
+        "T1 Black #1A1A1A",
+        "T2 Construction yellow #FFC200",
+        "T3 Silver grey #8C8F92",
+        "T4 Signal red #BF160D"
+      ],
+      "size_mm": [
+        101.4,
+        37.3,
+        46.1
+      ],
+      "volume_cm3": 53.03,
+      "triangles": 13952,
+      "watertight": true,
+      "loose_pieces": 1,
+      "pieces_thickened": 52,
+      "pieces_total": 74,
+      "pieces_closed_by_hull": 0,
+      "thinnest_wall_mm": 5.43,
+      "surface_too_thin": 0.0
+    },
+    "Roll_Off_Dumpster_20yd": {
+      "name": "Roll-off dumpster (20 yd)",
+      "file": "Roll_Off_Dumpster_20yd_1-50.stl",
+      "painted": "Roll_Off_Dumpster_20yd_1-50.3mf",
+      "filaments": [
+        "T1 Dark green #22582F",
+        "T2 Black #1A1A1A",
+        "T3 Silver grey #8C8F92"
+      ],
+      "size_mm": [
+        121.5,
+        48.9,
+        31.1
+      ],
+      "volume_cm3": 8.33,
+      "triangles": 5478,
+      "watertight": true,
+      "loose_pieces": 1,
+      "pieces_thickened": 6,
+      "pieces_total": 49,
+      "pieces_closed_by_hull": 0,
+      "thinnest_wall_mm": 6.48,
+      "surface_too_thin": 0.0
+    },
+    "Planetary_Mixer_on_Stand": {
+      "name": "Planetary concrete mixer on stand",
+      "file": "Planetary_Mixer_on_Stand_1-50.stl",
+      "painted": "Planetary_Mixer_on_Stand_1-50.3mf",
+      "filaments": [
+        "T1 Sand #D8C8A4",
+        "T2 Safety orange #F26A0D",
+        "T3 Silver grey #8C8F92",
+        "T4 Wood brown #A07848"
+      ],
+      "size_mm": [
+        43.1,
+        43.1,
+        67.3
+      ],
+      "volume_cm3": 19.44,
+      "triangles": 7318,
+      "watertight": true,
+      "loose_pieces": 1,
+      "pieces_thickened": 15,
+      "pieces_total": 42,
+      "pieces_closed_by_hull": 0,
+      "thinnest_wall_mm": 4.67,
+      "surface_too_thin": 0.0
+    },
+    "Planetary_Concrete_Mixer_500L": {
+      "name": "Planetary concrete mixer (500 L)",
+      "file": "Planetary_Concrete_Mixer_500L_1-50.stl",
+      "painted": "Planetary_Concrete_Mixer_500L_1-50.3mf",
+      "filaments": [
+        "T1 Safety orange #F26A0D",
+        "T2 Silver grey #8C8F92",
+        "T3 Black #1A1A1A"
+      ],
+      "size_mm": [
+        33.7,
+        35.1,
+        39.9
+      ],
+      "volume_cm3": 15.2,
+      "triangles": 6462,
+      "watertight": true,
+      "loose_pieces": 1,
+      "pieces_thickened": 4,
+      "pieces_total": 13,
+      "pieces_closed_by_hull": 0,
+      "thinnest_wall_mm": 3.37,
+      "surface_too_thin": 0.001
+    },
+    "Mixer_Stand": {
+      "name": "Mixer stand",
+      "file": "Mixer_Stand_1-50.stl",
+      "painted": "Mixer_Stand_1-50.3mf",
+      "filaments": [
+        "T1 Sand #D8C8A4",
+        "T2 Wood brown #A07848",
+        "T3 Black #1A1A1A"
+      ],
+      "size_mm": [
+        43.1,
+        43.1,
+        31.1
+      ],
+      "volume_cm3": 4.26,
+      "triangles": 722,
+      "watertight": true,
+      "loose_pieces": 1,
+      "pieces_thickened": 12,
+      "pieces_total": 29,
+      "pieces_closed_by_hull": 0,
+      "thinnest_wall_mm": 3.42,
+      "surface_too_thin": 0.0
+    },
+    "Pallet_of_Concrete_Bags": {
+      "name": "Pallet of concrete bags",
+      "file": "Pallet_of_Concrete_Bags_1-50.stl",
+      "painted": "Pallet_of_Concrete_Bags_1-50.3mf",
+      "filaments": [
+        "T1 Light grey #C8CACC",
+        "T2 Wood brown #A07848"
+      ],
+      "size_mm": [
+        24.8,
+        20.4,
+        16.2
+      ],
+      "volume_cm3": 4.83,
+      "triangles": 170794,
+      "watertight": true,
+      "loose_pieces": 1,
+      "pieces_thickened": 13,
+      "pieces_total": 34,
+      "pieces_closed_by_hull": 0,
+      "thinnest_wall_mm": 2.58,
+      "surface_too_thin": 0.0
+    },
+    "Industrial_Steel_Stair_12ft": {
+      "name": "Industrial steel stair (12 ft)",
+      "file": "Industrial_Steel_Stair_12ft_1-50.stl",
+      "painted": "Industrial_Steel_Stair_12ft_1-50.3mf",
+      "filaments": [
+        "T1 Silver grey #8C8F92",
+        "T2 Light grey #C8CACC",
+        "T3 Construction yellow #FFC200"
+      ],
+      "size_mm": [
+        94.4,
+        21.3,
+        94.2
+      ],
+      "volume_cm3": 3.23,
+      "triangles": 41774,
+      "watertight": true,
+      "loose_pieces": 1,
+      "pieces_thickened": 31,
+      "pieces_total": 64,
+      "pieces_closed_by_hull": 0,
+      "thinnest_wall_mm": 4.78,
+      "surface_too_thin": 0.0
+    },
+    "Rail_Crossover_Gantry": {
+      "name": "Rail crossover gantry",
+      "file": "Rail_Crossover_Gantry_1-50.stl",
+      "painted": "Rail_Crossover_Gantry_1-50.3mf",
+      "filaments": [
+        "T1 White #F2F2F0",
+        "T2 Silver grey #8C8F92",
+        "T3 Construction yellow #FFC200",
+        "T4 Black #1A1A1A"
+      ],
+      "size_mm": [
+        177.1,
+        158.2,
+        167.9
+      ],
+      "volume_cm3": 49.32,
+      "triangles": 185886,
+      "watertight": true,
+      "loose_pieces": 1,
+      "pieces_thickened": 68,
+      "pieces_total": 254,
+      "pieces_closed_by_hull": 0,
+      "thinnest_wall_mm": 12.56,
+      "surface_too_thin": 0.0
+    },
+    "Temporary_Fence_Panel_6x10ft": {
+      "name": "Temporary fence panel (6 x 10 ft)",
+      "file": "Temporary_Fence_Panel_6x10ft_1-50.stl",
+      "painted": "Temporary_Fence_Panel_6x10ft_1-50.3mf",
+      "filaments": [
+        "T1 Light grey #C8CACC",
+        "T2 Silver grey #8C8F92"
+      ],
+      "size_mm": [
+        64.6,
+        12.3,
+        37.4
+      ],
+      "volume_cm3": 1.16,
+      "triangles": 9456,
+      "watertight": true,
+      "loose_pieces": 1,
+      "pieces_thickened": 4,
+      "pieces_total": 47,
+      "pieces_closed_by_hull": 0,
+      "thinnest_wall_mm": 2.95,
+      "surface_too_thin": 0.0
+    },
+    "Traffic_Cone_28in": {
+      "name": "Traffic cone (28 in)",
+      "file": "Traffic_Cone_28in_1-50.stl",
+      "painted": "Traffic_Cone_28in_1-50.3mf",
+      "filaments": [
+        "T1 Safety orange #F26A0D",
+        "T2 Black #1A1A1A",
+        "T3 White #F2F2F0"
+      ],
+      "size_mm": [
+        7.2,
+        7.2,
+        14.4
+      ],
+      "volume_cm3": 0.16,
+      "triangles": 8336,
+      "watertight": true,
+      "loose_pieces": 1,
+      "pieces_thickened": 2,
+      "pieces_total": 6,
+      "pieces_closed_by_hull": 0,
+      "thinnest_wall_mm": 0.84,
+      "surface_too_thin": 0.007
+    },
+    "Carry_Deck_Crane": {
+      "name": "Carry deck crane",
+      "file": "Carry_Deck_Crane_1-50.stl",
+      "painted": "Carry_Deck_Crane_1-50.3mf",
+      "filaments": [
+        "T1 Construction yellow #FFC200",
+        "T2 Black #1A1A1A",
+        "T3 Signal red #BF160D",
+        "T4 Light grey #C8CACC"
+      ],
+      "size_mm": [
+        165.1,
+        131.1,
+        172.6
+      ],
+      "volume_cm3": 199.87,
+      "triangles": 45320,
+      "watertight": true,
+      "loose_pieces": 1,
+      "pieces_thickened": 22,
+      "pieces_total": 140,
+      "pieces_closed_by_hull": 0,
+      "thinnest_wall_mm": 10.24,
+      "surface_too_thin": 0.0
+    },
+    "Bulk_Bag_Concrete_on_Pallet": {
+      "name": "Bulk bag of concrete mix (1 t) on pallet",
+      "file": "Bulk_Bag_Concrete_on_Pallet_1-50.stl",
+      "painted": "Bulk_Bag_Concrete_on_Pallet_1-50.3mf",
+      "filaments": [
+        "T1 White #F2F2F0",
+        "T2 Wood brown #A07848",
+        "T3 Blue #0066C0",
+        "T4 Construction yellow #FFC200"
+      ],
+      "size_mm": [
+        24.1,
+        21.8,
+        25.9
+      ],
+      "volume_cm3": 7.58,
+      "triangles": 12542,
+      "watertight": true,
+      "loose_pieces": 1,
+      "pieces_thickened": 15,
+      "pieces_total": 31,
+      "pieces_closed_by_hull": 1,
+      "thinnest_wall_mm": 2.71,
+      "surface_too_thin": 0.001
+    }
+  }
+}

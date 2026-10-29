@@ -313,3 +313,13 @@ again after a new branch adds models, then commit.
 Locally, `serve.py` re-indexes the repo on start; after adding a model without restarting, run
 `python dashboard/build_index.py` and refresh. The viewer loads three.js (and,
 for STEP/IGES, occt-import-js) from a CDN, so it needs internet access.
+
+---
+
+# Listings
+
+`listings/` turns models in this repo into marketplace listings: printable
+scale models with painted multi-colour 3MFs, pictures, a zip and the listing
+text, plus a script that posts them to Cults3D through its API (a dry run
+unless told otherwise). The first is a 1:50 pack of fourteen construction site
+models. See [listings/README.md](listings/README.md).
