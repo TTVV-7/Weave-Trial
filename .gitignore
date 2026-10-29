@@ -5,3 +5,4 @@ __pycache__/
 .venv/
 /site/
 node_modules/
+christmas-figures/cache/

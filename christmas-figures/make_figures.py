@@ -27,6 +27,7 @@ import make_magnets as mm  # noqa: E402
 
 OUT = HERE / "stl"
 OUT.mkdir(exist_ok=True)
+CACHE = HERE / "cache"   # repaired meshes, 60 MB each, not committed
 
 HEIGHT = 70.0        # figurine height, base to top, before the loop
 LOOP_HOLE = 3.0      # hanging loop: hole diameter
@@ -92,19 +93,27 @@ def repaired(m):
 
 
 def whole(name):
-    """The figure as a valid manifold at HEIGHT, its decimated mesh and its
-    textured vertices. hi3D meshes carry a few microscopic loose fragments:
-    only the biggest piece is kept."""
+    """The figure as a valid manifold at HEIGHT, plus what mm.load() gave
+    (the watertight full mesh and the textured vertices) for mm.make().
+    hi3D meshes carry a few microscopic loose fragments: only the biggest
+    piece is kept."""
     m, painted = mm.load(HERE / f"{name}.glb", HEIGHT)
     if not m.is_watertight:
-        print(f"{name}: not watertight after merging, repairing", flush=True)
-        m = repaired(m)
+        cached = CACHE / f"{name}.repaired.ply"
+        if cached.exists():
+            m = trimesh.load(cached)
+        else:
+            print(f"{name}: not watertight after merging, repairing", flush=True)
+            m = repaired(m)
+            CACHE.mkdir(exist_ok=True)
+            m.export(cached)
+    loaded = (m, painted)
     if len(m.faces) > mm.FACES:
         m = mm.decimate(m)
     solid = mm.to_manifold(m)
     if solid.status() != manifold3d.Error.NoError:
         raise SystemExit(f"{name}: not a valid manifold ({solid.status()})")
-    return max(solid.decompose(), key=lambda s: s.volume()), m, painted
+    return max(solid.decompose(), key=lambda s: s.volume()), loaded
 
 
 def biggest_piece(part):
@@ -129,7 +138,8 @@ def write(name, mesh, painted, transform, spec, suffix=""):
 
 def make(name):
     spec = FIGURES[name]
-    solid, mesh, painted = whole(name)
+    solid, loaded = whole(name)
+    painted = loaded[1]
     figure = trimesh.Trimesh(**mm._arrays(solid))
     w, d, h = figure.extents
     print(f"{name}: {w:.0f} × {d:.0f} × {h:.0f} mm, {solid.volume() / 1000:.1f} cm³,",
@@ -147,7 +157,7 @@ def make(name):
 
     # mm.make() cuts the half and writes name-half.stl and name-lids.stl itself,
     # from the mesh already loaded; the half is written again without its fragments.
-    half = biggest_piece(mm.make(name, folder=HERE, out=OUT, height=HEIGHT, loaded=(mesh, painted)))
+    half = biggest_piece(mm.make(name, folder=HERE, out=OUT, height=HEIGHT, loaded=loaded))
     half["mesh"].export(OUT / f"{name}-half.stl")
     label = mm.paint(half, spec["filaments"])
     mm.write_3mf(OUT / f"{name}-half.3mf", half["mesh"], label, spec["filaments"])
