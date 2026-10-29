@@ -170,10 +170,11 @@ def lids(n, pocket_r):
     return cylinders([(i * (2 * r + 3), 0) for i in range(n)], r, LID)
 
 
-def make(name, folder=HERE, out=OUT, height=HEIGHT):
+def make(name, folder=HERE, out=OUT, height=HEIGHT, loaded=None):
     """The half of folder/name.glb with its magnet pockets, written to out/ as
-    name-half.stl and name-lids.stl, plus what paint() needs to colour it."""
-    m, painted = load(folder / f"{name}.glb", height)
+    name-half.stl and name-lids.stl, plus what paint() needs to colour it.
+    `loaded` is what load() returned, for a caller that already has it."""
+    m, painted = loaded or load(folder / f"{name}.glb", height)
     if not m.is_watertight:
         raise SystemExit(f"{name}: mesh is not watertight after merging")
     if len(m.faces) > FACES:

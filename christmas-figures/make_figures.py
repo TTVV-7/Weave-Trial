@@ -77,19 +77,34 @@ def loop(mesh, sink=LOOP_SINK):
     return ring.rotate([90, 0, 0]).translate([x, y, z + r_ring - sink])
 
 
+def repaired(m):
+    """A mesh hi3D left with an edge shared by three faces (the gingerbread
+    man's base) made watertight with pymeshfix. Slow on 2M faces, about 20
+    minutes, but repairing after decimation instead loses most of the
+    detail. The loose fragments it leaves go the way of hi3D's own."""
+    import pymeshfix
+    v, f = pymeshfix.clean_from_arrays(np.ascontiguousarray(m.vertices, dtype=np.float64),
+                                       np.ascontiguousarray(m.faces, dtype=np.int32))
+    out = trimesh.Trimesh(v, f, process=True)
+    if not out.is_watertight:
+        raise SystemExit("mesh is not watertight even after pymeshfix")
+    return out
+
+
 def whole(name):
-    """The figure as a valid manifold at HEIGHT, plus its textured vertices.
-    hi3D meshes carry a few microscopic loose fragments: only the biggest
-    piece is kept."""
+    """The figure as a valid manifold at HEIGHT, its decimated mesh and its
+    textured vertices. hi3D meshes carry a few microscopic loose fragments:
+    only the biggest piece is kept."""
     m, painted = mm.load(HERE / f"{name}.glb", HEIGHT)
     if not m.is_watertight:
-        raise SystemExit(f"{name}: mesh is not watertight after merging")
+        print(f"{name}: not watertight after merging, repairing", flush=True)
+        m = repaired(m)
     if len(m.faces) > mm.FACES:
         m = mm.decimate(m)
     solid = mm.to_manifold(m)
     if solid.status() != manifold3d.Error.NoError:
         raise SystemExit(f"{name}: not a valid manifold ({solid.status()})")
-    return max(solid.decompose(), key=lambda s: s.volume()), painted
+    return max(solid.decompose(), key=lambda s: s.volume()), m, painted
 
 
 def biggest_piece(part):
@@ -114,7 +129,7 @@ def write(name, mesh, painted, transform, spec, suffix=""):
 
 def make(name):
     spec = FIGURES[name]
-    solid, painted = whole(name)
+    solid, mesh, painted = whole(name)
     figure = trimesh.Trimesh(**mm._arrays(solid))
     w, d, h = figure.extents
     print(f"{name}: {w:.0f} × {d:.0f} × {h:.0f} mm, {solid.volume() / 1000:.1f} cm³,",
@@ -130,9 +145,9 @@ def make(name):
     print(f"  ornament {ornament.extents[2]:.0f} mm tall, T1-T4",
           write(name, ornament, painted, None, spec, "-ornament"))
 
-    # mm.make() cuts the half and writes name-half.stl and name-lids.stl itself;
-    # the half is written again without its fragments.
-    half = biggest_piece(mm.make(name, folder=HERE, out=OUT, height=HEIGHT))
+    # mm.make() cuts the half and writes name-half.stl and name-lids.stl itself,
+    # from the mesh already loaded; the half is written again without its fragments.
+    half = biggest_piece(mm.make(name, folder=HERE, out=OUT, height=HEIGHT, loaded=(mesh, painted)))
     half["mesh"].export(OUT / f"{name}-half.stl")
     label = mm.paint(half, spec["filaments"])
     mm.write_3mf(OUT / f"{name}-half.3mf", half["mesh"], label, spec["filaments"])
@@ -140,5 +155,10 @@ def make(name):
 
 
 if __name__ == "__main__":
-    for name in sys.argv[1:] or FIGURES:
-        make(name)
+    names = sys.argv[1:] or list(FIGURES)
+    if len(names) == 1:
+        make(names[0])
+    else:  # one process per figure: a 2M-face model's memory is not all given back
+        import subprocess
+        for name in names:
+            subprocess.run([sys.executable, __file__, name], check=True)

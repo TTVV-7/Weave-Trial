@@ -41,10 +41,14 @@ sinks it 1 mm deeper and tries again.
 ## Rebuilding
 
 ```bash
-python3 make_figures.py              # all six
+python3 make_figures.py              # all six, one process each
 python3 make_figures.py santa        # one
 ```
 
-Needs `trimesh manifold3d shapely scipy fast-simplification`. Then
+Needs `trimesh manifold3d shapely scipy fast-simplification`, and `pymeshfix`
+for a model hi3D left with an edge shared by three faces: the gingerbread man's
+base has two, and repairing it at full resolution takes about 20 minutes
+(repairing after decimation loses most of the detail). Each figure runs in
+its own process because a 2M-face model's memory is not all given back. Then
 `python3 ../listings/make_christmas_listing.py` for the pictures, zip and
 `listing.json`.
