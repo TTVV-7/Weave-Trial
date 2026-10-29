@@ -147,7 +147,7 @@ def main() -> None:
     listing = json.loads(listing_path.read_text()) if listing_path.exists() else {
         "name": f"Construction Site Pack {report['scale']} - {len(models)} painted multi-colour models",
         "description": description(report),
-        "price": 9.0,
+        "price": 5.0,
         "currency": "USD",
         "locale": "EN",
         "made_with_ai": True,

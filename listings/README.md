@@ -58,7 +58,7 @@ open painted in Bambu Studio, OrcaSlicer and Snapmaker Orca.
   the accurate one.
 - **Category.** `python listings/cults_upload.py --categories` lists Cults'
   category ids. Put one in `listing.json` as `category_id`.
-- **Price** is $9 for the fourteen. Edit `listing.json`. A rebuild keeps your
+- **Price** is $5 for the fourteen. Edit `listing.json`. A rebuild keeps your
   text and only refreshes the file and image lists.
 
 ## Posting to Cults
