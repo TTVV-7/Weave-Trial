@@ -119,6 +119,8 @@ def guide(figures: dict) -> str:
              "  <name>-ornament   the same with a hanging loop on top (3 mm hole)",
              "  <name>-half       the front half, flat back, with magnet pockets",
              "  <name>-lids       one thin disc per pocket (STL only)", "",
+             "The full-colour textured models (GLB) are separate downloads, one zip per",
+             "figure: for 3D viewers, rendering or a full-colour printer.", "",
              "Filaments, in slot order T1-T4. Five figures use the same four; the penguin",
              "swaps dark green for black in slot T3. Matte PLA suits them.", ""]
     for f in figures.values():
@@ -149,7 +151,7 @@ Included:
 
 Magnets to buy for the set: {magnet_text(every)} neodymium discs.
 
-Three zips: figurines, ornaments and magnets, each with a print guide. Print upright with 0.12-0.16 mm layers; the magnet halves print flat on their back.
+Files: three zips of print files (figurines, ornaments, magnets), each with a print guide, and one zip per figure with its full-colour GLB model, textured, for 3D viewers, rendering or full-colour printing. Print upright with 0.12-0.16 mm layers; the magnet halves print flat on their back.
 
 The figures were generated with Hi3D from clay-style pictures, then given their loops and magnet pockets and painted for multi-colour printing.
 """
@@ -195,6 +197,14 @@ def main() -> None:
                     if suffix != "-lids":
                         z.write(FIGURES_DIR / "stl" / f"{name}{suffix}.3mf", f"3mf/{name}{suffix}.3mf")
             z.writestr("PRINT-GUIDE.txt", guide(figures))
+        print(f"zipped {zip_path.name}: {zip_path.stat().st_size / 1e6:.1f} MB")
+        zips.append(zip_path)
+    # The full-colour hi3D models too, zipped one per figure (about 30 MB each):
+    # no listing on Cults carries a bare .glb, so it may not take one.
+    for name in figures:
+        zip_path = folder / f"{folder.name}-glb-{name}.zip"
+        with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as z:
+            z.write(FIGURES_DIR / f"{name}.glb", f"{name}.glb")
         print(f"zipped {zip_path.name}: {zip_path.stat().st_size / 1e6:.1f} MB")
         zips.append(zip_path)
 
