@@ -54,6 +54,17 @@ FIGURES = {
     # baked-in shadow: keep only the darkest samples out.
     "penguin": dict(filaments=[RED, WHITE, BLACK, BROWN], shadow_l=4),
 }
+# Decimation leaves long thin triangles on the gingerbread man's flat front, and
+# a triangle is painted one colour, so a sliver touching a button went red
+# across the cookie: split its triangles to at most 1 mm before painting.
+FIGURES["gingerbread"]["max_edge"] = 1.0
+
+
+def refined(mesh, spec):
+    """mesh with no edge longer than the figure's max_edge, if it has one."""
+    if "max_edge" not in spec:
+        return mesh
+    return mesh.subdivide_to_size(spec["max_edge"], max_iter=12)
 
 
 def loop(mesh, sink=LOOP_SINK):
@@ -143,7 +154,7 @@ def make(name):
     figure = trimesh.Trimesh(**mm._arrays(solid))
     w, d, h = figure.extents
     print(f"{name}: {w:.0f} × {d:.0f} × {h:.0f} mm, {solid.volume() / 1000:.1f} cm³,",
-          "T1-T4", write(name, figure, painted, None, spec))
+          "T1-T4", write(name, refined(figure, spec), painted, None, spec))
 
     for sink in (LOOP_SINK, LOOP_SINK + 1, LOOP_SINK + 2):
         hung = solid + loop(figure, sink)
@@ -153,11 +164,15 @@ def make(name):
         raise SystemExit(f"{name}: the loop does not join the figure")
     ornament = trimesh.Trimesh(**mm._arrays(hung))
     print(f"  ornament {ornament.extents[2]:.0f} mm tall, T1-T4",
-          write(name, ornament, painted, None, spec, "-ornament"))
+          write(name, refined(ornament, spec), painted, None, spec, "-ornament"))
 
     # mm.make() cuts the half and writes name-half.stl and name-lids.stl itself,
     # from the mesh already loaded; the half is written again without its fragments.
     half = biggest_piece(mm.make(name, folder=HERE, out=OUT, height=HEIGHT, loaded=loaded))
+    if "max_edge" in spec:
+        half["mesh"] = refined(half["mesh"], spec)
+        half["rgb"] = mm.texture_colours(half["mesh"], painted, half["lay"],
+                                         shadow_l=spec.get("shadow_l", mm.SHADOW_L))
     half["mesh"].export(OUT / f"{name}-half.stl")
     label = mm.paint(half, spec["filaments"])
     mm.write_3mf(OUT / f"{name}-half.3mf", half["mesh"], label, spec["filaments"])

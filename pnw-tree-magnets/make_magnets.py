@@ -210,7 +210,7 @@ def make(name, folder=HERE, out=OUT, height=HEIGHT, loaded=None):
     row = (f"| `stl/{name}-half.stl` + `-lids.stl` | {w:.0f} × {h:.0f} | {d:.0f} mm "
            f"| {len(pockets)} × {magnet[0]:g}×{magnet[1]:g} mm | {back:g} mm "
            f"| {tree.volume() / 1000:.1f} cm³ |")
-    return dict(name=name, mesh=out, rgb=rgb, row=row)
+    return dict(name=name, mesh=out, rgb=rgb, row=row, lay=lay)
 
 
 # ---------- colour: the same 4 filaments for every tree, painted 3MF ----------

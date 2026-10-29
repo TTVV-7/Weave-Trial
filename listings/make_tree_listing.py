@@ -89,14 +89,15 @@ def tree(name: str) -> dict:
             "magnets": [m for _, _, m in holes]}
 
 
-def caption(path: Path, text: str) -> None:
-    """The text in a strip under the picture, where it can't run over the tree's base."""
+def caption(path: Path, text: str, band: int | None = None, font: int | None = None) -> None:
+    """The text in a strip under the picture, where it can't run over the tree's base.
+    The strip's height and the font size follow the picture's width unless given."""
     picture = Image.open(path).convert("RGB")
-    band = picture.width // 15
+    band = band or picture.width // 15
     out = Image.new("RGB", (picture.width, picture.height + band), "#eceff1")
     out.paste(picture, (0, 0))
     ImageDraw.Draw(out).text((picture.width // 30, picture.height + band // 4), text, fill="#3b3a36",
-                             font=ImageFont.truetype(FONT, picture.width // 45))
+                             font=ImageFont.truetype(FONT, font or picture.width // 45))
     out.save(path)
 
 

@@ -90,7 +90,7 @@ def three_forms(fig: dict, out: Path, size: int) -> None:
     sheet.save(out)
     w, d, h = fig["size_mm"]
     caption(out, f"{fig['name']}  ·  {w} × {d} × {h} mm  ·  magnets: {magnet_text(fig['magnets'])}"
-                 f"  ·  filaments: {', '.join(fig['filaments'])}")
+                 f"  ·  filaments: {', '.join(fig['filaments'])}", band=size // 12, font=size // 36)
 
 
 def backs(figures: dict, out: Path) -> None:
@@ -149,7 +149,7 @@ Included:
 
 Magnets to buy for the set: {magnet_text(every)} neodymium discs.
 
-Print upright with 0.12-0.16 mm layers; the magnet halves print flat on their back. A print guide is in the zip.
+Three zips: figurines, ornaments and magnets, each with a print guide. Print upright with 0.12-0.16 mm layers; the magnet halves print flat on their back.
 
 The figures were generated with Hi3D from clay-style pictures, then given their loops and magnet pockets and painted for multi-colour printing.
 """
@@ -159,37 +159,44 @@ def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     ap.add_argument("folder", nargs="?", type=Path, default=ROOT / "listings" / "christmas-figures")
     ap.add_argument("--size", type=int, default=1000, help="panel size, px")
+    ap.add_argument("--skip-images", action="store_true", help="keep the images already made")
     args = ap.parse_args()
     folder = args.folder
     (folder / "images").mkdir(parents=True, exist_ok=True)
     figures = {name: figure(name) for name in mf.FIGURES}
 
-    shots, tiles = [], []
-    with tempfile.TemporaryDirectory() as scratch:
-        for i, (name, f) in enumerate(figures.items()):
-            out = folder / "images" / f"{i + 1}_{name}.png"
-            three_forms(f, out, args.size)
-            shots.append(out)
-            tiles.append(Path(scratch) / f"{name}.png")
-            mesh, rgb = f["forms"]["figurine"]
-            render.render(mesh, tiles[-1], face_rgb=rgb, azimuth=VIEW[0], elevation=VIEW[1], size=800)
-            print(f"rendered {out.name}")
-        cover_path = folder / "images" / "0_cover.png"
-        cover(tiles, cover_path, "Christmas Figures Pack",
-              "6 figures  ·  figurine + ornament + fridge magnet  ·  painted 3MF + STL  ·  4 filaments",
-              cols=3)
+    shots = [folder / "images" / f"{i + 1}_{name}.png" for i, name in enumerate(figures)]
+    cover_path = folder / "images" / "0_cover.png"
     backs_path = folder / "images" / "7_magnet-backs.png"
-    backs(figures, backs_path)
+    if not args.skip_images:
+        tiles = []
+        with tempfile.TemporaryDirectory() as scratch:
+            for (name, f), out in zip(figures.items(), shots):
+                three_forms(f, out, args.size)
+                tiles.append(Path(scratch) / f"{name}.png")
+                mesh, rgb = f["forms"]["figurine"]
+                render.render(mesh, tiles[-1], face_rgb=rgb, azimuth=VIEW[0], elevation=VIEW[1], size=800)
+                print(f"rendered {out.name}")
+            cover(tiles, cover_path, "Christmas Figures Pack",
+                  "6 figures  ·  figurine + ornament + fridge magnet  ·  3MF + STL, 4 filaments",
+                  cols=3)
+        backs(figures, backs_path)
 
-    zip_path = folder / f"{folder.name}.zip"
-    with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as z:
-        for name in figures:
-            for suffix in ("", "-ornament", "-half"):
-                z.write(FIGURES_DIR / "stl" / f"{name}{suffix}.3mf", f"3mf/{name}{suffix}.3mf")
-                z.write(FIGURES_DIR / "stl" / f"{name}{suffix}.stl", f"stl/{name}{suffix}.stl")
-            z.write(FIGURES_DIR / "stl" / f"{name}-lids.stl", f"stl/{name}-lids.stl")
-        z.writestr("PRINT-GUIDE.txt", guide(figures))
-    print(f"zipped {zip_path.name}: {zip_path.stat().st_size / 1e6:.1f} MB")
+    # One zip per form: all together they are 184 MB, and GitHub, which serves
+    # the files to Cults, takes nothing over 100 MB.
+    zips = []
+    for form, suffixes in (("figurines", ("",)), ("ornaments", ("-ornament",)),
+                           ("magnets", ("-half", "-lids"))):
+        zip_path = folder / f"{folder.name}-{form}.zip"
+        with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as z:
+            for name in figures:
+                for suffix in suffixes:
+                    z.write(FIGURES_DIR / "stl" / f"{name}{suffix}.stl", f"stl/{name}{suffix}.stl")
+                    if suffix != "-lids":
+                        z.write(FIGURES_DIR / "stl" / f"{name}{suffix}.3mf", f"3mf/{name}{suffix}.3mf")
+            z.writestr("PRINT-GUIDE.txt", guide(figures))
+        print(f"zipped {zip_path.name}: {zip_path.stat().st_size / 1e6:.1f} MB")
+        zips.append(zip_path)
 
     listing_path = folder / "listing.json"
     listing = json.loads(listing_path.read_text()) if listing_path.exists() else {
@@ -205,7 +212,7 @@ def main() -> None:
         "sub_category_ids": ["Q2F0ZWdvcnkvMTIw"],   # Seasonal & Celebrations
         "license_code": None,
     }
-    listing["files"] = [zip_path.name]
+    listing["files"] = [z.name for z in zips]
     listing["images"] = [p.relative_to(folder).as_posix()
                          for p in [cover_path] + shots + [backs_path]][:MAX_IMAGES]
     listing_path.write_text(json.dumps(listing, indent=2, ensure_ascii=False) + "\n")
