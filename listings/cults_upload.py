@@ -81,7 +81,9 @@ def graphql(query: str, variables: dict | None = None) -> dict:
     req = urllib.request.Request(
         ENDPOINT,
         data=json.dumps({"query": query, "variables": variables or {}}).encode(),
-        headers={"Content-Type": "application/json", "Authorization": f"Basic {token}"},
+        # Cloudflare in front of Cults turns away Python's default User-Agent (error 1010)
+        headers={"Content-Type": "application/json", "Authorization": f"Basic {token}",
+                 "User-Agent": "cults_upload/1.0"},
     )
     try:
         with urllib.request.urlopen(req, timeout=60) as r:
