@@ -18,7 +18,7 @@ plain single-colour STL.
 | `stl/pacific-madrone-half.stl` + `-lids.stl` | 65 × 75 | 23 mm | 2 × 6×3 mm | 2 mm | 10.1 cm³ |
 | `stl/bigleaf-maple-half.stl` + `-lids.stl` | 69 × 73 | 23 mm | 3 × 6×3 mm | 0 mm | 21.1 cm³ |
 
-**Magnets to buy:** 14 × 6×3 mm and 3 × 5×2 mm neodymium discs (the spruce is too slim
+**Magnets to buy:** 12 × 6×3 mm and 3 × 5×2 mm neodymium discs (the spruce is too slim
 for 6 mm). The hemlock only has solid plastic for one; it's light enough that one holds it.
 
 ## Colour (`stl/*-half.3mf`)

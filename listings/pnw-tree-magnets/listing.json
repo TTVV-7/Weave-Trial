@@ -1,0 +1,38 @@
+{
+  "name": "Pacific Northwest Tree Magnets - 6 painted multi-colour fridge magnets",
+  "description": "Six Pacific Northwest trees as fridge magnets: Douglas Fir, Western Red Cedar, Sitka Spruce, Western Hemlock, Pacific Madrone, Bigleaf Maple. Each one is the front half of a stylised tree, about 75 mm tall, with a flat back and hidden magnet pockets, so it sits flat on the fridge.\n\nEvery tree comes as a painted 3MF for 4-filament printers (Bambu AMS, Snapmaker U1) and as a plain STL for single-colour printing. All six use the same four filaments in the same slots, so you load the printer once and can mix trees on one plate.\n\nIncluded:\n- Douglas Fir, 39 x 75 mm, 21 mm deep, 3 x 6x3 mm magnets\n- Western Red Cedar, 60 x 75 mm, 24 mm deep, 3 x 6x3 mm magnets\n- Sitka Spruce, 27 x 75 mm, 14 mm deep, 3 x 5x2 mm magnets\n- Western Hemlock, 46 x 75 mm, 20 mm deep, 1 x 6x3 mm magnets\n- Pacific Madrone, 65 x 75 mm, 23 mm deep, 2 x 6x3 mm magnets\n- Bigleaf Maple, 69 x 73 mm, 23 mm deep, 3 x 6x3 mm magnets\n\nMagnets to buy: 12 x 6x3 mm and 3 x 5x2 mm neodymium discs. Each pocket gets a thin printed lid, so the magnets are hidden.\n\nFilaments: Dark forest green, Moss green, Dark brown, Golden amber. Matte PLA suits them.\n\nPrint flat back down with 0.12 mm layers; few supports needed. A print guide is in the zip.\n\nThe trees were generated with Hi3D, then cut flat, fitted with magnet pockets and painted for multi-colour printing.\n",
+  "price": 3.0,
+  "currency": "USD",
+  "locale": "EN",
+  "made_with_ai": true,
+  "tags": [
+    "fridge magnet",
+    "magnet",
+    "tree",
+    "Pacific Northwest",
+    "PNW",
+    "Douglas fir",
+    "cedar",
+    "maple",
+    "multicolor",
+    "AMS"
+  ],
+  "category_id": "Q2F0ZWdvcnkvMzA",
+  "sub_category_ids": [
+    "Q2F0ZWdvcnkvNjE"
+  ],
+  "license_code": null,
+  "files": [
+    "pnw-tree-magnets.zip"
+  ],
+  "images": [
+    "images/0_cover.png",
+    "images/1_douglas-fir.png",
+    "images/2_western-red-cedar.png",
+    "images/3_sitka-spruce.png",
+    "images/4_western-hemlock.png",
+    "images/5_pacific-madrone.png",
+    "images/6_bigleaf-maple.png",
+    "images/7_front-and-back.png"
+  ]
+}

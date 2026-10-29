@@ -49,6 +49,19 @@ eleven stock PLA colours (`FILAMENTS`), and each model keeps its four most-used.
 The 3MFs use the same per-triangle painting as `pnw-tree-magnets/`, so they
 open painted in Bambu Studio, OrcaSlicer and Snapmaker Orca.
 
+## The second listing: Pacific Northwest tree magnets
+
+```bash
+python listings/make_tree_listing.py
+```
+
+`pnw-tree-magnets/` holds six trees generated with hi3D and made into fridge
+magnets. This script makes `pnw-tree-magnets/` here from those files: a
+picture of each half-tree in its filament colours, a cover, the
+front-and-back sheet, a zip with a print guide, and `listing.json`. It doesn't
+rebuild the trees. The pictures leave out the inside walls of the magnet
+pockets, which would otherwise show through the front.
+
 ## Before you post
 
 - **Print one.** The pictures are renders. Listings with photos of a real print

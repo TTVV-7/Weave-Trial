@@ -55,9 +55,9 @@ def render_model(folder: Path, info: dict, out: Path, size: int, caption: bool =
                   label=f"{info['name']}  ·  {x:.0f} × {y:.0f} × {z:.0f} mm" if caption else None)
 
 
-def cover(tiles: list[Path], out: Path, title: str, subtitle: str) -> None:
-    """All the models on one sheet under a title, four or five to a row."""
-    cell, cols = 400, 4 if len(tiles) <= 12 else 5
+def cover(tiles: list[Path], out: Path, title: str, subtitle: str, cols: int | None = None) -> None:
+    """All the models on one sheet under a title, four or five to a row unless cols says."""
+    cell, cols = 400, cols or (4 if len(tiles) <= 12 else 5)
     rows = -(-len(tiles) // cols)
     head = 150
     sheet = Image.new("RGB", (cell * cols, head + cell * rows), "#eceff1")
