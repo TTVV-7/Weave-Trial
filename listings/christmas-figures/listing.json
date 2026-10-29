@@ -1,0 +1,46 @@
+{
+  "name": "Christmas Figures Pack - 6 painted multi-colour figurines, ornaments and fridge magnets",
+  "description": "Six Christmas figures in a chunky clay style: Santa, Snowman, Reindeer, Gingerbread Man, Nutcracker, Penguin. Each one comes three ways: a standing figurine about 70 mm tall, a hanging ornament with a loop on top, and a fridge magnet (the front half, with hidden magnet pockets and glue-in lids).\n\nEvery file comes as a painted 3MF for 4-filament printers (Bambu AMS, Snapmaker U1) and as a plain STL for single-colour printing. Five figures use the same four filaments in the same slots, red, white, dark green and golden brown, so you load the printer once; the penguin swaps green for black.\n\nIncluded:\n- Santa, 37 x 34 x 70 mm\n- Snowman, 41 x 41 x 70 mm\n- Reindeer, 41 x 56 x 70 mm\n- Gingerbread Man, 47 x 42 x 70 mm\n- Nutcracker, 30 x 28 x 70 mm\n- Penguin, 47 x 50 x 70 mm\n\nMagnets to buy for the set: 18 x 6x3 mm neodymium discs.\n\nFiles: three zips of print files (figurines, ornaments, magnets), each with a print guide, and one zip per figure with its full-colour GLB model, textured, for 3D viewers, rendering or full-colour printing. Print upright with 0.12-0.16 mm layers; the magnet halves print flat on their back.\n\nThe figures were generated with Hi3D from clay-style pictures, then given their loops and magnet pockets and painted for multi-colour printing.\n",
+  "price": 5.0,
+  "currency": "USD",
+  "locale": "EN",
+  "made_with_ai": true,
+  "tags": [
+    "christmas",
+    "ornament",
+    "fridge magnet",
+    "santa",
+    "snowman",
+    "reindeer",
+    "gingerbread",
+    "nutcracker",
+    "penguin",
+    "multicolor"
+  ],
+  "category_id": "Q2F0ZWdvcnkvMjk",
+  "sub_category_ids": [
+    "Q2F0ZWdvcnkvMTIw"
+  ],
+  "license_code": null,
+  "files": [
+    "christmas-figures-figurines.zip",
+    "christmas-figures-ornaments.zip",
+    "christmas-figures-magnets.zip",
+    "christmas-figures-glb-santa.zip",
+    "christmas-figures-glb-snowman.zip",
+    "christmas-figures-glb-reindeer.zip",
+    "christmas-figures-glb-gingerbread.zip",
+    "christmas-figures-glb-nutcracker.zip",
+    "christmas-figures-glb-penguin.zip"
+  ],
+  "images": [
+    "images/0_cover.png",
+    "images/1_santa.png",
+    "images/2_snowman.png",
+    "images/3_reindeer.png",
+    "images/4_gingerbread.png",
+    "images/5_nutcracker.png",
+    "images/6_penguin.png",
+    "images/7_magnet-backs.png"
+  ]
+}
