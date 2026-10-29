@@ -58,6 +58,37 @@ FIGURES = {
 # a triangle is painted one colour, so a sliver touching a button went red
 # across the cookie: split its triangles to at most 1 mm before painting.
 FIGURES["gingerbread"]["max_edge"] = 1.0
+# hi3D's texture also bleeds the buttons' red down and right across the flat
+# cookie: red stays only on the buttons, which stand 0.5-2.5 mm proud of it.
+FIGURES["gingerbread"]["raised_only"] = (0, 3)   # red (T1), else golden brown (T4)
+
+FRONT = np.array([0.0, -1.0, 0.0])   # the figure's front, as mm.load() leaves it
+HALF_FRONT = np.array([0.0, 0.0, 1.0])   # and the magnet half's, lying on its back
+
+
+def raised_only(mesh, label, slot, keep_as, front, rise=0.3):
+    """Triangles of filament `slot` that stand less than `rise` mm in front of
+    the surrounding `keep_as` surface (its front-facing triangles, the 60
+    nearest seen from the front) become `keep_as`."""
+    from scipy.spatial import cKDTree
+    c, n = mesh.triangles_center, mesh.face_normals
+    depth = c @ front
+    lateral = c - np.outer(depth, front)
+    face = (label == keep_as) & (n @ front > 0.8)
+    which = np.flatnonzero(label == slot)
+    _, near = cKDTree(lateral[face]).query(lateral[which], k=60)
+    low = depth[which] - np.median(depth[face][near], axis=1) < rise
+    label = label.copy()
+    label[which[low]] = keep_as
+    return label
+
+
+def painted_labels(part, spec, front):
+    """mm.paint() with the figure's filaments, then its raised_only rule if it has one."""
+    label = mm.paint(part, spec["filaments"])
+    if "raised_only" in spec:
+        label = raised_only(part["mesh"], label, *spec["raised_only"], front=front)
+    return label
 
 
 def refined(mesh, spec):
@@ -141,7 +172,7 @@ def write(name, mesh, painted, transform, spec, suffix=""):
     mesh.export(OUT / f"{name}{suffix}.stl")
     part = dict(name=name, mesh=mesh, rgb=mm.texture_colours(
         mesh, painted, transform, shadow_l=spec.get("shadow_l", mm.SHADOW_L)))
-    label = mm.paint(part, spec["filaments"])
+    label = painted_labels(part, spec, FRONT)
     mm.write_3mf(OUT / f"{name}{suffix}.3mf", mesh, label, spec["filaments"])
     share = np.bincount(label, weights=mesh.area_faces, minlength=4)
     return (share / share.sum()).round(2).tolist()
@@ -174,7 +205,7 @@ def make(name):
         half["rgb"] = mm.texture_colours(half["mesh"], painted, half["lay"],
                                          shadow_l=spec.get("shadow_l", mm.SHADOW_L))
     half["mesh"].export(OUT / f"{name}-half.stl")
-    label = mm.paint(half, spec["filaments"])
+    label = painted_labels(half, spec, HALF_FRONT)
     mm.write_3mf(OUT / f"{name}-half.3mf", half["mesh"], label, spec["filaments"])
     print(f"  magnet {half['row']}")
 
