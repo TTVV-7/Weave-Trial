@@ -157,8 +157,9 @@ than it needed to be.
 
 ## Floor art
 
-The pocket floor, the face the iPad rests on, has a design engraved 0.4 mm
-deep. `ipad_holder.3mf` has the one `FLOOR_ART` names (contour lines); every
+The pocket floor, the face the iPad rests on, has a design inlaid 0.4 mm
+deep in white: its own part ("Floor art"), on filament 2 with the VanEye
+logo and the front lines. `ipad_holder.3mf` has the one `FLOOR_ART` names (contour lines); every
 design in `FLOOR_STYLES` is also written as its own holder in `options/`, and
 `options/floor_options.png` shows them side by side:
 
@@ -172,8 +173,8 @@ design in `FLOOR_STYLES` is also written as its own holder in `options/`, and
 | `ipad_holder_waves.3mf` | flowing wave lines |
 | `ipad_holder_honeycomb.3mf` | hexagon outlines, 12 mm across |
 
-All stay inside the screen opening, so supports under the lip never sit in
-the grooves.
+All stay inside the screen opening, so supports under the lip never sit on the
+inlay.
 
 ## The wing screw
 

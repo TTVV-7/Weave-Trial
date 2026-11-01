@@ -317,9 +317,9 @@ def power_slot(frame: trimesh.Trimesh) -> m3.Manifold:
 
 
 # --- floor art --------------------------------------------------------------
-# A design engraved into the pocket floor: the face the iPad rests on, seen
+# A design inlaid in white (filament 2) in the pocket floor: the face the iPad rests on, seen
 # whenever it is out. Kept inside the screen opening (so supports under the
-# lip never sit in the grooves) and clear of the walls. FLOOR_ART picks the
+# lip never sit on it) and clear of the walls. FLOOR_ART picks the
 # design (None for a plain floor); FLOOR_STYLES lists them all, and main()
 # writes one holder per style into options/ to choose from.
 FLOOR_ART = "contours"
@@ -467,7 +467,8 @@ def art_honeycomb() -> m3.CrossSection:
 
 
 def floor_art(style: str | None = None) -> m3.Manifold:
-    """The chosen design's grooves, as a solid to cut from the floor's top face."""
+    """The chosen design as a solid in the floor's top FLOOR_DEPTH, to be
+    inlaid in the second filament."""
     style = style or FLOOR_ART
     art = globals()["art_" + style]()
     x0, y0, x1, y1 = FLOOR_BOX
@@ -665,8 +666,9 @@ def build_holder(info: dict | None = None, style: str | None = None):
         [case, cs.extrude(z1 - z0).translate([0, 0, z0]), neck_box], m3.OpType.Add)
     body = body - hole_cutter(axis) - power_slot(frame)
     style = style or FLOOR_ART
-    if style:
-        body = body - floor_art(style)
+    # The floor design is inlaid in white (filament 2), like the logo and
+    # the front lines, rather than left as empty grooves.
+    floor_inlay = (body ^ floor_art(style)) if style else None
     if info is not None:
         info["axis"] = axis
         info["top"] = top
@@ -684,6 +686,8 @@ def build_holder(info: dict | None = None, style: str | None = None):
         lines = body ^ front_lines(body, frame).extrude(LINE_DEPTH).translate(
             [0, 0, z1 - LINE_DEPTH])
         inlays.append(("Front lines", (255, 255, 255), lines))
+    if floor_inlay is not None:
+        inlays.append(("Floor art", (255, 255, 255), floor_inlay))
     for _, _, solid in inlays:
         body = body - solid
 
@@ -909,13 +913,13 @@ def write_options(body: m3.Manifold):
         art = globals()["art_" + style]() ^ m3.CrossSection.square(
             [x1 - x0, y1 - y0]).translate([x0, y0])
         patch(ax, outline, fc="#1a1a1a", ec="none")
-        patch(ax, art, fc="#9a9a9a", ec="none")
+        patch(ax, art, fc="#ffffff", ec="none")
         patch(ax, lip, fc="#000000", ec="#555555", lw=0.6, alpha=0.55)
         ax.set_xlim(112, 267); ax.set_ylim(-218, 40); ax.set_aspect("equal")
         ax.set_axis_off()
         ax.set_title(f"{style}\n{FLOOR_STYLES[style]}", fontsize=10)
         print(f"options/ipad_holder_{style}.3mf")
-    fig.suptitle("Pocket floor designs (engraved 0.4 mm), seen from the front with "
+    fig.suptitle("Pocket floor designs (white inlay, 0.4 mm), seen from the front with "
                  "the iPad out; the lip is shaded", fontsize=12)
     plt.savefig(os.path.join(out, "floor_options.png"), dpi=100, bbox_inches="tight")
 
