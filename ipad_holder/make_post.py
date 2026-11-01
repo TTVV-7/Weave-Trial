@@ -9,8 +9,9 @@ the female half a socket to take it. Square, so the halves cannot turn. A
 drop of glue in the socket makes it permanent.
 
 The tip: over the last TIP_LEN mm at the 0 end, the top face is cut down,
-with a small step where the cut starts, so the bar is TIP_BASE thick there,
-tapering to TIP_END at the very end -- measured off the real bar.
+with a step down where the cut starts, so the bar is TIP_BASE thick there,
+widening to TIP_END at the very end -- measured off the real bar (thinnest
+just past the step, not at the end).
 
 The scale runs 0 to 40 cm from the tip along the bed face, as a black inlay
 (the first 0.4 mm, in its own part and filament), mirrored so it reads from
@@ -56,8 +57,8 @@ MARK_RGB = (0, 0, 0)
 
 # --- the tip ---------------------------------------------------------------
 TIP_LEN = 24.0                  # how far back from the end the cut runs
-TIP_BASE = 9.3                  # thickness where the cut starts, after the step
-TIP_END = 7.8                   # thickness at the very end
+TIP_BASE = 7.8                   # thickness where the cut starts, after the step
+TIP_END = 9.3                    # thickness at the very end
 # On the cut face of the real bar: a round button (a rivet or spring-pin head)
 # standing proud, with a groove running from it out to the end. Read off a
 # photo, so the sizes are estimates: measure the real bar and set these.
