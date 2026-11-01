@@ -58,6 +58,14 @@ MARK_RGB = (0, 0, 0)
 TIP_LEN = 24.0                  # how far back from the end the cut runs
 TIP_BASE = 9.3                  # thickness where the cut starts, after the step
 TIP_END = 7.8                   # thickness at the very end
+# On the cut face of the real bar: a round button (a rivet or spring-pin head)
+# standing proud, with a groove running from it out to the end. Read off a
+# photo, so the sizes are estimates: measure the real bar and set these.
+BUTTON_X = 16.0                 # button centre, from the end of the bar
+BUTTON_D = 3.2
+BUTTON_H = 0.7                  # how far it stands above the cut face
+GROOVE_W = 0.8
+GROOVE_D = 0.4
 
 
 def tip_cutter() -> m3.Manifold:
@@ -70,6 +78,30 @@ def tip_cutter() -> m3.Manifold:
     at_step = (m3.Manifold.cube([0.01, S + 2 * e, S - TIP_BASE + e])
                .translate([TIP_LEN, -e, TIP_BASE]))
     return m3.Manifold.batch_hull([at_end, at_step])
+
+
+def tip_face_z(x: float) -> float:
+    """Height of the cut face at ``x`` mm from the end."""
+    return TIP_END + (TIP_BASE - TIP_END) * x / TIP_LEN
+
+
+def tip_button() -> m3.Manifold:
+    """The domed button on the cut face, centred across the bar."""
+    r = BUTTON_D / 2
+    sink = 0.3                                    # into the face, so they fuse
+    dome = (m3.Manifold.sphere(r, 48).scale([1, 1, (BUTTON_H + sink) / r])
+            ^ m3.Manifold.cube([BUTTON_D + 1, BUTTON_D + 1, BUTTON_H + sink + 1])
+            .translate([-r - 0.5, -r - 0.5, 0]))
+    return dome.translate([BUTTON_X, POST_SIDE / 2, tip_face_z(BUTTON_X) - sink])
+
+
+def tip_groove() -> m3.Manifold:
+    """The groove from the button out to the end, following the face's slope."""
+    w, d, e = GROOVE_W, GROOVE_D, 1.0
+    y0 = POST_SIDE / 2 - w / 2
+    at_end = m3.Manifold.cube([0.01, w, d + e]).translate([-e, y0, tip_face_z(-e) - d])
+    at_btn = m3.Manifold.cube([0.01, w, d + e]).translate([BUTTON_X, y0, tip_face_z(BUTTON_X) - d])
+    return m3.Manifold.batch_hull([at_end, at_btn])
 
 
 def bar(length: float) -> m3.Manifold:
@@ -92,7 +124,8 @@ def build_halves() -> tuple[m3.Manifold, m3.Manifold]:
     tip = (centred_square(PEG_SIDE - 2 * c, 0.01)
            .translate([PEG_LEN - 0.01, 0, 0]))
     peg = m3.Manifold.batch_hull([body, tip])
-    male = bar(half) + peg.translate([half - 0.01, 0, 0]) - tip_cutter()
+    male = (bar(half) + peg.translate([half - 0.01, 0, 0]) - tip_cutter()
+            - tip_groove() + tip_button())
     socket = centred_square(PEG_SIDE + 2 * FIT, PEG_LEN + SOCKET_EXTRA + 0.01)
     female = bar(half) - socket.translate([-0.01, 0, 0])
     return male, female
