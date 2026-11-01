@@ -46,9 +46,9 @@ The pocket is 5 mm taller (`POCKET_LONGER`) and 1.5 mm deeper
 | | source | now |
 |---|---|---|
 | pocket height, inside | 204.0 mm | 209.0 mm |
-| pocket depth, floor to lip | 7.8 mm | 9.3 mm |
+| pocket depth, floor to lip | 7.8 mm | 8.3 mm (9.3 before the lip was thickened, below) |
 | case height, without the loop | 210.5 mm | 215.5 mm |
-| case thickness | 11.8 mm | 13.3 mm |
+| case thickness | 11.8 mm | 14.3 mm |
 
 The bottom half of the frame moves down through the plain side walls, and
 the lip and front face move up, so the loop, top button slot and the home
@@ -128,6 +128,24 @@ are the last two layers, in their own part and filament. They stay 0.7 mm
 clear of every edge and opening. `front_lines_mockup.png` shows them against
 the other styles that were considered.
 
+## Strength
+
+On a print the front lip's strip over the open right-hand side broke at its
+corners, and the back flexed. That strip is only held at its two ends, so:
+
+| | before | now |
+|---|---|---|
+| back plate | 2 mm | 3 mm (`BACK_THICKER`, grown toward the bed; the pocket keeps its size) |
+| front lip, all round | 2 mm | 3 mm (`LIP_THICKER`, grown inward so there is no step at the corners) |
+| right-hand strip, width | 9 mm | 10.5 mm (`STRIP_WIDER`), still 2 mm clear of the screen |
+| screen opening's corners | square | rounded 4 mm (`OPENING_R`), so the strip blends into the top and bottom lips |
+| power-button window's corners | square | rounded 1.5 mm (`POWER_R`) |
+
+The thicker lip makes the pocket 8.3 mm deep, floor to lip, still deeper
+than the source's 7.8 and room for any iPad mini (6.1–7.5 mm). The home
+button's opening is cut straight through the extra millimetre, so it is the
+same size on the face.
+
 ## Power button
 
 A window through the top wall in the top-right corner (seen from the front)
@@ -139,10 +157,23 @@ than it needed to be.
 
 ## Floor art
 
-The pocket floor, the face the iPad rests on, has contour lines engraved
-0.4 mm deep, like a topographic map (`FLOOR_ART`; `FLOOR_SEED` picks a
-different landscape). They stay inside the front lip's shadow, so supports
-under the lip never sit in the grooves.
+The pocket floor, the face the iPad rests on, has a design engraved 0.4 mm
+deep. `ipad_holder.3mf` has the one `FLOOR_ART` names (contour lines); every
+design in `FLOOR_STYLES` is also written as its own holder in `options/`, and
+`options/floor_options.png` shows them side by side:
+
+![floor designs](options/floor_options.png)
+
+| `options/` file | design |
+|---|---|
+| `ipad_holder_contours.3mf` | topographic contour lines, like a map (`FLOOR_SEED` picks the landscape) |
+| `ipad_holder_iris.3mf` | an eye's iris: pupil, rings and radial fibres |
+| `ipad_holder_eyechart.3mf` | an eye chart: rows of letters, large to small |
+| `ipad_holder_waves.3mf` | flowing wave lines |
+| `ipad_holder_honeycomb.3mf` | hexagon outlines, 12 mm across |
+
+All stay inside the screen opening, so supports under the lip never sit in
+the grooves.
 
 ## The wing screw
 

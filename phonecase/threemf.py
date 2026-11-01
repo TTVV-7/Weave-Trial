@@ -177,13 +177,39 @@ def to_3mf(spec: CaseSpec, plan: PaintPlan, *, tol: float = 0.02,
                         origin=(spec.outer_w / 2, spec.outer_l / 2), name=name)
 
 
+def slicer_configs(parts: list[Part], top_id: int, part_ids: list[int],
+                   name: str) -> dict[str, str]:
+    """Bambu Studio / OrcaSlicer settings: which filament each part prints
+    in, and what colour each filament is, so the file opens already coloured.
+    Filament n is ``slot + 1``.
+    """
+    import json
+    vols = "".join(
+        f'<part id="{pid}" subtype="normal_part">'
+        f'<metadata key="name" value="{_escape(p.name)}"/>'
+        f'<metadata key="extruder" value="{p.slot + 1}"/></part>'
+        for p, pid in zip(parts, part_ids))
+    model = (
+        '<?xml version="1.0" encoding="UTF-8"?>\n<config>'
+        f'<object id="{top_id}"><metadata key="name" value="{_escape(name)}"/>'
+        f'<metadata key="extruder" value="1"/>{vols}</object></config>')
+    colours = {}
+    for p in parts:
+        colours.setdefault(p.slot, "#%02X%02X%02X" % p.rgb)
+    project = json.dumps({"filament_colour": [colours.get(i, "#FFFFFF")
+                                              for i in range(max(colours) + 1)]})
+    return {"Metadata/model_settings.config": model,
+            "Metadata/project_settings.config": project}
+
+
 def parts_to_3mf(parts: list[Part], *, origin=(0.0, 0.0),
-                 name: str = "case") -> bytes:
+                 name: str = "case", slicer_config: bool = False) -> bytes:
     """Package parts as a 3MF: a material per filament, a component per part.
 
     The build item carries the shift into the positive octant rather than the
     vertices, so the numbers in the file stay the case's own coordinates and
-    stay readable.
+    stay readable. ``slicer_config`` adds the Bambu Studio / OrcaSlicer
+    settings that assign each part its filament and colour.
     """
     if not parts:
         raise ValueError("nothing to write")
@@ -216,6 +242,9 @@ def parts_to_3mf(parts: list[Part], *, origin=(0.0, 0.0),
         z.writestr("[Content_Types].xml", _TYPES)
         z.writestr("_rels/.rels", _RELS)
         z.writestr("3D/3dmodel.model", model)
+        if slicer_config:
+            for path, text in slicer_configs(parts, oid, ids, name).items():
+                z.writestr(path, text)
     return buf.getvalue()
 
 

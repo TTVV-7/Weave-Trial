@@ -1,0 +1,924 @@
+"""The iPad holder with an M5 thread in its clamp, a wing screw for it, and
+two logos inlaid in the back.
+
+    python ipad_holder/make_holder.py
+
+Reads ``source_ipad_holder.3mf`` and the two logo SVGs next to this file and
+writes ``ipad_holder.3mf``, ``wing_screw.3mf`` / ``.stl`` and ``preview.png``.
+
+The pocket is stretched 5 mm taller and 1.5 mm deeper than the source's.
+The diamond loop at the top is rebuilt as a true diamond with a 12 mm
+opening, point to point, in 5 mm walls; the source's 5.2 mm hole (at
+9 o'clock) goes with the old loop. An ISO-60 degree M5 x 0.8
+thread is cut square through the upper-right wall instead, as near 2 o'clock
+as the screw can sit and still pass into the opening without scraping the
+lower-right wall. It is sized for a steel M5 wing screw, which cuts its way
+through the printed thread's layer steps and holds; the printed screw fits too.
+
+A slot in the top wall, open to the front, clears the iPad mini's top
+(power) button in the top-right corner. The case's corners are rounded in
+plan (the pocket's two closed corners with them, so the wall stays 3 mm),
+and its front and back perimeter edges are rounded over. The source's
+front-camera keyhole in the top lip is filled in. The home-button opening is
+moved to where an iPad mini's button actually sits, made bigger, and
+sloped. White accent lines run round the four corners of the front face.
+
+The VanEye logo is cut 0.4 mm into the back face (the face on the bed) and
+kept as its own part, so a slicer opens the file with two filaments to
+assign. The printyours.ca logo is etched: the same 0.4 mm recess, left
+empty. On the back both are mirrored, so they read correctly from behind.
+"""
+
+from __future__ import annotations
+
+import math
+import os
+import sys
+
+import manifold3d as m3
+import numpy as np
+import trimesh
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, os.path.dirname(HERE))
+from phonecase import svgart                                    # noqa: E402
+from phonecase.threemf import Part, parts_to_3mf               # noqa: E402
+
+# --- thread ---------------------------------------------------------------
+# M5 x 0.8, for a bought steel M5 wing screw.
+NOMINAL_D = 5.0
+PITCH = 0.8
+# Extra neck length under the loop. With the screw at 9 o'clock this had to
+# be 8 mm for the wings to clear the frame; at 2 o'clock they point up and
+# away, so the source's neck is enough (checked in check_screw).
+LOOP_RAISE = 0.0
+# The top is what hangs on the post, so it is made stronger: the top wall
+# grows TOP_THICKER outward (3 -> 5 mm), the neck is NECK_W wide instead of
+# the source's 12 mm, and the neck and loop run the case's full thickness
+# rather than stopping 1.5 mm short of the front.
+TOP_THICKER = 2.0
+NECK_W = 16.0
+# The loop is a true diamond: a square opening DIAMOND_SIDE mm along each
+# side, stood on its point, so it slides along a 10 mm square bar turned 45
+# degrees. 10.25 follows the hook test, where 10.2 fit best. Walls LOOP_WALL thick. HOOK_TEST_SIDES go in hook_test.3mf, to
+# check the fit on the post before printing the whole case.
+DIAMOND_SIDE = 10.25
+HOOK_TEST_SIDES = (10.0, 10.2, 10.5, 10.75)
+LOOP_WALL = 5.0
+HOLE_CLOCK = 2.0                # where the screw goes in, seen from the front
+SCREW_GAP = 0.5                 # least gap between the screw and the walls
+                                # of the opening as it passes through
+# Radial limits of the two threads. ISO M5: internal minor 4.134, external
+# major 5.0, external minor 4.019. The hole is held close to size for a
+# steel screw: a steel M5 overlaps it by 0.375 mm radially and clears its
+# flanks by 0.05 mm, snug enough to bite into the layer steps. (The first
+# version's 4.35 minor and 0.12 mm flanks let a printed screw pull out.)
+# The printed screw is a shade under a steel one so it still turns.
+HOLE_MINOR, HOLE_MAJOR = 4.25, 5.20
+SCREW_MINOR, SCREW_MAJOR = 4.00, 4.90
+FLANK_CLEAR = 0.05
+
+# --- logos ----------------------------------------------------------------
+INLAY_DEPTH = 0.4               # two 0.2 mm layers: enough to hide the base colour
+ETCH_DEPTH = 0.4                # an etched logo is the same recess, left empty
+# Where each logo goes, in model coordinates, and how wide its artwork is.
+# An "inlay" is its own part in its own filament; an "etch" is just a recess.
+LOGOS = [
+    # file, keep-dark?, centre x, centre y, width, part name, display colour, kind
+    ("logo_vaneye.svg", False, 189.6, -87.5, 105.0, "VanEye logo", (255, 255, 255), "inlay"),
+    ("logo_printyours.svg", True, 189.6, -177.0, 55.0, "printyours.ca logo", None, "etch"),
+]
+
+# --- pocket size ----------------------------------------------------------
+# Taller and deeper than the source, for a looser fit. The bottom half of the
+# frame moves down POCKET_LONGER (through the plain walls at y = -100, where
+# nothing is cut), and the lip and front face move up POCKET_DEEPER (from
+# z = 9.6, just under the lip). The loop and the top stay where they were.
+POCKET_LONGER = 5.0
+POCKET_DEEPER = 1.5
+STRETCH_Y = -100.0
+STRETCH_Z = 9.6
+
+# --- strength ---------------------------------------------------------------
+# The back plate was 2 mm and flexed; it grows BACK_THICKER outward (toward
+# the bed), so the pocket keeps its size. The front lip was 2 mm, and over
+# the open right-hand side it is a free strip 9 mm wide held only at its two
+# ends: on a print it broke at those corners. The lip grows LIP_THICKER all
+# round (inward, so there is no step at the corners to break at), the strip
+# STRIP_WIDER toward the screen, and the screen opening's corners are rounded
+# OPENING_R so the strip blends into the top and bottom lips.
+BACK_THICKER = 1.0              # back plate 2 -> 3 mm
+LIP_THICKER = 1.0               # front lip 2 -> 3 mm; pocket 9.3 -> 8.3 mm deep
+STRIP_WIDER = 1.5               # right-hand strip 9 -> 10.5 mm; 2 mm clear of the screen
+OPENING_R = 4.0
+FLOOR = 2.0 + BACK_THICKER      # top of the back plate: the pocket floor
+LIP_SRC_Z = 9.8 + POCKET_DEEPER  # the lip's underside after the stretch, before the above
+# The screen opening in the lip as the source has it (less the home-button
+# notch), x0, y0, x1, y1.
+OPENING = (125.0, -200.6, 252.2, -5.4)
+POWER_R = 1.5                   # the power-button window's corners, rounded
+
+# --- rounding -------------------------------------------------------------
+CORNER_R = 8.0                  # the case's corners, seen from the front
+EDGE_R = 1.5                    # front and back perimeter edges
+# The pocket's two closed corners (the right side is open below the lip, so
+# only the left ones are corners at all). Rounded concentric with the
+# outside so the wall stays 3 mm; an iPad mini's corners are rounder still.
+POCKET_LEFT, POCKET_BOTTOM, POCKET_TOP = 121.0, -205.1 - POCKET_LONGER, -1.1
+POCKET_R = 5.0
+
+# --- wing screw -----------------------------------------------------------
+SHANK_LEN = 13.0                # threaded length: 5 mm of wall, then 8 of the
+                                # 8.4 mm it can reach into the opening
+
+# The head is drawn at a 30 mm span and scaled to WING_SPAN, so lobes, waist
+# and hub keep their proportions.
+WING_SPAN = 40.0
+WING_K = WING_SPAN / 30.0
+WING_THICK = 4.0
+HUB_D, HUB_H = 10.0 * WING_K, 9.0 * WING_K
+
+
+def to_manifold(mesh: trimesh.Trimesh) -> m3.Manifold:
+    return m3.Manifold(m3.Mesh(vert_properties=np.asarray(mesh.vertices, np.float32),
+                               tri_verts=np.asarray(mesh.faces, np.uint32)))
+
+
+def to_trimesh(solid: m3.Manifold) -> trimesh.Trimesh:
+    m = solid.to_mesh()
+    return trimesh.Trimesh(m.vert_properties[:, :3], m.tri_verts, process=False)
+
+
+# --------------------------------------------------------------------------
+# threads
+# --------------------------------------------------------------------------
+
+def threaded_rod(length: float, d_minor: float, d_major: float,
+                 offset: float, *, segs: int = 72, steps: int = 20) -> m3.Manifold:
+    """A rod along +z from 0 to ``length`` carrying a right-hand 60 degree thread.
+
+    The surface is a radius that depends on angle and height: the sharp ISO
+    triangle wave, moved out by ``offset`` (negative shrinks it), clipped to
+    the minor and major radii. Moving along the helix keeps the same radius,
+    which is what makes it a thread rather than a stack of rings.
+    """
+    H = PITCH * math.sqrt(3) / 2
+    r_pitch = (NOMINAL_D - 0.6495 * PITCH) / 2    # basic pitch radius
+    r_lo = r_pitch - H / 2 + offset
+    nz = max(2, int(math.ceil(length / PITCH * steps)))
+    th = np.linspace(0, 2 * math.pi, segs, endpoint=False)
+    z = np.linspace(0, length, nz + 1)
+    T, Z = np.meshgrid(th, z)
+    u = np.mod(Z - PITCH * T / (2 * math.pi), PITCH) / PITCH
+    tri = 1 - np.abs(2 * u - 1)
+    R = np.clip(r_lo + H * tri, d_minor / 2, d_major / 2)
+    verts = np.c_[(R * np.cos(T)).ravel(), (R * np.sin(T)).ravel(), Z.ravel()]
+    verts = np.vstack([verts, [0, 0, 0], [0, 0, length]])
+    bot, top = len(verts) - 2, len(verts) - 1
+    idx = np.arange((nz + 1) * segs).reshape(nz + 1, segs)
+    a, b = idx[:-1], np.roll(idx[:-1], -1, axis=1)
+    c, d = idx[1:], np.roll(idx[1:], -1, axis=1)
+    faces = np.vstack([np.c_[a.ravel(), b.ravel(), d.ravel()],
+                       np.c_[a.ravel(), d.ravel(), c.ravel()]])
+    r0, r1 = idx[0], idx[-1]
+    faces = np.vstack([faces,
+                       np.c_[np.full(segs, bot), np.roll(r0, -1), r0],
+                       np.c_[np.full(segs, top), r1, np.roll(r1, -1)]])
+    mesh = trimesh.Trimesh(verts, faces, process=False)
+    if mesh.volume < 0:
+        mesh.invert()
+    return to_manifold(mesh)
+
+
+def orient(solid: m3.Manifold, start, direction) -> m3.Manifold:
+    """Turn a solid built along +z to run along ``direction`` (in the xy
+    plane) from ``start``."""
+    deg = math.degrees(math.atan2(direction[1], direction[0]))
+    return solid.rotate([0, 90, 0]).rotate([0, 0, deg]).translate(list(start))
+
+
+def hole_cutter(axis) -> m3.Manifold:
+    flank = FLANK_CLEAR * 2 / math.sqrt(3)        # radial shift for that flank gap
+    length = axis["wall"] + 6.0
+    rod = threaded_rod(length, HOLE_MINOR, HOLE_MAJOR, +flank)
+    return orient(rod, axis["inner"] - 0.5 * axis["n"], axis["n"])
+
+
+# --------------------------------------------------------------------------
+# holder
+# --------------------------------------------------------------------------
+
+def load_source():
+    scene = trimesh.load(os.path.join(HERE, "source_ipad_holder.3mf"))
+    return {name: g for name, g in scene.geometry.items()}
+
+
+def stretch_frame(frame: trimesh.Trimesh) -> trimesh.Trimesh:
+    """The frame made POCKET_LONGER taller and POCKET_DEEPER deeper.
+
+    No vertex lies near either cut, so moving everything past it stretches
+    only the plain walls that cross it.
+    """
+    v = frame.vertices.copy()
+    v[v[:, 1] < STRETCH_Y, 1] -= POCKET_LONGER
+    v[v[:, 2] > STRETCH_Z, 2] += POCKET_DEEPER
+    v[v[:, 1] > 1.0, 1] += TOP_THICKER          # only the top's outside face
+    v[np.abs(v[:, 2] - LIP_SRC_Z) < 0.01, 2] -= LIP_THICKER   # the lip's underside
+    v[v[:, 2] > 1.0, 2] += BACK_THICKER         # everything above the back plate
+    return trimesh.Trimesh(v, frame.faces, process=False)
+
+
+def loop_section(cx: float, w: float, base: float,
+                 side: float = DIAMOND_SIDE) -> m3.CrossSection:
+    """The diamond loop's cross-section, centred on ``cx`` over a neck ``w``
+    wide whose top is at ``base``.
+
+    The opening is a square on its point, ``side`` along each side; the
+    outside is the
+    opening grown LOOP_WALL (mitred, so the corners stay sharp). Below the
+    opening the outside's point is filled out to the neck's full width, so
+    the loop does not hang from a narrow waist.
+    """
+    h = side / math.sqrt(2)                      # centre to point
+    hole = m3.CrossSection([[[h, 0], [0, h], [-h, 0], [0, -h]]])
+    outer = hole.offset(LOOP_WALL, m3.JoinType.Miter, 2.0)
+    flat = -h - LOOP_WALL
+    foot = m3.CrossSection.batch_hull([
+        outer ^ m3.CrossSection.square([60, 60]).translate([-30, -h - 60]),
+        m3.CrossSection.square([w, 0.01]).translate([-w / 2, flat])])
+    ring = ((outer ^ m3.CrossSection.square([60, 60]).translate([-30, flat]))
+            + foot) - hole
+    # The flat sits 1 mm into the neck so the two fuse.
+    return ring.translate([cx, base - 1.0 - flat])
+
+
+def hole_axis(cs: m3.CrossSection, zc: float) -> dict:
+    """Where the screw goes through the upper-right wall.
+
+    The thread runs square to the wall so the wings seat flat. Along the wall
+    it sits where a line from the opening's centre at HOLE_CLOCK meets the
+    inside face, but no further toward the right corner than lets the screw
+    clear the lower-right wall by SCREW_GAP as it passes into the opening.
+    """
+    polys = sorted((np.asarray(p) for p in cs.to_polygons()),
+                   key=lambda p: -abs(_area(p)))
+    outer, inner = polys[0], polys[1]
+    top_i, right_i, left_i = (inner[inner[:, 1].argmax()], inner[inner[:, 0].argmax()],
+                              inner[inner[:, 0].argmin()])
+    top_o = outer[outer[:, 1].argmax()]
+    centre = np.array([(left_i[0] + right_i[0]) / 2, (left_i[1] + right_i[1]) / 2])
+    along = (right_i - top_i) / np.linalg.norm(right_i - top_i)
+    n = np.array([along[1], -along[0]])          # out of the opening
+    if np.dot(n, top_i - centre) < 0:
+        n = -n
+    mid = (top_i + right_i) / 2
+    half = np.linalg.norm(right_i - top_i) / 2
+    a = math.radians(HOLE_CLOCK * 30)
+    ray = np.array([math.sin(a), math.cos(a)])   # clockwise from 12
+    t = np.dot(mid - centre, n) / np.dot(ray, n)
+    wanted = float(np.dot(centre + t * ray - mid, along))
+    s = min(wanted, half - SCREW_MAJOR / 2 - SCREW_GAP)
+    inner_pt = mid + s * along
+    wall = float(np.dot(top_o - top_i, n))
+    return {"inner": np.r_[inner_pt, zc], "n": np.r_[n, 0.0], "wall": wall,
+            "shift": s, "wanted": wanted, "face": 2 * half,
+            "clock": 3 + math.degrees(math.atan2(-(inner_pt - centre)[1],
+                                                 (inner_pt - centre)[0])) / 30}
+
+
+def _area(p) -> float:
+    x, y = p[:, 0], p[:, 1]
+    return 0.5 * float(np.dot(x, np.roll(y, -1)) - np.dot(y, np.roll(x, -1)))
+
+
+# The window in the top wall for the iPad mini's top button: centred
+# POWER_CENTRE in from the frame's right-hand outside edge, POWER_LEN long and
+# POWER_H tall inside to inside, from the pocket floor up. The front lip runs
+# unbroken above it. Measured off a print: the first version was a 24 mm slot
+# open to the front, and longer than it needed to be.
+POWER_CENTRE = 21.0
+POWER_LEN = 20.3
+POWER_H = 7.8
+
+
+def power_slot(frame: trimesh.Trimesh) -> m3.Manifold:
+    """The window through the top wall, so a finger reaches the button. Its
+    corners are rounded POWER_R, so the wall above it has no sharp corner to
+    crack from."""
+    x_right = frame.bounds[1, 0]
+    y_top = frame.bounds[1, 1]
+    x0 = x_right - POWER_CENTRE - POWER_LEN / 2
+    r = POWER_R
+    # Drawn in x (across) and z (up), then stood up and run through the wall.
+    win = (m3.CrossSection.square([POWER_LEN - 2 * r, POWER_H - 2 * r])
+           .translate([r, r]).offset(r, m3.JoinType.Round, 2.0, 48))
+    return (win.extrude(12.0).rotate([90, 0, 0])
+            .translate([x0, y_top + 2.0, FLOOR]))
+
+
+# --- floor art --------------------------------------------------------------
+# A design engraved into the pocket floor: the face the iPad rests on, seen
+# whenever it is out. Kept inside the screen opening (so supports under the
+# lip never sit in the grooves) and clear of the walls. FLOOR_ART picks the
+# design (None for a plain floor); FLOOR_STYLES lists them all, and main()
+# writes one holder per style into options/ to choose from.
+FLOOR_ART = "contours"
+FLOOR_STYLES = {
+    "contours": "topographic contour lines, like a map",
+    "iris": "an eye's iris: pupil, rings and radial fibres",
+    "eyechart": "an eye chart: rows of letters, large to small",
+    "waves": "flowing wave lines across the floor",
+    "honeycomb": "a honeycomb of hexagon outlines",
+}
+FLOOR_SEED = 7                  # picks the contours' landscape
+FLOOR_DEPTH = 0.4
+FLOOR_LINE_W = 0.8
+FLOOR_LEVELS = 14
+FLOOR_BOX = (129.0, -196.0, 247.0, -10.0)       # x0, y0, x1, y1
+
+
+def strokes(paths, width: float = FLOOR_LINE_W, closed: bool = False) -> m3.CrossSection:
+    """Polylines drawn with a round pen ``width`` wide."""
+    r = width / 2
+    dot = m3.CrossSection.circle(r, 12)
+    out = []
+    for path in paths:
+        path = np.asarray(path, float)
+        if closed:
+            path = np.vstack([path, path[:1]])
+        # Resample every 1.5 mm or so; each stretch is the hull of two dots.
+        d = np.r_[0, np.cumsum(np.linalg.norm(np.diff(path, axis=0), axis=1))]
+        if d[-1] < 3.0:
+            continue
+        t = np.linspace(0, d[-1], max(2, int(d[-1] / 1.5) + 1))
+        pts = np.c_[np.interp(t, d, path[:, 0]), np.interp(t, d, path[:, 1])]
+        out += [m3.CrossSection.batch_hull([dot.translate(list(a)), dot.translate(list(b))])
+                for a, b in zip(pts[:-1], pts[1:])]
+    return m3.CrossSection.batch_boolean(out, m3.OpType.Add)
+
+
+def art_contours() -> m3.CrossSection:
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    rng = np.random.default_rng(FLOOR_SEED)
+    x0, y0, x1, y1 = FLOOR_BOX
+    X, Y = np.meshgrid(np.linspace(x0, x1, 240), np.linspace(y0, y1, 380))
+    Z = np.zeros_like(X)
+    for _ in range(9):                           # a few hills and hollows
+        cx, cy = rng.uniform(x0, x1), rng.uniform(y0, y1)
+        r = rng.uniform(25, 60)
+        Z += rng.uniform(-1, 1) * np.exp(-((X - cx) ** 2 + (Y - cy) ** 2) / (2 * r * r))
+    fig = plt.figure()
+    cs = plt.contour(X, Y, Z, levels=FLOOR_LEVELS)
+    paths = [p for level in cs.allsegs for p in level if len(p) >= 2]
+    plt.close(fig)
+    return strokes(paths)
+
+
+def art_iris() -> m3.CrossSection:
+    """Pupil, iris edge and collarette as rings, fibres running out between
+    them with a slight wave, and a few faint outer rings."""
+    x0, y0, x1, y1 = FLOOR_BOX
+    c = np.array([(x0 + x1) / 2, (y0 + y1) / 2])
+    R_PUPIL, R_COLLAR, R_IRIS = 13.0, 24.0, 48.0
+    ring = lambda r: c + r * np.c_[np.cos(np.linspace(0, 2 * np.pi, 240, endpoint=False)),
+                                   np.sin(np.linspace(0, 2 * np.pi, 240, endpoint=False))]
+    paths = [ring(R_PUPIL), ring(R_IRIS), ring(R_IRIS + 2.2)]
+    # The collarette: a wavy ring between pupil and iris edge.
+    a = np.linspace(0, 2 * np.pi, 360, endpoint=False)
+    rc = R_COLLAR + 1.6 * np.sin(14 * a)
+    collar = c + np.c_[rc * np.cos(a), rc * np.sin(a)]
+    fibres = []
+    n = 72
+    for i in range(n):
+        th = 2 * np.pi * i / n
+        r = np.linspace(R_PUPIL + 1.6, R_IRIS - 1.6, 30)
+        wob = 0.05 * np.sin((r - R_PUPIL) / 4.0 + i)     # a slight wave, in radians
+        fibres.append(c + np.c_[r * np.cos(th + wob), r * np.sin(th + wob)])
+    # Rings fading out toward the corners, broken into arcs.
+    arcs = []
+    for k, r in enumerate((58.0, 68.0, 80.0, 94.0)):
+        for j in range(12):
+            t = np.linspace(0, 2 * np.pi / 12 * 0.7, 30) + 2 * np.pi * j / 12 + 0.4 * k
+            arcs.append(c + r * np.c_[np.cos(t), np.sin(t)])
+    out = strokes(paths, closed=True) + strokes([collar], closed=True)
+    return out + strokes(fibres, 0.6) + strokes(arcs)
+
+
+def text_region(txt: str, height: float, family: str = "DejaVu Serif") -> m3.CrossSection:
+    """``txt`` as filled outlines, its capitals ``height`` tall, bottom-left at 0."""
+    from matplotlib.font_manager import FontProperties
+    from matplotlib.textpath import TextPath
+    prop = FontProperties(family=family, weight="bold")
+    cap = TextPath((0, 0), "E", size=100, prop=prop).get_extents().height
+    tp = TextPath((0, 0), txt, size=100 * height / cap, prop=prop)
+    loops = [p for p in tp.to_polygons() if len(p) >= 3]
+    return m3.CrossSection(loops, m3.FillRule.EvenOdd)
+
+
+def art_eyechart() -> m3.CrossSection:
+    """Rows of letters getting smaller down the floor, the way an eye chart
+    reads, each row centred; the line widths keep even the smallest letters'
+    strokes about a millimetre wide."""
+    x0, y0, x1, y1 = FLOOR_BOX
+    cx = (x0 + x1) / 2
+    rows = [("E", 34.0), ("F  P", 22.0), ("T  O  Z", 16.0), ("L  P  E  D", 12.0),
+            ("P  E  C  F  D", 9.5), ("E  D  F  C  Z  P", 8.0),
+            ("F  E  L  O  P  Z  D", 7.0), ("D  E  F  P  O  T  E  C", 6.0)]
+    gap = (y1 - y0 - sum(h for _, h in rows)) / (len(rows) + 1)
+    y, out = y1, []
+    for txt, h in rows:
+        y -= gap + h
+        t = text_region(txt, h)
+        bx0, _, bx1, _ = t.bounds()
+        out.append(t.translate([cx - (bx0 + bx1) / 2, y]))
+    return m3.CrossSection.batch_boolean(out, m3.OpType.Add)
+
+
+def art_waves() -> m3.CrossSection:
+    """Lines across the floor, each a sum of two slow waves whose phase drifts
+    from line to line, so the field looks like it ripples."""
+    x0, y0, x1, y1 = FLOOR_BOX
+    x = np.linspace(x0 - 2, x1 + 2, 300)
+    paths = []
+    for i, yb in enumerate(np.arange(y0 + 2, y1, 5.5)):
+        f = (yb - y0) / (y1 - y0)
+        y = (yb + 3.0 * np.sin(2 * np.pi * (x - x0) / 90 + 4 * f)
+             + 1.5 * np.sin(2 * np.pi * (x - x0) / 37 - 7 * f))
+        paths.append(np.c_[x, y])
+    return strokes(paths)
+
+
+def art_honeycomb() -> m3.CrossSection:
+    """Hexagon outlines, 12 mm across the flats."""
+    x0, y0, x1, y1 = FLOOR_BOX
+    s = 12.0 / math.sqrt(3)                      # side = circumradius
+    dx, dy = 1.5 * s, math.sqrt(3) * s
+    hexes = []
+    i = 0
+    for cx in np.arange(x0 - s, x1 + 2 * s, dx):
+        off = (i % 2) * dy / 2
+        for cy in np.arange(y0 - dy, y1 + dy, dy):
+            a = np.arange(6) * np.pi / 3
+            hexes.append(np.c_[cx + s * np.cos(a), cy + off + s * np.sin(a)])
+        i += 1
+    return strokes(hexes, closed=True)
+
+
+def floor_art(style: str | None = None) -> m3.Manifold:
+    """The chosen design's grooves, as a solid to cut from the floor's top face."""
+    style = style or FLOOR_ART
+    art = globals()["art_" + style]()
+    x0, y0, x1, y1 = FLOOR_BOX
+    art = art ^ m3.CrossSection.square([x1 - x0, y1 - y0]).translate([x0, y0])
+    return art.extrude(FLOOR_DEPTH + 0.01).translate([0, 0, FLOOR - FLOOR_DEPTH])
+
+
+def rounded_rect(x0, y0, x1, y1, r) -> m3.CrossSection:
+    return (m3.CrossSection.square([x1 - x0 - 2 * r, y1 - y0 - 2 * r])
+            .translate([x0 + r, y0 + r]).offset(r, m3.JoinType.Round, 2.0, 96))
+
+
+def envelope(frame: trimesh.Trimesh, steps: int = 10) -> m3.Manifold:
+    """The frame's outline with rounded corners and rounded-over edges.
+
+    The outline is convex, so the rounded box is the hull of thin slices of
+    it, each inset by how far the edge round has come in at that height.
+    """
+    (x0, y0, z0), (x1, y1, z1) = frame.bounds
+    slabs = []
+    for i in range(steps + 1):
+        a = math.pi / 2 * i / steps
+        inset = EDGE_R * (1 - math.cos(a))
+        for z in (z0 + EDGE_R * (1 - math.sin(a)), z1 - EDGE_R * (1 - math.sin(a))):
+            sl = rounded_rect(x0 + inset, y0 + inset, x1 - inset, y1 - inset,
+                              CORNER_R - inset).extrude(1e-3)
+            slabs.append(sl.translate([0, 0, min(max(z, z0), z1 - 1e-3)]))
+    return m3.Manifold.batch_hull(slabs)
+
+
+# The front-camera keyhole: a notch in the top wall's inside face and a hole
+# through the lip above it, around x = 189. Filling it back to the wall face
+# (y = -1.1) and the lip's edge (y = -5.4, from LIP_Z) leaves the top as
+# plain as the rest of it.
+CAMERA_X = (185.0, 193.0)
+
+
+def camera_fill() -> m3.Manifold:
+    x0, x1 = CAMERA_X
+    wall = (m3.Manifold.cube([x1 - x0, 1.2, FRONT_Z - FLOOR + 0.05])
+            .translate([x0, -1.1, FLOOR - 0.05]))
+    lip = m3.Manifold.cube([x1 - x0, 4.4, FRONT_Z - LIP_Z]).translate([x0, -5.4, LIP_Z])
+    return wall + lip
+
+
+# Where the iPad mini sits: slid in against the left wall, resting on the
+# bottom wall as it hangs. Its 7.9" 4:3 screen leaves a 21 mm bottom bezel on
+# the 203.2 mm body, and the home button (about 11 mm) is centred in it.
+IPAD_W = 134.8
+HOME_CENTRE = (POCKET_LEFT + IPAD_W / 2, POCKET_BOTTOM + 10.6)
+HOME_HOLE_D = 15.0              # at the back of the lip, against the screen
+HOME_HOLE_W = 19.0              # its width, side to side: a slot, rounded ends
+HOME_SLOPE = 30.0               # degrees from the face: the gentle bevel out
+LIP_Z = LIP_SRC_Z - LIP_THICKER + BACK_THICKER   # underside of the front lip
+FRONT_Z = LIP_SRC_Z + 2.0 + BACK_THICKER        # the front face
+
+
+def home_fill() -> m3.Manifold:
+    """Fill the source's home-button hole (10 mm, 4.7 mm too low) flush with
+    the bottom lip, so the new one can be cut in the right place."""
+    return (m3.Manifold.cube([14.0, 9.6, FRONT_Z - LIP_Z])
+            .translate([181.6, -205.2 - POCKET_LONGER, LIP_Z]))
+
+
+def home_cutter(z_top: float) -> m3.Manifold:
+    """A slot HOME_HOLE_W wide and HOME_HOLE_D tall at the lip's underside,
+    widening at HOME_SLOPE to the front face, so the lip slopes away all round
+    the button. It is the hull of two cones, one at each rounded end. The
+    LIP_THICKER added under the lip is cut straight, so the opening on the
+    face is the size it was."""
+    r0 = HOME_HOLE_D / 2
+    z_slope = LIP_Z + LIP_THICKER
+    h = z_top - z_slope
+    r1 = r0 + h / math.tan(math.radians(HOME_SLOPE))
+    cone = m3.Manifold.cylinder(h + 0.02, r0, r1 + 0.02 / math.tan(math.radians(HOME_SLOPE)), 128)
+    cone = cone.translate([0, 0, z_slope - LIP_Z]) + m3.Manifold.cylinder(
+        z_slope - LIP_Z + 0.02, r0, r0, 128)
+    dx = (HOME_HOLE_W - HOME_HOLE_D) / 2
+    slot = m3.Manifold.batch_hull([cone.translate([-dx, 0, 0]), cone.translate([dx, 0, 0])])
+    return slot.translate([*HOME_CENTRE, LIP_Z - 0.01])
+
+
+# --- colours --------------------------------------------------------------
+BODY_RGB = (0, 0, 0)            # filament 1; the white inlays are filament 2
+
+# --- front accent lines ---------------------------------------------------
+# On, the lines are their own part, in the same white filament as the
+# VanEye logo. Off, the front is plain body colour.
+FRONT_LINES = True
+LINE_DEPTH = 0.4                # the last two layers, in a second filament
+LINE_W = 0.8                    # two nozzle widths
+LINE_IN = 3.0                   # from the case's outer edge
+LINE_LEN = 35.0                 # along each side from each corner
+LINE_MARGIN = 0.7               # kept clear of every edge and opening
+
+
+def front_lines(body: m3.Manifold, frame: trimesh.Trimesh) -> m3.CrossSection:
+    """Corner accents: a line following the rounded outline LINE_IN from the
+    edge, kept only within LINE_LEN of each corner, on the flat front face."""
+    (x0, y0, _), (x1, y1, z1) = frame.bounds
+    outer = rounded_rect(x0, y0, x1, y1, CORNER_R)
+    ring = (outer.offset(-LINE_IN, m3.JoinType.Round)
+            - outer.offset(-LINE_IN - LINE_W, m3.JoinType.Round))
+    keep = body.slice(z1 - 0.05).offset(-LINE_MARGIN, m3.JoinType.Round)
+    L = LINE_LEN
+    boxes = [m3.CrossSection.square([L, L]).translate([x, y])
+             for x, y in ((x0, y1 - L), (x1 - L, y1 - L), (x0, y0), (x1 - L, y0))]
+    lines = ring ^ keep ^ m3.CrossSection.batch_boolean(boxes, m3.OpType.Add)
+    # Drop stubs left where an opening cuts a line short (the button slot
+    # leaves one by the top-right corner): too short to read as a line.
+    return m3.CrossSection.batch_boolean(
+        [p for p in lines.decompose() if p.area() > 4.0], m3.OpType.Add)
+
+
+def lip_fill() -> m3.Manifold:
+    """Lip material that narrows the screen opening on the right by
+    STRIP_WIDER and rounds its corners OPENING_R."""
+    x0, y0, x1, y1 = OPENING
+    # 0.5 mm beyond the opening all round (into lip that is there anyway),
+    # so no sliver of the old edge is left standing.
+    p = 0.5
+    old = m3.CrossSection.square([x1 - x0 + 2 * p, y1 - y0 + 2 * p]).translate([x0 - p, y0 - p])
+    new = rounded_rect(x0, y0, x1 - STRIP_WIDER, y1, OPENING_R)
+    return (old - new).extrude(FRONT_Z - LIP_Z + 0.01).translate([0, 0, LIP_Z])
+
+
+def pocket_fillets(frame: trimesh.Trimesh) -> m3.Manifold:
+    """Material filling the pocket's two left corners out to POCKET_R."""
+    z1 = frame.bounds[1, 2]
+    r = POCKET_R
+    # Reaching 0.1 mm into the walls so the fill fuses with them rather
+    # than meeting them face to face.
+    fill = (m3.CrossSection.square([r + 0.1, r + 0.1]).translate([-0.1, -0.1])
+            - m3.CrossSection.circle(r, 96).translate([r, r]))
+    corners = [fill.translate([POCKET_LEFT, POCKET_BOTTOM]),
+               fill.mirror([0, 1]).translate([POCKET_LEFT, POCKET_TOP])]
+    cs = m3.CrossSection.batch_boolean(corners, m3.OpType.Add)
+    return cs.extrude(z1 - FLOOR + 1e-3).translate([0, 0, FLOOR - 1e-3])
+
+
+def logo_region(path: str, keep_dark: bool, cx: float, cy: float,
+                width: float) -> m3.CrossSection:
+    """The logo's ink as a 2-D region, placed and mirrored for the back face.
+
+    Painter's rule from the top of the stack down: each shape counts only
+    where nothing drawn after it covers it, and only the ink colour is kept
+    (dark on a light logo, light on a dark one).
+    """
+    art = svgart.load_file(path, flatness=0.02)
+    covered, ink = m3.CrossSection(), []
+    for shape in reversed(art.shapes):
+        loops = [sp for sp in shape.subpaths if len(sp) >= 3]
+        if not loops:
+            continue
+        rule = m3.FillRule.EvenOdd if shape.even_odd else m3.FillRule.NonZero
+        poly = m3.CrossSection(loops, rule)
+        visible = poly - covered
+        covered = covered + poly
+        r, g, b = shape.rgb
+        dark = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255 < 0.45
+        if dark == keep_dark and not visible.is_empty():
+            ink.append(visible)
+    region = m3.CrossSection.batch_boolean(ink, m3.OpType.Add)
+    x0, y0, x1, y1 = region.bounds()
+    s = width / (x1 - x0)
+    # Seen from behind, the model's +x runs to the viewer's left; the SVG's
+    # y runs down. Scaling both by -s reads the right way round from the back.
+    region = (region.translate([-(x0 + x1) / 2, -(y0 + y1) / 2])
+                    .scale([-s, -s]).translate([cx, cy]))
+    # Drop specks no nozzle could lay down.
+    return m3.CrossSection.batch_boolean(
+        [p for p in region.decompose() if p.area() > 0.05], m3.OpType.Add)
+
+
+def build_holder(info: dict | None = None, style: str | None = None):
+    src = load_source()
+    names = sorted(src, key=lambda n: -src[n].volume)
+    frame, loop, neck = (src[n] for n in names)
+    frame = stretch_frame(frame)
+    # The neck is a plain box on the top wall, as long as the source's (plus
+    # LOOP_RAISE), NECK_W wide and the case's full thickness; the loop sits
+    # on it.
+    (nx0, ny0, _), (nx1, ny1, _) = neck.bounds
+    z0, z1 = frame.bounds[:, 2]
+    cx, top = (nx0 + nx1) / 2, frame.bounds[1, 1]
+    base = top + (ny1 - ny0) + LOOP_RAISE
+    # It also starts 1 mm inside the frame wall, so the two fuse.
+    neck_box = (m3.Manifold.cube([NECK_W, base - top + 1.0, z1 - z0])
+                .translate([cx - NECK_W / 2, top - 1.0, z0]))
+    cs = loop_section(cx, NECK_W, base)
+    axis = hole_axis(cs, (z0 + z1) / 2)
+    case = ((to_manifold(frame) + pocket_fillets(frame) + camera_fill()
+             + home_fill() + lip_fill()) ^ envelope(frame)) - home_cutter(frame.bounds[1, 2])
+    body = m3.Manifold.batch_boolean(
+        [case, cs.extrude(z1 - z0).translate([0, 0, z0]), neck_box], m3.OpType.Add)
+    body = body - hole_cutter(axis) - power_slot(frame)
+    style = style or FLOOR_ART
+    if style:
+        body = body - floor_art(style)
+    if info is not None:
+        info["axis"] = axis
+        info["top"] = top
+
+    inlays = []
+    for fname, keep_dark, cx, cy, w, label, rgb, kind in LOGOS:
+        region = logo_region(os.path.join(HERE, fname), keep_dark, cx, cy, w)
+        if kind == "etch":
+            body = body - region.extrude(ETCH_DEPTH)
+            continue
+        solid = body ^ region.extrude(INLAY_DEPTH)
+        inlays.append((label, rgb, solid))
+    z1 = frame.bounds[1, 2]
+    if FRONT_LINES:
+        lines = body ^ front_lines(body, frame).extrude(LINE_DEPTH).translate(
+            [0, 0, z1 - LINE_DEPTH])
+        inlays.append(("Front lines", (255, 255, 255), lines))
+    for _, _, solid in inlays:
+        body = body - solid
+
+    parts = [Part("Holder", 0, BODY_RGB, body)]
+    # Every inlay is white, so they share filament 2.
+    parts += [Part(label, 1, rgb, solid) for label, rgb, solid in inlays]
+    return parts
+
+
+# --------------------------------------------------------------------------
+# wing screw
+# --------------------------------------------------------------------------
+
+def build_screw() -> m3.Manifold:
+    """Printed head-down: wings flat on the bed, thread pointing up."""
+    flank = FLANK_CLEAR * 2 / math.sqrt(3)
+    # Wings: a bow-tie outline in the xz plane, extruded WING_THICK in y.
+    k = WING_K
+    lobe = m3.CrossSection.circle(4.5 * k, 64)
+    wing = m3.CrossSection.batch_hull([
+        m3.CrossSection.square([HUB_D, HUB_H]).translate([-HUB_D / 2, 0]),
+        lobe.translate([-(WING_SPAN / 2 - 4.5 * k), 4.5 * k]),
+        lobe.translate([+(WING_SPAN / 2 - 4.5 * k), 4.5 * k]),
+    ])
+    # Waist the outline between hub and lobes so it reads as two wings.
+    waist = m3.CrossSection.circle(6.0 * k, 64)
+    wing = (wing - waist.translate([-8.6 * k, HUB_H + 3.2 * k])
+            - waist.translate([8.6 * k, HUB_H + 3.2 * k]))
+    wings = (wing.extrude(WING_THICK).translate([0, 0, -WING_THICK / 2])
+             .rotate([90, 0, 0]))
+    hub = m3.Manifold.cylinder(HUB_H, HUB_D / 2, HUB_D / 2, 64)
+    collar = m3.Manifold.cylinder(1.0, 4.5, 4.5, 64).translate([0, 0, HUB_H])
+    rod = threaded_rod(SHANK_LEN, SCREW_MINOR, SCREW_MAJOR, -flank)
+    # Chamfer the tip so the thread starts cleanly.
+    tip = m3.Manifold.cylinder(SHANK_LEN, SCREW_MAJOR / 2 + SHANK_LEN - 0.6,
+                               SCREW_MAJOR / 2 - 0.6, 64)
+    rod = (rod ^ tip).translate([0, 0, HUB_H + 1.0])
+    return m3.Manifold.batch_boolean([wings, hub, collar, rod], m3.OpType.Add)
+
+
+def seat_screw(screw: m3.Manifold, axis: dict, spin: float = 0.0,
+               backoff: float = 0.0) -> m3.Manifold:
+    """The screw in the clamp, turned ``spin`` degrees, bearing face on the
+    loop (or ``backoff`` mm short of it)."""
+    face = axis["inner"] + axis["n"] * (axis["wall"] + backoff)
+    s = screw.rotate([0, 0, spin]).translate([0, 0, -(HUB_H + 1.0)])
+    return orient(s, face, -axis["n"])
+
+
+def check_screw(body: m3.Manifold, screw: m3.Manifold, axis: dict) -> dict:
+    """Does the screw turn, and does it go in?
+
+    The head is turned a full revolution in 5 degree steps against the
+    holder, 0.3 mm off its seat; then a rod the screw's full diameter is
+    pushed from the inside face across the opening until it meets the loop,
+    which is how far the screw can reach to clamp something.
+    """
+    head = screw ^ m3.Manifold.cube([80, 80, HUB_H + 1.0]).translate([-40, -40, 0])
+    hits = [deg for deg in range(0, 360, 5)
+            if (seat_screw(head, axis, deg, 0.3) ^ body).volume() > 1e-3]
+    reach = 0.0
+    while reach < axis["face"]:
+        rod = m3.Manifold.cylinder(reach + 0.1, SCREW_MAJOR / 2, SCREW_MAJOR / 2, 48)
+        if (orient(rod, axis["inner"] - 0.05 * axis["n"], -axis["n"]) ^ body).volume() > 1e-3:
+            break
+        reach += 0.1
+    lowest = min(seat_screw(head, axis, deg, 0.3).bounding_box()[1]
+                 for deg in range(0, 360, 5))
+    return {"hits": hits, "reach": reach, "lowest_wing_y": lowest}
+
+
+# --------------------------------------------------------------------------
+# output
+# --------------------------------------------------------------------------
+
+def preview(parts, screw, axis, reach, path):
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    from matplotlib.patches import PathPatch
+    from matplotlib.path import Path
+    from mpl_toolkits.mplot3d.art3d import Poly3DCollection
+
+    fig = plt.figure(figsize=(20, 7))
+    light = np.array([0.3, -0.5, 0.8]) / np.linalg.norm([0.3, -0.5, 0.8])
+
+    def draw(ax, meshes, view):
+        for mesh, rgb in meshes:
+            shade = np.clip(np.abs(mesh.face_normals @ light), 0.25, 1)[:, None]
+            ax.add_collection3d(Poly3DCollection(
+                mesh.triangles, facecolors=np.c_[np.array(rgb) / 255 * shade,
+                                                 np.ones(len(shade))],
+                edgecolor="none"))
+        allv = np.vstack([m.vertices for m, _ in meshes])
+        c, r = allv.mean(0), (allv.max(0) - allv.min(0)).max() / 2
+        ax.set_xlim(c[0] - r, c[0] + r); ax.set_ylim(c[1] - r, c[1] + r)
+        ax.set_zlim(c[2] - r, c[2] + r); ax.view_init(*view); ax.set_axis_off()
+
+    def fill(ax, cs, colour):
+        loops = cs.to_polygons()
+        if not loops:
+            return
+        verts = np.vstack([np.vstack([lp, lp[:1]]) for lp in loops])
+        codes = []
+        for lp in loops:
+            codes += [Path.MOVETO] + [Path.LINETO] * (len(lp) - 1) + [Path.CLOSEPOLY]
+        ax.add_patch(PathPatch(Path(verts, codes), fc=colour, ec="k", lw=0.4))
+
+    meshes = [(to_trimesh(p.solid), p.rgb) for p in parts]
+    ax = fig.add_subplot(1, 3, 1, projection="3d"); ax.set_title("Back (logos)")
+    draw(ax, meshes, (-90, 90))              # from below: the back face
+
+    # The screw as far in as it goes: through the wall and `reach` across.
+    seated = seat_screw(screw, axis, 0, SHANK_LEN - axis["wall"] - reach)
+    z = axis["inner"][2]
+    ax = fig.add_subplot(1, 3, 2)
+    ax.set_title("Front, cut through the thread: clamp at 2 o'clock, "
+                 "button slot top right", fontsize=10)
+    fill(ax, parts[0].solid.slice(z), "#%02x%02x%02x" % parts[0].rgb)
+    fill(ax, seated.slice(z), "#c8c8c8")
+    ax.set_xlim(165, 265); ax.set_ylim(-12, 42); ax.set_aspect("equal")
+    ax.set_xlabel("mm"); ax.grid(True, lw=0.3)
+
+    ax = fig.add_subplot(1, 3, 3, projection="3d"); ax.set_title("Wing screw")
+    draw(ax, [(to_trimesh(screw), (200, 200, 200))], (15, -60))
+    plt.savefig(path, dpi=110, bbox_inches="tight")
+
+
+HOOK_TEST_THICK = 5.0           # the test pieces only need to drop over the post
+HOOK_TEST_LABEL = 0.6           # depth of the size etched in each tab
+
+
+def build_hook_test() -> list:
+    """One loop per HOOK_TEST_SIDES, each on a short neck and a tab with its
+    size etched in the top, side by side."""
+    from matplotlib.font_manager import FontProperties
+    from matplotlib.textpath import TextPath
+    tab_w, tab_h = 24.0, 12.0
+    pieces, x = [], 0.0
+    for side in HOOK_TEST_SIDES:
+        h = side / math.sqrt(2)
+        half = h + LOOP_WALL * math.sqrt(2)
+        cx = x + max(half, tab_w / 2)
+        tab = m3.CrossSection.square([tab_w, tab_h]).translate([cx - tab_w / 2, -tab_h])
+        neck = m3.CrossSection.square([NECK_W, 6.0]).translate([cx - NECK_W / 2, -1.0])
+        cs = loop_section(cx, NECK_W, 5.0, side) + tab + neck
+        solid = cs.extrude(HOOK_TEST_THICK)
+        tp = TextPath((0, 0), f"{side:g}", size=7.0,
+                      prop=FontProperties(family="DejaVu Sans", weight="bold"))
+        loops = [p for p in tp.to_polygons() if len(p) >= 3]
+        text = m3.CrossSection(loops, m3.FillRule.EvenOdd)
+        tx0, ty0, tx1, ty1 = text.bounds()
+        text = text.translate([cx - (tx0 + tx1) / 2, -tab_h / 2 - (ty0 + ty1) / 2])
+        solid = solid - text.extrude(HOOK_TEST_LABEL + 0.01).translate(
+            [0, 0, HOOK_TEST_THICK - HOOK_TEST_LABEL])
+        pieces.append(Part(f"Hook {side:g} mm", 0, BODY_RGB, solid))
+        x = cx + max(half, tab_w / 2) + 6.0
+    return pieces
+
+
+def main():
+    info = {}
+    parts = build_holder(info)
+    screw = build_screw()
+    axis = info["axis"]
+    lo = np.min([p.solid.bounding_box()[:3] for p in parts], axis=0)
+    with open(os.path.join(HERE, "ipad_holder.3mf"), "wb") as f:
+        f.write(parts_to_3mf(parts, origin=(10 - lo[0], 10 - lo[1]),
+                             name="iPad holder", slicer_config=True))
+    with open(os.path.join(HERE, "wing_screw.3mf"), "wb") as f:
+        f.write(parts_to_3mf([Part("Wing screw", 0, (200, 200, 200), screw)],
+                             origin=(20, 20), name="M5 wing screw"))
+    to_trimesh(screw).export(os.path.join(HERE, "wing_screw.stl"))
+    hooks = build_hook_test()
+    with open(os.path.join(HERE, "hook_test.3mf"), "wb") as f:
+        f.write(parts_to_3mf(hooks, origin=(20, 30), name="Hook fit test"))
+    for p in parts:
+        print(f"{p.name:20s} volume {p.solid.volume():9.1f} mm3  "
+              f"genus {p.solid.genus()}")
+    print(f"{'Wing screw':20s} volume {screw.volume():9.1f} mm3  "
+          f"height {screw.bounding_box()[5]:.1f} mm")
+    print(f"loop wall {axis['wall']:.2f} mm, inside face {axis['face']:.2f} mm; "
+          f"screw at {axis['clock']:.2f} o'clock, {axis['shift']:.2f} mm off the "
+          f"face's centre ({axis['wanted']:.2f} wanted for exactly {HOLE_CLOCK:g})")
+    chk = check_screw(parts[0].solid, screw, axis)
+    print(f"wings hit the holder at {len(chk['hits'])} of 72 turns {chk['hits'][:6]}; "
+          f"screw reaches {chk['reach']:.1f} mm into the opening; lowest wing "
+          f"{chk['lowest_wing_y'] - info['top']:.1f} mm above the frame")
+    preview(parts, screw, axis, chk["reach"], os.path.join(HERE, "preview.png"))
+    write_options(parts[0].solid)
+
+
+def write_options(body: m3.Manifold):
+    """One holder per floor design in options/, and a sheet showing them all
+    side by side as seen from the front with the iPad out."""
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    from matplotlib.patches import PathPatch
+    from matplotlib.path import Path
+    out = os.path.join(HERE, "options")
+    os.makedirs(out, exist_ok=True)
+
+    def patch(ax, cs, **kw):
+        loops = cs.to_polygons()
+        verts = np.vstack([np.vstack([lp, lp[:1]]) for lp in loops])
+        codes = []
+        for lp in loops:
+            codes += [Path.MOVETO] + [Path.LINETO] * (len(lp) - 1) + [Path.CLOSEPOLY]
+        ax.add_patch(PathPatch(Path(verts, codes), **kw))
+
+    outline = body.slice(0.5)
+    lip = body.slice(FRONT_Z - 0.5)
+    styles = list(FLOOR_STYLES)
+    fig, axs = plt.subplots(1, len(styles), figsize=(4.2 * len(styles), 7.5))
+    for ax, style in zip(axs, styles):
+        parts = build_holder(style=style)
+        lo = np.min([p.solid.bounding_box()[:3] for p in parts], axis=0)
+        with open(os.path.join(out, f"ipad_holder_{style}.3mf"), "wb") as f:
+            f.write(parts_to_3mf(parts, origin=(10 - lo[0], 10 - lo[1]),
+                                 name=f"iPad holder, {style} floor", slicer_config=True))
+        x0, y0, x1, y1 = FLOOR_BOX
+        art = globals()["art_" + style]() ^ m3.CrossSection.square(
+            [x1 - x0, y1 - y0]).translate([x0, y0])
+        patch(ax, outline, fc="#1a1a1a", ec="none")
+        patch(ax, art, fc="#9a9a9a", ec="none")
+        patch(ax, lip, fc="#000000", ec="#555555", lw=0.6, alpha=0.55)
+        ax.set_xlim(112, 267); ax.set_ylim(-218, 40); ax.set_aspect("equal")
+        ax.set_axis_off()
+        ax.set_title(f"{style}\n{FLOOR_STYLES[style]}", fontsize=10)
+        print(f"options/ipad_holder_{style}.3mf")
+    fig.suptitle("Pocket floor designs (engraved 0.4 mm), seen from the front with "
+                 "the iPad out; the lip is shaded", fontsize=12)
+    plt.savefig(os.path.join(out, "floor_options.png"), dpi=100, bbox_inches="tight")
+
+
+if __name__ == "__main__":
+    main()
