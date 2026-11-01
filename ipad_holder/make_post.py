@@ -8,10 +8,13 @@ that join with a square peg: the male half carries the peg on its inner end,
 the female half a socket to take it. Square, so the halves cannot turn. A
 drop of glue in the socket makes it permanent.
 
-The tip: over the last TIP_LEN mm at the 0 end, the top face is cut down,
-with a step down where the cut starts, so the bar is TIP_BASE thick there,
-widening to TIP_END at the very end -- measured off the real bar (thinnest
-just past the step, not at the end).
+The tip: over the last TIP_LEN mm at the 0 end, one corner is cut off, the
+cut face square to the bar's diagonal, with a step down where the cut
+starts. Measured from the cut face across to the opposite corner, the bar is
+TIP_BASE thick just past the step, widening to TIP_END at the very end (the
+full bar is 14.1 mm corner to corner). A round dimple and a groove are cut
+into the cut face. The cut corner is the top back one as printed, so the
+cut face looks up at 45 degrees and needs no supports.
 
 The scale runs 0 to 40 cm from the tip along the bed face, as a black inlay
 (the first 0.4 mm, in its own part and filament), mirrored so it reads from
@@ -59,50 +62,58 @@ MARK_RGB = (0, 0, 0)
 TIP_LEN = 24.0                  # how far back from the end the cut runs
 TIP_BASE = 7.8                   # thickness where the cut starts, after the step
 TIP_END = 9.3                    # thickness at the very end
-# On the cut face of the real bar: a round button (a rivet or spring-pin head)
-# standing proud, with a groove running from it out to the end. Read off a
+# On the cut face of the real bar: a round dimple (a cut-out, where a ball
+# detent drops in) with a groove running from it out to the end. Read off a
 # photo, so the sizes are estimates: measure the real bar and set these.
-BUTTON_X = 16.0                 # button centre, from the end of the bar
-BUTTON_D = 3.2
-BUTTON_H = 0.7                  # how far it stands above the cut face
+DIMPLE_X = 16.0                 # dimple centre, from the end of the bar
+DIMPLE_D = 3.2
+DIMPLE_DEPTH = 1.0
 GROOVE_W = 0.8
 GROOVE_D = 0.4
 
 
+# The cut takes off one corner, square to the bar's diagonal: the bar hangs
+# turned 45 degrees in the diamond loop, cut corner up. The tip's pieces are
+# drawn in a frame turned with it, where x runs along the bar, the second
+# axis is the distance from the opposite corner (the one left on the bed
+# edge, at y = z = 0) along the diagonal, and the third runs across the cut
+# face; diag() turns that frame back onto the bar.
+
+
+def diag(solid: m3.Manifold) -> m3.Manifold:
+    return solid.rotate([45, 0, 0])
+
+
 def tip_cutter() -> m3.Manifold:
-    """What comes off the top face over the last TIP_LEN mm at x = 0: a wedge
-    from TIP_END thick at the end to TIP_BASE at x = TIP_LEN, then a straight
-    step up to the full bar."""
-    S, e = POST_SIDE, 1.0
-    at_end = (m3.Manifold.cube([0.01, S + 2 * e, S - TIP_END + e])
-              .translate([-e, -e, TIP_END]))
-    at_step = (m3.Manifold.cube([0.01, S + 2 * e, S - TIP_BASE + e])
-               .translate([TIP_LEN, -e, TIP_BASE]))
-    return m3.Manifold.batch_hull([at_end, at_step])
+    """What comes off the corner over the last TIP_LEN mm at x = 0: a wedge
+    leaving TIP_END from the opposite corner at the end and TIP_BASE at
+    x = TIP_LEN, then a straight step up to the full bar."""
+    e = 1.0
+    slab = lambda x, t: m3.Manifold.cube([0.01, 20.0, 30.0]).translate([x, t, -15.0])
+    return diag(m3.Manifold.batch_hull([slab(-e, tip_face_z(-e)),
+                                        slab(TIP_LEN, TIP_BASE)]))
 
 
 def tip_face_z(x: float) -> float:
-    """Height of the cut face at ``x`` mm from the end."""
+    """How far the cut face is from the opposite corner at ``x`` mm from the
+    end: the bar's thickness there, measured across the diagonal."""
     return TIP_END + (TIP_BASE - TIP_END) * x / TIP_LEN
 
 
-def tip_button() -> m3.Manifold:
-    """The domed button on the cut face, centred across the bar."""
-    r = BUTTON_D / 2
-    sink = 0.3                                    # into the face, so they fuse
-    dome = (m3.Manifold.sphere(r, 48).scale([1, 1, (BUTTON_H + sink) / r])
-            ^ m3.Manifold.cube([BUTTON_D + 1, BUTTON_D + 1, BUTTON_H + sink + 1])
-            .translate([-r - 0.5, -r - 0.5, 0]))
-    return dome.translate([BUTTON_X, POST_SIDE / 2, tip_face_z(BUTTON_X) - sink])
+def tip_dimple() -> m3.Manifold:
+    """The round cut-out in the cut face, on its centre line: a sphere
+    flattened to DIMPLE_DEPTH, centred on the face."""
+    r = DIMPLE_D / 2
+    return diag(m3.Manifold.sphere(r, 48).scale([1, DIMPLE_DEPTH / r, 1])
+                .translate([DIMPLE_X, tip_face_z(DIMPLE_X), 0]))
 
 
 def tip_groove() -> m3.Manifold:
-    """The groove from the button out to the end, following the face's slope."""
+    """The groove from the dimple out to the end, following the face's slope."""
     w, d, e = GROOVE_W, GROOVE_D, 1.0
-    y0 = POST_SIDE / 2 - w / 2
-    at_end = m3.Manifold.cube([0.01, w, d + e]).translate([-e, y0, tip_face_z(-e) - d])
-    at_btn = m3.Manifold.cube([0.01, w, d + e]).translate([BUTTON_X, y0, tip_face_z(BUTTON_X) - d])
-    return m3.Manifold.batch_hull([at_end, at_btn])
+    strip = lambda x: (m3.Manifold.cube([0.01, d + e, w])
+                       .translate([x, tip_face_z(x) - d, -w / 2]))
+    return diag(m3.Manifold.batch_hull([strip(-e), strip(DIMPLE_X)]))
 
 
 def bar(length: float) -> m3.Manifold:
@@ -126,7 +137,7 @@ def build_halves() -> tuple[m3.Manifold, m3.Manifold]:
            .translate([PEG_LEN - 0.01, 0, 0]))
     peg = m3.Manifold.batch_hull([body, tip])
     male = (bar(half) + peg.translate([half - 0.01, 0, 0]) - tip_cutter()
-            - tip_groove() + tip_button())
+            - tip_groove() - tip_dimple())
     socket = centred_square(PEG_SIDE + 2 * FIT, PEG_LEN + SOCKET_EXTRA + 0.01)
     female = bar(half) - socket.translate([-0.01, 0, 0])
     return male, female
