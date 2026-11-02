@@ -1,9 +1,9 @@
-"""A copy of the bar the holder slides along: 10 x 10 mm square, 400 mm long,
+"""A copy of the bar the holder slides along: 10 x 10 mm square, 500 mm long,
 with the real bar's cut-down tip at one end and a millimetre scale.
 
     python ipad_holder/make_post.py
 
-400 mm is longer than the bed, so the bar is printed as two 200 mm halves
+500 mm is longer than the bed, so the bar is printed as two 250 mm halves
 that join with a square peg: the male half carries the peg on its inner end,
 the female half a socket to take it. Square, so the halves cannot turn. A
 drop of glue in the socket makes it permanent.
@@ -16,7 +16,7 @@ full bar is 14.1 mm corner to corner). A round dimple and a groove are cut
 into the cut face. The cut corner is the top back one as printed, so the
 cut face looks up at 45 degrees and needs no supports.
 
-The scale runs 0 to 40 cm from the tip along the bed face, as a black inlay
+The scale runs 0 to 50 cm from the tip along the bed face, as a black inlay
 (the first 0.4 mm, in its own part and filament), mirrored so it reads from
 below: a tick every mm, longer every 5 mm, longest every cm, and each cm
 numbered. The two side faces carry the cm and 5 mm ticks engraved 0.4 mm
@@ -24,7 +24,9 @@ deep, without numbers. The top face is plain.
 
 Writes ``test_post.3mf`` (both halves, with the scale) and
 ``test_post_male.stl`` / ``test_post_female.stl`` (one colour, no scale).
-Print both as they lie, scale on the bed: no supports.
+Print both as they lie, scale on the bed: no supports. A half with its peg is
+265 mm, longer than a P1S's 256 mm bed, so both lie along the bed's diagonal
+(362 mm), side by side and centred; the STLs are turned the same way.
 """
 
 from __future__ import annotations
@@ -40,7 +42,7 @@ sys.path.insert(0, os.path.dirname(HERE))
 from phonecase.threemf import Part, parts_to_3mf               # noqa: E402
 
 POST_SIDE = 10.0                # the real post's section, by calipers
-POST_LEN = 400.0                # joined length, peg hidden in the socket
+POST_LEN = 500.0                # joined length, peg hidden in the socket
 PEG_SIDE = 5.0                  # leaves 2.5 mm of wall round the socket
 PEG_LEN = 15.0
 PEG_CHAMFER = 0.6               # on the peg's tip, so it finds the socket
@@ -187,20 +189,34 @@ def scale_parts(solid: m3.Manifold, x0: float):
     return body, inlay
 
 
+BED = 256.0                     # Bambu Lab P1S, square
+GAP = 10.0                      # between the halves on the bed
+
+
+def diagonal(solid: m3.Manifold) -> m3.Manifold:
+    """Turned 45 degrees about the pair's middle and centred on the bed."""
+    S, L = POST_SIDE, POST_LEN / 2 + PEG_LEN
+    mid = [L / 2, S + GAP / 2, 0]
+    return (solid.translate([-mid[0], -mid[1], 0]).rotate([0, 0, 45])
+            .translate([BED / 2, BED / 2, 0]))
+
+
 def main():
     male, female = build_halves()
     half = POST_LEN / 2
     m_body, m_ink = scale_parts(male, 0.0)
     f_body, f_ink = scale_parts(female, half)
-    # Side by side on the bed, 10 mm apart.
-    gap = POST_SIDE + 10.0
+    # Side by side, 10 mm apart, then turned onto the bed's diagonal.
+    gap = POST_SIDE + GAP
     f_body, f_ink = f_body.translate([0, gap, 0]), f_ink.translate([0, gap, 0])
+    m_body, m_ink, f_body, f_ink = (diagonal(p) for p in (m_body, m_ink, f_body, f_ink))
+    male, female = diagonal(male), diagonal(female)
     parts = [Part("Male half", 0, BODY_RGB, m_body),
              Part("Male half scale", 1, MARK_RGB, m_ink),
              Part("Female half", 0, BODY_RGB, f_body),
              Part("Female half scale", 1, MARK_RGB, f_ink)]
     with open(os.path.join(HERE, "test_post.3mf"), "wb") as f:
-        f.write(parts_to_3mf(parts, origin=(20, 20), name="10 mm test post, 400 mm",
+        f.write(parts_to_3mf(parts, origin=(0, 0), name="10 mm test post, 500 mm",
                              slicer_config=True))
     for name, solid in (("male", male), ("female", female)):
         m = solid.to_mesh()
@@ -208,7 +224,8 @@ def main():
             os.path.join(HERE, f"test_post_{name}.stl"))
     for name, solid in (("male", male), ("female", female)):
         b = solid.bounding_box()
-        print(f"{name:6s} {b[3] - b[0]:.1f} x {b[4] - b[1]:.1f} x {b[5] - b[2]:.1f} mm, "
+        print(f"{name:6s} on the bed x {b[0]:.1f}..{b[3]:.1f}, y {b[1]:.1f}..{b[4]:.1f}, "
+              f"up to {b[5]:.1f} mm, "
               f"genus {solid.genus()}, {len(solid.decompose())} piece")
     print(f"scale inlay {m_ink.volume() + f_ink.volume():.0f} mm3, "
           f"{len(m_ink.decompose()) + len(f_ink.decompose())} pieces")
