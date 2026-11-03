@@ -54,6 +54,20 @@ def test_every_asset_has_a_unique_key_and_file_name():
     assert len({a.stem for a in assets}) == len(assets)
 
 
+def test_set3_modules_follow_the_contract(capsys):
+    folder = Path(B.HERE) / "set3"
+    files = sorted(f.stem for f in folder.glob("*.py") if not f.stem.startswith("_"))
+    loaded = B.load_module_assets("set3", 3)
+    assert "skipping" not in capsys.readouterr().err
+    assert sorted(a.key for a in loaded) == files
+    order = (folder / "ORDER").read_text().split()
+    assert len(order) == len(set(order)), "ORDER lists a key twice"
+    assert set(files) <= set(order), "ORDER must list every set 3 module"
+    for a in loaded:
+        assert a.set == 3 and a.stem and a.title and callable(a.build)
+        assert (Path(B.HERE) / f"{a.stem}.glb").exists(), f"{a.key} has not been built"
+
+
 @pytest.mark.parametrize("key", ["jersey_barrier", "wheelbarrow", "type3_barricade"])
 def test_print_file_is_one_closed_piece_flat_on_the_bed(key, tmp_path):
     m = Model(print_mode=True, scale=50)
