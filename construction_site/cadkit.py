@@ -332,13 +332,27 @@ def _tess(shape: cq.Shape, tol, ang):
     return v, t
 
 
-def export_glb(model: Model, path: Path, tol=0.6, ang=0.2):
+def _glb_angle(solid: cq.Shape) -> float:
+    """Angular deflection for one solid: fine for big round things (wheels, drums), coarser for
+    small ones (chain links, bolts, cord coils), which otherwise dominate a GLB's size unseen."""
+    size = solid.BoundingBox().DiagonalLength
+    return 0.2 if size > 400 else 0.35 if size > 120 else 0.6
+
+
+def export_glb(model: Model, path: Path, tol=0.6):
     import trimesh
     from trimesh.visual.material import PBRMaterial
 
     scene = trimesh.Scene()
     for name, fin, shapes in model.parts:
-        v, t = _tess(cq.Compound.makeCompound(shapes), tol, ang)
+        vs, ts, n = [], [], 0
+        for shape in shapes:
+            for solid in shape.Solids() or [shape]:
+                v, t = _tess(solid, tol, _glb_angle(solid))
+                vs.append(v)
+                ts.append(t + n)
+                n += len(v)
+        v, t = np.concatenate(vs), np.concatenate(ts)
         if not len(t):
             continue
         v = np.column_stack([v[:, 0], v[:, 2], -v[:, 1]]) / 1000.0   # mm, Z up -> m, Y up

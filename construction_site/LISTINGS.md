@@ -1,7 +1,8 @@
-# Cults3D listing kit: Construction Set 2
+# Cults3D listing kit: Construction Sets 2 and 3
 
-Ready-to-paste titles, descriptions and tags for the 13 set 2 assets (14–26 in
-[README.md](README.md)), plus a suggested free/paid split. Prices are starting
+Ready-to-paste titles, descriptions and tags for the 26 set 2 and set 3 assets
+(14–39 in [README.md](README.md)), plus a suggested free/paid split. Set 3 starts
+at [Construction Set 3](#construction-set-3-2739). Prices are starting
 points to check against similar listings, not market data.
 
 ## Free or paid
@@ -181,3 +182,136 @@ plates, wound with cable, and the tail run out along the ground.
 - 40 × 18 × 25 mm at 1:50, one piece. Light support under the cable tail.
 
 Tags: `cable reel`, `cable drum`, `spool`, `electrical`, `construction site`, `1:50`, `28mm`, `scatter terrain`, `industrial`
+
+---
+
+# Construction Set 3 (27–39)
+
+The same 1:50 scale and print rules as set 2: one closed piece per file, flat base, 0.8 mm minimum.
+
+| Tier | Assets |
+|---|---|
+| **Free** | Traffic Drum |
+| **Low** (about $1–2) | Concrete Pipe Stack, Water-Filled Barrier |
+| **Mid** (about $3–4) | Electric Scissor Lift, Mobile Site Office, Solar Arrow Board Trailer, Trench Shield |
+| **Premium** (about $5–7) | Wheel Loader, Articulated Dump Truck, Crawler Dozer, Backhoe Loader, Vibratory Roller, Concrete Mixer Truck |
+| **Bundle** | All 13 (and a "complete site" bundle of all 39) |
+
+The six machines are the strongest sellers in the whole library. Lead the store with them, and offer the free traffic drum as the sample for this set.
+
+## 27 · Wheel Loader (3 yd³ class) 1:50
+
+Medium (about 16 t) articulated loader with its bucket on the ground: Z-bar linkage with lift and tilt rams, bell crank and tilt link, a bucket with bolt-on edge segments and side cutters, centre hinge and steering rams, 23.5R25 chevron tyres, fenders and mud flaps, ROPS cab with ladder and handrails, louvred hood, exhaust and pre-cleaner, sculpted counterweight with lamps.
+
+- 166 × 59 × 71 mm at 1:50, one piece. Supports: under the bucket linkage, lift arms, fenders, cab roof and mirrors.
+- Suggested price: about $5–7.
+
+Tags: `wheel loader`, `front end loader`, `loader`, `earthmoving`, `1:50`, `construction site`, `diorama`, `scale model`
+
+## 28 · Articulated Dump Truck (30 t class) 1:50
+
+6x6 articulated hauler, body down: tractor with long hood, grille and bumper, glazed cab with ladder and platform, articulation/oscillation hitch with steering rams, walking-beam tandem bogie, 23.5R25 tyres, flared curved-floor dump body with cab-protector lip and two hoist rams.
+
+- 213 × 60 × 75 mm at 1:50, one piece. Supports: under the body floor, cab-protector lip, cab roof, platform and mudguards.
+- Suggested price: about $5–7.
+
+Tags: `articulated dump truck`, `adt`, `dump truck`, `hauler`, `1:50`, `construction site`, `diorama`, `scale model`
+
+## 29 · Crawler Dozer (20 t class) 1:50
+
+20 t class dozer on a conventional oval (low-drive) undercarriage: 560 mm grouser shoes on a pinned chain, sprocket, idler, rollers and carrier rollers, semi-U blade on push arms with tilt ram and lift rams, louvred hood, ROPS cab, fenders with steps and handrails, and a single-shank ripper raised at the rear.
+
+- 133 × 68 × 66 mm at 1:50, one piece. Supports: under the blade face, push arms, ripper, cab roof and the upper track runs.
+- Suggested price: about $5–7.
+
+Tags: `bulldozer`, `crawler dozer`, `dozer`, `tracked`, `1:50`, `construction site`, `diorama`, `scale model`
+
+## 30 · Backhoe Loader (14 ft dig depth class) 1:50
+
+4WD backhoe loader working: loader arms with twin tilt rams and a 1 m³ bucket on the ground, sloping hood, 19.5L-24 and 12.5/80-18 tyres, glazed cab with interior, and a backhoe with swing frame, curved boom, dipper, H-link and 24 in bucket resting behind, between two stabilisers down on pads.
+
+- 178 × 68 × 76 mm at 1:50, one piece. Supports: under the boom and dipper arch, loader arms, cab roof and mirrors.
+- Suggested price: about $5–7.
+
+Tags: `backhoe loader`, `backhoe`, `digger`, `loader`, `1:50`, `construction site`, `diorama`, `scale model`
+
+## 31 · Single-Drum Vibratory Roller (84 in, 11 t class) 1:50
+
+11 t class smooth-drum vibratory roller: 84 in drum in a yoke with scraper bars, rubber isolators and drive and vibration motors, centre joint with steering rams, 23.1-26 tractor tyres, long louvred hood with exhaust and pre-cleaner, ROPS cab with ladder.
+
+- 120 × 47 × 63 mm at 1:50, one piece. Supports: under the drum yoke, platform, hood edges, roof and fender arches.
+- Suggested price: about $5–7.
+
+Tags: `road roller`, `soil compactor`, `vibratory roller`, `compaction`, `1:50`, `construction site`, `diorama`, `scale model`
+
+## 32 · Concrete Mixer Truck (8 m³ / 10 yd³) 1:50
+
+Transit mixer on a generic 6x4 cab-over: pear-shaped 8 m³ drum tilted 13° with orange and white bands, roller track and support rollers, gearbox pedestal, charge hopper, collection hopper and folding chute stowed, rear ladder and platform, water tank, side guards and mudguards.
+
+- 190 × 61 × 80 mm at 1:50, one piece. Supports: under the drum belly, hoppers and chute, cab overhangs, platform and mudguards.
+- Suggested price: about $5–7.
+
+Tags: `concrete mixer`, `cement truck`, `transit mixer`, `ready mix`, `1:50`, `construction site`, `diorama`, `scale model`
+
+## 33 · Electric Scissor Lift (26 ft class, raised) 1:50
+
+26 ft class, 46 in-wide electric slab scissor lift raised to a 3.9 m deck: a geometrically correct five-stage scissor stack with pins, cross tubes, slide rollers and lift ram, battery trays, pothole guards, solid tyres, a platform with roll-out extension deck, guardrails, toeboards, entry gate and control box.
+
+- 60 × 25 × 101 mm at 1:50, one piece. Supports: under the platform and extension deck; resin strongly recommended.
+- Suggested price: about $3–4.
+
+Tags: `scissor lift`, `aerial work platform`, `mewp`, `access`, `1:50`, `construction site`, `diorama`, `scale model`
+
+## 34 · Mobile Site Office (10 x 40 ft) 1:50
+
+Single-wide 10 x 40 ft site office on cribbing piers: ribbed siding with trim, crowned roof with vents, ten sliding windows with blinds, two steel doors (one with a timber stair and landing, one with a galvanised prefab stair), wall A/C units, lights, I-beam chassis and A-frame tongue.
+
+- 296 × 116 × 75 mm at 1:50, one piece. Supports: under the box between the piers, the tongue and the A/C units.
+- Suggested price: about $3–4.
+
+Tags: `site office`, `office trailer`, `mobile office`, `portable building`, `1:50`, `construction site`, `diorama`, `scale model`
+
+## 35 · Solar Arrow Board Trailer 1:50
+
+Solar arrow board set up for work: 96 x 48 in panel with 25 hooded amber lamps forming a right arrow, telescoping mast with winch, tilted solar modules on a rack, battery box, leaf-spring axle, four outrigger jacks on pads, A-frame tongue with coupler and jockey wheel.
+
+- 77 × 50 × 68 mm at 1:50, one piece. Supports: under the sign panel (or print it face down) and the solar rack.
+- Suggested price: about $3–4.
+
+Tags: `arrow board`, `traffic advisor`, `work zone`, `solar`, `1:50`, `construction site`, `diorama`, `scale model`
+
+## 36 · Trench Shield (8 x 20 ft) 1:50
+
+8 x 20 ft steel trench shield: two 120 mm double-skin panels with knife edges, top cap and end channels, ribs and spreader bosses, four 6 in galvanised spreaders with collars, pins and keepers, lifting padeyes with shackles, stacking sockets and pulling eyes.
+
+- 128 × 31 × 53 mm at 1:50, one piece. Supports: under the spreaders and the pulling eyes; a brim helps on FDM.
+- Suggested price: about $3–4.
+
+Tags: `trench box`, `trench shield`, `shoring`, `excavation`, `1:50`, `construction site`, `diorama`, `scale model`
+
+## 37 · Concrete Pipe Stack (24 in RCP) 1:50
+
+Six 24 in Wall B reinforced concrete pipes in a 3-2-1 pyramid, bells alternating: open bores, bells with socket steps, spigots with rubber gaskets, lift holes and stencils, on timber skids and dunnage with wedge chocks.
+
+- 52 × 61 × 56 mm at 1:50, one piece. Supports: under the pipe barrels and bells (tree supports).
+- Suggested price: about $1–2.
+
+Tags: `concrete pipe`, `rcp`, `storm drain`, `building materials`, `1:50`, `construction site`, `diorama`, `scale model`
+
+## 38 · Water-Filled Barrier (6 ft, plastic) 1:50
+
+6 ft, 42 in rotomoulded water-filled barrier: tapered section with moulded panels and ribs, reflective sheeting, interlocking hinge knuckles with a T-handle pin, fill cap, post sockets, hand-holds, fork slots and drain plug.
+
+- 37 × 12 × 22 mm at 1:50, one piece. Supports: none.
+- Suggested price: about $1–2.
+
+Tags: `water filled barrier`, `plastic barrier`, `work zone`, `traffic control`, `1:50`, `construction site`, `diorama`, `scale model`
+
+## 39 · Traffic Drum (36 in channelizer) 1:50 (FREE)
+
+MUTCD-style traffic drum: tapered moulded body with a hand-hold, four 5 in orange and white reflective bands in moulded channels, a 36 in tyre-ring ballast base and a Type A amber warning light clamped on top.
+
+- 18 × 18 × 28 mm at 1:50, one piece. Supports: none.
+- Suggested price: FREE.
+
+Tags: `traffic drum`, `channelizer`, `barrel`, `work zone`, `1:50`, `construction site`, `diorama`, `scale model`

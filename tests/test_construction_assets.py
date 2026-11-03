@@ -22,7 +22,9 @@ trimesh = pytest.importorskip("trimesh")
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "construction_site"))
 
 import build_assets as B  # noqa: E402
-from cadkit import IN, Model, export_print, prism  # noqa: E402
+import numpy as np  # noqa: E402
+
+from cadkit import IN, Model, box, count_bad_edges, export_print, prism, weld_float32  # noqa: E402
 
 
 def asset(key):
@@ -68,7 +70,8 @@ def test_set3_modules_follow_the_contract(capsys):
         assert (Path(B.HERE) / f"{a.stem}.glb").exists(), f"{a.key} has not been built"
 
 
-@pytest.mark.parametrize("key", ["jersey_barrier", "wheelbarrow", "type3_barricade"])
+@pytest.mark.parametrize("key", ["jersey_barrier", "wheelbarrow", "type3_barricade", "traffic_drum", "trench_box",
+                                 "water_filled_barrier"])
 def test_print_file_is_one_closed_piece_flat_on_the_bed(key, tmp_path):
     m = Model(print_mode=True, scale=50)
     asset(key).build(m)
@@ -76,6 +79,7 @@ def test_print_file_is_one_closed_piece_flat_on_the_bed(key, tmp_path):
     report = export_print(m, stl, 50)
     assert report["pieces"] == 1
     assert report["skipped_solids"] == 0
+    assert report["nonmanifold_edges"] == 0
 
     data = stl.read_bytes()
     (count,) = struct.unpack_from("<I", data, 80)
@@ -86,6 +90,30 @@ def test_print_file_is_one_closed_piece_flat_on_the_bed(key, tmp_path):
     assert mesh.volume > 0
     assert mesh.bounds[0][2] == pytest.approx(0, abs=1e-4)
     assert mesh.bounds[0][:2] == pytest.approx(-mesh.bounds[1][:2], abs=1e-3)   # centred
+
+
+def test_welding_at_float32_collapses_edges_it_cannot_resolve():
+    # two vertices 1e-9 mm apart are one point in float32: their triangle has to go
+    v = np.array([[0, 0, 0], [1, 0, 0], [1 + 1e-9, 0, 0], [0, 1, 0]], float)
+    t = np.array([[0, 1, 3], [1, 2, 3]])
+    vw, tw = weld_float32(v, t)
+    assert len(vw) == 3 and len(tw) == 1
+    assert vw[tw[0]].tolist() == [[0, 0, 0], [1, 0, 0], [0, 1, 0]]   # the surviving triangle, same winding
+
+
+def test_edge_count_flags_two_boxes_touching_on_a_line():
+    tetra = np.array([[0, 1, 2], [0, 3, 1], [1, 3, 2], [2, 3, 0]])
+    assert count_bad_edges(tetra) == 0
+    assert count_bad_edges(tetra[:3]) == 3          # an open surface
+
+
+def test_parts_touching_only_along_a_line_still_print_clean(tmp_path):
+    # the case that left pinched edges in the print files: two blocks sharing one edge
+    m = Model(print_mode=True, scale=50)
+    m.add("a", None, box(0, 1000, 0, 1000, 0, 1000), box(1000, 2000, 1000, 2000, 0, 1000),
+          box(0, 2000, 0, 2000, 900, 1100))
+    report = export_print(m, tmp_path / "x.stl", 50)
+    assert report["nonmanifold_edges"] == 0 and report["pieces"] == 1
 
 
 def test_print_mode_thickens_thin_parts_to_a_printable_wall():

@@ -16,11 +16,12 @@
     52.2
    ],
    "volume_cm3": 20.23,
-   "triangles": 38496,
+   "triangles": 31194,
    "pieces": 1,
    "sealed_voids": 2,
    "genus": 37,
-   "skipped_solids": 0
+   "skipped_solids": 0,
+   "nonmanifold_edges": 0
   },
   "seconds": 12.3
  },
@@ -41,11 +42,12 @@
     40.0
    ],
    "volume_cm3": 25.69,
-   "triangles": 33974,
+   "triangles": 24896,
    "pieces": 1,
    "sealed_voids": 0,
    "genus": 14,
-   "skipped_solids": 0
+   "skipped_solids": 0,
+   "nonmanifold_edges": 0
   },
   "seconds": 10.8
  },
@@ -66,11 +68,12 @@
     51.8
    ],
    "volume_cm3": 291.25,
-   "triangles": 20290,
+   "triangles": 12160,
    "pieces": 1,
    "sealed_voids": 0,
    "genus": 20,
-   "skipped_solids": 0
+   "skipped_solids": 0,
+   "nonmanifold_edges": 0
   },
   "seconds": 9.9
  },
@@ -90,12 +93,13 @@
     72.0,
     193.1
    ],
-   "volume_cm3": 29.01,
-   "triangles": 32314,
+   "volume_cm3": 29.0,
+   "triangles": 20466,
    "pieces": 1,
    "sealed_voids": 0,
    "genus": 14,
-   "skipped_solids": 0
+   "skipped_solids": 0,
+   "nonmanifold_edges": 0
   },
   "seconds": 9.9
  },
@@ -116,11 +120,12 @@
     107.3
    ],
    "volume_cm3": 2.85,
-   "triangles": 67174,
+   "triangles": 49120,
    "pieces": 1,
    "sealed_voids": 0,
    "genus": 73,
-   "skipped_solids": 0
+   "skipped_solids": 0,
+   "nonmanifold_edges": 0
   },
   "seconds": 11.8
  },
@@ -141,11 +146,12 @@
     49.8
    ],
    "volume_cm3": 22.45,
-   "triangles": 6512,
+   "triangles": 4492,
    "pieces": 1,
    "sealed_voids": 0,
    "genus": 3,
-   "skipped_solids": 0
+   "skipped_solids": 0,
+   "nonmanifold_edges": 0
   },
   "seconds": 7.8
  },
@@ -166,11 +172,12 @@
     50.4
    ],
    "volume_cm3": 2.21,
-   "triangles": 23934,
+   "triangles": 15664,
    "pieces": 1,
    "sealed_voids": 0,
    "genus": 10,
-   "skipped_solids": 0
+   "skipped_solids": 0,
+   "nonmanifold_edges": 0
   },
   "seconds": 9.8
  },
@@ -191,11 +198,12 @@
     16.3
    ],
    "volume_cm3": 5.55,
-   "triangles": 14568,
+   "triangles": 8364,
    "pieces": 1,
    "sealed_voids": 0,
    "genus": 6,
-   "skipped_solids": 0
+   "skipped_solids": 0,
+   "nonmanifold_edges": 0
   },
   "seconds": 7.5
  },
@@ -216,11 +224,12 @@
     16.3
    ],
    "volume_cm3": 16.65,
-   "triangles": 48788,
+   "triangles": 29554,
    "pieces": 1,
    "sealed_voids": 0,
    "genus": 38,
-   "skipped_solids": 0
+   "skipped_solids": 0,
+   "nonmanifold_edges": 0
   },
   "seconds": 9.9
  },
@@ -245,7 +254,8 @@
    "pieces": 1,
    "sealed_voids": 0,
    "genus": 272,
-   "skipped_solids": 0
+   "skipped_solids": 0,
+   "nonmanifold_edges": 0
   },
   "seconds": 13.7
  },
@@ -270,7 +280,8 @@
    "pieces": 1,
    "sealed_voids": 0,
    "genus": 43,
-   "skipped_solids": 0
+   "skipped_solids": 0,
+   "nonmanifold_edges": 0
   },
   "seconds": 8.4
  },
@@ -291,11 +302,12 @@
     14.0
    ],
    "volume_cm3": 0.52,
-   "triangles": 15240,
+   "triangles": 12338,
    "pieces": 1,
    "sealed_voids": 0,
    "genus": 3,
-   "skipped_solids": 0
+   "skipped_solids": 0,
+   "nonmanifold_edges": 0
   },
   "seconds": 10.2
  },
@@ -303,6 +315,7 @@
   "key": "cable_reel",
   "title": "Wooden Cable Reel (49 in, wound)",
   "stem": "Cable_Reel_Wooden",
+  "set": 2,
   "size_mm": [
    1995,
    900,
@@ -315,13 +328,365 @@
     18.0,
     24.8
    ],
-   "volume_cm3": 5.75,
-   "triangles": 112050,
+   "volume_cm3": 5.8,
+   "triangles": 63606,
    "pieces": 1,
    "sealed_voids": 0,
-   "genus": 17,
-   "skipped_solids": 0
+   "genus": 5,
+   "skipped_solids": 0,
+   "nonmanifold_edges": 0
   },
-  "seconds": 17.7
+  "seconds": 16.6
+ },
+ {
+  "key": "wheel_loader",
+  "title": "Wheel Loader (3 yd\u00b3 class)",
+  "stem": "Wheel_Loader_3yd",
+  "set": 3,
+  "size_mm": [
+   8270,
+   2916,
+   3574
+  ],
+  "parts": 107,
+  "print": {
+   "size_mm": [
+    166.0,
+    58.9,
+    71.2
+   ],
+   "volume_cm3": 152.55,
+   "triangles": 133618,
+   "pieces": 1,
+   "sealed_voids": 0,
+   "genus": 57,
+   "skipped_solids": 0,
+   "nonmanifold_edges": 0
+  },
+  "seconds": 24.0
+ },
+ {
+  "key": "articulated_dump_truck",
+  "title": "Articulated Dump Truck (30 t class)",
+  "stem": "Articulated_Dump_Truck_30t",
+  "set": 3,
+  "size_mm": [
+   10632,
+   3025,
+   3753
+  ],
+  "parts": 134,
+  "print": {
+   "size_mm": [
+    212.6,
+    60.5,
+    74.8
+   ],
+   "volume_cm3": 209.15,
+   "triangles": 142596,
+   "pieces": 1,
+   "sealed_voids": 0,
+   "genus": 48,
+   "skipped_solids": 0,
+   "nonmanifold_edges": 0
+  },
+  "seconds": 23.3
+ },
+ {
+  "key": "crawler_dozer",
+  "title": "Crawler Dozer (20 t class)",
+  "stem": "Crawler_Dozer_20t",
+  "set": 3,
+  "size_mm": [
+   6642,
+   3380,
+   3283
+  ],
+  "parts": 126,
+  "print": {
+   "size_mm": [
+    132.8,
+    68.0,
+    65.5
+   ],
+   "volume_cm3": 119.0,
+   "triangles": 129502,
+   "pieces": 1,
+   "sealed_voids": 0,
+   "genus": 118,
+   "skipped_solids": 0,
+   "nonmanifold_edges": 0
+  },
+  "seconds": 24.3
+ },
+ {
+  "key": "backhoe_loader",
+  "title": "Backhoe Loader (14 ft dig depth class)",
+  "stem": "Backhoe_Loader",
+  "set": 3,
+  "size_mm": [
+   8921,
+   3400,
+   3810
+  ],
+  "parts": 153,
+  "print": {
+   "size_mm": [
+    178.5,
+    68.0,
+    75.9
+   ],
+   "volume_cm3": 130.89,
+   "triangles": 144966,
+   "pieces": 1,
+   "sealed_voids": 0,
+   "genus": 75,
+   "skipped_solids": 0,
+   "nonmanifold_edges": 0
+  },
+  "seconds": 25.2
+ },
+ {
+  "key": "soil_compactor",
+  "title": "Single-Drum Vibratory Roller (84 in, 11 t class)",
+  "stem": "Vibratory_Soil_Roller_84in",
+  "set": 3,
+  "size_mm": [
+   6003,
+   2332,
+   3140
+  ],
+  "parts": 123,
+  "print": {
+   "size_mm": [
+    120.1,
+    46.8,
+    62.6
+   ],
+   "volume_cm3": 133.04,
+   "triangles": 88464,
+   "pieces": 1,
+   "sealed_voids": 0,
+   "genus": 38,
+   "skipped_solids": 0,
+   "nonmanifold_edges": 0
+  },
+  "seconds": 19.3
+ },
+ {
+  "key": "concrete_mixer_truck",
+  "title": "Concrete Mixer Truck (8 m\u00b3 / 10 yd\u00b3)",
+  "stem": "Concrete_Mixer_Truck_8m3",
+  "set": 3,
+  "size_mm": [
+   9474,
+   3070,
+   4008
+  ],
+  "parts": 206,
+  "print": {
+   "size_mm": [
+    189.5,
+    61.4,
+    80.0
+   ],
+   "volume_cm3": 247.33,
+   "triangles": 187936,
+   "pieces": 1,
+   "sealed_voids": 0,
+   "genus": 103,
+   "skipped_solids": 0,
+   "nonmanifold_edges": 0
+  },
+  "seconds": 30.2
+ },
+ {
+  "key": "scissor_lift",
+  "title": "Electric Scissor Lift (26 ft class, raised)",
+  "stem": "Electric_Scissor_Lift_26ft",
+  "set": 3,
+  "size_mm": [
+   2987,
+   1212,
+   5043
+  ],
+  "parts": 77,
+  "print": {
+   "size_mm": [
+    59.7,
+    25.2,
+    100.8
+   ],
+   "volume_cm3": 16.5,
+   "triangles": 114010,
+   "pieces": 1,
+   "sealed_voids": 0,
+   "genus": 89,
+   "skipped_solids": 0,
+   "nonmanifold_edges": 0
+  },
+  "seconds": 20.2
+ },
+ {
+  "key": "site_office_trailer",
+  "title": "Mobile Site Office (10 x 40 ft)",
+  "stem": "Mobile_Site_Office_10x40ft",
+  "set": 3,
+  "size_mm": [
+   14784,
+   5767,
+   3746
+  ],
+  "parts": 54,
+  "print": {
+   "size_mm": [
+    295.7,
+    115.6,
+    74.9
+   ],
+   "volume_cm3": 851.63,
+   "triangles": 70560,
+   "pieces": 1,
+   "sealed_voids": 0,
+   "genus": 122,
+   "skipped_solids": 0,
+   "nonmanifold_edges": 0
+  },
+  "seconds": 20.2
+ },
+ {
+  "key": "arrow_board_trailer",
+  "title": "Solar Arrow Board Trailer",
+  "stem": "Solar_Arrow_Board_Trailer",
+  "set": 3,
+  "size_mm": [
+   3806,
+   2480,
+   3396
+  ],
+  "parts": 97,
+  "print": {
+   "size_mm": [
+    76.7,
+    49.6,
+    67.8
+   ],
+   "volume_cm3": 9.5,
+   "triangles": 144422,
+   "pieces": 1,
+   "sealed_voids": 0,
+   "genus": 43,
+   "skipped_solids": 0,
+   "nonmanifold_edges": 0
+  },
+  "seconds": 35.7
+ },
+ {
+  "key": "trench_box",
+  "title": "Trench Shield (8 x 20 ft)",
+  "stem": "Trench_Shield_8x20ft",
+  "set": 3,
+  "size_mm": [
+   6366,
+   1551,
+   2642
+  ],
+  "parts": 36,
+  "print": {
+   "size_mm": [
+    128.2,
+    31.0,
+    53.2
+   ],
+   "volume_cm3": 30.45,
+   "triangles": 59706,
+   "pieces": 1,
+   "sealed_voids": 0,
+   "genus": 47,
+   "skipped_solids": 0,
+   "nonmanifold_edges": 0
+  },
+  "seconds": 14.0
+ },
+ {
+  "key": "concrete_pipe_stack",
+  "title": "Concrete Pipe Stack (24 in RCP)",
+  "stem": "Concrete_Pipe_Stack_24in",
+  "set": 3,
+  "size_mm": [
+   2606,
+   3051,
+   2775
+  ],
+  "parts": 23,
+  "print": {
+   "size_mm": [
+    52.1,
+    61.0,
+    55.5
+   ],
+   "volume_cm3": 24.26,
+   "triangles": 35824,
+   "pieces": 1,
+   "sealed_voids": 0,
+   "genus": 47,
+   "skipped_solids": 0,
+   "nonmanifold_edges": 0
+  },
+  "seconds": 15.4
+ },
+ {
+  "key": "water_filled_barrier",
+  "title": "Water-Filled Barrier (6 ft, plastic)",
+  "stem": "Water_Filled_Barrier_6ft",
+  "set": 3,
+  "size_mm": [
+   1860,
+   592,
+   1101
+  ],
+  "parts": 10,
+  "print": {
+   "size_mm": [
+    37.2,
+    11.8,
+    22.2
+   ],
+   "volume_cm3": 5.35,
+   "triangles": 12310,
+   "pieces": 1,
+   "sealed_voids": 0,
+   "genus": 4,
+   "skipped_solids": 0,
+   "nonmanifold_edges": 0
+  },
+  "seconds": 8.2
+ },
+ {
+  "key": "traffic_drum",
+  "title": "Traffic Drum (36 in channelizer)",
+  "stem": "Traffic_Drum_Channelizer",
+  "set": 3,
+  "size_mm": [
+   914,
+   914,
+   1343
+  ],
+  "parts": 17,
+  "print": {
+   "size_mm": [
+    18.2,
+    18.2,
+    27.6
+   ],
+   "volume_cm3": 2.11,
+   "triangles": 13100,
+   "pieces": 1,
+   "sealed_voids": 0,
+   "genus": 4,
+   "skipped_solids": 0,
+   "nonmanifold_edges": 0
+  },
+  "seconds": 9.9
  }
 ]

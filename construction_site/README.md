@@ -1,6 +1,6 @@
 # Construction Site Assets
 
-26 construction-site models built to real-world dimensions, for site planning, layout drawings, visualisation and 3D printing: the original 13 (01–13) and a second set (14–26) that also comes as print-ready 1:50 STLs.
+39 construction-site models built to real-world dimensions, for site planning, layout drawings, visualisation and 3D printing: the original 13 (01–13), set 2 (14–26) and set 3 (27–39). Sets 2 and 3 also come as print-ready 1:50 STLs.
 
 ## Formats
 
@@ -91,3 +91,43 @@ python construction_site/build_assets.py --list
 `cadkit.py` has the primitives and the three exporters, `build_assets.py` the models (one function each, all dimensions in millimetres, X forward, Y left, Z up), and `render_previews.mjs` the studio renders. Parts are named in the STEP and GLB files (`boom`, `bucket_teeth`, `locking_bars`, …), so they can be recoloured or hidden in any CAD or 3D package.
 
 All set 2 assets are generic: they follow published standards (ISO 668 container dimensions, the FHWA NJ barrier profile, MUTCD Type III barricade striping, AISC W-shapes, nominal CMU sizes) and typical class dimensions for the machines. None of them copies a particular manufacturer's product.
+
+---
+
+## Set 3 (27–39): earthmoving, access and work-zone equipment
+
+![the whole set together](Construction_Set_3_collection.png)
+
+Same formats, scale and print rules as set 2. Each asset is one module in `set3/` (`set3/wheel_loader.py`, …), so you can edit one without touching the rest:
+
+```bash
+python construction_site/build_assets.py --set 3           # rebuild set 3
+python construction_site/build_assets.py crawler_dozer     # one asset
+python construction_site/build_assets.py crawler_dozer --diagnose   # which parts float, if a print splits
+```
+
+| # | Asset | Full size (L × W × H) | At 1:50 (mm) | Description | Suggested tags |
+|---|---|---|---|---|---|
+| 27 | Wheel Loader (3 yd³ class) | 27.1 × 9.6 × 11.7 ft | 166 × 59 × 71 | Medium (about 16 t) articulated loader with its bucket on the ground: Z-bar linkage with lift and tilt rams, bell crank and tilt link, a bucket with bolt-on edge segments and side cutters, centre hinge and steering rams, 23.5R25 chevron tyres, fenders and mud flaps, ROPS cab with ladder and handrails, louvred hood, exhaust and pre-cleaner, sculpted counterweight with lamps. | wheel-loader, front-end-loader, loader, earthmoving |
+| 28 | Articulated Dump Truck (30 t class) | 34.9 × 9.9 × 12.3 ft | 213 × 60 × 75 | 6x6 articulated hauler, body down: tractor with long hood, grille and bumper, glazed cab with ladder and platform, articulation/oscillation hitch with steering rams, walking-beam tandem bogie, 23.5R25 tyres, flared curved-floor dump body with cab-protector lip and two hoist rams. | articulated-dump-truck, adt, dump-truck, hauler |
+| 29 | Crawler Dozer (20 t class) | 21.8 × 11.1 × 10.8 ft | 133 × 68 × 66 | 20 t class dozer on a conventional oval (low-drive) undercarriage: 560 mm grouser shoes on a pinned chain, sprocket, idler, rollers and carrier rollers, semi-U blade on push arms with tilt ram and lift rams, louvred hood, ROPS cab, fenders with steps and handrails, and a single-shank ripper raised at the rear. | bulldozer, crawler-dozer, dozer, tracked |
+| 30 | Backhoe Loader (14 ft dig depth class) | 29.3 × 11.2 × 12.5 ft | 178 × 68 × 76 | 4WD backhoe loader working: loader arms with twin tilt rams and a 1 m³ bucket on the ground, sloping hood, 19.5L-24 and 12.5/80-18 tyres, glazed cab with interior, and a backhoe with swing frame, curved boom, dipper, H-link and 24 in bucket resting behind, between two stabilisers down on pads. | backhoe-loader, backhoe, digger, loader |
+| 31 | Single-Drum Vibratory Roller (84 in, 11 t class) | 19.7 × 7.7 × 10.3 ft | 120 × 47 × 63 | 11 t class smooth-drum vibratory roller: 84 in drum in a yoke with scraper bars, rubber isolators and drive and vibration motors, centre joint with steering rams, 23.1-26 tractor tyres, long louvred hood with exhaust and pre-cleaner, ROPS cab with ladder. | road-roller, soil-compactor, vibratory-roller, compaction |
+| 32 | Concrete Mixer Truck (8 m³ / 10 yd³) | 31.1 × 10.1 × 13.1 ft | 190 × 61 × 80 | Transit mixer on a generic 6x4 cab-over: pear-shaped 8 m³ drum tilted 13° with orange and white bands, roller track and support rollers, gearbox pedestal, charge hopper, collection hopper and folding chute stowed, rear ladder and platform, water tank, side guards and mudguards. | concrete-mixer, cement-truck, transit-mixer, ready-mix |
+| 33 | Electric Scissor Lift (26 ft class, raised) | 9.8 × 4.0 × 16.5 ft | 60 × 25 × 101 | 26 ft class, 46 in-wide electric slab scissor lift raised to a 3.9 m deck: a geometrically correct five-stage scissor stack with pins, cross tubes, slide rollers and lift ram, battery trays, pothole guards, solid tyres, a platform with roll-out extension deck, guardrails, toeboards, entry gate and control box. | scissor-lift, aerial-work-platform, mewp, access |
+| 34 | Mobile Site Office (10 x 40 ft) | 48.5 × 18.9 × 12.3 ft | 296 × 116 × 75 | Single-wide 10 x 40 ft site office on cribbing piers: ribbed siding with trim, crowned roof with vents, ten sliding windows with blinds, two steel doors (one with a timber stair and landing, one with a galvanised prefab stair), wall A/C units, lights, I-beam chassis and A-frame tongue. | site-office, office-trailer, mobile-office, portable-building |
+| 35 | Solar Arrow Board Trailer | 12.5 × 8.1 × 11.1 ft | 77 × 50 × 68 | Solar arrow board set up for work: 96 x 48 in panel with 25 hooded amber lamps forming a right arrow, telescoping mast with winch, tilted solar modules on a rack, battery box, leaf-spring axle, four outrigger jacks on pads, A-frame tongue with coupler and jockey wheel. | arrow-board, traffic-advisor, work-zone, solar |
+| 36 | Trench Shield (8 x 20 ft) | 20.9 × 5.1 × 8.7 ft | 128 × 31 × 53 | 8 x 20 ft steel trench shield: two 120 mm double-skin panels with knife edges, top cap and end channels, ribs and spreader bosses, four 6 in galvanised spreaders with collars, pins and keepers, lifting padeyes with shackles, stacking sockets and pulling eyes. | trench-box, trench-shield, shoring, excavation |
+| 37 | Concrete Pipe Stack (24 in RCP) | 8.5 × 10.0 × 9.1 ft | 52 × 61 × 56 | Six 24 in Wall B reinforced concrete pipes in a 3-2-1 pyramid, bells alternating: open bores, bells with socket steps, spigots with rubber gaskets, lift holes and stencils, on timber skids and dunnage with wedge chocks. | concrete-pipe, rcp, storm-drain, building-materials |
+| 38 | Water-Filled Barrier (6 ft, plastic) | 6.1 × 1.9 × 3.6 ft | 37 × 12 × 22 | 6 ft, 42 in rotomoulded water-filled barrier: tapered section with moulded panels and ribs, reflective sheeting, interlocking hinge knuckles with a T-handle pin, fill cap, post sockets, hand-holds, fork slots and drain plug. | water-filled-barrier, plastic-barrier, work-zone, traffic-control |
+| 39 | Traffic Drum (36 in channelizer) | 3.0 × 3.0 × 4.4 ft | 18 × 18 × 28 | MUTCD-style traffic drum: tapered moulded body with a hand-hold, four 5 in orange and white reflective bands in moulded channels, a 36 in tyre-ring ballast base and a Type A amber warning light clamped on top. | traffic-drum, channelizer, barrel, work-zone |
+
+### Printing set 3
+
+Every file is one closed, connected body with a flat base, at least 0.8 mm thick everywhere at 1:50. In print mode the cabs are filled solid behind their glass, so the prints have no sealed voids. The machines carry much more fine detail than set 2 (handrails, mirrors, ladders, linkages), so:
+
+- **Resin recommended:** every machine, the scissor lift (1.1 × 2.6 mm arms) and the arrow board (lamp hoods, cranks).
+- **FDM friendly:** traffic drum, water-filled barrier and trench shield. The pipe stack and site office also work with supports.
+- **Supports:** see the listing for each asset in [LISTINGS.md](LISTINGS.md).
+
+All set 3 assets are generic. They follow published class figures and standards (MUTCD drums and arrow panels, ASTM C76 pipe, 23.5R25 / 19.5L-24 tyre sizes) and don't copy a particular manufacturer's design. The dozer, for example, uses a conventional oval track frame.

@@ -1,0 +1,98 @@
+[
+ {
+  "file": "Mobile_Site_Office_10x40ft.glb",
+  "x": -7.89,
+  "y": -10.33,
+  "rot": 300
+ },
+ {
+  "file": "Electric_Scissor_Lift_26ft.glb",
+  "x": -12.21,
+  "y": -1.85,
+  "rot": 20
+ },
+ {
+  "file": "Concrete_Pipe_Stack_24in.glb",
+  "x": -13.41,
+  "y": 3.23,
+  "rot": 120
+ },
+ {
+  "file": "Concrete_Mixer_Truck_8m3.glb",
+  "x": 3.54,
+  "y": -14.12,
+  "rot": 60
+ },
+ {
+  "file": "Articulated_Dump_Truck_30t.glb",
+  "x": -3.71,
+  "y": -1.57,
+  "rot": 55
+ },
+ {
+  "file": "Trench_Shield_8x20ft.glb",
+  "x": -10.28,
+  "y": 10.81,
+  "rot": 150
+ },
+ {
+  "file": "Wheel_Loader_3yd.glb",
+  "x": 8.28,
+  "y": -7.34,
+  "rot": -5
+ },
+ {
+  "file": "Crawler_Dozer_20t.glb",
+  "x": 4.03,
+  "y": 0.02,
+  "rot": -10
+ },
+ {
+  "file": "Backhoe_Loader.glb",
+  "x": -0.65,
+  "y": 7.13,
+  "rot": 145
+ },
+ {
+  "file": "Vibratory_Soil_Roller_84in.glb",
+  "x": -3.97,
+  "y": 13.87,
+  "rot": 65
+ },
+ {
+  "file": "Solar_Arrow_Board_Trailer.glb",
+  "x": 12.59,
+  "y": -0.81,
+  "rot": 225
+ },
+ {
+  "file": "Water_Filled_Barrier_6ft.glb",
+  "x": 9.59,
+  "y": 4.38,
+  "rot": 120
+ },
+ {
+  "file": "Water_Filled_Barrier_6ft.glb",
+  "x": 8.59,
+  "y": 6.12,
+  "rot": 120
+ },
+ {
+  "file": "Traffic_Drum_Channelizer.glb",
+  "x": 6.41,
+  "y": 8.9,
+  "rot": 0
+ },
+ {
+  "file": "Traffic_Drum_Channelizer.glb",
+  "x": 5.16,
+  "y": 11.06,
+  "rot": 0
+ },
+ {
+  "file": "Traffic_Drum_Channelizer.glb",
+  "x": 3.91,
+  "y": 13.23,
+  "rot": 0
+ }
+]
