@@ -5,6 +5,8 @@
     python construction_site/build_assets.py mini_excavator  # just these
     python construction_site/build_assets.py --list
     python construction_site/build_assets.py --scale 87      # HO-scale print files
+    python construction_site/build_assets.py --set 3         # one set
+    python construction_site/build_assets.py wheel_loader --diagnose   # what floats in the print
 
 For each asset this writes, beside this file:
 
@@ -24,6 +26,7 @@ thinner than a nozzle can lay down.
 from __future__ import annotations
 
 import argparse
+import importlib
 import json
 import math
 import subprocess
@@ -40,37 +43,10 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 
 from cadkit import (FT, IN, Finish, Model, arc_pts, band, bar, box, clip_poly, cone,  # noqa: E402
-                    cut, cyl, export_glb, export_print, export_step, frustum, mv,
-                    pipe, prism, rgb, rot, rounded_box, sphere, stadium, text, torus)
+                    corrugated_plan, cut, cyl, export_glb, export_print, export_step, frustum, mv,
+                    pin, pipe, prism, ram, rgb, rot, rounded_box, sphere, stadium, text, torus, wheel_lugs)
 
-# --------------------------------------------------------------------------- finishes
-
-YELLOW = Finish(rgb("#f0ad00"), rough=0.45)
-ORANGE = Finish(rgb("#e8590c"), rough=0.45)
-BLACK = Finish(rgb("#1d1f22"), rough=0.55)
-DARK = Finish(rgb("#3a3d42"), rough=0.6)
-RUBBER = Finish(rgb("#141516"), rough=0.92)
-STEEL = Finish(rgb("#a9adb2"), metal=0.85, rough=0.35)
-CHROME = Finish(rgb("#dfe2e5"), metal=1.0, rough=0.15)
-GALV = Finish(rgb("#b9bfc4"), metal=0.7, rough=0.45)
-GLASS = Finish(rgb("#3c5566"), rough=0.05, alpha=0.45)
-TIMBER = Finish(rgb("#b08a5c"), rough=0.85)
-TIMBER_DARK = Finish(rgb("#8a6a45"), rough=0.88)
-CONCRETE = Finish(rgb("#bdbab3"), rough=0.95)
-CMU = Finish(rgb("#9d9b95"), rough=0.97)
-RUST = Finish(rgb("#7a4a2e"), metal=0.3, rough=0.8)
-MILL = Finish(rgb("#4e5459"), metal=0.6, rough=0.55)
-WHITE = Finish(rgb("#f2f2ee"), rough=0.75)
-SIGN_ORANGE = Finish(rgb("#ff6a13"), rough=0.4)
-AMBER = Finish(rgb("#ffb000"), rough=0.2, glow=(1.0, 0.55, 0.0))
-LED = Finish(rgb("#f4f8ff"), rough=0.2, glow=(0.9, 0.95, 1.0))
-RED = Finish(rgb("#c62828"), rough=0.4)
-GREEN = Finish(rgb("#2e7d32"), rough=0.45)
-BLUE = Finish(rgb("#1f5fa8"), rough=0.5)
-TOILET_BLUE = Finish(rgb("#1565c0"), rough=0.45)
-TRANSLUCENT = Finish(rgb("#eef1ee"), rough=0.35, alpha=0.9)
-CONTAINER = Finish(rgb("#2c5d8f"), metal=0.3, rough=0.55)
-REFLECTOR = Finish(rgb("#ffd000"), rough=0.2)
+from finishes import *  # noqa: E402,F401,F403  (the colour palette)
 
 
 # =========================================================================== assets
@@ -138,32 +114,6 @@ def jersey_barrier_run(m: Model):
         m.add(f"pin_{j + 1}", RUST, cyl(m.r(19), (x, 0, 150), (x, 0, 780)),
               cyl(m.r(32), (x, 0, 780), (x, 0, 800)))
 
-
-
-def ram(a, b, rb, rr, frac=0.55, eye=None):
-    """A hydraulic cylinder from a to b: barrel for `frac` of the way, then the rod."""
-    a, b = np.asarray(a, float), np.asarray(b, float)
-    j = a + (b - a) * frac
-    e = eye or rb * 0.9
-    return [cyl(rb, a, j), cyl(rr, j - (b - a) * 0.02, b)], [sphere(e, a), sphere(rr * 1.4, b)]
-
-
-def pin(c, r, half, axis="y"):
-    x, y, z = c
-    d = {"x": (half, 0, 0), "y": (0, half, 0), "z": (0, 0, half)}[axis]
-    return cyl(r, (x - d[0], y - d[1], z - d[2]), (x + d[0], y + d[1], z + d[2]))
-
-
-def wheel_lugs(xc, zc, R, depth, y0, y1, n, width, split=0.15):
-    """Bar tread round a tyre: n lugs, alternating halves, one straight down."""
-    lugs = []
-    ym, half = (y0 + y1) / 2, (y1 - y0) / 2
-    for i in range(n):
-        a = 270 + 360 * i / n
-        lo, hi = (y0, ym + split * half) if i % 2 else (ym - split * half, y1)
-        lug = box(xc - width / 2, xc + width / 2, lo, hi, zc + R - depth - 2, zc + R)
-        lugs.append(rot(lug, 90 - a, (0, 1, 0), (xc, 0, zc)))
-    return lugs
 
 
 # --------------------------------------------------------------------------- mini excavator
@@ -390,20 +340,6 @@ def skid_steer(m: Model):
 
 
 # --------------------------------------------------------------------------- shipping container
-
-def corrugated_plan(x0, x1, y_out, depth, y_back, pitch=278.0, flat_out=72.0, flat_in=68.0):
-    """Plan of a corrugated wall: x along the wall, outer face at y_out, solid back to y_back."""
-    run = (pitch - flat_out - flat_in) / 2
-    inward = -1 if y_back < y_out else 1
-    y_in = y_out + inward * depth
-    pts, x = [], x0 - pitch
-    while x < x1 + pitch:
-        pts += [(x, y_out), (x + flat_out, y_out), (x + flat_out + run, y_in), (x + pitch - run, y_in)]
-        x += pitch
-    pts += [(x, y_out), (x, y_back), (x0 - pitch, y_back)]
-    lo, hi = sorted((y_out, y_back))
-    return clip_poly(pts, x0, x1, lo, hi)
-
 
 def shipping_container(m: Model):
     """20 ft ISO container (1CC), 20 x 8 x 8.5 ft, doors closed, for site storage."""
@@ -867,9 +803,10 @@ class Asset:
     az: float = 35
     el: float = 22
     size: str = "1200x900"
+    set: int = 2
 
 
-ASSETS = [
+SET2 = [
     Asset("mini_excavator", "Mini_Excavator_3-5t", "Mini Excavator (3.5 t class)", mini_excavator, az=40, el=20),
     Asset("skid_steer", "Skid_Steer_Loader", "Skid Steer Loader (radial lift, 68 in bucket)", skid_steer, az=40, el=20),
     Asset("shipping_container", "Shipping_Container_20ft", "Shipping Container (20 ft ISO, site storage)",
@@ -892,7 +829,43 @@ ASSETS = [
 ]
 
 
+def load_module_assets(folder: str, set_no: int, keys=None) -> list[Asset]:
+    """Assets that live one per module in a folder (set3/wheel_loader.py, ...).
+
+    Each module defines ASSET = {key, stem, title, az?, el?, size?} and build(m).
+    Only the modules asked for are imported, so one half-written module cannot
+    stop another from building; a module that fails to import is reported and
+    skipped.
+    """
+    order_file = HERE / folder / "ORDER"
+    names = [f.stem for f in sorted((HERE / folder).glob("*.py")) if not f.stem.startswith("_")]
+    if order_file.exists():
+        ranked = [n for n in order_file.read_text().split() if n in names]
+        names = ranked + [n for n in names if n not in ranked]
+    out = []
+    for name in names:
+        if keys and name not in keys:
+            continue
+        try:
+            mod = importlib.import_module(f"{folder}.{name}")
+            a = mod.ASSET
+            assert a["key"] == name, f"ASSET key {a['key']!r} must match the file name"
+        except Exception as e:  # noqa: BLE001  report and carry on with the rest
+            print(f"skipping {folder}/{name}.py: {type(e).__name__}: {e}", file=sys.stderr)
+            continue
+        out.append(Asset(a["key"], a["stem"], a["title"], mod.build, a.get("az", 35), a.get("el", 22),
+                         a.get("size", "1200x900"), set_no))
+    return out
+
+
+def all_assets(keys=None) -> list[Asset]:
+    return SET2 + load_module_assets("set3", 3, keys)
+
+
 # =========================================================================== build
+
+COLLECTIONS = {2: "collection_set2.json", 3: "collection_set3.json"}
+
 
 def render(asset: Asset, scale: float):
     cmd = ["node", str(HERE / "render_previews.mjs"), "--az", str(asset.az), "--el", str(asset.el)]
@@ -901,10 +874,36 @@ def render(asset: Asset, scale: float):
     subprocess.run(cmd + ["--size", "900x900", str(stl)], check=True)
 
 
-def render_collection():
-    subprocess.run(["node", str(HERE / "render_previews.mjs"), "--scene", str(HERE / "collection_scene.json"),
-                    "--az", "30", "--el", "26", "--size", "1800x1100",
-                    "--out", str(HERE / "Construction_Set_2_collection.png")], check=True)
+def render_collection(set_no: int):
+    scene = HERE / COLLECTIONS[set_no]
+    if scene.exists():
+        subprocess.run(["node", str(HERE / "render_previews.mjs"), "--scene", str(scene),
+                        "--az", "30", "--el", "26", "--size", "1800x1100",
+                        "--out", str(HERE / f"Construction_Set_{set_no}_collection.png")], check=True)
+
+
+def diagnose(asset: Asset, scale: float, min_wall: float):
+    """Which parts end up in which separate piece of the print, to find what floats."""
+    import manifold3d as mf
+    from cadkit import _to_manifold
+
+    m = Model(print_mode=True, scale=scale, min_wall=min_wall)
+    asset.build(m)
+    items = [(f"{name}[{i}]", _to_manifold(so, 0.02 * scale, 0.15))
+             for name, _, shapes in m.parts for i, s in enumerate(shapes) for so in s.Solids()]
+    bad = [n for n, x in items if x is None]
+    items = [(n, x) for n, x in items if x is not None]
+    body = mf.Manifold.batch_boolean([x for _, x in items], mf.OpType.Add)
+    comps = sorted(body.decompose(), key=lambda c: -c.volume())
+    print(f"{asset.key}: {len(comps)} piece(s) before trimming at the bed"
+          + (f"; not closed solids, left out: {bad}" if bad else ""))
+    for k, c in enumerate(comps):
+        owners = [n for n, x in items
+                  if mf.Manifold.batch_boolean([x, c], mf.OpType.Intersect).volume() > 0.5 * x.volume()]
+        bb = [round(v) for v in c.bounding_box()]
+        kind = "void" if c.volume() < 0 else "piece"
+        shown = owners if k else owners[:6] + (["..."] if len(owners) > 6 else [])
+        print(f"  {kind} {k}: volume {c.volume() / 1e9:.4f} m3, box {bb}: {shown}")
 
 
 def build(asset: Asset, scale: float, min_wall: float, do_render: bool) -> dict:
@@ -927,7 +926,7 @@ def build(asset: Asset, scale: float, min_wall: float, do_render: bool) -> dict:
         render(asset, scale)
 
     info = {
-        "key": asset.key, "title": asset.title, "stem": asset.stem,
+        "key": asset.key, "title": asset.title, "stem": asset.stem, "set": asset.set,
         "size_mm": [round(x1 - x0), round(y1 - y0), round(z1 - z0)],
         "parts": len(shown.parts),
         "print": report,
@@ -938,7 +937,8 @@ def build(asset: Asset, scale: float, min_wall: float, do_render: bool) -> dict:
           f"1:{scale:g} print {report['size_mm']} mm, {report['volume_cm3']} cm3, "
           f"{report['pieces']} piece(s), {info['seconds']} s")
     if report["pieces"] != 1 or report["skipped_solids"]:
-        print(f"  WARNING: {report['pieces']} separate pieces, {report['skipped_solids']} solids skipped")
+        print(f"  WARNING: {report['pieces']} separate pieces, {report['skipped_solids']} solids skipped"
+              f" (run with --diagnose to see which parts)")
     if report["sealed_voids"]:
         print(f"  note: {report['sealed_voids']} small sealed void(s) inside the print body")
     return info
@@ -948,35 +948,46 @@ def main() -> int:
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("keys", nargs="*", help="assets to build (default: all)")
     p.add_argument("--list", action="store_true")
+    p.add_argument("--set", type=int, choices=sorted(COLLECTIONS), help="only this set")
     p.add_argument("--scale", type=float, default=50, help="print scale, 1:N (default 50)")
     p.add_argument("--min-wall", type=float, default=0.8, help="thinnest printed wall, mm (default 0.8)")
     p.add_argument("--no-render", action="store_true", help="skip the preview renders")
     p.add_argument("--render-only", action="store_true", help="re-render the previews of what is built")
+    p.add_argument("--no-index", action="store_true", help="don't update assets.json")
+    p.add_argument("--diagnose", action="store_true", help="list which parts make up each separate print piece")
     args = p.parse_args()
 
+    assets = all_assets(args.keys or None)
     if args.list:
-        for a in ASSETS:
-            print(f"{a.key:22s} {a.title}")
+        for a in assets:
+            print(f"set {a.set}  {a.key:24s} {a.title}")
         return 0
-    chosen = [a for a in ASSETS if not args.keys or a.key in args.keys]
-    unknown = set(args.keys) - {a.key for a in ASSETS}
+    chosen = [a for a in assets if (not args.keys or a.key in args.keys) and (not args.set or a.set == args.set)]
+    unknown = set(args.keys) - {a.key for a in assets}
     if unknown:
-        p.error(f"unknown asset(s): {', '.join(sorted(unknown))}")
+        p.error(f"unknown or unloadable asset(s): {', '.join(sorted(unknown))}")
 
+    if args.diagnose:
+        for a in chosen:
+            diagnose(a, args.scale, args.min_wall)
+        return 0
+    whole_sets = sorted({a.set for a in chosen}) if not args.keys else []
     if args.render_only:
         for a in chosen:
             render(a, args.scale)
-        if not args.keys:
-            render_collection()
+        for n in whole_sets:
+            render_collection(n)
         return 0
     results = [build(a, args.scale, args.min_wall, not args.no_render) for a in chosen]
-    if not args.keys and not args.no_render:
-        render_collection()
-    index = HERE / "assets.json"
-    old = {r["key"]: r for r in json.loads(index.read_text())} if index.exists() else {}
-    old.update({r["key"]: r for r in results})
-    order = [a.key for a in ASSETS]
-    index.write_text(json.dumps([old[k] for k in order if k in old], indent=1) + "\n")
+    if not args.no_render:
+        for n in whole_sets:
+            render_collection(n)
+    if not args.no_index:
+        index = HERE / "assets.json"
+        old = {r["key"]: r for r in json.loads(index.read_text())} if index.exists() else {}
+        old.update({r["key"]: r for r in results})
+        order = [a.key for a in all_assets()]
+        index.write_text(json.dumps([old[k] for k in order if k in old], indent=1) + "\n")
     return 0
 
 

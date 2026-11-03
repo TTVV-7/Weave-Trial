@@ -26,7 +26,7 @@ from cadkit import IN, Model, export_print, prism  # noqa: E402
 
 
 def asset(key):
-    return next(a for a in B.ASSETS if a.key == key)
+    return next(a for a in B.all_assets() if a.key == key)
 
 
 @pytest.mark.parametrize("axis", ["x", "y", "z"])
@@ -49,8 +49,9 @@ def test_jersey_profile_is_the_nj_shape():
 
 
 def test_every_asset_has_a_unique_key_and_file_name():
-    assert len({a.key for a in B.ASSETS}) == len(B.ASSETS)
-    assert len({a.stem for a in B.ASSETS}) == len(B.ASSETS)
+    assets = B.all_assets()
+    assert len({a.key for a in assets}) == len(assets)
+    assert len({a.stem for a in assets}) == len(assets)
 
 
 @pytest.mark.parametrize("key", ["jersey_barrier", "wheelbarrow", "type3_barricade"])

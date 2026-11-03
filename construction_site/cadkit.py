@@ -231,6 +231,48 @@ def rounded_box(x0, x1, y0, y1, z0, z1, r):
     return mv(s.val(), (x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2)
 
 
+# --------------------------------------------------------------------------- machine parts
+
+def ram(a, b, rb, rr, frac=0.55, eye=None):
+    """A hydraulic cylinder from a to b: barrel for `frac` of the way, then the rod."""
+    a, b = np.asarray(a, float), np.asarray(b, float)
+    j = a + (b - a) * frac
+    e = eye or rb * 0.9
+    return [cyl(rb, a, j), cyl(rr, j - (b - a) * 0.02, b)], [sphere(e, a), sphere(rr * 1.4, b)]
+
+
+def pin(c, r, half, axis="y"):
+    x, y, z = c
+    d = {"x": (half, 0, 0), "y": (0, half, 0), "z": (0, 0, half)}[axis]
+    return cyl(r, (x - d[0], y - d[1], z - d[2]), (x + d[0], y + d[1], z + d[2]))
+
+
+def wheel_lugs(xc, zc, R, depth, y0, y1, n, width, split=0.15):
+    """Bar tread round a tyre: n lugs, alternating halves, one straight down."""
+    lugs = []
+    ym, half = (y0 + y1) / 2, (y1 - y0) / 2
+    for i in range(n):
+        a = 270 + 360 * i / n
+        lo, hi = (y0, ym + split * half) if i % 2 else (ym - split * half, y1)
+        lug = box(xc - width / 2, xc + width / 2, lo, hi, zc + R - depth - 2, zc + R)
+        lugs.append(rot(lug, 90 - a, (0, 1, 0), (xc, 0, zc)))
+    return lugs
+
+
+def corrugated_plan(x0, x1, y_out, depth, y_back, pitch=278.0, flat_out=72.0, flat_in=68.0):
+    """Plan of a corrugated wall: x along the wall, outer face at y_out, solid back to y_back."""
+    run = (pitch - flat_out - flat_in) / 2
+    inward = -1 if y_back < y_out else 1
+    y_in = y_out + inward * depth
+    pts, x = [], x0 - pitch
+    while x < x1 + pitch:
+        pts += [(x, y_out), (x + flat_out, y_out), (x + flat_out + run, y_in), (x + pitch - run, y_in)]
+        x += pitch
+    pts += [(x, y_out), (x, y_back), (x0 - pitch, y_back)]
+    lo, hi = sorted((y_out, y_back))
+    return clip_poly(pts, x0, x1, lo, hi)
+
+
 # --------------------------------------------------------------------------- model
 
 class Model:
