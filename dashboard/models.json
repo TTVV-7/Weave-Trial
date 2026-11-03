@@ -1,6 +1,72 @@
 {
-  "generated": "2026-10-20T18:29:34+00:00",
+  "generated": "2026-11-03T14:52:42+00:00",
   "models": [
+    {
+      "name": "Cable Reel Wooden",
+      "file": "Cable_Reel_Wooden.glb",
+      "path": "construction_site/Cable_Reel_Wooden.glb",
+      "folder": "construction_site",
+      "ext": "glb",
+      "type": "glTF",
+      "size": 3176928,
+      "modified": "2026-11-03T14:52:29+00:00",
+      "preview": "construction_site/Cable_Reel_Wooden_preview.png"
+    },
+    {
+      "name": "Cable Reel Wooden",
+      "file": "Cable_Reel_Wooden.step",
+      "path": "construction_site/Cable_Reel_Wooden.step",
+      "folder": "construction_site",
+      "ext": "step",
+      "type": "STEP",
+      "size": 812455,
+      "modified": "2026-11-03T14:52:29+00:00",
+      "preview": "construction_site/Cable_Reel_Wooden_preview.png"
+    },
+    {
+      "name": "Contractor Wheelbarrow",
+      "file": "Contractor_Wheelbarrow.glb",
+      "path": "construction_site/Contractor_Wheelbarrow.glb",
+      "folder": "construction_site",
+      "ext": "glb",
+      "type": "glTF",
+      "size": 341848,
+      "modified": "2026-11-03T14:52:29+00:00",
+      "preview": "construction_site/Contractor_Wheelbarrow_preview.png"
+    },
+    {
+      "name": "Contractor Wheelbarrow",
+      "file": "Contractor_Wheelbarrow.step",
+      "path": "construction_site/Contractor_Wheelbarrow.step",
+      "folder": "construction_site",
+      "ext": "step",
+      "type": "STEP",
+      "size": 1247904,
+      "modified": "2026-11-03T14:52:29+00:00",
+      "preview": "construction_site/Contractor_Wheelbarrow_preview.png"
+    },
+    {
+      "name": "Frame Scaffold Tower",
+      "file": "Frame_Scaffold_Tower.glb",
+      "path": "construction_site/Frame_Scaffold_Tower.glb",
+      "folder": "construction_site",
+      "ext": "glb",
+      "type": "glTF",
+      "size": 1214524,
+      "modified": "2026-11-03T14:52:29+00:00",
+      "preview": "construction_site/Frame_Scaffold_Tower_preview.png"
+    },
+    {
+      "name": "Frame Scaffold Tower",
+      "file": "Frame_Scaffold_Tower.step",
+      "path": "construction_site/Frame_Scaffold_Tower.step",
+      "folder": "construction_site",
+      "ext": "step",
+      "type": "STEP",
+      "size": 982295,
+      "modified": "2026-11-03T14:52:29+00:00",
+      "preview": "construction_site/Frame_Scaffold_Tower_preview.png"
+    },
     {
       "name": "Industrial Steel Stair 12ft",
       "file": "Industrial_Steel_Stair_12ft.glb",
@@ -24,6 +90,94 @@
       "preview": "construction_site/Industrial_Steel_Stair_12ft_preview.png"
     },
     {
+      "name": "Jersey Barrier NJ 10ft",
+      "file": "Jersey_Barrier_NJ_10ft.glb",
+      "path": "construction_site/Jersey_Barrier_NJ_10ft.glb",
+      "folder": "construction_site",
+      "ext": "glb",
+      "type": "glTF",
+      "size": 531904,
+      "modified": "2026-11-03T14:52:29+00:00",
+      "preview": "construction_site/Jersey_Barrier_NJ_10ft_preview.png"
+    },
+    {
+      "name": "Jersey Barrier NJ 10ft",
+      "file": "Jersey_Barrier_NJ_10ft.step",
+      "path": "construction_site/Jersey_Barrier_NJ_10ft.step",
+      "folder": "construction_site",
+      "ext": "step",
+      "type": "STEP",
+      "size": 196114,
+      "modified": "2026-11-03T14:52:29+00:00",
+      "preview": "construction_site/Jersey_Barrier_NJ_10ft_preview.png"
+    },
+    {
+      "name": "Jersey Barrier Run 3x10ft",
+      "file": "Jersey_Barrier_Run_3x10ft.glb",
+      "path": "construction_site/Jersey_Barrier_Run_3x10ft.glb",
+      "folder": "construction_site",
+      "ext": "glb",
+      "type": "glTF",
+      "size": 1603112,
+      "modified": "2026-11-03T14:52:29+00:00",
+      "preview": "construction_site/Jersey_Barrier_Run_3x10ft_preview.png"
+    },
+    {
+      "name": "Jersey Barrier Run 3x10ft",
+      "file": "Jersey_Barrier_Run_3x10ft.step",
+      "path": "construction_site/Jersey_Barrier_Run_3x10ft.step",
+      "folder": "construction_site",
+      "ext": "step",
+      "type": "STEP",
+      "size": 618603,
+      "modified": "2026-11-03T14:52:29+00:00",
+      "preview": "construction_site/Jersey_Barrier_Run_3x10ft_preview.png"
+    },
+    {
+      "name": "LED Light Tower",
+      "file": "LED_Light_Tower.glb",
+      "path": "construction_site/LED_Light_Tower.glb",
+      "folder": "construction_site",
+      "ext": "glb",
+      "type": "glTF",
+      "size": 769364,
+      "modified": "2026-11-03T14:52:29+00:00",
+      "preview": "construction_site/LED_Light_Tower_preview.png"
+    },
+    {
+      "name": "LED Light Tower",
+      "file": "LED_Light_Tower.step",
+      "path": "construction_site/LED_Light_Tower.step",
+      "folder": "construction_site",
+      "ext": "step",
+      "type": "STEP",
+      "size": 2300193,
+      "modified": "2026-11-03T14:52:29+00:00",
+      "preview": "construction_site/LED_Light_Tower_preview.png"
+    },
+    {
+      "name": "Mini Excavator 3 5t",
+      "file": "Mini_Excavator_3-5t.glb",
+      "path": "construction_site/Mini_Excavator_3-5t.glb",
+      "folder": "construction_site",
+      "ext": "glb",
+      "type": "glTF",
+      "size": 1149552,
+      "modified": "2026-11-03T14:52:29+00:00",
+      "preview": "construction_site/Mini_Excavator_3-5t_preview.png"
+    },
+    {
+      "name": "Mini Excavator 3 5t",
+      "file": "Mini_Excavator_3-5t.step",
+      "path": "construction_site/Mini_Excavator_3-5t.step",
+      "folder": "construction_site",
+      "ext": "step",
+      "type": "STEP",
+      "size": 3393804,
+      "modified": "2026-11-03T14:52:29+00:00",
+      "preview": "construction_site/Mini_Excavator_3-5t_preview.png"
+    },
+    {
       "name": "Mixer Stand",
       "file": "Mixer_Stand.glb",
       "path": "construction_site/Mixer_Stand.glb",
@@ -44,6 +198,28 @@
       "size": 827628,
       "modified": "2026-10-20T18:17:06+00:00",
       "preview": "construction_site/Mixer_Stand_preview.png"
+    },
+    {
+      "name": "Pallet of CMU Blocks",
+      "file": "Pallet_of_CMU_Blocks.glb",
+      "path": "construction_site/Pallet_of_CMU_Blocks.glb",
+      "folder": "construction_site",
+      "ext": "glb",
+      "type": "glTF",
+      "size": 428352,
+      "modified": "2026-11-03T14:52:29+00:00",
+      "preview": "construction_site/Pallet_of_CMU_Blocks_preview.png"
+    },
+    {
+      "name": "Pallet of CMU Blocks",
+      "file": "Pallet_of_CMU_Blocks.step",
+      "path": "construction_site/Pallet_of_CMU_Blocks.step",
+      "folder": "construction_site",
+      "ext": "step",
+      "type": "STEP",
+      "size": 9326519,
+      "modified": "2026-11-03T14:52:29+00:00",
+      "preview": "construction_site/Pallet_of_CMU_Blocks_preview.png"
     },
     {
       "name": "Pallet of Concrete Bags",
@@ -112,6 +288,28 @@
       "preview": "construction_site/Planetary_Mixer_on_Stand_preview.png"
     },
     {
+      "name": "Portable Toilet",
+      "file": "Portable_Toilet.glb",
+      "path": "construction_site/Portable_Toilet.glb",
+      "folder": "construction_site",
+      "ext": "glb",
+      "type": "glTF",
+      "size": 230244,
+      "modified": "2026-11-03T14:52:29+00:00",
+      "preview": "construction_site/Portable_Toilet_preview.png"
+    },
+    {
+      "name": "Portable Toilet",
+      "file": "Portable_Toilet.step",
+      "path": "construction_site/Portable_Toilet.step",
+      "folder": "construction_site",
+      "ext": "step",
+      "type": "STEP",
+      "size": 465124,
+      "modified": "2026-11-03T14:52:29+00:00",
+      "preview": "construction_site/Portable_Toilet_preview.png"
+    },
+    {
       "name": "Rail Crossover Gantry",
       "file": "Rail_Crossover_Gantry.glb",
       "path": "construction_site/Rail_Crossover_Gantry.glb",
@@ -154,6 +352,72 @@
       "size": 787734,
       "modified": "2026-10-20T18:17:06+00:00",
       "preview": "construction_site/Roll_Off_Dumpster_20yd_preview.png"
+    },
+    {
+      "name": "Shipping Container 20ft",
+      "file": "Shipping_Container_20ft.glb",
+      "path": "construction_site/Shipping_Container_20ft.glb",
+      "folder": "construction_site",
+      "ext": "glb",
+      "type": "glTF",
+      "size": 530768,
+      "modified": "2026-11-03T14:52:29+00:00",
+      "preview": "construction_site/Shipping_Container_20ft_preview.png"
+    },
+    {
+      "name": "Shipping Container 20ft",
+      "file": "Shipping_Container_20ft.step",
+      "path": "construction_site/Shipping_Container_20ft.step",
+      "folder": "construction_site",
+      "ext": "step",
+      "type": "STEP",
+      "size": 3067629,
+      "modified": "2026-11-03T14:52:29+00:00",
+      "preview": "construction_site/Shipping_Container_20ft_preview.png"
+    },
+    {
+      "name": "Skid Steer Loader",
+      "file": "Skid_Steer_Loader.glb",
+      "path": "construction_site/Skid_Steer_Loader.glb",
+      "folder": "construction_site",
+      "ext": "glb",
+      "type": "glTF",
+      "size": 837960,
+      "modified": "2026-11-03T14:52:29+00:00",
+      "preview": "construction_site/Skid_Steer_Loader_preview.png"
+    },
+    {
+      "name": "Skid Steer Loader",
+      "file": "Skid_Steer_Loader.step",
+      "path": "construction_site/Skid_Steer_Loader.step",
+      "folder": "construction_site",
+      "ext": "step",
+      "type": "STEP",
+      "size": 2837054,
+      "modified": "2026-11-03T14:52:29+00:00",
+      "preview": "construction_site/Skid_Steer_Loader_preview.png"
+    },
+    {
+      "name": "Steel Beam Bundle W12x26",
+      "file": "Steel_Beam_Bundle_W12x26.glb",
+      "path": "construction_site/Steel_Beam_Bundle_W12x26.glb",
+      "folder": "construction_site",
+      "ext": "glb",
+      "type": "glTF",
+      "size": 37468,
+      "modified": "2026-11-03T14:52:29+00:00",
+      "preview": "construction_site/Steel_Beam_Bundle_W12x26_preview.png"
+    },
+    {
+      "name": "Steel Beam Bundle W12x26",
+      "file": "Steel_Beam_Bundle_W12x26.step",
+      "path": "construction_site/Steel_Beam_Bundle_W12x26.step",
+      "folder": "construction_site",
+      "ext": "step",
+      "type": "STEP",
+      "size": 893038,
+      "modified": "2026-11-03T14:52:29+00:00",
+      "preview": "construction_site/Steel_Beam_Bundle_W12x26_preview.png"
     },
     {
       "name": "Telehandler 10000lb 56ft",
@@ -288,6 +552,182 @@
       "preview": "construction_site/Trailer_Concrete_Line_Pump_preview.png"
     },
     {
+      "name": "Type III Barricade Road Closed",
+      "file": "Type_III_Barricade_Road_Closed.glb",
+      "path": "construction_site/Type_III_Barricade_Road_Closed.glb",
+      "folder": "construction_site",
+      "ext": "glb",
+      "type": "glTF",
+      "size": 562304,
+      "modified": "2026-11-03T14:52:29+00:00",
+      "preview": "construction_site/Type_III_Barricade_Road_Closed_preview.png"
+    },
+    {
+      "name": "Type III Barricade Road Closed",
+      "file": "Type_III_Barricade_Road_Closed.step",
+      "path": "construction_site/Type_III_Barricade_Road_Closed.step",
+      "folder": "construction_site",
+      "ext": "step",
+      "type": "STEP",
+      "size": 2690743,
+      "modified": "2026-11-03T14:52:29+00:00",
+      "preview": "construction_site/Type_III_Barricade_Road_Closed_preview.png"
+    },
+    {
+      "name": "Cable Reel Wooden 1 50",
+      "file": "Cable_Reel_Wooden_1-50.stl",
+      "path": "construction_site/print_1-50/Cable_Reel_Wooden_1-50.stl",
+      "folder": "construction_site/print_1-50",
+      "ext": "stl",
+      "type": "STL",
+      "size": 5602584,
+      "modified": "2026-11-03T14:52:29+00:00",
+      "preview": "construction_site/print_1-50/Cable_Reel_Wooden_1-50_preview.png"
+    },
+    {
+      "name": "Contractor Wheelbarrow 1 50",
+      "file": "Contractor_Wheelbarrow_1-50.stl",
+      "path": "construction_site/print_1-50/Contractor_Wheelbarrow_1-50.stl",
+      "folder": "construction_site/print_1-50",
+      "ext": "stl",
+      "type": "STL",
+      "size": 762084,
+      "modified": "2026-11-03T14:52:29+00:00",
+      "preview": "construction_site/print_1-50/Contractor_Wheelbarrow_1-50_preview.png"
+    },
+    {
+      "name": "Frame Scaffold Tower 1 50",
+      "file": "Frame_Scaffold_Tower_1-50.stl",
+      "path": "construction_site/print_1-50/Frame_Scaffold_Tower_1-50.stl",
+      "folder": "construction_site/print_1-50",
+      "ext": "stl",
+      "type": "STL",
+      "size": 3358784,
+      "modified": "2026-11-03T14:52:29+00:00",
+      "preview": "construction_site/print_1-50/Frame_Scaffold_Tower_1-50_preview.png"
+    },
+    {
+      "name": "Jersey Barrier NJ 10ft 1 50",
+      "file": "Jersey_Barrier_NJ_10ft_1-50.stl",
+      "path": "construction_site/print_1-50/Jersey_Barrier_NJ_10ft_1-50.stl",
+      "folder": "construction_site/print_1-50",
+      "ext": "stl",
+      "type": "STL",
+      "size": 728484,
+      "modified": "2026-11-03T14:52:29+00:00",
+      "preview": "construction_site/print_1-50/Jersey_Barrier_NJ_10ft_1-50_preview.png"
+    },
+    {
+      "name": "Jersey Barrier Run 3x10ft 1 50",
+      "file": "Jersey_Barrier_Run_3x10ft_1-50.stl",
+      "path": "construction_site/print_1-50/Jersey_Barrier_Run_3x10ft_1-50.stl",
+      "folder": "construction_site/print_1-50",
+      "ext": "stl",
+      "type": "STL",
+      "size": 2439484,
+      "modified": "2026-11-03T14:52:29+00:00",
+      "preview": "construction_site/print_1-50/Jersey_Barrier_Run_3x10ft_1-50_preview.png"
+    },
+    {
+      "name": "LED Light Tower 1 50",
+      "file": "LED_Light_Tower_1-50.stl",
+      "path": "construction_site/print_1-50/LED_Light_Tower_1-50.stl",
+      "folder": "construction_site/print_1-50",
+      "ext": "stl",
+      "type": "STL",
+      "size": 1615784,
+      "modified": "2026-11-03T14:52:29+00:00",
+      "preview": "construction_site/print_1-50/LED_Light_Tower_1-50_preview.png"
+    },
+    {
+      "name": "Mini Excavator 3 5t 1 50",
+      "file": "Mini_Excavator_3-5t_1-50.stl",
+      "path": "construction_site/print_1-50/Mini_Excavator_3-5t_1-50.stl",
+      "folder": "construction_site/print_1-50",
+      "ext": "stl",
+      "type": "STL",
+      "size": 1924884,
+      "modified": "2026-11-03T14:52:29+00:00",
+      "preview": "construction_site/print_1-50/Mini_Excavator_3-5t_1-50_preview.png"
+    },
+    {
+      "name": "Pallet of CMU Blocks 1 50",
+      "file": "Pallet_of_CMU_Blocks_1-50.stl",
+      "path": "construction_site/print_1-50/Pallet_of_CMU_Blocks_1-50.stl",
+      "folder": "construction_site/print_1-50",
+      "ext": "stl",
+      "type": "STL",
+      "size": 346684,
+      "modified": "2026-11-03T14:52:29+00:00",
+      "preview": "construction_site/print_1-50/Pallet_of_CMU_Blocks_1-50_preview.png"
+    },
+    {
+      "name": "Portable Toilet 1 50",
+      "file": "Portable_Toilet_1-50.stl",
+      "path": "construction_site/print_1-50/Portable_Toilet_1-50.stl",
+      "folder": "construction_site/print_1-50",
+      "ext": "stl",
+      "type": "STL",
+      "size": 325684,
+      "modified": "2026-11-03T14:52:29+00:00",
+      "preview": "construction_site/print_1-50/Portable_Toilet_1-50_preview.png"
+    },
+    {
+      "name": "Shipping Container 20ft 1 50",
+      "file": "Shipping_Container_20ft_1-50.stl",
+      "path": "construction_site/print_1-50/Shipping_Container_20ft_1-50.stl",
+      "folder": "construction_site/print_1-50",
+      "ext": "stl",
+      "type": "STL",
+      "size": 1014584,
+      "modified": "2026-11-03T14:52:29+00:00",
+      "preview": "construction_site/print_1-50/Shipping_Container_20ft_1-50_preview.png"
+    },
+    {
+      "name": "Skid Steer Loader 1 50",
+      "file": "Skid_Steer_Loader_1-50.stl",
+      "path": "construction_site/print_1-50/Skid_Steer_Loader_1-50.stl",
+      "folder": "construction_site/print_1-50",
+      "ext": "stl",
+      "type": "STL",
+      "size": 1698784,
+      "modified": "2026-11-03T14:52:29+00:00",
+      "preview": "construction_site/print_1-50/Skid_Steer_Loader_1-50_preview.png"
+    },
+    {
+      "name": "Steel Beam Bundle W12x26 1 50",
+      "file": "Steel_Beam_Bundle_W12x26_1-50.stl",
+      "path": "construction_site/print_1-50/Steel_Beam_Bundle_W12x26_1-50.stl",
+      "folder": "construction_site/print_1-50",
+      "ext": "stl",
+      "type": "STL",
+      "size": 69684,
+      "modified": "2026-11-03T14:52:29+00:00",
+      "preview": "construction_site/print_1-50/Steel_Beam_Bundle_W12x26_1-50_preview.png"
+    },
+    {
+      "name": "Type III Barricade Road Closed 1 50",
+      "file": "Type_III_Barricade_Road_Closed_1-50.stl",
+      "path": "construction_site/print_1-50/Type_III_Barricade_Road_Closed_1-50.stl",
+      "folder": "construction_site/print_1-50",
+      "ext": "stl",
+      "type": "STL",
+      "size": 1196784,
+      "modified": "2026-11-03T14:52:29+00:00",
+      "preview": "construction_site/print_1-50/Type_III_Barricade_Road_Closed_1-50_preview.png"
+    },
+    {
+      "name": "mammoet 1824 crane",
+      "file": "mammoet_1824_crane.step",
+      "path": "crane_model/mammoet_1824_crane.step",
+      "folder": "crane_model",
+      "ext": "step",
+      "type": "STEP",
+      "size": 3708766,
+      "modified": "2026-10-27T18:06:39+00:00",
+      "preview": "crane_model/preview.png"
+    },
+    {
       "name": "Rain Hoarding",
       "file": "Rain_Hoarding.step",
       "path": "hoarding/Rain_Hoarding.step",
@@ -295,7 +735,7 @@
       "ext": "step",
       "type": "STEP",
       "size": 8196667,
-      "modified": "2026-10-20T18:25:53+00:00",
+      "modified": "2026-10-20T18:30:32+00:00",
       "preview": "hoarding/Rain_Hoarding_preview.png"
     },
     {
@@ -343,6 +783,61 @@
       "preview": null
     },
     {
+      "name": "belt buckle x",
+      "file": "belt_buckle_x.stl",
+      "path": "jubilee-props/stl/belt_buckle_x.stl",
+      "folder": "jubilee-props/stl",
+      "ext": "stl",
+      "type": "STL",
+      "size": 225884,
+      "modified": "2026-10-21T02:43:16+00:00",
+      "preview": null
+    },
+    {
+      "name": "chest pin x",
+      "file": "chest_pin_x.stl",
+      "path": "jubilee-props/stl/chest_pin_x.stl",
+      "folder": "jubilee-props/stl",
+      "ext": "stl",
+      "type": "STL",
+      "size": 179884,
+      "modified": "2026-10-23T03:20:44+00:00",
+      "preview": null
+    },
+    {
+      "name": "earring x oval",
+      "file": "earring_x_oval.stl",
+      "path": "jubilee-props/stl/earring_x_oval.stl",
+      "folder": "jubilee-props/stl",
+      "ext": "stl",
+      "type": "STL",
+      "size": 360484,
+      "modified": "2026-10-23T03:20:44+00:00",
+      "preview": null
+    },
+    {
+      "name": "earrings pair",
+      "file": "earrings_pair.stl",
+      "path": "jubilee-props/stl/earrings_pair.stl",
+      "folder": "jubilee-props/stl",
+      "ext": "stl",
+      "type": "STL",
+      "size": 720884,
+      "modified": "2026-10-23T03:20:44+00:00",
+      "preview": null
+    },
+    {
+      "name": "necklace pendant x",
+      "file": "necklace_pendant_x.stl",
+      "path": "jubilee-props/stl/necklace_pendant_x.stl",
+      "folder": "jubilee-props/stl",
+      "ext": "stl",
+      "type": "STL",
+      "size": 359284,
+      "modified": "2026-10-23T03:20:44+00:00",
+      "preview": null
+    },
+    {
       "name": "bucket",
       "file": "bucket.3mf",
       "path": "keyholders/bucket.3mf",
@@ -383,7 +878,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 196354,
-      "modified": "2026-10-20T18:25:53+00:00",
+      "modified": "2026-10-20T18:30:32+00:00",
       "preview": "mascotstand/models/mascot_stand_assembled_preview.png"
     },
     {
@@ -394,7 +889,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 115313,
-      "modified": "2026-10-20T18:25:53+00:00",
+      "modified": "2026-10-20T18:30:32+00:00",
       "preview": "mascotstand/models/mascot_stand_base_preview.png"
     },
     {
@@ -405,7 +900,7 @@
       "ext": "stl",
       "type": "STL",
       "size": 584484,
-      "modified": "2026-10-20T18:25:53+00:00",
+      "modified": "2026-10-20T18:30:32+00:00",
       "preview": "mascotstand/models/mascot_stand_base_preview.png"
     },
     {
@@ -416,7 +911,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 81842,
-      "modified": "2026-10-20T18:25:53+00:00",
+      "modified": "2026-10-20T18:30:32+00:00",
       "preview": "mascotstand/models/mascot_stand_trim_preview.png"
     },
     {
@@ -427,7 +922,7 @@
       "ext": "stl",
       "type": "STL",
       "size": 128084,
-      "modified": "2026-10-20T18:25:53+00:00",
+      "modified": "2026-10-20T18:30:32+00:00",
       "preview": "mascotstand/models/mascot_stand_trim_cup_rim_preview.png"
     },
     {
@@ -438,7 +933,7 @@
       "ext": "stl",
       "type": "STL",
       "size": 105684,
-      "modified": "2026-10-20T18:25:53+00:00",
+      "modified": "2026-10-20T18:30:32+00:00",
       "preview": "mascotstand/models/mascot_stand_trim_side_band_preview.png"
     },
     {
@@ -449,7 +944,7 @@
       "ext": "stl",
       "type": "STL",
       "size": 59884,
-      "modified": "2026-10-20T18:25:53+00:00",
+      "modified": "2026-10-20T18:30:32+00:00",
       "preview": "mascotstand/models/mascot_stand_trim_stage_ring_preview.png"
     },
     {
@@ -460,7 +955,7 @@
       "ext": "stl",
       "type": "STL",
       "size": 135884,
-      "modified": "2026-10-20T18:25:53+00:00",
+      "modified": "2026-10-20T18:30:32+00:00",
       "preview": "mascotstand/models/mascot_stand_trim_tray_rim_preview.png"
     },
     {
@@ -471,7 +966,7 @@
       "ext": "stl",
       "type": "STL",
       "size": 60084,
-      "modified": "2026-10-20T18:25:53+00:00",
+      "modified": "2026-10-20T18:30:32+00:00",
       "preview": "mirror_hanger/out/black_base_preview.png"
     },
     {
@@ -482,7 +977,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 58278,
-      "modified": "2026-10-20T18:25:53+00:00",
+      "modified": "2026-10-20T18:30:32+00:00",
       "preview": "mirror_hanger/out/hanger_preview.png"
     },
     {
@@ -493,7 +988,7 @@
       "ext": "stl",
       "type": "STL",
       "size": 176484,
-      "modified": "2026-10-20T18:25:53+00:00",
+      "modified": "2026-10-20T18:30:32+00:00",
       "preview": "mirror_hanger/out/red_layer_preview.png"
     },
     {
@@ -504,7 +999,7 @@
       "ext": "stl",
       "type": "STL",
       "size": 98084,
-      "modified": "2026-10-20T18:25:53+00:00",
+      "modified": "2026-10-20T18:30:32+00:00",
       "preview": "mirror_hanger/out/white_layer_preview.png"
     },
     {
@@ -515,7 +1010,7 @@
       "ext": "stl",
       "type": "STL",
       "size": 51884,
-      "modified": "2026-10-20T18:25:53+00:00",
+      "modified": "2026-10-20T18:30:32+00:00",
       "preview": "mirror_hanger/out3d/black_part_preview.png"
     },
     {
@@ -526,7 +1021,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 54314,
-      "modified": "2026-10-20T18:25:53+00:00",
+      "modified": "2026-10-20T18:30:32+00:00",
       "preview": "mirror_hanger/out3d/cube_preview.png"
     },
     {
@@ -537,7 +1032,7 @@
       "ext": "stl",
       "type": "STL",
       "size": 159884,
-      "modified": "2026-10-20T18:25:53+00:00",
+      "modified": "2026-10-20T18:30:32+00:00",
       "preview": "mirror_hanger/out3d/red_part_preview.png"
     },
     {
@@ -548,7 +1043,7 @@
       "ext": "stl",
       "type": "STL",
       "size": 92084,
-      "modified": "2026-10-20T18:25:53+00:00",
+      "modified": "2026-10-20T18:30:32+00:00",
       "preview": "mirror_hanger/out3d/white_part_preview.png"
     },
     {
@@ -592,7 +1087,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 54402,
-      "modified": "2026-10-20T18:25:53+00:00",
+      "modified": "2026-10-20T18:30:32+00:00",
       "preview": "neonsign/example/back_parts_preview.png"
     },
     {
@@ -603,7 +1098,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 126266,
-      "modified": "2026-10-20T18:25:53+00:00",
+      "modified": "2026-10-20T18:30:32+00:00",
       "preview": "neonsign/example/channels_plate_1_preview.png"
     },
     {
@@ -614,7 +1109,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 87766,
-      "modified": "2026-10-20T18:25:53+00:00",
+      "modified": "2026-10-20T18:30:32+00:00",
       "preview": "neonsign/example/channels_plate_2_preview.png"
     },
     {
@@ -625,7 +1120,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 103287,
-      "modified": "2026-10-20T18:25:53+00:00",
+      "modified": "2026-10-20T18:30:32+00:00",
       "preview": "neonsign/example/channels_plate_3_preview.png"
     },
     {
@@ -636,7 +1131,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 130016,
-      "modified": "2026-10-20T18:25:53+00:00",
+      "modified": "2026-10-20T18:30:32+00:00",
       "preview": "neonsign/example/channels_plate_4_preview.png"
     },
     {
@@ -647,7 +1142,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 59156,
-      "modified": "2026-10-20T18:25:53+00:00",
+      "modified": "2026-10-20T18:30:32+00:00",
       "preview": "neonsign/example/channels_plate_5_preview.png"
     },
     {
@@ -658,7 +1153,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 23311,
-      "modified": "2026-10-20T18:25:53+00:00",
+      "modified": "2026-10-20T18:30:32+00:00",
       "preview": "neonsign/example/pixel_caps_preview.png"
     },
     {
@@ -871,6 +1366,270 @@
       "preview": "pilot/preview.png"
     },
     {
+      "name": "bigleaf maple",
+      "file": "bigleaf-maple.glb",
+      "path": "pnw-tree-magnets/bigleaf-maple.glb",
+      "folder": "pnw-tree-magnets",
+      "ext": "glb",
+      "type": "glTF",
+      "size": 50086780,
+      "modified": "2026-10-21T03:06:15+00:00",
+      "preview": "pnw-tree-magnets/bigleaf-maple.png"
+    },
+    {
+      "name": "douglas fir",
+      "file": "douglas-fir.glb",
+      "path": "pnw-tree-magnets/douglas-fir.glb",
+      "folder": "pnw-tree-magnets",
+      "ext": "glb",
+      "type": "glTF",
+      "size": 49495612,
+      "modified": "2026-10-21T03:06:15+00:00",
+      "preview": "pnw-tree-magnets/douglas-fir.png"
+    },
+    {
+      "name": "pacific madrone",
+      "file": "pacific-madrone.glb",
+      "path": "pnw-tree-magnets/pacific-madrone.glb",
+      "folder": "pnw-tree-magnets",
+      "ext": "glb",
+      "type": "glTF",
+      "size": 49867416,
+      "modified": "2026-10-21T03:06:15+00:00",
+      "preview": "pnw-tree-magnets/pacific-madrone.png"
+    },
+    {
+      "name": "sitka spruce",
+      "file": "sitka-spruce.glb",
+      "path": "pnw-tree-magnets/sitka-spruce.glb",
+      "folder": "pnw-tree-magnets",
+      "ext": "glb",
+      "type": "glTF",
+      "size": 48333348,
+      "modified": "2026-10-21T03:06:15+00:00",
+      "preview": "pnw-tree-magnets/sitka-spruce.png"
+    },
+    {
+      "name": "bigleaf maple half",
+      "file": "bigleaf-maple-half.3mf",
+      "path": "pnw-tree-magnets/stl/bigleaf-maple-half.3mf",
+      "folder": "pnw-tree-magnets/stl",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 2377200,
+      "modified": "2026-10-22T17:03:21+00:00",
+      "preview": null
+    },
+    {
+      "name": "bigleaf maple half",
+      "file": "bigleaf-maple-half.stl",
+      "path": "pnw-tree-magnets/stl/bigleaf-maple-half.stl",
+      "folder": "pnw-tree-magnets/stl",
+      "ext": "stl",
+      "type": "STL",
+      "size": 9906884,
+      "modified": "2026-10-21T23:13:08+00:00",
+      "preview": null
+    },
+    {
+      "name": "bigleaf maple lids",
+      "file": "bigleaf-maple-lids.stl",
+      "path": "pnw-tree-magnets/stl/bigleaf-maple-lids.stl",
+      "folder": "pnw-tree-magnets/stl",
+      "ext": "stl",
+      "type": "STL",
+      "size": 37884,
+      "modified": "2026-10-21T23:13:08+00:00",
+      "preview": null
+    },
+    {
+      "name": "douglas fir half",
+      "file": "douglas-fir-half.3mf",
+      "path": "pnw-tree-magnets/stl/douglas-fir-half.3mf",
+      "folder": "pnw-tree-magnets/stl",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 2477060,
+      "modified": "2026-10-22T17:03:21+00:00",
+      "preview": null
+    },
+    {
+      "name": "douglas fir half",
+      "file": "douglas-fir-half.stl",
+      "path": "pnw-tree-magnets/stl/douglas-fir-half.stl",
+      "folder": "pnw-tree-magnets/stl",
+      "ext": "stl",
+      "type": "STL",
+      "size": 10478684,
+      "modified": "2026-10-21T23:13:08+00:00",
+      "preview": null
+    },
+    {
+      "name": "douglas fir lids",
+      "file": "douglas-fir-lids.stl",
+      "path": "pnw-tree-magnets/stl/douglas-fir-lids.stl",
+      "folder": "pnw-tree-magnets/stl",
+      "ext": "stl",
+      "type": "STL",
+      "size": 37884,
+      "modified": "2026-10-21T23:13:08+00:00",
+      "preview": null
+    },
+    {
+      "name": "pacific madrone half",
+      "file": "pacific-madrone-half.3mf",
+      "path": "pnw-tree-magnets/stl/pacific-madrone-half.3mf",
+      "folder": "pnw-tree-magnets/stl",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 3338391,
+      "modified": "2026-10-22T17:03:21+00:00",
+      "preview": null
+    },
+    {
+      "name": "pacific madrone half",
+      "file": "pacific-madrone-half.stl",
+      "path": "pnw-tree-magnets/stl/pacific-madrone-half.stl",
+      "folder": "pnw-tree-magnets/stl",
+      "ext": "stl",
+      "type": "STL",
+      "size": 13969884,
+      "modified": "2026-10-21T23:13:08+00:00",
+      "preview": null
+    },
+    {
+      "name": "pacific madrone lids",
+      "file": "pacific-madrone-lids.stl",
+      "path": "pnw-tree-magnets/stl/pacific-madrone-lids.stl",
+      "folder": "pnw-tree-magnets/stl",
+      "ext": "stl",
+      "type": "STL",
+      "size": 25284,
+      "modified": "2026-10-21T23:13:08+00:00",
+      "preview": null
+    },
+    {
+      "name": "sitka spruce half",
+      "file": "sitka-spruce-half.3mf",
+      "path": "pnw-tree-magnets/stl/sitka-spruce-half.3mf",
+      "folder": "pnw-tree-magnets/stl",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 2967495,
+      "modified": "2026-10-22T17:03:21+00:00",
+      "preview": null
+    },
+    {
+      "name": "sitka spruce half",
+      "file": "sitka-spruce-half.stl",
+      "path": "pnw-tree-magnets/stl/sitka-spruce-half.stl",
+      "folder": "pnw-tree-magnets/stl",
+      "ext": "stl",
+      "type": "STL",
+      "size": 12608984,
+      "modified": "2026-10-21T23:13:08+00:00",
+      "preview": null
+    },
+    {
+      "name": "sitka spruce lids",
+      "file": "sitka-spruce-lids.stl",
+      "path": "pnw-tree-magnets/stl/sitka-spruce-lids.stl",
+      "folder": "pnw-tree-magnets/stl",
+      "ext": "stl",
+      "type": "STL",
+      "size": 37884,
+      "modified": "2026-10-21T23:13:08+00:00",
+      "preview": null
+    },
+    {
+      "name": "western hemlock half",
+      "file": "western-hemlock-half.3mf",
+      "path": "pnw-tree-magnets/stl/western-hemlock-half.3mf",
+      "folder": "pnw-tree-magnets/stl",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 3864430,
+      "modified": "2026-10-22T17:03:21+00:00",
+      "preview": null
+    },
+    {
+      "name": "western hemlock half",
+      "file": "western-hemlock-half.stl",
+      "path": "pnw-tree-magnets/stl/western-hemlock-half.stl",
+      "folder": "pnw-tree-magnets/stl",
+      "ext": "stl",
+      "type": "STL",
+      "size": 16456584,
+      "modified": "2026-10-21T23:13:08+00:00",
+      "preview": null
+    },
+    {
+      "name": "western hemlock lids",
+      "file": "western-hemlock-lids.stl",
+      "path": "pnw-tree-magnets/stl/western-hemlock-lids.stl",
+      "folder": "pnw-tree-magnets/stl",
+      "ext": "stl",
+      "type": "STL",
+      "size": 12684,
+      "modified": "2026-10-21T23:13:08+00:00",
+      "preview": null
+    },
+    {
+      "name": "western red cedar half",
+      "file": "western-red-cedar-half.3mf",
+      "path": "pnw-tree-magnets/stl/western-red-cedar-half.3mf",
+      "folder": "pnw-tree-magnets/stl",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 2653829,
+      "modified": "2026-10-22T17:03:21+00:00",
+      "preview": null
+    },
+    {
+      "name": "western red cedar half",
+      "file": "western-red-cedar-half.stl",
+      "path": "pnw-tree-magnets/stl/western-red-cedar-half.stl",
+      "folder": "pnw-tree-magnets/stl",
+      "ext": "stl",
+      "type": "STL",
+      "size": 11060884,
+      "modified": "2026-10-21T23:13:08+00:00",
+      "preview": null
+    },
+    {
+      "name": "western red cedar lids",
+      "file": "western-red-cedar-lids.stl",
+      "path": "pnw-tree-magnets/stl/western-red-cedar-lids.stl",
+      "folder": "pnw-tree-magnets/stl",
+      "ext": "stl",
+      "type": "STL",
+      "size": 37884,
+      "modified": "2026-10-21T23:13:08+00:00",
+      "preview": null
+    },
+    {
+      "name": "western hemlock",
+      "file": "western-hemlock.glb",
+      "path": "pnw-tree-magnets/western-hemlock.glb",
+      "folder": "pnw-tree-magnets",
+      "ext": "glb",
+      "type": "glTF",
+      "size": 48113304,
+      "modified": "2026-10-21T03:06:15+00:00",
+      "preview": "pnw-tree-magnets/western-hemlock.png"
+    },
+    {
+      "name": "western red cedar",
+      "file": "western-red-cedar.glb",
+      "path": "pnw-tree-magnets/western-red-cedar.glb",
+      "folder": "pnw-tree-magnets",
+      "ext": "glb",
+      "type": "glTF",
+      "size": 49047816,
+      "modified": "2026-10-21T03:06:15+00:00",
+      "preview": "pnw-tree-magnets/western-red-cedar.png"
+    },
+    {
       "name": "Dumper Access",
       "file": "Dumper_Access.glb",
       "path": "railbridge/Dumper_Access.glb",
@@ -935,6 +1694,83 @@
       "size": 168251,
       "modified": "2026-10-16T20:18:17+00:00",
       "preview": "reviewstand/example/review_stand_sign_preview.png"
+    },
+    {
+      "name": "ss10 assembly inward",
+      "file": "ss10_assembly_inward.stl",
+      "path": "ss10_chase/out/ss10_assembly_inward.stl",
+      "folder": "ss10_chase/out",
+      "ext": "stl",
+      "type": "STL",
+      "size": 341084,
+      "modified": "2026-10-20T21:14:43+00:00",
+      "preview": null
+    },
+    {
+      "name": "ss10 assembly outward",
+      "file": "ss10_assembly_outward.stl",
+      "path": "ss10_chase/out/ss10_assembly_outward.stl",
+      "folder": "ss10_chase/out",
+      "ext": "stl",
+      "type": "STL",
+      "size": 341084,
+      "modified": "2026-10-20T21:14:43+00:00",
+      "preview": null
+    },
+    {
+      "name": "ss10 bracket inward",
+      "file": "ss10_bracket_inward.stl",
+      "path": "ss10_chase/out/ss10_bracket_inward.stl",
+      "folder": "ss10_chase/out",
+      "ext": "stl",
+      "type": "STL",
+      "size": 21484,
+      "modified": "2026-10-20T21:14:43+00:00",
+      "preview": null
+    },
+    {
+      "name": "ss10 bracket outward",
+      "file": "ss10_bracket_outward.stl",
+      "path": "ss10_chase/out/ss10_bracket_outward.stl",
+      "folder": "ss10_chase/out",
+      "ext": "stl",
+      "type": "STL",
+      "size": 21484,
+      "modified": "2026-10-20T21:14:43+00:00",
+      "preview": null
+    },
+    {
+      "name": "ss10 housing",
+      "file": "ss10_housing.stl",
+      "path": "ss10_chase/out/ss10_housing.stl",
+      "folder": "ss10_chase/out",
+      "ext": "stl",
+      "type": "STL",
+      "size": 295084,
+      "modified": "2026-10-20T21:14:43+00:00",
+      "preview": null
+    },
+    {
+      "name": "ss10 housing half A",
+      "file": "ss10_housing_half_A.stl",
+      "path": "ss10_chase/out/ss10_housing_half_A.stl",
+      "folder": "ss10_chase/out",
+      "ext": "stl",
+      "type": "STL",
+      "size": 172284,
+      "modified": "2026-10-20T21:14:43+00:00",
+      "preview": null
+    },
+    {
+      "name": "ss10 housing half B",
+      "file": "ss10_housing_half_B.stl",
+      "path": "ss10_chase/out/ss10_housing_half_B.stl",
+      "folder": "ss10_chase/out",
+      "ext": "stl",
+      "type": "STL",
+      "size": 172784,
+      "modified": "2026-10-20T21:14:43+00:00",
+      "preview": null
     },
     {
       "name": "Genie GTH 1056 max 65deg extended 10m",
