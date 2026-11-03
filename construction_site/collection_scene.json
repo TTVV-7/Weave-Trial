@@ -1,0 +1,74 @@
+[
+ {
+  "file": "Frame_Scaffold_Tower.glb",
+  "x": -1.76,
+  "y": -7.95,
+  "rot": 120
+ },
+ {
+  "file": "Shipping_Container_20ft.glb",
+  "x": -4.62,
+  "y": -3.59,
+  "rot": 275
+ },
+ {
+  "file": "LED_Light_Tower.glb",
+  "x": -7.13,
+  "y": 2.35,
+  "rot": 15
+ },
+ {
+  "file": "Skid_Steer_Loader.glb",
+  "x": 2.28,
+  "y": -5.15,
+  "rot": 75
+ },
+ {
+  "file": "Pallet_of_CMU_Blocks.glb",
+  "x": -0.09,
+  "y": -3.05,
+  "rot": 15
+ },
+ {
+  "file": "Mini_Excavator_3-5t.glb",
+  "x": -1.14,
+  "y": 0.38,
+  "rot": -15
+ },
+ {
+  "file": "Steel_Beam_Bundle_W12x26.glb",
+  "x": -3.15,
+  "y": 4.65,
+  "rot": 120
+ },
+ {
+  "file": "Type_III_Barricade_Road_Closed.glb",
+  "x": 6.07,
+  "y": -4.12,
+  "rot": 120
+ },
+ {
+  "file": "Portable_Toilet.glb",
+  "x": 3.95,
+  "y": -1.64,
+  "rot": 15
+ },
+ {
+  "file": "Contractor_Wheelbarrow.glb",
+  "x": 3.01,
+  "y": 0.58,
+  "rot": 200
+ },
+ {
+  "file": "Cable_Reel_Wooden.glb",
+  "x": 0.8,
+  "y": 3.81,
+  "rot": 75
+ },
+ {
+  "file": "Jersey_Barrier_Run_3x10ft.glb",
+  "x": 4.45,
+  "y": 3.49,
+  "rot": 120
+ }
+]

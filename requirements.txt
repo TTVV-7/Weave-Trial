@@ -5,3 +5,6 @@ fullcontrol>=0.1   # --fullcontrol backend (its viewer and printer library)
 manifold3d>=3.0    # case.py --stl: the boolean, and nothing else. The case's
                    # rounded rectangles, lofts and binary STL are written out
                    # here; this is only what subtracts the cutouts.
+cadquery>=2.4      # construction_site/build_assets.py: the models, STEP and GLB
+trimesh>=4.0       #   ... the GLB writer
+                   #   (manifold3d above also unions its print STLs)

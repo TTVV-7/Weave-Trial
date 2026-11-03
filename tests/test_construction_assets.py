@@ -1,0 +1,94 @@
+"""The construction-site assets: drawn to the published sizes, and printable.
+
+The print files are what people pay for, so the tests that matter are the
+ones on them: one connected piece, closed, flat on the bed, at the scale it
+says. These need the optional CAD stack (cadquery, manifold3d, trimesh) and
+are skipped without it.
+"""
+
+from __future__ import annotations
+
+import math
+import struct
+import sys
+from pathlib import Path
+
+import pytest
+
+pytest.importorskip("cadquery")
+pytest.importorskip("manifold3d")
+trimesh = pytest.importorskip("trimesh")
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "construction_site"))
+
+import build_assets as B  # noqa: E402
+from cadkit import IN, Model, export_print, prism  # noqa: E402
+
+
+def asset(key):
+    return next(a for a in B.ASSETS if a.key == key)
+
+
+@pytest.mark.parametrize("axis", ["x", "y", "z"])
+@pytest.mark.parametrize("winding", [1, -1])
+def test_prism_is_never_inside_out(axis, winding):
+    pts = [(0, 0), (40, 0), (40, 20), (0, 20)][::winding]
+    assert prism(pts, axis, 5, 15).Volume() == pytest.approx(40 * 20 * 10)
+
+
+def test_jersey_profile_is_the_nj_shape():
+    pts = B.jersey_profile()
+    ys = [y for y, _ in pts]
+    zs = [z for _, z in pts]
+    assert max(zs) == pytest.approx(32 * IN)
+    assert max(ys) - min(ys) == pytest.approx(24 * IN)
+    top = [y for y, z in pts if z == max(zs)]
+    assert max(top) - min(top) == pytest.approx(6 * IN, abs=1)
+    (y0, z0), (y1, z1) = pts[1], pts[2]
+    assert math.degrees(math.atan2(z1 - z0, y0 - y1)) == pytest.approx(55)
+
+
+def test_every_asset_has_a_unique_key_and_file_name():
+    assert len({a.key for a in B.ASSETS}) == len(B.ASSETS)
+    assert len({a.stem for a in B.ASSETS}) == len(B.ASSETS)
+
+
+@pytest.mark.parametrize("key", ["jersey_barrier", "wheelbarrow", "type3_barricade"])
+def test_print_file_is_one_closed_piece_flat_on_the_bed(key, tmp_path):
+    m = Model(print_mode=True, scale=50)
+    asset(key).build(m)
+    stl = tmp_path / "part.stl"
+    report = export_print(m, stl, 50)
+    assert report["pieces"] == 1
+    assert report["skipped_solids"] == 0
+
+    data = stl.read_bytes()
+    (count,) = struct.unpack_from("<I", data, 80)
+    assert len(data) == 84 + 50 * count
+
+    mesh = trimesh.load(stl)
+    assert mesh.is_watertight
+    assert mesh.volume > 0
+    assert mesh.bounds[0][2] == pytest.approx(0, abs=1e-4)
+    assert mesh.bounds[0][:2] == pytest.approx(-mesh.bounds[1][:2], abs=1e-3)   # centred
+
+
+def test_print_mode_thickens_thin_parts_to_a_printable_wall():
+    shown, printed = Model(), Model(print_mode=True, scale=50, min_wall=0.8)
+    assert shown.t(2.5) == 2.5
+    assert printed.t(2.5) == pytest.approx(40)          # 0.8 mm at 1:50
+    assert printed.t(300) == 300
+    assert printed.r(5) == pytest.approx(20)
+
+
+def test_barrier_prints_at_its_scale():
+    m = Model(print_mode=True, scale=50)
+    asset("jersey_barrier").build(m)
+    m2 = Model(print_mode=True, scale=87)
+    asset("jersey_barrier").build(m2)
+    import tempfile
+    with tempfile.TemporaryDirectory() as d:
+        r50 = export_print(m, Path(d) / "a.stl", 50)
+        r87 = export_print(m2, Path(d) / "b.stl", 87)
+    assert r50["size_mm"][2] == pytest.approx(32 * IN / 50, abs=0.05)
+    assert r87["size_mm"][2] == pytest.approx(32 * IN / 87, abs=0.05)

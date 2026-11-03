@@ -1,0 +1,327 @@
+[
+ {
+  "key": "mini_excavator",
+  "title": "Mini Excavator (3.5 t class)",
+  "stem": "Mini_Excavator_3-5t",
+  "size_mm": [
+   4470,
+   1740,
+   2622
+  ],
+  "parts": 40,
+  "print": {
+   "size_mm": [
+    89.4,
+    34.8,
+    52.2
+   ],
+   "volume_cm3": 20.23,
+   "triangles": 38496,
+   "pieces": 1,
+   "sealed_voids": 2,
+   "genus": 37,
+   "skipped_solids": 0
+  },
+  "seconds": 12.3
+ },
+ {
+  "key": "skid_steer",
+  "title": "Skid Steer Loader (radial lift, 68 in bucket)",
+  "stem": "Skid_Steer_Loader",
+  "size_mm": [
+   3072,
+   1830,
+   2006
+  ],
+  "parts": 37,
+  "print": {
+   "size_mm": [
+    61.4,
+    36.6,
+    40.0
+   ],
+   "volume_cm3": 25.69,
+   "triangles": 33974,
+   "pieces": 1,
+   "sealed_voids": 0,
+   "genus": 14,
+   "skipped_solids": 0
+  },
+  "seconds": 10.8
+ },
+ {
+  "key": "shipping_container",
+  "title": "Shipping Container (20 ft ISO, site storage)",
+  "stem": "Shipping_Container_20ft",
+  "size_mm": [
+   6112,
+   2438,
+   2591
+  ],
+  "parts": 14,
+  "print": {
+   "size_mm": [
+    122.4,
+    48.8,
+    51.8
+   ],
+   "volume_cm3": 291.25,
+   "triangles": 20290,
+   "pieces": 1,
+   "sealed_voids": 0,
+   "genus": 20,
+   "skipped_solids": 0
+  },
+  "seconds": 9.9
+ },
+ {
+  "key": "light_tower",
+  "title": "LED Light Tower (towable, 30 ft mast)",
+  "stem": "LED_Light_Tower",
+  "size_mm": [
+   3728,
+   3600,
+   9661
+  ],
+  "parts": 28,
+  "print": {
+   "size_mm": [
+    74.6,
+    72.0,
+    193.1
+   ],
+   "volume_cm3": 29.01,
+   "triangles": 32314,
+   "pieces": 1,
+   "sealed_voids": 0,
+   "genus": 14,
+   "skipped_solids": 0
+  },
+  "seconds": 9.9
+ },
+ {
+  "key": "scaffold_tower",
+  "title": "Frame Scaffold Tower (2 lifts, 5 x 7 ft)",
+  "stem": "Frame_Scaffold_Tower",
+  "size_mm": [
+   2439,
+   1674,
+   5364
+  ],
+  "parts": 9,
+  "print": {
+   "size_mm": [
+    48.8,
+    33.5,
+    107.3
+   ],
+   "volume_cm3": 2.85,
+   "triangles": 67174,
+   "pieces": 1,
+   "sealed_voids": 0,
+   "genus": 73,
+   "skipped_solids": 0
+  },
+  "seconds": 11.8
+ },
+ {
+  "key": "portable_toilet",
+  "title": "Portable Toilet (site unit)",
+  "stem": "Portable_Toilet",
+  "size_mm": [
+   1363,
+   1148,
+   2490
+  ],
+  "parts": 9,
+  "print": {
+   "size_mm": [
+    27.4,
+    23.0,
+    49.8
+   ],
+   "volume_cm3": 22.45,
+   "triangles": 6512,
+   "pieces": 1,
+   "sealed_voids": 0,
+   "genus": 3,
+   "skipped_solids": 0
+  },
+  "seconds": 7.8
+ },
+ {
+  "key": "type3_barricade",
+  "title": "Type III Barricade with ROAD CLOSED sign",
+  "stem": "Type_III_Barricade_Road_Closed",
+  "size_mm": [
+   2438,
+   1280,
+   2520
+  ],
+  "parts": 87,
+  "print": {
+   "size_mm": [
+    48.8,
+    25.6,
+    50.4
+   ],
+   "volume_cm3": 2.21,
+   "triangles": 23934,
+   "pieces": 1,
+   "sealed_voids": 0,
+   "genus": 10,
+   "skipped_solids": 0
+  },
+  "seconds": 9.8
+ },
+ {
+  "key": "jersey_barrier",
+  "title": "Jersey Barrier (NJ shape, 10 ft)",
+  "stem": "Jersey_Barrier_NJ_10ft",
+  "size_mm": [
+   3256,
+   610,
+   813
+  ],
+  "parts": 4,
+  "print": {
+   "size_mm": [
+    65.4,
+    12.2,
+    16.3
+   ],
+   "volume_cm3": 5.55,
+   "triangles": 14568,
+   "pieces": 1,
+   "sealed_voids": 0,
+   "genus": 6,
+   "skipped_solids": 0
+  },
+  "seconds": 7.5
+ },
+ {
+  "key": "jersey_barrier_run",
+  "title": "Jersey Barrier Run (3 x 10 ft, pinned)",
+  "stem": "Jersey_Barrier_Run_3x10ft",
+  "size_mm": [
+   9572,
+   610,
+   813
+  ],
+  "parts": 14,
+  "print": {
+   "size_mm": [
+    191.7,
+    12.2,
+    16.3
+   ],
+   "volume_cm3": 16.65,
+   "triangles": 48788,
+   "pieces": 1,
+   "sealed_voids": 0,
+   "genus": 38,
+   "skipped_solids": 0
+  },
+  "seconds": 9.9
+ },
+ {
+  "key": "cmu_pallet",
+  "title": "Pallet of CMU Blocks (90 x 8x8x16 in)",
+  "stem": "Pallet_of_CMU_Blocks",
+  "size_mm": [
+   1219,
+   1016,
+   1316
+  ],
+  "parts": 4,
+  "print": {
+   "size_mm": [
+    24.4,
+    20.3,
+    26.2
+   ],
+   "volume_cm3": 5.52,
+   "triangles": 6932,
+   "pieces": 1,
+   "sealed_voids": 0,
+   "genus": 272,
+   "skipped_solids": 0
+  },
+  "seconds": 13.7
+ },
+ {
+  "key": "steel_beam_bundle",
+  "title": "Steel Beam Bundle (12 x W12x26, 20 ft)",
+  "stem": "Steel_Beam_Bundle_W12x26",
+  "size_mm": [
+   6098,
+   1120,
+   1198
+  ],
+  "parts": 14,
+  "print": {
+   "size_mm": [
+    121.9,
+    22.4,
+    24.0
+   ],
+   "volume_cm3": 13.67,
+   "triangles": 1392,
+   "pieces": 1,
+   "sealed_voids": 0,
+   "genus": 43,
+   "skipped_solids": 0
+  },
+  "seconds": 8.4
+ },
+ {
+  "key": "wheelbarrow",
+  "title": "Contractor Wheelbarrow (6 cu ft)",
+  "stem": "Contractor_Wheelbarrow",
+  "size_mm": [
+   1659,
+   736,
+   711
+  ],
+  "parts": 7,
+  "print": {
+   "size_mm": [
+    33.2,
+    14.7,
+    14.0
+   ],
+   "volume_cm3": 0.52,
+   "triangles": 15240,
+   "pieces": 1,
+   "sealed_voids": 0,
+   "genus": 3,
+   "skipped_solids": 0
+  },
+  "seconds": 10.2
+ },
+ {
+  "key": "cable_reel",
+  "title": "Wooden Cable Reel (49 in, wound)",
+  "stem": "Cable_Reel_Wooden",
+  "size_mm": [
+   1995,
+   900,
+   1250
+  ],
+  "parts": 9,
+  "print": {
+   "size_mm": [
+    39.9,
+    18.0,
+    24.8
+   ],
+   "volume_cm3": 5.75,
+   "triangles": 112050,
+   "pieces": 1,
+   "sealed_voids": 0,
+   "genus": 17,
+   "skipped_solids": 0
+  },
+  "seconds": 17.7
+ }
+]
