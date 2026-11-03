@@ -366,6 +366,41 @@ def _to_manifold(solid: cq.Shape, tol, ang):
     return m if m.status() == mf.Error.NoError and not m.is_empty() else None
 
 
+def weld_float32(v, t):
+    """Round vertices to float32, merge the identical ones, drop triangles that collapse."""
+    v32 = np.asarray(v, np.float64).astype(np.float32)
+    uniq, inv = np.unique(v32, axis=0, return_inverse=True)
+    t = inv.reshape(-1)[np.asarray(t, np.int64)]
+    keep = (t[:, 0] != t[:, 1]) & (t[:, 1] != t[:, 2]) & (t[:, 0] != t[:, 2])
+    return uniq, t[keep]
+
+
+def bad_edges(t):
+    """Vertex pairs of the edges not shared by exactly two triangles."""
+    e = np.sort(np.concatenate([t[:, [0, 1]], t[:, [1, 2]], t[:, [2, 0]]]), axis=1)
+    edges, counts = np.unique(e, axis=0, return_counts=True)
+    return edges[counts != 2]
+
+
+def count_bad_edges(t):
+    """Edges not shared by exactly two triangles: 0 for a closed, manifold mesh."""
+    return len(bad_edges(t))
+
+
+def _bead(a, b, r):
+    """A thin manifold cylinder from a to b, a little longer than the edge."""
+    import manifold3d as mf
+    a, b = np.asarray(a, float), np.asarray(b, float)
+    d = b - a
+    L = float(np.linalg.norm(d))
+    z = d / L
+    x = np.cross(z, [1.0, 0, 0] if abs(z[0]) < 0.9 else [0, 1.0, 0])
+    x /= np.linalg.norm(x)
+    y = np.cross(z, x)
+    m = np.column_stack([x, y, z, a - z * r])          # 3 x 4: rotate local Z onto the edge, then move
+    return mf.Manifold.cylinder(L + 2 * r, r, r, 8).transform(m)
+
+
 def export_print(model: Model, path: Path, scale: float):
     """Union every solid into one body at 1:scale, flat on the bed, as binary STL."""
     import manifold3d as mf
@@ -388,9 +423,23 @@ def export_print(model: Model, path: Path, scale: float):
     (x0, y0, _), (x1, y1, _) = (lambda b: (b[:3], b[3:]))(body.bounding_box())
     body = body.translate((-(x0 + x1) / 2, -(y0 + y1) / 2, 0))
 
-    mesh = body.to_mesh()
-    v = np.asarray(mesh.vert_properties)[:, :3].astype(np.float32)
-    t = np.asarray(mesh.tri_verts)
+    # STL stores float32. Snap to it here, the way a slicer will, and clean up what that does:
+    # a 5 um simplify merges parts that only touch along a line, and welding at float32 can
+    # collapse an edge shorter than float32 can resolve, leaving a triangle with a repeated
+    # vertex. Dropping those is exactly that edge collapse.
+    # Parts that only touch along a line can't be written as a closed STL at all, so as a last
+    # resort each edge that is still not shared by exactly two triangles gets a 0.03 mm weld bead
+    # along it, which turns the line contact into a real (if invisible) joint.
+    for _ in range(4):
+        body = body.simplify(0.005)
+        mesh = body.to_mesh64() if hasattr(body, "to_mesh64") else body.to_mesh()
+        v, t = weld_float32(np.asarray(mesh.vert_properties)[:, :3], np.asarray(mesh.tri_verts))
+        bad = bad_edges(t)
+        if not len(bad):
+            break
+        beads = [_bead(v[i], v[j], 0.03) for i, j in bad if np.linalg.norm(v[i] - v[j]) > 1e-6]
+        body = mf.Manifold.batch_boolean([body] + beads, mf.OpType.Add).trim_by_plane((0, 0, 1), 0.0)
+    bad_edge_count = len(bad)
     tri = v[t]
     n = np.cross(tri[:, 1] - tri[:, 0], tri[:, 2] - tri[:, 0])
     n /= np.maximum(np.linalg.norm(n, axis=1, keepdims=True), 1e-12)
@@ -410,4 +459,5 @@ def export_print(model: Model, path: Path, scale: float):
         "sealed_voids": sum(1 for c in parts if c.volume() < 0),
         "genus": body.genus(),
         "skipped_solids": failed,
+        "nonmanifold_edges": bad_edge_count,
     }

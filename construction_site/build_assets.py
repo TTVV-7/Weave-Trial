@@ -768,7 +768,7 @@ def cable_reel(m: Model):
     m.add("battens", TIMBER_DARK, battens)
     m.add("plank_seams", Finish(rgb("#5a4530"), rough=0.9), seams)
     m.add("barrel", TIMBER_DARK, cut(ax(half, Rb), ax(half + 10, 50)))
-    wraps = [torus(505, 25, (0, y, zc), (0, 1, 0)) for y in np.linspace(-half + 25, half - 25, 14)]
+    wraps = [torus(505, 27, (0, y, zc), (0, 1, 0)) for y in np.linspace(-half + 25, half - 25, 14)]   # overlapping, not tangent
     m.add("cable", RUBBER, cut(ax(half, 505), ax(half + 10, Rb - 1)), wraps)
 
     nuts = []
@@ -789,7 +789,7 @@ def cable_reel(m: Model):
     tail = [(-60, 250, zc + 530), (320, 250, zc + 420), (560, 250, 320), (700, 250, 21),
             (1050, 280, 21), (1300, 180, 21)]
     m.add("cable_tail", RUBBER, pipe(tail, 25))
-    m.add("cable_tape", RED, cyl(26, (1300, 180, 21), (1360, 156, 21)))
+    m.add("cable_tape", RED, cyl(26, (1281.4, 187.4, 21), (1360, 156, 21)))   # sleeves the last 20 mm of the cable
 
 
 # =========================================================================== registry
@@ -906,6 +906,14 @@ def diagnose(asset: Asset, scale: float, min_wall: float):
         print(f"  {kind} {k}: volume {c.volume() / 1e9:.4f} m3, box {bb}: {shown}")
 
 
+def build_print(asset: Asset, scale: float, min_wall: float) -> dict:
+    printed = Model(print_mode=True, scale=scale, min_wall=min_wall)
+    asset.build(printed)
+    pdir = HERE / f"print_1-{scale:g}"
+    pdir.mkdir(exist_ok=True)
+    return export_print(printed, pdir / f"{asset.stem}_1-{scale:g}.stl", scale)
+
+
 def build(asset: Asset, scale: float, min_wall: float, do_render: bool) -> dict:
     t0 = time.time()
     shown = Model()
@@ -915,12 +923,7 @@ def build(asset: Asset, scale: float, min_wall: float, do_render: bool) -> dict:
     export_step(shown, step, asset.title)
     export_glb(shown, glb)
 
-    printed = Model(print_mode=True, scale=scale, min_wall=min_wall)
-    asset.build(printed)
-    pdir = HERE / f"print_1-{scale:g}"
-    pdir.mkdir(exist_ok=True)
-    stl = pdir / f"{asset.stem}_1-{scale:g}.stl"
-    report = export_print(printed, stl, scale)
+    report = build_print(asset, scale, min_wall)
 
     if do_render:
         render(asset, scale)
@@ -936,6 +939,8 @@ def build(asset: Asset, scale: float, min_wall: float, do_render: bool) -> dict:
     print(f"{asset.stem}: {L:.1f} x {W:.1f} x {H:.1f} ft, {info['parts']} parts; "
           f"1:{scale:g} print {report['size_mm']} mm, {report['volume_cm3']} cm3, "
           f"{report['pieces']} piece(s), {info['seconds']} s")
+    if report["nonmanifold_edges"]:
+        print(f"  WARNING: {report['nonmanifold_edges']} edges of the print mesh are not shared by exactly two triangles")
     if report["pieces"] != 1 or report["skipped_solids"]:
         print(f"  WARNING: {report['pieces']} separate pieces, {report['skipped_solids']} solids skipped"
               f" (run with --diagnose to see which parts)")
@@ -953,6 +958,7 @@ def main() -> int:
     p.add_argument("--min-wall", type=float, default=0.8, help="thinnest printed wall, mm (default 0.8)")
     p.add_argument("--no-render", action="store_true", help="skip the preview renders")
     p.add_argument("--render-only", action="store_true", help="re-render the previews of what is built")
+    p.add_argument("--print-only", action="store_true", help="only rewrite the print STLs (and their index entries)")
     p.add_argument("--no-index", action="store_true", help="don't update assets.json")
     p.add_argument("--diagnose", action="store_true", help="list which parts make up each separate print piece")
     args = p.parse_args()
@@ -978,7 +984,22 @@ def main() -> int:
         for n in whole_sets:
             render_collection(n)
         return 0
-    results = [build(a, args.scale, args.min_wall, not args.no_render) for a in chosen]
+    if args.print_only:
+        index = HERE / "assets.json"
+        known = {r["key"]: r for r in json.loads(index.read_text())} if index.exists() else {}
+        results = []
+        for a in chosen:
+            report = build_print(a, args.scale, args.min_wall)
+            flag = "" if report["pieces"] == 1 and not report["nonmanifold_edges"] else "  WARNING"
+            print(f"{a.stem}: 1:{args.scale:g} print {report['size_mm']} mm, {report['pieces']} piece(s), "
+                  f"{report['nonmanifold_edges']} bad edges{flag}")
+            if a.key in known and args.scale == 50:
+                results.append({**known[a.key], "print": report})
+        args.no_render = True
+        if args.scale != 50:
+            args.no_index = True
+    else:
+        results = [build(a, args.scale, args.min_wall, not args.no_render) for a in chosen]
     if not args.no_render:
         for n in whole_sets:
             render_collection(n)
