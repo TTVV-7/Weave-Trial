@@ -861,13 +861,20 @@ def load_module_assets(folder: str, set_no: int, keys=None) -> list[Asset]:
     return out
 
 
+MODULE_SETS = {3: "set3", 4: "set4"}
+
+
 def all_assets(keys=None) -> list[Asset]:
-    return SET2 + load_module_assets("set3", 3, keys)
+    out = list(SET2)
+    for n, folder in MODULE_SETS.items():
+        if (HERE / folder).is_dir():
+            out += load_module_assets(folder, n, keys)
+    return out
 
 
 # =========================================================================== build
 
-COLLECTIONS = {2: "collection_set2.json", 3: "collection_set3.json"}
+COLLECTIONS = {2: "collection_set2.json", 3: "collection_set3.json", 4: "collection_set4.json"}
 
 
 def render(asset: Asset, scale: float):
