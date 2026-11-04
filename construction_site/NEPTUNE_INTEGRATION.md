@@ -155,9 +155,15 @@ Packs 1–3 were staged, then merged into a throwaway copy of the twin (`a264638
 | `scripts/test-library.mjs` (new; every library entry complete and the right size) | 37 / 37 | 59 / 59 |
 | `scripts/test-construction-ui.mjs` (new; each pack model has a card, loads with no page error, stands on its base at its card size) | — | 3 / 3, all 26 models |
 | `npm run test:rows-ui` | 16 / 16 | 16 / 16 |
-| `npm run test:site-items-ui` | 3 / 3 | running |
-| `npm run test:plant-ui` | 4 / 4 | running |
-| `npm run test:premium-ui` | 6 / 6 | running |
+| `npm run test:site-items-ui` | 3 / 3 | 3 / 3 |
+| `npm run test:plant-ui` | 4 / 4 | 4 / 4 |
+| `npm run test:premium-ui` | 6 / 6 | 4 / 6, then **6 / 6** with the patch below |
+
+**One test needed a fix.** `test-premium-ui.mjs` finds the Pro scissor lift's card by the text
+"Scissor lift". The new "Scissor lift 26 ft (raised)" card matches that as well, so Playwright stops
+with two matches. `construction_site/neptune/test-premium-ui.patch` selects the card by its id
+(`[data-item="scissor-lift-32ft"]`) instead, which won't break the next time a similar name is added.
+It applies cleanly to the twin with `git apply`.
 
 After merging, the library has 57 downloaded models (35 + 22 added, 4 replaced). The four replaced
 items kept their `drive` tuning, and the telehandler kept its Pro flag.
@@ -167,7 +173,7 @@ items kept their `drive` tuning, and the telehandler kept its Pro flag.
 1. Settle decisions 1–3 and edit the manifest. Then rerun the exporter and read `REPORT.md`.
 2. In the twin, create a feature branch. **Never use `claude/kind-ride-ovicsk`**: a push there deploys
    to production through Cloudflare Workers Builds.
-3. Run `merge-into-twin.mjs`, add `scripts/test-library.mjs` and `scripts/test-construction-ui.mjs` with `test:library` and `test:construction-ui` scripts to
+3. Run `merge-into-twin.mjs`, apply `neptune/test-premium-ui.patch` (`git apply`), add `scripts/test-library.mjs` and `scripts/test-construction-ui.mjs` with `test:library` and `test:construction-ui` scripts to
    `package.json`, then commit, using the twin's commit style ("Library: …").
 4. Test:
    - `node --test scripts/test-library.mjs`
