@@ -16,14 +16,16 @@ place the deck and pile-cap concrete on wharf, berth and conveyor-trestle works)
   outrigger pad; an outrigger control station (levers, red knobs) on each side of the outrigger
   box; boom rests at the front (behind the cab) and over the pump;
 * boom: four tapered welded box sections in a two-high, two-wide Z/R-fold package (sections
-  of ~7.9 / 8.0 / 7.5 / 9.5 m, ~33 m of arm plus the turret, ~38 m vertical reach): section 1
+  of ~7.9 / 8.0 / 7.5 / 9.5 m, ~33 m of arm plus the turret, ~38 m vertical reach; the split is set
+  by the stowed package, with the tip section reaching out over the cab roof): section 1
   back from the turret, section 2 folded forward on top of it, section 3 rolled beside section 1
   back to the rear, section 4 folded forward on top of section 3 and out over the cab roof;
   knuckle yokes with pins at each fold, the big lift cylinder at the turret and a fold cylinder
   at every knuckle, hydraulic hoses; an orange stripe along every section;
 * concrete system: the DN125 delivery line (133 mm OD) from the S-valve up over the hopper, along
   the right of the body, up the turret and along every section with clamp collars, elbows round
-  every knuckle, the tip elbow with a work lamp and a ~3 m end hose hanging in front of the cab; the rear hopper
+  every knuckle, the tip elbow with a work lamp and a ~3 m end hose hanging in front of the cab and tied
+  down to a hook on the front bumper for travel; the rear hopper
   (~600 l) with its grille, agitator shaft and motors, S-valve outlet housing with its shift
   cylinders and lever, twin material cylinders, water box and drive cylinders under the body;
   ~600 l water tank (left), hydraulic oil tank and oil cooler (right), rear control box with its
@@ -175,7 +177,8 @@ def sec_pipe(k, x, s):
     """Centre of the delivery line on the s side (+1 left, -1 right) of section k at x."""
     x0, x1, yc, zb, *_ = SEC[k]
     w, h = sec_at(k, x)
-    return (x, yc + s * (w / 2 + 110.0), zb + h / 2)
+    off = 150.0 if k == 1 else 110.0         # section 1: clear of the turret's pivot lugs
+    return (x, yc + s * (w / 2 + off), zb + h / 2)
 
 
 def along(a, b, f):
@@ -195,7 +198,7 @@ def cbox(x0, x1, y0, y1, z0, z1, c, axis="x"):
 LIGHT = False          # set by build(): True for the display model (GLB), False for the print
 
 
-def rod(r, a, b, chord=32.0):
+def rod(r, a, b, chord=45.0):
     """A round bar from a to b: a true cylinder for the print, a polygon prism (facets ~chord mm)
     for the display model, which keeps the GLB light without changing the silhouette."""
     if not LIGHT:
@@ -332,8 +335,9 @@ def wheel(a, m, xc, s, y_in, y_out, kind):
     yf = y_out
     a.add("wheel_rims", WHEEL, cut(rod(300, c(yf - 135), c(yf - 8)), rod(300 - m.t(24), c(yf - 100), c(yf + 1))))
     y0, y1 = sorted((s * (yf - 97), s * (yf - 104)))
-    a.add("wheel_hubs", DARK, [prism(ngon(xc + 205 * math.cos(t), ZC + 205 * math.sin(t), 34, 6), "y", y0, y1)
-                               for t in np.linspace(0.3, 2 * math.pi + 0.3, 8, endpoint=False)])
+    if m.print_mode:                         # hand-hole bosses: print only, the GLB stays light
+        a.add("wheel_hubs", DARK, [prism(ngon(xc + 205 * math.cos(t), ZC + 205 * math.sin(t), 34, 6), "y", y0, y1)
+                                   for t in np.linspace(0.3, 2 * math.pi + 0.3, 8, endpoint=False)])
     hub = 70.0 if kind == "steer" else 45.0
     a.add("wheel_hubs", DARK, rod(130, c(yf - 104), c(yf - 101 + hub)),
           cone(118, 60, c(yf - 101 + hub), c(yf - 101 + hub + 35)))
@@ -381,7 +385,7 @@ def cab(c, m):
         y0, y1 = sorted((s * 700, s * 1180))
         c.add("fenders", BLACK, prism(band(arc_pts(0, ZC, 650, 18, 162, 24), m.t(16) / 2), "y", y0, y1))
         wall = clip_poly(arc_pts(0, ZC, 655, 0, 180, 24), -700, 700, 880, 2000)
-        y0, y1 = sorted((s * 692, s * 712))
+        y0, y1 = sorted((s * 692, s * (692 + m.t(20))))
         c.add("fenders", BLACK, prism(wall, "y", y0, y1))
 
     # windscreen, rubber, wipers
@@ -709,10 +713,13 @@ def build(m):
     a.add("line_clamps", BLACK, clamps)
     # end hose hanging from the tip elbow in front of the cab
     eh = (5500, p4b[1] - 10, p4b[2] - 120)
+    # ... tied down to a hook on the front bumper for travel, as stowed pumps carry it
     a.add("pins", STEEL, cyl(RP + 22, (eh[0], eh[1], eh[2] + 20), (eh[0] + 25, eh[1], eh[2] - 70)))
     a.add("end_hose", RUBBER, tube([(eh[0] + 10, eh[1], eh[2] - 40), (5590, eh[1] - 5, 3000), (5615, eh[1] - 20, 2400),
-                                    (5630, eh[1] - 40, 1850)], 72, 600))
-    a.add("pins", STEEL, cyl(85, (5630, eh[1] - 40, 1880), (5632, eh[1] - 40, 1800)))
+                                    (5605, eh[1] - 35, 1700), (5585, eh[1] - 40, 960)], 72, 600))
+    a.add("pins", STEEL, cyl(85, (5585, eh[1] - 40, 1060), (5585, eh[1] - 40, 985)))
+    a.add("black_trim", BLACK, box(5500, 5600, eh[1] - 110, eh[1] + 30, 880, 990),
+          box(5490, 5555, eh[1] - 100, eh[1] + 20, 860, 1030))
     # work lamp on the tip of section 4, aimed at the end hose
     xt, yt = SEC[4][1], SEC[4][2]
     a.add("black_trim", BLACK, box(xt - 180, xt - 40, yt - 70, yt + 70, ZB + 240, ZB + 330))
@@ -779,9 +786,11 @@ def build(m):
     inner = [(hx0 + 10, 1560), (hx1 + 50, 1560), (hx1 + 50, 1262), (-5578, 945), (-5165, 890), (hx0 + 10, 960)]
     hop = cut(prism(outer, "y", -880, 880), prism(inner, "y", -830, 830))
     a.add("hopper", GREY, hop, box(-4960, -4900, -880, 880, 880, 1500))
-    gr = [box(x - 15, x + 15, -850, 850, 1460, 1515) for x in np.arange(-5110, -5730, -90)]
-    gr += [box(-5770, -5010, y - 15, y + 15, 1470, 1525) for y in (-560, 0, 560)]
-    gr += [box(hx1 - 15, hx0 - 30, -895, -860, 1490, 1530), box(hx1 - 15, hx0 - 30, 860, 895, 1490, 1530)]
+    tw = m.t(30)                             # grille bars: at least a printable wall in print
+    gh = max(70.0, m.t(70))
+    gr = [box(x - tw / 2, x + tw / 2, -850, 850, 1450, 1450 + gh) for x in np.arange(-5120, -5730, -110)]
+    gr += [box(-5770, -5010, y - tw / 2, y + tw / 2, 1460, 1460 + gh) for y in (-560, 0, 560)]
+    gr += [box(hx1 - 15, hx0 - 30, *sorted((s * 860, s * (860 + m.t(35)))), 1490, 1540) for s in (1, -1)]
     a.add("hopper_grille", BLACK, gr)
     if not m.print_mode:
         a.add("hopper_inside", Finish(rgb("#5d5f60"), rough=0.9), box(-5600, -5100, -820, 820, 930, 960))

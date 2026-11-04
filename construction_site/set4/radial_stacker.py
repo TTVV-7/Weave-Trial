@@ -33,9 +33,11 @@ Colours: yellow truss, hopper, hood and undercarriage; black belt, tyres and dri
 idlers, pulleys and running gear; red guards. It prints in Construction yellow, Black, Silver
 grey and Signal red.
 
-PRINT NOTE: at 1:50 the model is ~610 mm long and ~235 mm high, larger than most print beds;
-print it at 1:100 or smaller, or split the truss at a panel point. Truss members, plates and
-rods go through m.t()/m.r(), so nothing is under 0.8 mm at 1:50.
+PRINT NOTE: built at true size. At 1:50 the model is ~615 mm long and ~230 mm high, larger
+than most print beds: either split the 1:50 truss at a panel point, or rebuild the print at a
+smaller scale (build_assets.py radial_stacker --scale 100) so that m.t()/m.r() re-thicken the
+truss members, plates and rods for that scale. Do NOT just shrink the 1:50 STL in the slicer:
+the thinnest members (idler shafts, lattice bars) would drop under a printable wall.
 
 Millimetres, X forward (the head and discharge face +X), Y left, Z up, ground at Z = 0,
 footprint roughly centred on the origin.
@@ -52,7 +54,7 @@ from cadkit import Finish, arc_pts, band, bar, box, cut, cyl, frustum, mv, place
 from finishes import AMBER, BLACK, CHROME, DARK, GALV, LED, RED, RUBBER, STEEL, YELLOW
 
 ASSET = dict(key="radial_stacker", stem="Radial_Stacking_Conveyor",
-             title="Radial Stacking Conveyor (36 in x 100 ft)", az=40, el=15, size="1200x900")
+             title="Radial Stacking Conveyor (36 in x 100 ft)", az=40, el=20, size="1200x900")
 
 PAINT = YELLOW
 GUARD = RED
@@ -307,21 +309,22 @@ def truss(m):
     for s in (1, -1):
         y = s * YC
         for i in range(N):
-            bottom.append(bar(W(NODES[i], y, -DEPTH[i]), W(NODES[i + 1], y, -DEPTH[i + 1]), 110, 110))
+            bottom.append(bar(W(NODES[i], y, -DEPTH[i]), W(NODES[i + 1], y, -DEPTH[i + 1]), m.t(110), m.t(110)))
         for i in range(N + 1):
             joints.append(lbox(NODES[i] - 75, NODES[i] + 75, *ys(s, 540, 660), -DEPTH[i] - 62, -DEPTH[i] + 62))
-            verts.append(bar(W(NODES[i], y, 0), W(NODES[i], y, -DEPTH[i]), 80, 80))
+            verts.append(bar(W(NODES[i], y, 0), W(NODES[i], y, -DEPTH[i]), m.t(80), m.t(80)))
         for i in range(N):
             a, b = (W(NODES[i], y, 0), W(NODES[i + 1], y, -DEPTH[i + 1])) if i % 2 == 0 else \
                    (W(NODES[i], y, -DEPTH[i]), W(NODES[i + 1], y, 0))
-            diags.append(bar(a, b, 60 if i % 2 else 66, 70))
+            diags.append(bar(a, b, m.t(60 if i % 2 else 66), m.t(70)))
     for i in range(N + 1):
-        lats.append(lbox(NODES[i] - 35, NODES[i] + 35, -YC, YC, -DEPTH[i] - 35, -DEPTH[i] + 35))
-        lats.append(lbox(NODES[i] - 30, NODES[i] + 30, -YC, YC, -30, 30))
+        h1, h2 = m.t(70) / 2, m.t(60) / 2
+        lats.append(lbox(NODES[i] - h1, NODES[i] + h1, -YC, YC, -DEPTH[i] - h1, -DEPTH[i] + h1))
+        lats.append(lbox(NODES[i] - h2, NODES[i] + h2, -YC, YC, -h2, h2))
     nrm = (-SA, 0, CA)
     for i in range(N):
         sg = 1 if i % 2 else -1
-        lats.append(bar(W(NODES[i], -sg * YC, -DEPTH[i]), W(NODES[i + 1], sg * YC, -DEPTH[i + 1]), 56, 56, up=nrm))
+        lats.append(bar(W(NODES[i], -sg * YC, -DEPTH[i]), W(NODES[i + 1], sg * YC, -DEPTH[i + 1]), m.t(56), m.t(56), up=nrm))
     m.add("bottom_chords", PAINT, bottom, joints)
     m.add("truss_verticals", PAINT, verts)
     m.add("truss_diagonals", PAINT, diags)
@@ -350,15 +353,16 @@ def idlers(m):
     stations = [1150 + 360 * k for k in range(5)]                       # impact idlers under the boot
     stations += list(np.arange(3300, L - 1750, 1200))
     frames, rolls, impact = [], [], []
+    f1, f2 = m.t(80) / 2, m.t(60) / 2
     for k, s in enumerate(stations):
         tgt = impact if k < 5 else rolls
-        frames.append(lbox(s - 40, s + 40, -640, 640, 40, 100))
+        frames.append(lbox(s - f1, s + f1, -640, 640, 40, 100))
         tgt.append(rod(m, RR, W(s, -FLAT, wc), W(s, FLAT, wc), 14))
         if m.print_mode:
             tgt.append(lcyl(rs, s, wc, -FLAT - 25, FLAT + 25))
         for sg in (1, -1):
-            frames.append(lbox(s - 30, s + 30, *ys(sg, 176, 176 + bt), 60, wc + 40))
-            frames.append(lbox(s - 30, s + 30, *ys(sg, 540, 540 + bt), 60, 470))
+            frames.append(lbox(s - f2, s + f2, *ys(sg, 176, 176 + bt), 60, wc + 40))
+            frames.append(lbox(s - f2, s + f2, *ys(sg, 540, 540 + bt), 60, 470))
 
             def wp(a):
                 y = FLAT + a * C35 + off * S35
@@ -377,7 +381,7 @@ def idlers(m):
         ret.append(rod(m, RRET, W(s, -515, wr), W(s, 515, wr), 14))
         ret.append(rod(m, rs, W(s, -570, wr), W(s, 570, wr), 8))
         for sg in (1, -1):
-            hang.append(lbox(s - 30, s + 30, *ys(sg, 528, 528 + m.t(10)), wr - 40, -20))
+            hang.append(lbox(s - f2, s + f2, *ys(sg, 528, 528 + m.t(10)), wr - 40, -20))
     m.add("return_idlers", GALV, ret)
     m.add("return_hangers", PAINT, hang)
 
@@ -393,7 +397,7 @@ def head(m):
     plate = [(L - 1900, -110), (L + 250, -110), (L + 420, 0), (L + 420, 150), (L - 1900, 150)]
     m.add("head_plates", PAINT, [lprism_sw(plate, *ys(s, 608, 608 + m.t(16))) for s in (1, -1)],
           lbox(L - 1650, L - 1550, -620, 620, -110, -40),
-          [bar(W(S1, s * YC, -DEPTH[N]), W(L - 300, s * 616, -80), 80, 80) for s in (1, -1)])
+          [bar(W(S1, s * YC, -DEPTH[N]), W(L - 300, s * 616, -80), m.t(80), m.t(80)) for s in (1, -1)])
     m.add("head_pulley", GALV, lcyl(RH, L, wh, -525, 525),
           [lcyl(RH * 0.55, L, wh, *ys(s, 520, 560)) for s in (1, -1)])
     m.add("head_lagging", RUBBER, lcyl(RH + th - 6, L, wh, -457, 457))
@@ -405,7 +409,8 @@ def head(m):
     a_top = math.degrees(math.asin(min(1.0, (540 - wh) / r0)))
     a_back = 180 - a_top
     shell = lprism_sw(arc_band(L, wh, r0, r0 + ht, -30, a_back, 28), -650, 650)
-    sb = lprism_sw(arc_band(L, wh, RH + 70, r0 + ht, -30, a_back, 28), 604, 650)
+    # closed side plates: only a bearing/shaft opening (the 80 mm shaft clears it, the bosses overlap)
+    sb = lprism_sw(arc_band(L, wh, 110, r0 + ht, -30, a_back, 28), 604, 650)
     sb2 = mirror(sb)
     sback = [L - 1500, L + r0 * math.cos(math.radians(a_back)) + 30]
     rear = lbox(sback[0], sback[1], -650, 650, 540, 540 + ht)
@@ -427,7 +432,7 @@ def head(m):
           lprism_sw(band([sc, tip], m.t(16) / 2), -440, 440))
     m.add("scraper_tensioners", RED, [lbox(sc[0] - 80, sc[0] + 80, *ys(s, 630, 700), sc[1] - 120, sc[1] + 80)
                                       for s in (1, -1)])
-    m.add("scraper_arms", PAINT, [bar(W(L + 200, s * 616, -80), W(sc[0], s * 616, sc[1]), 70, 60) for s in (1, -1)])
+    m.add("scraper_arms", PAINT, [bar(W(L + 200, s * 616, -80), W(sc[0], s * 616, sc[1]), m.t(70), m.t(60)) for s in (1, -1)])
 
     # floodlights on the hood, aimed down at the pile
     lamps, lens = [], []
@@ -483,7 +488,7 @@ def platform(m):
         top = W(sc, 0, 20)
         x = min(max(top[0], xa + 60), xb - 60)
         br.append(box(x - 45, x + 45, 612, 700, zp - 400, top[2]))
-        br.append(bar((x, 660, zp - 370), (x, 1550, zp - 30), 70, 70))
+        br.append(bar((x, 660, zp - 370), (x, 1550, zp - 30), m.t(70), m.t(70)))
         br.append(box(x - 40, x + 40, 610, 1600, zp - 120, zp - 20))
     m.add("platform_brackets", PAINT, br)
     # handrail round the outer edges, toe boards
@@ -621,7 +626,7 @@ def electrics(m):
     x0 = W(s0, 0, 0)[0]
     zc0 = W(s0, 0, -300)[2] - 150
     m.add("cabinet_bracket", PAINT, box(x0 - 260, x0 + 260, 630, 760, zc0 + 120, zc0 + 360),
-          bar(W(s0 + 200, 640, -380), (x0 + 200, 700, zc0 + 40), 60, 60))
+          bar(W(s0 + 200, 640, -380), (x0 + 200, 700, zc0 + 40), m.t(60), m.t(60)))
     m.add("control_cabinet", CABINET, box(x0 - 350, x0 + 350, 740, 1160, zc0, zc0 + 1000),
           box(x0 - 380, x0 + 380, 720, 1180, zc0 + 1000, zc0 + 1040))
     m.add("cabinet_trim", BLACK, box(x0 - 330, x0 + 330, 1158, 1158 + m.t(6), zc0 + 980, zc0 + 990),

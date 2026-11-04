@@ -12,8 +12,8 @@ A generic, brand-neutral truck with the typical proportions of the North America
   glass, wipers, sun visor and roof marker lamps, amber light bar, west-coast mirrors, grab
   handles, steps over the fuel tank (left) and battery box (right), exhaust stack and air cleaner
   behind the cab;
-* blower module: a ~1.5 m long enclosure behind the cab for the positive-displacement vacuum
-  blower and water pump, with louvred side panels and access doors, the blower silencer across
+* blower module: a ~1.25 m long enclosure 350 mm behind the cab (the stack and air cleaner stand
+  in the gap) for the positive-displacement vacuum blower and water pump, with louvred side panels and access doors, the blower silencer across
   its roof with its outlet stack, an inlet filter housing, the vacuum line from the tank, a roof
   walkway with handrails and a side ladder, and toolboxes underneath;
 * debris tank: a 2.0 m diameter x 4.0 m cylinder with a dished front head (~12.5 m3), stiffening
@@ -74,7 +74,7 @@ XT0, XT1 = -395.0, -4365.0       # cylinder front / rear
 FH_C, FH_R = -1897.0, 1800.0     # dished front head: sphere centre x, radius
 DR_C, DR_R = -2540.0, 2200.0     # dished rear door
 # ---- blower module
-MX0, MX1, MY, MZ0, MZ1 = 550.0, 2000.0, 1230.0, 1060.0, 2850.0
+MX0, MX1, MY, MZ0, MZ1 = 550.0, 1800.0, 1230.0, 1060.0, 2850.0
 # ---- boom
 BZ0, BZ1 = 3480.0, 3760.0        # boom base section bottom / top
 VY, VZ, VR = 300.0, 3610.0, 110.0  # vacuum tube along the boom: y, z, radius
@@ -119,6 +119,37 @@ def ysp(s, a, b):
     return tuple(sorted((s * a, s * b)))
 
 
+MERGE = {}
+for _target, _names in {
+    "black_trim": ("door_seams", "module_door_seams", "toolbox_seams", "toolbox_handles", "water_tank_trim",
+                   "headlamp_housing", "bumper_valance", "windscreen_rubber", "door_rubber", "arch_trim",
+                   "hood_vents", "fuel_tank_straps", "fuel_cap", "light_bar_base", "silencer_saddles", "filter_lid",
+                   "vacuum_line_flanges", "manway_clamps", "wash_wand_holder", "rear_work_lamps", "boom_work_light",
+                   "hose_cuff", "dig_tube_collar", "vacuum_tube_clamps", "mirror_heads", "wipers",
+                   "exhaust_shield", "boom_collar", "door_gasket", "stack_brackets", "ladder_brackets",
+                   "step_hangers", "drain_valve"),
+    "amber_lamps": ("front_indicators", "fender_markers", "roof_markers", "light_bar", "rear_indicators",
+                    "rear_beacon"),
+    "white_lamps": ("headlamps", "fog_lamps", "rear_work_lamp_lens", "boom_work_light_lens"),
+    "axles_driveline": ("front_axle", "drive_axles", "prop_shafts"),
+    "hinges_and_lugs": ("module_hinges", "door_hinge", "door_ram_lugs", "rear_beacon_mount", "tip_hinge",
+                        "boom_ram_lug", "turret_base", "boom_tip"),
+    "ram_rods": ("door_ram_rods", "tip_ram_rod", "boom_ram_rod"),
+    "rams": ("door_rams", "boom_ram", "tip_ram"),
+    "cab_chrome": ("door_handle", "grab_handles", "mirror_arms", "mirror_glass"),
+    "handrails": ("roof_handrails", "tank_handrails"),
+    "conspicuity_strips": ("water_tank_strip", "rear_reflector_strip"),
+    "pins": ("hinge_pin", "tip_pin", "boom_pivot"),
+    "water_fittings": ("water_fillers", "water_valves", "drain_pipe"),
+    "cab": ("sun_visor",),
+    "debris_tank": ("tank_flange",),
+    "boom": ("boom_fly",),
+    "silencer": ("silencer_outlet",),
+    "front_suspension": ("front_springs", "tie_rod"),
+}.items():
+    MERGE.update(dict.fromkeys(_names, _target))
+
+
 # =============================================================================== wheels
 
 def wheel(m, parts, xc, s, y_in, y_out, kind):
@@ -138,7 +169,7 @@ def wheel(m, parts, xc, s, y_in, y_out, kind):
             parts["tyres"].append(cyl(R, c(a), c(a + w)))
     else:
         y0, y1 = sorted((s * (y_in + 28), s * (y_out - 28)))
-        parts["tyres"] += wheel_lugs(xc, ZC, R, D + 4, y0, y1, 22 if kind == "inner" else 28,
+        parts["tyres"] += wheel_lugs(xc, ZC, R, D + 4, y0, y1, 16 if kind == "inner" else 28,
                                      90 if kind == "inner" else 80, 0.12)
     if kind == "inner":
         return
@@ -227,9 +258,10 @@ def build(m):
     # tridem drive axles, equaliser beams, air springs
     ax = []
     for x in XR:
-        ax += [cyl(140, (x, -620, ZC), (x, 620, ZC)), cyl(250, (x - 160, 0, ZC), (x + 160, 0, ZC)),
-               cyl(230, (x, -300, ZC), (x, 300, ZC))]
-        ax += [cyl(230, (x, s * 560, ZC), (x, s * 1140, ZC)) for s in (1, -1)]
+        # mostly hidden under the body and inside the wheels: light 16-sided prisms
+        ax += [rod((x, -620, ZC), (x, 620, ZC), 140, 16), rod((x - 160, 0, ZC), (x + 160, 0, ZC), 250, 16),
+               rod((x, -300, ZC), (x, 300, ZC), 230, 16)]
+        ax += [rod((x, s * 560, ZC), (x, s * 1140, ZC), 230, 16) for s in (1, -1)]
     ax.append(cyl(150, (XR[0], 0, ZC), (XR[0] + 380, 0, ZC + 40)))
     add("drive_axles", DARK, ax)
     susp = []
@@ -347,11 +379,17 @@ def build(m):
     add("battery_lid", DARK, box(2280, 3420, -1112, -1090, 520, 1020))
 
     # exhaust stack (right) and air cleaner (left) between the cab and the module
-    add("exhaust_stack", CHROME, cyl(90, (2075, -1000, 1300), (2075, -1000, 3420)),
-          cone(90, 70, (2075, -1000, 3420), (2075, -1000, 3520)))
-    add("exhaust_shield", BLACK, cyl(110, (2075, -1000, 2300), (2075, -1000, 3000)))
-    add("air_cleaner", BLACK, cyl(200, (2075, 1000, 1500), (2075, 1000, 2550)),
-          cone(200, 120, (2075, 1000, 2550), (2075, 1000, 2650)))
+    XS = 1975.0                  # in the 350 mm gap between the blower module (MX1) and the cab back
+    add("exhaust_stack", CHROME, cyl(90, (XS, -1000, 1300), (XS, -1000, 3420)),
+          cone(90, 70, (XS, -1000, 3420), (XS, -1000, 3520)))
+    add("exhaust_shield", BLACK, cyl(110, (XS, -1000, 2300), (XS, -1000, 3000)))
+    add("air_cleaner", BLACK, cyl(150, (XS, 1000, 1500), (XS, 1000, 2550)),
+          cone(150, 90, (XS, 1000, 2550), (XS, 1000, 2650)),
+          cyl(70, (XS, 1000, 1420), (XS, 1000, 1510)))
+    # stand-off brackets to the cab back wall
+    add("stack_brackets", BLACK, [box(XS, CAB_X0 + 30, *ysp(s, 970, 1030), z, z + 60)
+                                  for s in (1, -1) for z in (1450, 2150)],
+          [box(XS, CAB_X0 + 30, -1030, -970, 2750, 2810)])
 
     # =========================================================== blower module
     mod = box(MX0, MX1, -MY, MY, MZ0, MZ1)
@@ -360,46 +398,52 @@ def build(m):
     for s in (1, -1):
         lx0 = 800.0 if s > 0 else 1100.0
         lt = m.t(30)
-        add("module_louvres", BLACK, box(lx0, 1880, *ysp(s, MY - 15, MY - 15 + lt), 1420, 2650))
-        add("louvre_slats", STEEL, [box(lx0 + 20, 1860, *ysp(s, MY, MY + lt + 10), z, z + 40)
+        add("module_louvres", BLACK, box(lx0, MX1 - 120, *ysp(s, MY - 15, MY - 15 + lt), 1420, 2650))
+        add("louvre_slats", STEEL, [box(lx0 + 20, MX1 - 140, *ysp(s, MY, MY + lt + 10), z, z + 40)
                                       for z in np.arange(1470, 2620, 105)])
         add("module_door_seams", BLACK, [box(x, x + 20, *ysp(s, MY - 10, MY + m.t(12)), MZ0 + 60, MZ1 - 60)
-                                           for x in (lx0 - 60, 1940)])
-        add("module_hinges", DARK, [box(1950, 1990, *ysp(s, MY - 10, MY + m.t(25)), z, z + 120) for z in (1300, 2500)])
+                                           for x in (lx0 - 60, MX1 - 60)])
+        add("module_hinges", DARK, [box(MX1 - 50, MX1 - 10, *ysp(s, MY - 10, MY + m.t(25)), z, z + 120) for z in (1300, 2500)])
     # silencer across the roof, its outlet; inlet filter housing; vacuum line from the tank
     add("silencer", CHROME, cyl(270, (850, -950, 3110), (850, 950, 3110)),
           [cone(270, 120, (850, s * 950, 3110), (850, s * 1050, 3110)) for s in (1, -1)])
     add("silencer_saddles", BLACK, [box(700, 1000, y - 30, y + 30, 2860, 2980) for y in (-500, 500)])
     add("silencer_outlet", CHROME, cyl(110, (850, -650, 3300), (850, -650, 3540)))
-    add("filter_housing", STEEL, cyl(230, (1700, 850, 2860), (1700, 850, 3220)))
-    add("filter_lid", BLACK, cyl(245, (1700, 850, 3210), (1700, 850, 3270)),
-          [box(1690 + 200 * math.cos(a) - 20, 1710 + 200 * math.cos(a), 850 + 245 * math.sin(a) - 20,
+    add("filter_housing", STEEL, cyl(230, (1500, 850, 2860), (1500, 850, 3220)))
+    add("filter_lid", BLACK, cyl(245, (1500, 850, 3210), (1500, 850, 3270)),
+          [box(1490 + 200 * math.cos(a) - 20, 1510 + 200 * math.cos(a), 850 + 245 * math.sin(a) - 20,
                850 + 245 * math.sin(a) + 20, 3150, 3260) for a in (0.5, 2.6, 4.7)])
     add("vacuum_line", STEEL, rods([(-520, -450, 3300), (250, -450, 3300), (650, -450, 3000), (650, -450, 2800)], 110, 20))
     add("vacuum_line_flanges", BLACK, cyl(135, (100, -450, 3300), (150, -450, 3300)))
     # roof walkway handrails and the ladder on the right-hand side
+    xe = MX1 - 50
     rails_ = []
     for s in (1, -1):
-        xa = 1100.0 if s < 0 else 620.0
-        for x in (xa, 1950.0):
+        for x in (620.0, 1150.0, xe):
             rails_.append(rod((x, s * 1180, MZ1 - 10), (x, s * 1180, 3400), hr))
-        rails_ += rods([(xa, s * 1180, 3400), (1950, s * 1180, 3400)], hr)
-        rails_ += rods([(xa, s * 1180, 3130), (1950, s * 1180, 3130)], hr)
+        rails_ += rods([(620, s * 1180, 3400), (xe, s * 1180, 3400)], hr)
+        rails_ += rods([(620, s * 1180, 3130), (xe, s * 1180, 3130)], hr)
     add("roof_handrails", SAFETY, rails_)
-    lad = [box(x, x + 40, -1310, -1270, 380, 3380) for x in (620, 940)]
-    lad += [rod((630, -1290, z), (970, -1290, z), m.r(18)) for z in np.arange(560, 3300, 280)]
+    sw_ = m.t(50)                                      # ladder stiles, printable
+    stiles = (640.0, 950.0)
+    lad = [box(x - sw_ / 2, x + sw_ / 2, -1310, -1310 + sw_, 400, 3400) for x in stiles]
+    lad += [rod((stiles[0], -1290, z), (stiles[1], -1290, z), m.r(18)) for z in np.arange(560, 3300, 280)]
+    # stile tops tied into the roof handrail
+    lad += [rod((x, -1290, z), (x, -1180, z), hr) for x in stiles for z in (3130.0, 3390.0)]
     add("ladder", SAFETY, lad)
-    add("ladder_brackets", BLACK, [box(610, 990, -1300, -MY + 30, z, z + 60) for z in (1300, 2500)],
-          box(610, 990, -1300, -RY1 + 10, 880, 940))
+    add("ladder_brackets", BLACK, [box(600, 990, -1300, -MY + 30, z, z + 60) for z in (1300, 2500, 2755)],
+          box(600, 990, -1300, -RY1 + 10, 880, 940),
+          box(600, 1100, -1300, -1180, 445, 505))
 
     # toolboxes under the module
     for s, x0 in ((1, 650.0), (-1, 1050.0)):
-        add("toolbox", GALV, box(x0, 1950, *ysp(s, 560, 1240), 430, MZ0 + 10))
+        add("toolbox", GALV, box(x0, MX1 - 50, *ysp(s, 560, 1240), 430, MZ0 + 10))
         st = m.t(14)
-        add("toolbox_seams", BLACK, box(x0 + 20, 1930, *ysp(s, 1230, 1230 + st), 985, 1000),
-              box((x0 + 1950) / 2 - 10, (x0 + 1950) / 2 + 10, *ysp(s, 1230, 1230 + st), 450, 985))
+        xt = MX1 - 50
+        add("toolbox_seams", BLACK, box(x0 + 20, xt - 20, *ysp(s, 1230, 1230 + st), 985, 1000),
+              box((x0 + xt) / 2 - 10, (x0 + xt) / 2 + 10, *ysp(s, 1230, 1230 + st), 450, 985))
         add("toolbox_handles", BLACK, [box(x - 70, x + 70, *ysp(s, 1235, 1235 + m.t(30)), 930, 960)
-                                         for x in ((x0 * 3 + 1950) / 4, (x0 + 1950 * 3) / 4)])
+                                         for x in ((x0 * 3 + xt) / 4, (x0 + xt * 3) / 4)])
 
     # =========================================================== debris tank
     tank = [cyl(TR, (XT1, 0, TZ), (XT0, 0, TZ)),
@@ -489,7 +533,8 @@ def build(m):
         ft = m.t(25)
         add("hose_reel_flanges", STEEL, cyl(380, (xc, s * 770, zc), (xc, s * (770 + ft), zc)),
               cyl(380, (xc, s * (1180 - ft), zc), (xc, s * 1180, zc)))
-        add("hose_reel_hose", BLACK, cyl(320, (xc, s * 770, zc), (xc, s * 1180, zc)))
+        add("hose_reel_hose", BLACK, cyl(320, (xc, s * (770 + ft / 2), zc), (xc, s * (1180 - ft / 2), zc)),
+              [cyl(338, (xc, s * y, zc), (xc, s * (y + 45), zc)) for y in (830.0, 925.0, 1020.0)])
         add("hose_reel_stand", DARK, box(xc - 50, xc + 50, *ysp(s, RY0 + 20, 790), RZ1 - 20, zc + 40),
               cyl(m.r(40), (xc, s * 700, zc), (xc, s * 1230, zc)))
     add("wash_wand", STEEL, rod((640, 1300, 1250), (640, 1300, 2300), m.r(16)))
@@ -546,5 +591,12 @@ def build(m):
     add("dig_tube_handle", SAFETY, rods([h0 + up * 60, h0 + up * 260, h1 + up * 260, h1 + up * 60], m.r(24)))
     add("dig_tube_collar", BLACK, rod(p_end + t_end * 20 + np.array((0, 0, -25)), p_end + t_end * 110 + np.array((0, 0, -25)), 112, 16))
 
+    # merge the many small same-finish details into a few parts, to keep the web twin light
+    out = {}
     for name, (fin, shapes) in acc.items():
+        target = MERGE.get(name, name)
+        if target in out:
+            assert out[target][0] is fin, (name, target)
+        out.setdefault(target, (fin, []))[1].extend(shapes)
+    for name, (fin, shapes) in out.items():
         m.add(name, fin, shapes)

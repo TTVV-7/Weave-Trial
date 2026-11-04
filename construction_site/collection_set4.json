@@ -1,0 +1,80 @@
+[
+ {
+  "file": "Radial_Stacking_Conveyor.glb",
+  "x": -16.05,
+  "y": -16.2,
+  "rot": 300
+ },
+ {
+  "file": "Conveyor_Gallery_Module.glb",
+  "x": -27.32,
+  "y": 7.32,
+  "rot": 120
+ },
+ {
+  "file": "Rail_Gondola_Coal.glb",
+  "x": -3.66,
+  "y": -13.66,
+  "rot": 120
+ },
+ {
+  "file": "Road_Rail_Railcar_Mover.glb",
+  "x": -10.66,
+  "y": -1.54,
+  "rot": 300
+ },
+ {
+  "file": "Drive_Through_Wheel_Wash.glb",
+  "x": -13.7,
+  "y": 11.72,
+  "rot": 120
+ },
+ {
+  "file": "Concrete_Boom_Pump_38m.glb",
+  "x": 9.37,
+  "y": -14.22,
+  "rot": 20
+ },
+ {
+  "file": "Hydrovac_Truck.glb",
+  "x": 2.87,
+  "y": -2.96,
+  "rot": 20
+ },
+ {
+  "file": "Steel_Pipe_Pile_Stack.glb",
+  "x": -0.9,
+  "y": 7.56,
+  "rot": 120
+ },
+ {
+  "file": "Water_Truck_4000gal.glb",
+  "x": 17.53,
+  "y": -8.36,
+  "rot": 15
+ },
+ {
+  "file": "Fuel_Lube_Service_Truck.glb",
+  "x": 12.53,
+  "y": 0.3,
+  "rot": 15
+ },
+ {
+  "file": "Vacuum_Road_Sweeper.glb",
+  "x": 8.03,
+  "y": 8.1,
+  "rot": 15
+ },
+ {
+  "file": "Vibratory_Pile_Hammer.glb",
+  "x": 3.53,
+  "y": 15.89,
+  "rot": 30
+ },
+ {
+  "file": "Dust_Fog_Cannon.glb",
+  "x": -1.34,
+  "y": 22.32,
+  "rot": 210
+ }
+]

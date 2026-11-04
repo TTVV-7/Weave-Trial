@@ -27,9 +27,10 @@ terminal's rotary car dumper):
   irons at all four corners;
 * markings: a black reporting-mark panel on each side with a generic mark "XXXX 104526" (not a
   real railroad's mark) and capacity data, white retro-reflective strips on the side sills;
-* load: a coal fill heaped ~0.2 m above the top chords in a long ridge, sloping off at the ends.
+* load: a coal fill heaped ~0.25 m above the top chords (4.15 m) in a long ridge, sloping off at
+  the ends, with ~30 chunky lumps on the display model (not printed).
 
-At 1:50 the print is ~324 mm long (~66 x 82 mm in section). Colours: bare aluminium body, black
+At 1:50 the print is ~324 mm long (~66 x 83 mm in section). Colours: bare aluminium body, black
 trucks / underframe details / coal, red rotary-end marks, white lettering and reflectors.
 
 Millimetres, X forward (B end at +X), Y left, Z up, Z = 0 at the top of rail, centred on the car.
@@ -206,25 +207,35 @@ def coal(m):
     fill = [(max(-xl, min(xl, x)), z + 60) for x, z in BOTTOM]
     fill = [(-xl, ZE + 60)] + fill[1:-1] + [(xl, ZE + 60), (xl, ZCOAL), (-xl, ZCOAL)]
     body = prism(fill, "y", -yl, yl)
-    H = 320.0
+    H = 380.0
     cross = [(-yl, 3740.0)] + [(y, ZCOAL + H * (1 - abs(y / yl) ** 1.5)) for y in np.linspace(-yl, yl, 21)] \
         + [(yl, 3740.0)]
     longi = [(-xl, 3700), (xl, 3700), (xl, 3790), (xl - 1300, 4400), (-(xl - 1300), 4400), (-xl, 3790)]
     heap = prism(cross, "x", -xl, xl).intersect(prism(longi, "y", -yl - 10, yl + 10))
     m.add("coal_load", COAL, body, heap)
-    if not m.print_mode:          # lumps on the heap
+    if not m.print_mode:          # ~30 chunky lumps half sunk into the heap (display only)
         rng = np.random.default_rng(7)
         lumps = []
-        for _ in range(70):
-            x = rng.uniform(-xl + 400, xl - 400)
-            y = rng.uniform(-yl + 150, yl - 150)
+        for _ in range(30):
+            x = rng.uniform(-xl + 500, xl - 500)
+            y = rng.uniform(-yl + 250, yl - 250)
             z = min(ZCOAL + H * (1 - abs(y / yl) ** 1.5),
                     3790 + (xl - abs(x)) * (610 / 1300))
-            r = rng.uniform(50, 105)
-            lump = box(-r, r, -0.8 * r, 0.8 * r, -0.7 * r, 0.7 * r)
-            lump = rot(rot(lump, rng.uniform(-30, 30), (1, 0, 0)), rng.uniform(-30, 30), (0, 1, 0))
-            lumps.append(mv(rot(lump, rng.uniform(0, 180)), x, y, z - 0.35 * r))
+            r = rng.uniform(90, 150)
+            lump = octa(r * rng.uniform(0.85, 1.15), r * rng.uniform(0.7, 0.95), 0.55 * r)
+            lump = rot(rot(lump, rng.uniform(-15, 15), (1, 0, 0)), rng.uniform(-15, 15), (0, 1, 0))
+            lumps.append(mv(rot(lump, rng.uniform(0, 180)), x, y, z - 0.2 * r))
         m.add("coal_lumps", COAL, lumps)
+
+
+def octa(a, b, c):
+    """Squashed octahedron with semi-axes a (x), b (y), c (z): a chunky coal lump."""
+    V = cq.Vector
+    px, nx, py, ny, pz, nz = V(a, 0, 0), V(-a, 0, 0), V(0, b, 0), V(0, -b, 0), V(0, 0, c), V(0, 0, -c)
+    tris = [(px, py, pz), (py, nx, pz), (nx, ny, pz), (ny, px, pz),
+            (py, px, nz), (nx, py, nz), (ny, nx, nz), (px, ny, nz)]
+    faces = [cq.Face.makeFromWires(cq.Wire.makePolygon([p, q, r], close=True)) for p, q, r in tris]
+    return cq.Solid.makeSolid(cq.Shell.makeShell(faces))
 
 
 # --------------------------------------------------------------------------- markings
@@ -242,7 +253,7 @@ def markings(m):
         big.append(text("XXXX", 190, 9, (xc, yt, 3170), xd, nd))
         big.append(text("104526", 150, 9, (xc, yt, 2840), xd, nd))
         if not m.print_mode:
-            for line, z in (("CAPY 245000", 2480), ("LT WT 36400", 2370)):
+            for line, z in (("LD LMT 244000", 2480), ("LT WT 42000", 2370)):
                 small.append(text(line, 64, 7, (xc, yt, z), xd, nd))
         # retro-reflective strips on the side sill, between posts
         for x in (-6685.0, -2227.0, 2227.0, 6685.0):
@@ -344,8 +355,8 @@ def coupler(m, s):
         return box(xa, xb, ya, yb, z0, z1)
 
     tag = "B" if s > 0 else "A"
-    parts = [B(E + 150, E + 210, -240, 240, 730, 1030),                 # striker
-             B(E + 100, E + 410, -105, 105, ZK - 90, ZK + 90),          # shank
+    parts = [B(E + 90, E + 146, -240, 240, 730, 1030),                  # striker (50 ft 6 in over strikers)
+             B(E + 60, E + 410, -105, 105, ZK - 90, ZK + 90),          # shank
              B(E + 390, E + 480, -190, 170, ZK - 160, ZK + 160),         # head
              B(E + 470, XCPL, 25, 175, ZK - 150, ZK + 150),              # knuckle
              B(E + 470, XCPL - 15, -195, -95, ZK - 150, ZK + 150),       # guard arm
@@ -373,20 +384,20 @@ def hand_brake(m):
     yc, zc, xw = -730.0, 2130.0, E + 250
     m.add("brake_housing", BLACK, box(E - 5, E + 200, -900, -560, 1900, 2350),
           box(E - 5, E + 120, -930, -530, 2320, 2380))
-    rw = m.t(30)
-    rim = cyl(280 + rw / 2, (xw - 16, yc, zc), (xw + 16, yc, zc)).cut(
-        cyl(280 - rw / 2, (xw - 20, yc, zc), (xw + 20, yc, zc)))
-    spokes = [bar((xw, yc, zc), (xw, yc + 280 * math.cos(a), zc + 280 * math.sin(a)), 40, m.t(18),
+    rw, ta = m.t(30), m.t(32)          # rim radial width and axial thickness
+    rim = cyl(280 + rw / 2, (xw - ta / 2, yc, zc), (xw + ta / 2, yc, zc)).cut(
+        cyl(280 - rw / 2, (xw - ta / 2 - 4, yc, zc), (xw + ta / 2 + 4, yc, zc)))
+    spokes = [bar((xw, yc, zc), (xw, yc + 280 * math.cos(a), zc + 280 * math.sin(a)), 40, ta,
                   up=(1, 0, 0)) for a in np.radians([45, 135, 225, 315])]
-    m.add("brake_wheel", BLACK, rim, spokes, cyl(55, (E + 190, yc, zc), (xw + 25, yc, zc)))
+    m.add("brake_wheel", BLACK, rim, spokes, cyl(55, (E + 190, yc, zc), (xw + ta / 2 + 10, yc, zc)))
     m.add("brake_staff", BLACK, cyl(m.r(20), (E + 120, -640, 1170), (E + 120, -640, 1910)),
           box(E + 90, E + 150, -670, -610, 1170, 1200))
 
 
 def air_brake(m):
     """Air reservoir and control valve on the B end sheet, train line along the floor."""
-    m.add("air_reservoir", BLACK, cyl(150, (E + 175, 80, 1480), (E + 175, 820, 1480)),
-          [box(E - 5, E + 170, y - 30, y + 30, 1380, 1460) for y in (200, 700)])
+    m.add("air_reservoir", BLACK, cyl(150, (E + 175, 60, 1480), (E + 175, 440, 1480)),
+          [box(E - 5, E + 170, y - 30, y + 30, 1380, 1460) for y in (120, 380)])
     m.add("control_valve", BLACK, box(E - 5, E + 230, -330, -40, 1330, 1610),
           rod([(E + 140, -60, 1480), (E + 175, 80, 1480)], m.r(20)),
           rod([(E + 140, -200, 1330), (E + 140, -200, 1100), (E + 140, -40, 1000)], m.r(18)))
@@ -413,7 +424,7 @@ def ladders_and_grabs(m):
             steps.append(rod([(x0, y, 1180), (x0, y, 480), (x1, y, 480), (x1, y, 1180)], m.r(16), square=True))
             ya, yb = sy * (YS - 5), sy * (YP + 60)
             for z in (1400, 1800):
-                grabs.append(rod([(s * (E - 470), ya, z), (s * (E - 470), yb, z),
+                grabs.append(rod([(s * (E - 340), ya, z), (s * (E - 340), yb, z),
                                    (s * (E - 130), yb, z), (s * (E - 130), ya, z)], gr, square=True))
     m.add("sill_steps", BLACK, steps)
     m.add("side_grabs", BLACK, grabs)

@@ -11,15 +11,16 @@ longitudinally-welded structural pipe piles:
   submerged-arc weld seam standing ~4 mm proud along each pile;
 * a welded lifting / pitching padeye (40 mm plate, 70 mm hole) on the crown ~600 mm from the
   head end of every pile, standing radially;
-* a driving shoe on three piles: a 300 mm wide, 12 mm thick steel band welded flush round the
-  toe to stiffen it for hard driving (a cutting ring);
+* a driving shoe on three piles (all three on rusty piles, so it reads as a bright band): a
+  300 mm wide, 12 mm thick steel band welded flush round the toe to stiffen it for hard
+  driving (a cutting ring);
 * mill marks: a yellow paint-marker patch near the +X end of every pile with its heat number,
   and a white stencil line (size, wall, grade, length, pile number) along the side (lettering
   in the colour model only);
 * two surface conditions: blue-black mill scale fresh from the mill (three piles) and light
   brown surface rust on the three that have stood longer in the yard;
 * six piles stacked 3-2-1, the bottom row on three 8 x 6 timber skids (200 x 150 mm, laid flat)
-  at the quarter points and centre, each upper tier on 6 x 6 (150 mm) dunnage laid across the
+  about 2.2 m in from each end and at the centre, each upper tier on 6 x 6 (150 mm) dunnage laid across the
   crowns of the tier below; every pile beds ~5 mm into its timbers and the timbers ~5 mm into
   the crowns under them; piles in a row 20 mm apart (934 mm centres); the outer pile of every
   tier is held by a nailed timber wedge chock on each timber. Timbers and piles are a few cm off
@@ -27,6 +28,11 @@ longitudinally-welded structural pipe piles:
 
 Overall ~12.1 m long (over the hand-staggered piles), ~3.4 m wide over the skids (2.8 m over
 the bottom row) and ~3.17 m high to the crown of the top pile (3.3 m to its padeye).
+
+Print notes: every pile, the bottom row included, spans about 76 mm between timbers at 1:50 with
+its underside about 3 mm off the bed. Print with tree supports under all six piles, and use
+support blockers inside the bores. The 16.7 mm bores bridge on their own with a little droop at
+the crown.
 
 Millimetres, X along the piles, Y across the stack, Z up, ground at Z = 0.
 """
@@ -44,7 +50,7 @@ ASSET = dict(key="pipe_pile_stack", stem="Steel_Pipe_Pile_Stack",
              title="Steel Pipe Pile Stack (36 in, 12 m)", az=25, el=22, size="1200x900")
 
 MILL_SCALE = Finish(rgb("#30363c"), metal=0.6, rough=0.5)     # blue-black mill scale -> Silver grey
-LIGHT_RUST = Finish(rgb("#73401f"), metal=0.35, rough=0.9)    # light yard rust -> Wood brown
+LIGHT_RUST = Finish(rgb("#6a3019"), metal=0.15, rough=0.95)    # light yard rust -> Wood brown
 PADEYE = Finish(rgb("#5a6066"), metal=0.7, rough=0.45)        # freshly welded plate / shoe steel
 SHOE = Finish(rgb("#9ca2a8"), metal=0.8, rough=0.35)      # bright rolled band
 TIMBER_YARD = Finish(rgb("#c4a77a"), rough=0.9)                # weathered pine dunnage -> Sand
@@ -69,7 +75,7 @@ SINK = 5.0                  # piles into timbers, timbers into crowns
 SKID_H, SKID_W = 150.0, 200.0
 DUN = 150.0
 Z_GROUND = -2.0             # skids sunk 2 mm into the ground plane
-# timbers at the quarter points and centre, hand-placed a little off true per tier
+# timbers ~2.2 m in from each end and at the centre, hand-placed a little off true per tier
 X_TIMBER = ((-3800.0, 0.0, 3800.0), (-3770.0, 25.0, 3830.0), (-3825.0, -20.0, 3790.0))
 SEAM_DEG = ((35.0, -30.0, 50.0), (-40.0, 30.0), (60.0,))   # seam position round each pile
 SKID_HALF = (1700.0, 1160.0, 700.0)    # half-lengths across Y: skids, tier-2 and tier-3 dunnage
@@ -79,8 +85,8 @@ TIER_ROWS = [
     [(-PITCH, 1, 35.0, LIGHT_RUST, True, "P-21", "HT 6B2817"),
      (0.0, -1, -40.0, LIGHT_RUST, True, "P-22", "HT 6B2817"),
      (PITCH, 1, 15.0, MILL_SCALE, False, "P-23", "HT 6B2904")],
-    [(-PITCH / 2, -1, -55.0, MILL_SCALE, True, "P-24", "HT 6B2904"),
-     (PITCH / 2, 1, 25.0, LIGHT_RUST, False, "P-25", "HT 6B3150")],
+    [(-PITCH / 2, -1, -55.0, MILL_SCALE, False, "P-24", "HT 6B2904"),
+     (PITCH / 2, -1, 25.0, LIGHT_RUST, True, "P-25", "HT 6B3150")],
     [(0.0, 1, -20.0, MILL_SCALE, False, "P-26", "HT 6B3150")],
 ]
 
@@ -136,7 +142,8 @@ def build(m):
                 # flush with the toe: the pile's bevel lies inside the band, so the end faces don't touch
                 m.add(f"driving_shoe_{tag}", SHOE, band_)
             # the +X end: yellow paint-marker patch with the heat number, and the side stencil
-            xe = dx + L / 2
+            # (kept clear of a driving shoe when the toe is at the +X end)
+            xe = dx + L / 2 - (SHOE_L + 80.0 if shoe and head < 0 else 0.0)
             m.add(f"marker_patch_{tag}", MARKER, marker_patch(xe - 520, xe - 120, y, zc))
             if not m.print_mode:
                 m.add(f"heat_number_{tag}", STENCIL_BLACK, patch_text(heat, xe - 320, y, zc))

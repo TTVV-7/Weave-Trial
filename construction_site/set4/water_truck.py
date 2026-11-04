@@ -18,7 +18,7 @@ water trucks that keep haul roads and stockyards damp on mines, quarries and bul
   heads (~15.3 m3, 4,000 US gal), its baffles showing as external ribs; centrifugal pump driven
   by a PTO shaft on a deck behind the cab with suction valve, discharge manifold and air-valve
   actuators, a riser to a cab-top water cannon (monitor) with handle, hose reel with hose and
-  nozzle, hydrant fill pipe, vertical ladder up the front head to a top catwalk with
+  nozzle, hydrant fill pipe, vertical ladder up the rear head to a top catwalk with
   handrails both sides, fill hatch (manway) with hinge and clamps, vent; distribution pipes
   along the frame to the rear spray bar with fan nozzles, spray heads at the rear corners and
   side spray nozzles, all on air valves; rear work lamps and a rear beacon.
@@ -197,15 +197,11 @@ def wheel(m, parts, xc, s, y_in, y_out, kind):
             rib = cyl(R, c(a), c(a + w))
             tread.append(cut(rib, bore) if k == 3 else rib)
     else:
-        n = 24
+        n = 18
         p = 360.0 / n
-        ym, half = (y_in + y_out) / 2, (y_out - y_in) / 2
-        tread = []
-        for (a, b), ph in (((y_in + 26, ym + 0.12 * half), 270 - 0.225 * p),
-                           ((ym - 0.12 * half, y_out - 26), 270 + 0.275 * p)):
-            y0, y1 = sorted((s * a, s * b))
-            ring = prism(gear(xc, ZC, R, R - D - 4, n, ph), "y", y0, y1)
-            tread.append(cut(ring, bore) if b > y_out - 140 else ring)
+        # one lug ring across the tread (light for the web twin)
+        y0, y1 = sorted((s * (y_in + 26), s * (y_out - 26)))
+        tread = [cut(prism(gear(xc, ZC, R, R - D - 4, n, 270 - 0.225 * p), "y", y0, y1), bore)]
     parts["tyres"] += [body] + tread
     if kind == "inner":
         return
@@ -246,8 +242,8 @@ def build(model):
 
 
 def _build(m):
-    hr = m.r(18)
-    pr = m.r(20)
+    hr = m.r(24)
+    pr = m.r(26)
 
     # =========================================================== running gear
     parts = {k: [] for k in ("tyres", "rims", "rim_holes", "hubs", "nuts")}
@@ -403,7 +399,7 @@ def _build(m):
         seams.append(side_bar(1830 - sw / 2, 1110, xd(1110) + sw / 2, 1110, s, sw, sh))
         m.add("door_seams", BLACK, seams)
         m.add("door_handle", CHROME, side_bar(1950, 1950, 2110, 1950, s, 40, m.t(24)))
-        m.add("door_number", BLACK, text("WT-07", 210, m.t(10) + 6, (2400, s * 1146, 1600),
+        m.add("door_number", BLACK, text("WT-07", 280, m.t(10) + 8, (2400, s * (1150 - m.t(10)), 1600),
                                          (-s, 0, 0), (0, s, 0)))
         m.add("door_mirror_light", AMBER, side_bar(2950, 1300, 2990, 1300, s, 90, m.t(16)))
         ya, yb = s * 1140, s * 1205
@@ -470,7 +466,7 @@ def _build(m):
     for s in (1, -1):
         m.add("tail_lamps", RED, box(-4712, -4690, *sorted((s * 820, s * 1060)), 710, 800))
         m.add("rear_indicators", AMBER, box(-4712, -4690, *sorted((s * 620, s * 780)), 710, 800))
-    m.add("reversing_lamps", LED, [box(-4712, -4690, *sorted((s * 420, s * 560)), 725, 785) for s in (1, -1)])
+    m.add("reversing_lamps", LED, [box(-4712, -4690, *sorted((s * 260, s * 400)), 725, 785) for s in (1, -1)])
 
     # =========================================================== tank
     shell = ell_prism(TX0, TX1, TA, TB)
@@ -486,25 +482,33 @@ def _build(m):
     m.add("tank_cradles", BLACK, cradles)
     # lettering and side markers
     for s in (1, -1):
-        m.add("tank_lettering", BLACK, text("WATER", 420, 85, (-2200, s * 1138, TZ), (-s, 0, 0), (0, s, 0)))
+        # painted-on lettering: deep text clipped to a skin 12 mm proud of the elliptical shell
+        txt = text("WATER", 420, 140, (-2200, s * 1100, TZ), (-s, 0, 0), (0, s, 0))
+        if txt is not None:
+            m.add("tank_lettering", BLACK, txt.intersect(ell_prism(-3400, -1000, TA + 12, TB + 12)))
+        m.add("tank_marker_surrounds", BLACK, [box(x - 70, x + 70, *sorted((s * 1170, s * 1216)), TZ - 55, TZ + 55)
+                                               for x in (700.0, -4200.0)])
         m.add("tank_side_markers", AMBER, [box(x - 50, x + 50, *sorted((s * 1180, s * 1228)), TZ - 35, TZ + 35)
                                            for x in (700.0, -4200.0)])
 
     # catwalk on the tank top with handrails both sides
     pz = 2685.0
     pt = m.t(40)
-    plank = [box(-4330, -560, -270, 270, pz, pz + pt), box(60, 1045, -270, 270, pz, pz + pt)]
+    plank = [box(-4590, -560, -270, 270, pz, pz + pt), box(60, 1000, -270, 270, pz, pz + pt)]
     m.add("catwalk", GALV, plank)
-    m.add("catwalk_tread", DARK, [box(x - 12, x + 12, -255, 255, pz + pt - 8, pz + pt + 8)
-                                  for x in list(np.arange(-4250, -600, 250)) + list(np.arange(150, 1000, 250))])
+    m.add("catwalk_tread", DARK, [box(x - 12, x + 12, -255, 255, pz + pt - 8, pz + pt + 15)
+                                  for x in list(np.arange(-4500, -600, 250)) + list(np.arange(150, 1000, 250))])
     m.add("catwalk_brackets", BLACK, [box(x - 30, x + 30, -280, 280, 2610, pz + 10)
-                                      for x in (900.0, 200.0, -700.0, -1700.0, -2700.0, -3700.0, -4250.0)])
+                                      for x in (900.0, 200.0, -700.0, -1700.0, -2700.0, -3700.0, -4250.0)],
+          box(-4480, -4420, -280, 280, 2560, pz + 10))
     rails_ = []
     posts_x = (-4300.0, -3300.0, -2300.0, -1300.0, -560.0, 100.0, 850.0)
     ztop, zmid = 3300.0, 3000.0
     for y in (-280.0, 280.0):
         rails_ += [rod((x, y, pz + 10), (x, y, ztop + pr), pr) for x in posts_x]
         rails_ += [rod((posts_x[0] - pr, y, z), (posts_x[-1] + pr, y, z), pr) for z in (zmid, ztop)]
+    # front end closed by a guard rail; the rear end is the opening to the ladder
+    rails_ += [rod((posts_x[-1], -280 - pr, z), (posts_x[-1], 280 + pr, z), pr) for z in (zmid, ztop)]
     m.add("handrails", TANK, rails_)
 
     # fill hatch (manway) with hinge and clamps, vent
@@ -518,12 +522,12 @@ def _build(m):
     m.add("tank_vent", GALV, cyl(45, (-3900, 600, 2550), (-3900, 600, 2800)),
           cone(80, 40, (-3900, 600, 2790), (-3900, 600, 2850)))
 
-    # ladder up the front head
-    xl = 1055.0
-    m.add("ladder_stringers", BLACK, [box(xl - 25, xl + 25, y - 25, y + 25, DECK_Z - 20, 3260) for y in (-200, 200)])
-    m.add("ladder_rungs", GALV, [rod((xl, -210, z), (xl, 210, z), m.r(16), 8) for z in np.arange(1300, 2600, 300)])
-    m.add("ladder_brackets", DARK, [box(950, xl, y - 20, y + 20, 2290, 2340) for y in (-200, 200)])
-    m.add("ladder_grabs", TANK, [rod((xl, y, 3240), (850, y * 1.4, 3300), pr) for y in (-200, 200)])
+    # ladder up the rear head, from the rear bumper to the catwalk end
+    xl = -4600.0
+    m.add("ladder_stringers", BLACK, [box(xl - 25, xl + 25, y - 25, y + 25, 760, 3260) for y in (-200, 200)])
+    m.add("ladder_rungs", GALV, [rod((xl, -210, z), (xl, 210, z), m.r(16), 8) for z in np.arange(1000, 2600, 300)])
+    m.add("ladder_brackets", DARK, [box(xl, -4470, y - 20, y + 20, z - 25, z + 25) for y in (-200, 200) for z in (1500, 2200)])
+    m.add("ladder_grabs", TANK, [rod((xl, y, 3240), (-4300, y * 1.4, ztop), pr) for y in (-200, 200)])
 
     # =========================================================== pump deck and plumbing behind the cab
     m.add("pump_deck", GALV, box(1000, 1690, -1150, 1150, DECK_Z - m.t(30), DECK_Z))
@@ -555,7 +559,7 @@ def _build(m):
     m.add("water_cannon", STEEL, sphere(85, tuple(base)), cone(75, 50, tuple(base), tuple(tip - 120 * dvec)))
     m.add("cannon_nozzle", BLACK, cone(62, 40, tuple(tip - 140 * dvec), tuple(tip)))
     m.add("cannon_handle", BLACK, pipe([tuple(base), (1000, yc_, 3260), (930, yc_, 3200)], m.r(22)))
-    m.add("cannon_brace", DARK, bar((xc_, yc_, 2950), (1680, yc_, 2950), 60, 60))
+    m.add("cannon_brace", DARK, bar((xc_, yc_, 2950), (1760, yc_, 2950), 60, 60))
     # hose reel on the left of the deck
     rx, rz = 1430.0, 1600.0
     m.add("hose_reel_flanges", GALV, [cyl(260, (rx, y, rz), (rx, y + m.t(15), rz)) for y in (600.0, 1035.0)])
@@ -574,8 +578,8 @@ def _build(m):
     for s in (1, -1):
         m.add("rear_work_lamps", BLACK, box(-4540, -4440, *sorted((s * 700, s * 900)), 2240, 2380))
         m.add("rear_work_lamp_lens", LED, box(-4552, -4535, *sorted((s * 715, s * 885)), 2255, 2365))
-    m.add("rear_beacon_base", BLACK, cyl(90, (-4450, 0, 2540), (-4450, 0, 2620)))
-    m.add("rear_beacon", AMBER, cyl(72, (-4450, 0, 2615), (-4450, 0, 2720)), sphere(72, (-4450, 0, 2720)))
+    m.add("rear_beacon_base", BLACK, cyl(90, (-4440, -500, 2500), (-4440, -500, 2640)))
+    m.add("rear_beacon", AMBER, cyl(72, (-4440, -500, 2635), (-4440, -500, 2740)), sphere(72, (-4440, -500, 2740)))
 
     xb, zb = -4740.0, 560.0
     m.add("spray_bar", GALV, cyl(55, (xb, -1190, zb), (xb, 1190, zb)))
