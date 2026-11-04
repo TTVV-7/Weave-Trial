@@ -8,7 +8,7 @@
 // the model's front (+X) towards its left (+Y), --el its height, both in degrees.
 // A scene file is a list of {"file", "x", "y", "rot"} in metres and degrees.
 //
-// Needs Playwright (with its Chromium) and three.js:  npm install --no-save three@0.169.0
+// Needs Playwright (with its Chromium) and three.js: run  npm install  in construction_site/
 import { createRequire } from 'node:module';
 import { execSync } from 'node:child_process';
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
@@ -26,7 +26,7 @@ function threeDir() {
   for (const base of [process.cwd(), path.dirname(new URL(import.meta.url).pathname)]) {
     try { return path.resolve(path.dirname(createRequire(path.join(base, 'x.js')).resolve('three')), '..'); } catch {}
   }
-  console.error('three.js not found: run  npm install --no-save three@0.169.0  (or set THREE_DIR)');
+  console.error('three.js not found: run  npm install  in construction_site/  (or set THREE_DIR)');
   process.exit(1);
 }
 
@@ -49,6 +49,7 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { STLLoader } from 'three/addons/loaders/STLLoader.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 
 function backdrop() {
   const c = document.createElement('canvas'); c.width = 4; c.height = 256;
@@ -66,7 +67,7 @@ async function loadModel(url, color) {
     mesh.rotation.x = -Math.PI / 2;             // STL is Z up, in mm
     const g = new THREE.Group(); g.add(mesh); g.scale.setScalar(0.001); return g;
   }
-  return (await new GLTFLoader().loadAsync(url)).scene;
+  return (await new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).loadAsync(url)).scene;   // meshopt: Neptune's format
 }
 
 window.render = async ({ items, W, H, az, el, color }) => {

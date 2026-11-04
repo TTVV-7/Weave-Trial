@@ -1,0 +1,12 @@
+{
+  "private": true,
+  "type": "module",
+  "description": "Tools for the construction-site assets only: three.js for the preview renders (render_previews.mjs) and glTF-Transform + meshoptimizer for the Neptune twin export (neptune/optimize.mjs). Not part of the deployed site.",
+  "devDependencies": {
+    "@gltf-transform/core": "^4.2.1",
+    "@gltf-transform/extensions": "^4.2.1",
+    "@gltf-transform/functions": "^4.2.1",
+    "meshoptimizer": "^0.22.0",
+    "three": "0.169.0"
+  }
+}
