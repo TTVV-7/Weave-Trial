@@ -49,7 +49,8 @@ Built by `build_assets.py`, so every one can be regenerated, re-posed or exporte
 | `<Name>.step` | CAD. Every part a separate, coloured solid. | millimetres |
 | `<Name>.glb` | Web viewers, Blender, game engines. Coloured, one mesh per part. | metres |
 | `print_1-50/<Name>_1-50.stl` | 3D printing at 1:50. One closed, connected body, flat on the bed. | millimetres |
-| `<Name>_preview.png`, `print_1-50/<Name>_1-50_preview.png` | Studio renders for listings | |
+| `print_1-50/<Name>_1-50_painted.3mf` | The same print painted for multi-colour printers (Bambu AMS, OrcaSlicer, Snapmaker U1): up to four stock PLA filaments, slots T1–T4 listed in `assets.json`. | millimetres |
+| `<Name>_preview.png`, `print_1-50/<Name>_1-50_preview.png`, `print_1-50/<Name>_1-50_painted_preview.png` | Studio renders for listings | |
 
 | # | Asset | Full size (L × W × H) | At 1:50 (mm) | Description | Suggested tags |
 |---|---|---|---|---|---|

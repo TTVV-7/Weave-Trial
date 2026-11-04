@@ -10,6 +10,12 @@
   ],
   "parts": 40,
   "print": {
+   "filaments": [
+    "T1 Black #1A1A1A",
+    "T2 Construction yellow #FFC200",
+    "T3 Silver grey #8C8F92",
+    "T4 White #F2F2F0"
+   ],
    "size_mm": [
     89.4,
     34.8,
@@ -36,6 +42,12 @@
   ],
   "parts": 37,
   "print": {
+   "filaments": [
+    "T1 Black #1A1A1A",
+    "T2 Safety orange #F26A0D",
+    "T3 Silver grey #8C8F92",
+    "T4 White #F2F2F0"
+   ],
    "size_mm": [
     61.4,
     36.6,
@@ -62,6 +74,11 @@
   ],
   "parts": 14,
   "print": {
+   "filaments": [
+    "T1 Blue #0066C0",
+    "T2 Black #1A1A1A",
+    "T3 Silver grey #8C8F92"
+   ],
    "size_mm": [
     122.4,
     48.8,
@@ -88,6 +105,12 @@
   ],
   "parts": 28,
   "print": {
+   "filaments": [
+    "T1 Construction yellow #FFC200",
+    "T2 Black #1A1A1A",
+    "T3 Silver grey #8C8F92",
+    "T4 White #F2F2F0"
+   ],
    "size_mm": [
     74.6,
     72.0,
@@ -114,6 +137,12 @@
   ],
   "parts": 9,
   "print": {
+   "filaments": [
+    "T1 Wood brown #A07848",
+    "T2 Silver grey #8C8F92",
+    "T3 Blue #0066C0",
+    "T4 Construction yellow #FFC200"
+   ],
    "size_mm": [
     48.8,
     33.5,
@@ -140,6 +169,12 @@
   ],
   "parts": 9,
   "print": {
+   "filaments": [
+    "T1 Blue #0066C0",
+    "T2 Black #1A1A1A",
+    "T3 White #F2F2F0",
+    "T4 Silver grey #8C8F92"
+   ],
    "size_mm": [
     27.4,
     23.0,
@@ -166,6 +201,12 @@
   ],
   "parts": 87,
   "print": {
+   "filaments": [
+    "T1 White #F2F2F0",
+    "T2 Safety orange #F26A0D",
+    "T3 Silver grey #8C8F92",
+    "T4 Black #1A1A1A"
+   ],
    "size_mm": [
     48.8,
     25.6,
@@ -192,6 +233,11 @@
   ],
   "parts": 4,
   "print": {
+   "filaments": [
+    "T1 Light grey #C8CACC",
+    "T2 Wood brown #A07848",
+    "T3 Construction yellow #FFC200"
+   ],
    "size_mm": [
     65.4,
     12.2,
@@ -218,6 +264,11 @@
   ],
   "parts": 14,
   "print": {
+   "filaments": [
+    "T1 Light grey #C8CACC",
+    "T2 Wood brown #A07848",
+    "T3 Construction yellow #FFC200"
+   ],
    "size_mm": [
     191.7,
     12.2,
@@ -244,6 +295,10 @@
   ],
   "parts": 4,
   "print": {
+   "filaments": [
+    "T1 Silver grey #8C8F92",
+    "T2 Wood brown #A07848"
+   ],
    "size_mm": [
     24.4,
     20.3,
@@ -270,6 +325,10 @@
   ],
   "parts": 14,
   "print": {
+   "filaments": [
+    "T1 Silver grey #8C8F92",
+    "T2 Wood brown #A07848"
+   ],
    "size_mm": [
     121.9,
     22.4,
@@ -296,6 +355,12 @@
   ],
   "parts": 7,
   "print": {
+   "filaments": [
+    "T1 Dark green #22582F",
+    "T2 Black #1A1A1A",
+    "T3 Wood brown #A07848",
+    "T4 Silver grey #8C8F92"
+   ],
    "size_mm": [
     33.2,
     14.7,
@@ -323,6 +388,12 @@
   ],
   "parts": 9,
   "print": {
+   "filaments": [
+    "T1 Wood brown #A07848",
+    "T2 Black #1A1A1A",
+    "T3 Silver grey #8C8F92",
+    "T4 Signal red #BF160D"
+   ],
    "size_mm": [
     39.9,
     18.0,
@@ -350,6 +421,12 @@
   ],
   "parts": 107,
   "print": {
+   "filaments": [
+    "T1 Construction yellow #FFC200",
+    "T2 Black #1A1A1A",
+    "T3 Silver grey #8C8F92",
+    "T4 White #F2F2F0"
+   ],
    "size_mm": [
     166.0,
     58.9,
@@ -377,6 +454,12 @@
   ],
   "parts": 134,
   "print": {
+   "filaments": [
+    "T1 Black #1A1A1A",
+    "T2 Construction yellow #FFC200",
+    "T3 Silver grey #8C8F92",
+    "T4 Signal red #BF160D"
+   ],
    "size_mm": [
     212.6,
     60.5,
@@ -404,6 +487,12 @@
   ],
   "parts": 126,
   "print": {
+   "filaments": [
+    "T1 Construction yellow #FFC200",
+    "T2 Black #1A1A1A",
+    "T3 Silver grey #8C8F92",
+    "T4 White #F2F2F0"
+   ],
    "size_mm": [
     132.8,
     68.0,
@@ -431,6 +520,12 @@
   ],
   "parts": 153,
   "print": {
+   "filaments": [
+    "T1 Black #1A1A1A",
+    "T2 Construction yellow #FFC200",
+    "T3 Silver grey #8C8F92",
+    "T4 White #F2F2F0"
+   ],
    "size_mm": [
     178.5,
     68.0,
@@ -458,6 +553,12 @@
   ],
   "parts": 123,
   "print": {
+   "filaments": [
+    "T1 Black #1A1A1A",
+    "T2 Safety orange #F26A0D",
+    "T3 Silver grey #8C8F92",
+    "T4 Construction yellow #FFC200"
+   ],
    "size_mm": [
     120.1,
     46.8,
@@ -485,16 +586,22 @@
   ],
   "parts": 206,
   "print": {
+   "filaments": [
+    "T1 Black #1A1A1A",
+    "T2 White #F2F2F0",
+    "T3 Silver grey #8C8F92",
+    "T4 Safety orange #F26A0D"
+   ],
    "size_mm": [
     189.5,
     61.4,
     80.0
    ],
-   "volume_cm3": 247.33,
-   "triangles": 187936,
+   "volume_cm3": 247.25,
+   "triangles": 198764,
    "pieces": 1,
    "sealed_voids": 0,
-   "genus": 103,
+   "genus": 60,
    "skipped_solids": 0,
    "nonmanifold_edges": 0
   },
@@ -512,6 +619,12 @@
   ],
   "parts": 77,
   "print": {
+   "filaments": [
+    "T1 Safety orange #F26A0D",
+    "T2 Silver grey #8C8F92",
+    "T3 Black #1A1A1A",
+    "T4 Construction yellow #FFC200"
+   ],
    "size_mm": [
     59.7,
     25.2,
@@ -539,6 +652,12 @@
   ],
   "parts": 54,
   "print": {
+   "filaments": [
+    "T1 Silver grey #8C8F92",
+    "T2 White #F2F2F0",
+    "T3 Black #1A1A1A",
+    "T4 Wood brown #A07848"
+   ],
    "size_mm": [
     295.7,
     115.6,
@@ -566,6 +685,12 @@
   ],
   "parts": 97,
   "print": {
+   "filaments": [
+    "T1 Black #1A1A1A",
+    "T2 Silver grey #8C8F92",
+    "T3 Safety orange #F26A0D",
+    "T4 Wood brown #A07848"
+   ],
    "size_mm": [
     76.7,
     49.6,
@@ -593,6 +718,12 @@
   ],
   "parts": 36,
   "print": {
+   "filaments": [
+    "T1 Construction yellow #FFC200",
+    "T2 Silver grey #8C8F92",
+    "T3 White #F2F2F0",
+    "T4 Black #1A1A1A"
+   ],
    "size_mm": [
     128.2,
     31.0,
@@ -620,6 +751,11 @@
   ],
   "parts": 23,
   "print": {
+   "filaments": [
+    "T1 Silver grey #8C8F92",
+    "T2 Wood brown #A07848",
+    "T3 Black #1A1A1A"
+   ],
    "size_mm": [
     52.1,
     61.0,
@@ -647,6 +783,12 @@
   ],
   "parts": 10,
   "print": {
+   "filaments": [
+    "T1 Safety orange #F26A0D",
+    "T2 White #F2F2F0",
+    "T3 Silver grey #8C8F92",
+    "T4 Black #1A1A1A"
+   ],
    "size_mm": [
     37.2,
     11.8,
@@ -674,6 +816,12 @@
   ],
   "parts": 17,
   "print": {
+   "filaments": [
+    "T1 Safety orange #F26A0D",
+    "T2 Black #1A1A1A",
+    "T3 White #F2F2F0",
+    "T4 Silver grey #8C8F92"
+   ],
    "size_mm": [
     18.2,
     18.2,
