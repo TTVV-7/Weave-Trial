@@ -145,12 +145,29 @@ draw calls per row; merged, it costs one or two.
 
 The twin's library is 35 MB today. All 39 models would add about 12–14 MB once Pack 4 is in.
 
+## Tried on a copy of the twin
+
+Packs 1–3 were staged, then merged into a throwaway copy of the twin (`a264638`) with
+`merge-into-twin.mjs`. The real repository was not changed.
+
+| Check | Before merging | After merging |
+|---|---|---|
+| `scripts/test-library.mjs` (new; every library entry complete and the right size) | 37 / 37 | 59 / 59 |
+| `scripts/test-construction-ui.mjs` (new; each pack model has a card, loads with no page error, stands on its base at its card size) | — | 3 / 3, all 26 models |
+| `npm run test:rows-ui` | 16 / 16 | 16 / 16 |
+| `npm run test:site-items-ui` | 3 / 3 | running |
+| `npm run test:plant-ui` | 4 / 4 | running |
+| `npm run test:premium-ui` | 6 / 6 | running |
+
+After merging, the library has 57 downloaded models (35 + 22 added, 4 replaced). The four replaced
+items kept their `drive` tuning, and the telehandler kept its Pro flag.
+
 ## Rollout
 
 1. Settle decisions 1–3 and edit the manifest. Then rerun the exporter and read `REPORT.md`.
 2. In the twin, create a feature branch. **Never use `claude/kind-ride-ovicsk`**: a push there deploys
    to production through Cloudflare Workers Builds.
-3. Run `merge-into-twin.mjs`, add `scripts/test-library.mjs` and a `test:library` script to
+3. Run `merge-into-twin.mjs`, add `scripts/test-library.mjs` and `scripts/test-construction-ui.mjs` with `test:library` and `test:construction-ui` scripts to
    `package.json`, then commit, using the twin's commit style ("Library: …").
 4. Test:
    - `node --test scripts/test-library.mjs`
@@ -176,5 +193,9 @@ The twin's library is 35 MB today. All 39 models would add about 12–14 MB once
   unaffected.
 - **Repository growth.** The twin stores models directly in git, with no LFS. About 13 MB is fine,
   but every later re-export adds its full size to the history again, so re-export rarely.
+- **Drive tuning on replaced machines.** The dozer, backhoe, mixer truck and telehandler keep their `drive`
+  settings, including `drive.cab` (where the driver's camera sits) and `drive.pivot`. Those were measured
+  on the old models. Drive each one once and adjust `cab.ahead`, `cab.right` and `cab.up` if the view
+  sits outside the new cab.
 - **Metal parts may look dark.** The twin has no environment map. Check the silver parts in the app;
   the slimmed models keep their metalness and could be dulled if needed.
