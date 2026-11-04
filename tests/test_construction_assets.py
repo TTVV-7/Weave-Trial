@@ -24,7 +24,11 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "construction_si
 import build_assets as B  # noqa: E402
 import numpy as np  # noqa: E402
 
-from cadkit import IN, Model, box, count_bad_edges, export_print, prism, weld_float32  # noqa: E402
+import zipfile  # noqa: E402
+import re  # noqa: E402
+
+from cadkit import (FILAMENT_NAMES, IN, Finish, Model, box, count_bad_edges, export_print,  # noqa: E402
+                    filament_of, prism, slots, weld_float32)
 
 
 def asset(key):
@@ -135,3 +139,46 @@ def test_barrier_prints_at_its_scale():
         r87 = export_print(m2, Path(d) / "b.stl", 87)
     assert r50["size_mm"][2] == pytest.approx(32 * IN / 50, abs=0.05)
     assert r87["size_mm"][2] == pytest.approx(32 * IN / 87, abs=0.05)
+
+
+def _painted(tmp_path, key):
+    m = Model(print_mode=True, scale=50)
+    asset(key).build(m)
+    report = export_print(m, tmp_path / "x.stl", 50, painted=tmp_path / "x.3mf")
+    with zipfile.ZipFile(tmp_path / "x.3mf") as z:
+        xml = z.read("3D/3dmodel.model").decode()
+    return report, xml
+
+
+def test_painted_3mf_paints_every_triangle_with_one_of_four_slots(tmp_path):
+    report, xml = _painted(tmp_path, "type3_barricade")
+    codes = re.findall(r'paint_color="([0-9A-F]+)"', xml)
+    assert len(codes) == xml.count("<triangle ") == report["triangles"]
+    assert set(codes) <= {"4", "8", "0C", "1C"}
+    names = [f.split(" ", 1)[1].rsplit(" #", 1)[0] for f in report["filaments"]]
+    # the sign's lettering stays black and the rails stay striped
+    assert {"Black", "White", "Safety orange"} <= set(names) and len(names) <= 4
+
+
+def test_mixer_drum_stripes_survive_into_the_painted_print(tmp_path):
+    report, _ = _painted(tmp_path, "concrete_mixer_truck")
+    assert any("Safety orange" in f for f in report["filaments"])
+
+
+def test_finishes_map_to_stock_filaments():
+    assert FILAMENT_NAMES[filament_of(Finish((0.24, 0.33, 0.4), rough=0.05, alpha=0.45))] == "Black"   # glass
+    assert FILAMENT_NAMES[filament_of(Finish((0.87, 0.89, 0.9), metal=1.0))] == "Silver grey"         # chrome
+    assert FILAMENT_NAMES[filament_of(Finish((0.94, 0.68, 0.0)))] == "Construction yellow"
+
+
+def test_slots_keep_a_small_saturated_colour_over_a_near_duplicate_grey():
+    # white, light grey (nearly white) and silver at 50 mm2 each, orange at 15, a little black:
+    # folding the grey into white is the smaller visible change, so the orange keeps its slot
+    v = np.array([[0, 0, 0], [10, 0, 0], [0, 10, 0], [0, 0, 1], [6, 0, 1], [0, 5, 1], [0, 0, 2], [3, 0, 2], [0, 3, 2]],
+                 float)
+    t = np.array([[0, 1, 2], [0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 1, 2]])
+    names = ["White", "Light grey", "Safety orange", "Black", "Silver grey"]
+    labels = np.array([FILAMENT_NAMES.index(n) for n in names])
+    _, kept = slots(v, t, labels)
+    kept = [FILAMENT_NAMES[k] for k in kept]
+    assert "Safety orange" in kept and "Black" in kept and len(kept) == 4

@@ -380,13 +380,18 @@ def _to_manifold(solid: cq.Shape, tol, ang):
     return m if m.status() == mf.Error.NoError and not m.is_empty() else None
 
 
-def weld_float32(v, t):
-    """Round vertices to float32, merge the identical ones, drop triangles that collapse."""
+def _weld(v, t):
     v32 = np.asarray(v, np.float64).astype(np.float32)
     uniq, inv = np.unique(v32, axis=0, return_inverse=True)
     t = inv.reshape(-1)[np.asarray(t, np.int64)]
     keep = (t[:, 0] != t[:, 1]) & (t[:, 1] != t[:, 2]) & (t[:, 0] != t[:, 2])
-    return uniq, t[keep]
+    return uniq, t[keep], keep
+
+
+def weld_float32(v, t):
+    """Round vertices to float32, merge the identical ones, drop triangles that collapse."""
+    uniq, t, _ = _weld(v, t)
+    return uniq, t
 
 
 def bad_edges(t):
@@ -415,19 +420,174 @@ def _bead(a, b, r):
     return mf.Manifold.cylinder(L + 2 * r, r, r, 8).transform(m)
 
 
-def export_print(model: Model, path: Path, scale: float):
-    """Union every solid into one body at 1:scale, flat on the bed, as binary STL."""
+# --------------------------------------------------------------------------- painting
+
+# Stock PLA colours the print files are painted in, the same palette as Construction Site
+# Pack 1 (listings/make_scale_models.py), so every pack prints from the same spools.
+FILAMENTS = {
+    "Black": "#1A1A1A",
+    "Silver grey": "#8C8F92",
+    "Light grey": "#C8CACC",
+    "White": "#F2F2F0",
+    "Construction yellow": "#FFC200",
+    "Safety orange": "#F26A0D",
+    "Signal red": "#BF160D",
+    "Blue": "#0066C0",
+    "Dark green": "#22582F",
+    "Sand": "#D8C8A4",
+    "Wood brown": "#A07848",
+}
+FILAMENT_NAMES = list(FILAMENTS)
+TOOLHEADS = 4                                    # a 4-slot AMS, or four toolheads
+PAINT_CODE = ["4", "8", "0C", "1C"]              # Bambu Studio / OrcaSlicer codes for T1-T4
+
+
+def lab(rgb) -> np.ndarray:
+    """sRGB 0-255 to CIELAB, so 'nearest colour' means nearest to the eye."""
+    c = np.atleast_2d(np.asarray(rgb, dtype=float)) / 255
+    c = np.where(c <= 0.04045, c / 12.92, ((c + 0.055) / 1.055) ** 2.4)
+    xyz = c @ np.array([[0.4124, 0.3576, 0.1805],
+                        [0.2126, 0.7152, 0.0722],
+                        [0.0193, 0.1192, 0.9505]]).T / [0.9505, 1.0, 1.089]
+    f = np.where(xyz > 0.008856, np.cbrt(xyz), 7.787 * xyz + 16 / 116)
+    return np.stack([116 * f[:, 1] - 16, 500 * (f[:, 0] - f[:, 1]), 200 * (f[:, 1] - f[:, 2])], axis=1)
+
+
+FILAMENT_RGB = np.array([[int(h[i:i + 2], 16) for i in (1, 3, 5)] for h in FILAMENTS.values()])
+FILAMENT_LAB = lab(FILAMENT_RGB)
+
+
+def filament_of(fin: Finish) -> int:
+    """The filament a finish prints in: glass as black (tinted windows), else the nearest colour."""
+    if fin is None:
+        return 0
+    if fin.alpha < 1 and fin.rough < 0.2:
+        return FILAMENT_NAMES.index("Black")
+    if fin.metal >= 0.6:                         # steel, chrome, galvanising: silver, whatever the shade
+        return FILAMENT_NAMES.index("Silver grey")
+    return int(np.argmin(np.linalg.norm(FILAMENT_LAB - lab(np.asarray(fin.rgb) * 255), axis=1)))
+
+
+def _fill_unlabelled(t, labels):
+    """Give triangles with no source part (the cut base, weld beads) their neighbours' filament."""
+    labels = labels.copy()
+    if not (labels < 0).any():
+        return labels
+    e = np.sort(np.concatenate([t[:, [0, 1]], t[:, [1, 2]], t[:, [2, 0]]]), axis=1)
+    tri = np.tile(np.arange(len(t)), 3)
+    order = np.lexsort((e[:, 1], e[:, 0]))
+    e, tri = e[order], tri[order]
+    same = np.all(e[1:] == e[:-1], axis=1)
+    a, b = tri[:-1][same], tri[1:][same]                     # triangle pairs sharing an edge
+    for _ in range(200):
+        unknown = labels < 0
+        if not unknown.any():
+            break
+        fill_a = unknown[a] & ~unknown[b]
+        fill_b = unknown[b] & ~unknown[a]
+        if not (fill_a.any() or fill_b.any()):
+            break
+        labels[a[fill_a]] = labels[b[fill_a]]
+        labels[b[fill_b]] = labels[a[fill_b]]
+    known = labels[labels >= 0]
+    labels[labels < 0] = np.bincount(known).argmax() if len(known) else 0
+    return labels
+
+
+def slots(v, t, labels):
+    """Fit a model's filaments to the printer. Of every set of TOOLHEADS filaments (with black in
+    it if the model uses black, since black carries lettering, tyres and windows), keep the one
+    that changes the model's look least: the painted area of each colour times how far it moves
+    when folded into the nearest kept filament. So a small but saturated orange beats a grey
+    that is nearly the white already kept. Returns each triangle's slot and the kept filaments,
+    most used first."""
+    from itertools import combinations
+    tri = v[t].astype(float)
+    area = np.linalg.norm(np.cross(tri[:, 1] - tri[:, 0], tri[:, 2] - tri[:, 0]), axis=1) / 2
+    use = np.bincount(labels, weights=area, minlength=len(FILAMENTS))
+    used = [int(k) for k in np.flatnonzero(use > 0)]
+    dist = np.linalg.norm(FILAMENT_LAB[:, None] - FILAMENT_LAB[None], axis=2)
+    black = FILAMENT_NAMES.index("Black")
+    if len(used) <= TOOLHEADS:
+        kept = used
+    else:
+        def cost(c):
+            return sum(use[f] * dist[f, list(c)].min() for f in used)
+        options = [c for c in combinations(used, TOOLHEADS) if black not in used or black in c]
+        kept = list(min(options, key=cost))
+    kept.sort(key=lambda k: -use[k])
+    slot_of = np.array([kept.index(min(kept, key=lambda k: dist[f, k])) for f in range(len(FILAMENTS))])
+    return slot_of[labels], kept
+
+
+def write_painted_3mf(path: Path, v, t, slot, kept):
+    """One object, every triangle painted with its slot, in the per-triangle format Bambu Studio,
+    OrcaSlicer and Snapmaker Orca read (the same writer as Pack 1 and the tree magnets)."""
+    import zipfile
+    hexes = [FILAMENTS[FILAMENT_NAMES[k]] + "FF" for k in kept]
+    verts = "".join(f'<vertex x="{x:.4f}" y="{y:.4f}" z="{z:.4f}"/>' for x, y, z in v)
+    tris = "".join(f'<triangle v1="{a}" v2="{b}" v3="{c}" paint_color="{PAINT_CODE[k]}"/>'
+                   for (a, b, c), k in zip(t.tolist(), slot.tolist()))
+    model = ('<?xml version="1.0" encoding="UTF-8"?>'
+             '<model unit="millimeter" xml:lang="en-US" '
+             'xmlns="http://schemas.microsoft.com/3dmanufacturing/core/2015/02" '
+             'xmlns:m="http://schemas.microsoft.com/3dmanufacturing/material/2015/02">'
+             '<resources><m:colorgroup id="100">'
+             + "".join(f'<m:color color="{h}"/>' for h in hexes) +
+             f'</m:colorgroup><object id="1" type="model"><mesh><vertices>{verts}</vertices>'
+             f'<triangles>{tris}</triangles></mesh></object></resources>'
+             '<build><item objectid="1"/></build></model>')
+    settings = ('<?xml version="1.0" encoding="UTF-8"?><config><object id="1">'
+                f'<metadata key="name" value="{path.stem}"/><metadata key="extruder" value="1"/>'
+                '</object></config>')
+    with zipfile.ZipFile(path, "w", zipfile.ZIP_DEFLATED) as z:
+        z.writestr("[Content_Types].xml",
+                   '<?xml version="1.0" encoding="UTF-8"?><Types xmlns="http://schemas.'
+                   'openxmlformats.org/package/2006/content-types"><Default Extension="rels" '
+                   'ContentType="application/vnd.openxmlformats-package.relationships+xml"/>'
+                   '<Default Extension="model" ContentType="application/vnd.ms-package.'
+                   '3dmanufacturing-3dmodel+xml"/></Types>')
+        z.writestr("_rels/.rels",
+                   '<?xml version="1.0" encoding="UTF-8"?><Relationships xmlns="http://schemas.'
+                   'openxmlformats.org/package/2006/relationships"><Relationship '
+                   'Target="/3D/3dmodel.model" Id="rel0" Type="http://schemas.microsoft.com/'
+                   '3dmanufacturing/2013/01/3dmodel"/></Relationships>')
+        z.writestr("3D/3dmodel.model", model)
+        z.writestr("Metadata/model_settings.config", settings)
+
+
+def write_painted_glb(path: Path, v, t, slot, kept):
+    """The painted print as a GLB with a colour per triangle, for preview renders."""
+    import trimesh
+    colours = np.array([list(FILAMENT_RGB[k]) + [255] for k in kept], np.uint8)[slot]
+    yup = np.column_stack([v[:, 0], v[:, 2], -v[:, 1]]) / 1000.0
+    mesh = trimesh.Trimesh(yup, t, process=False)
+    mesh.unmerge_vertices()
+    mesh.visual = trimesh.visual.ColorVisuals(mesh, face_colors=colours)
+    path.write_bytes(mesh.export(file_type="glb"))
+
+
+def export_print(model: Model, path: Path, scale: float, painted: Path | None = None,
+                 painted_glb: Path | None = None):
+    """Union every solid into one body at 1:scale, flat on the bed, as binary STL; and, if asked,
+    the same body painted in up to four filaments as a 3MF (and a GLB of it for previews).
+
+    Every part's finish is matched to the nearest of FILAMENTS, and manifold3d records which part
+    each triangle of the union came from, so the painting follows the parts exactly."""
     import manifold3d as mf
 
     tol = 0.01 * scale          # 0.01 mm at print size
-    pieces, failed = [], 0
-    for _, _, shapes in model.parts:
+    pieces, failed, owner = [], 0, {}
+    for _, fin, shapes in model.parts:
+        filament = filament_of(fin)
         for s in shapes:
             for solid in s.Solids():
                 m = _to_manifold(solid, tol, 0.15)
                 if m is None:
                     failed += 1
                 else:
+                    m = m.as_original()
+                    owner[m.original_id()] = filament
                     pieces.append(m)
     body = mf.Manifold.batch_boolean(pieces, mf.OpType.Add)
     body = body.scale((1 / scale,) * 3).trim_by_plane((0, 0, 1), 0.0)
@@ -447,7 +607,10 @@ def export_print(model: Model, path: Path, scale: float):
     for _ in range(4):
         body = body.simplify(0.005)
         mesh = body.to_mesh64() if hasattr(body, "to_mesh64") else body.to_mesh()
-        v, t = weld_float32(np.asarray(mesh.vert_properties)[:, :3], np.asarray(mesh.tri_verts))
+        runs = np.asarray(mesh.run_index) // 3
+        labels = np.repeat([owner.get(int(i), -1) for i in mesh.run_original_id], np.diff(runs))
+        v, t, keep = _weld(np.asarray(mesh.vert_properties)[:, :3], np.asarray(mesh.tri_verts))
+        labels = labels[keep]
         bad = bad_edges(t)
         if not len(bad):
             break
@@ -464,8 +627,16 @@ def export_print(model: Model, path: Path, scale: float):
         fh.write(np.uint32(len(t)).tobytes())
         fh.write(rec.tobytes())
 
+    labels = _fill_unlabelled(t, labels)
+    slot, kept = slots(v, t, labels)
+    if painted is not None:
+        write_painted_3mf(painted, v, t, slot, kept)
+    if painted_glb is not None:
+        write_painted_glb(painted_glb, v, t, slot, kept)
+
     bb = body.bounding_box()
     return {
+        "filaments": [f"T{i + 1} {FILAMENT_NAMES[k]} {FILAMENTS[FILAMENT_NAMES[k]]}" for i, k in enumerate(kept)],
         "size_mm": tuple(round(bb[i + 3] - bb[i], 1) for i in range(3)),
         "volume_cm3": round(body.volume() / 1000, 2),
         "triangles": len(t),

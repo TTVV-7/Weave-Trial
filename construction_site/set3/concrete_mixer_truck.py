@@ -464,10 +464,10 @@ def build(m):
         m.add("rear_reflectors", RED, box(-6908, -6898, *sorted((s * 300, s * 420)), 470, 520))
 
     # =========================================================== drum and its drive
-    if m.print_mode:
-        m.add("drum", DRUM_A, drum_solid(cones=True))
-    else:
-        drum = drum_solid()
+    # the print drum is the faceted cone chain; both are cut into the same painted bands, so the
+    # painted 3MF prints the stripes too
+    if True:
+        drum = drum_solid(cones=m.print_mode)
         beta = math.radians(34.0)
         n = math.cos(beta) * U + math.sin(beta) * N        # band planes, slanted across the axis
         z = np.cross(n, Y)
@@ -476,9 +476,10 @@ def build(m):
         while a < 5300:
             w = widths[k % 2]
             slab = place(box(a, a + w, -3000, 3000, -3000, 3000), tuple(n), tuple(Y), tuple(z), tuple(DF))
-            piece = drum.intersect(slab)
-            if piece.Volume() > 1:
-                m.add(f"drum_band_{k + 1}", DRUM_A if k % 2 == 0 else DRUM_B, piece)
+            pieces = [d.intersect(slab) for d in (drum if isinstance(drum, list) else [drum])]
+            pieces = [pc for pc in pieces if pc.Volume() > 1]
+            if pieces:
+                m.add(f"drum_band_{k + 1}", DRUM_A if k % 2 == 0 else DRUM_B, pieces)
             a += w
             k += 1
     # the open mouth: recessed into the drum, dark inside, the two spiral blades showing

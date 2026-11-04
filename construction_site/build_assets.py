@@ -14,6 +14,9 @@ For each asset this writes, beside this file:
     <Name>.glb               web / Blender / game engines, metres, coloured
     print_1-<scale>/<Name>_1-<scale>.stl
                              one watertight body at the print scale, flat on the bed
+    print_1-<scale>/<Name>_1-<scale>_painted.3mf
+                             the same body painted in up to four stock PLA filaments,
+                             for multi-colour printers (Bambu AMS, OrcaSlicer, Snapmaker U1)
     <Name>_preview.png       studio render (needs node, Playwright and three.js;
                              skip with --no-render)
 
@@ -906,12 +909,24 @@ def diagnose(asset: Asset, scale: float, min_wall: float):
         print(f"  {kind} {k}: volume {c.volume() / 1e9:.4f} m3, box {bb}: {shown}")
 
 
-def build_print(asset: Asset, scale: float, min_wall: float) -> dict:
+def build_print(asset: Asset, scale: float, min_wall: float, render_painted: bool = False) -> dict:
+    """The print STL and the same print painted in up to four filaments as a 3MF, with a colour
+    render of the painted print when asked."""
+    import tempfile
     printed = Model(print_mode=True, scale=scale, min_wall=min_wall)
     asset.build(printed)
     pdir = HERE / f"print_1-{scale:g}"
     pdir.mkdir(exist_ok=True)
-    return export_print(printed, pdir / f"{asset.stem}_1-{scale:g}.stl", scale)
+    base = pdir / f"{asset.stem}_1-{scale:g}"
+    with tempfile.TemporaryDirectory() as tmp:
+        glb = Path(tmp) / "painted.glb" if render_painted else None
+        report = export_print(printed, base.with_suffix(".stl"), scale,
+                              painted=base.with_name(base.name + "_painted.3mf"), painted_glb=glb)
+        if render_painted:
+            subprocess.run(["node", str(HERE / "render_previews.mjs"), "--az", str(asset.az), "--el", str(asset.el),
+                            "--size", "900x900", "--out", str(base.with_name(base.name + "_painted_preview.png")),
+                            str(glb)], check=True)
+    return report
 
 
 def build(asset: Asset, scale: float, min_wall: float, do_render: bool) -> dict:
@@ -923,7 +938,7 @@ def build(asset: Asset, scale: float, min_wall: float, do_render: bool) -> dict:
     export_step(shown, step, asset.title)
     export_glb(shown, glb)
 
-    report = build_print(asset, scale, min_wall)
+    report = build_print(asset, scale, min_wall, render_painted=do_render)
 
     if do_render:
         render(asset, scale)
@@ -989,13 +1004,14 @@ def main() -> int:
         known = {r["key"]: r for r in json.loads(index.read_text())} if index.exists() else {}
         results = []
         for a in chosen:
-            report = build_print(a, args.scale, args.min_wall)
+            report = build_print(a, args.scale, args.min_wall, render_painted=not args.no_render)
             flag = "" if report["pieces"] == 1 and not report["nonmanifold_edges"] else "  WARNING"
             print(f"{a.stem}: 1:{args.scale:g} print {report['size_mm']} mm, {report['pieces']} piece(s), "
-                  f"{report['nonmanifold_edges']} bad edges{flag}")
+                  f"{report['nonmanifold_edges']} bad edges; painted "
+                  + ", ".join(f.split(" #")[0] for f in report["filaments"]) + flag)
             if a.key in known and args.scale == 50:
                 results.append({**known[a.key], "print": report})
-        args.no_render = True
+        args.no_render = True                    # the painted renders are done; skip the full previews
         if args.scale != 50:
             args.no_index = True
     else:
