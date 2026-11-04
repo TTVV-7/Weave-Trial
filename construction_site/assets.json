@@ -836,5 +836,434 @@
    "nonmanifold_edges": 0
   },
   "seconds": 9.9
+ },
+ {
+  "key": "water_truck",
+  "title": "Water Truck (4,000 gal dust control)",
+  "stem": "Water_Truck_4000gal",
+  "set": 4,
+  "size_mm": [
+   9735,
+   3050,
+   3387
+  ],
+  "parts": 128,
+  "print": {
+   "filaments": [
+    "T1 Black #1A1A1A",
+    "T2 Construction yellow #FFC200",
+    "T3 Silver grey #8C8F92",
+    "T4 White #F2F2F0"
+   ],
+   "size_mm": [
+    194.7,
+    61.0,
+    67.6
+   ],
+   "volume_cm3": 245.1,
+   "triangles": 94326,
+   "pieces": 1,
+   "sealed_voids": 0,
+   "genus": 116,
+   "skipped_solids": 0,
+   "nonmanifold_edges": 0
+  },
+  "seconds": 21.9
+ },
+ {
+  "key": "hydrovac_truck",
+  "title": "Hydrovac Excavation Truck",
+  "stem": "Hydrovac_Truck",
+  "set": 4,
+  "size_mm": [
+   11115,
+   3807,
+   3825
+  ],
+  "parts": 79,
+  "print": {
+   "filaments": [
+    "T1 Black #1A1A1A",
+    "T2 Signal red #BF160D",
+    "T3 Silver grey #8C8F92",
+    "T4 Construction yellow #FFC200"
+   ],
+   "size_mm": [
+    222.3,
+    76.1,
+    76.3
+   ],
+   "volume_cm3": 337.33,
+   "triangles": 94808,
+   "pieces": 1,
+   "sealed_voids": 0,
+   "genus": 114,
+   "skipped_solids": 0,
+   "nonmanifold_edges": 0
+  },
+  "seconds": 22.4
+ },
+ {
+  "key": "concrete_boom_pump",
+  "title": "Concrete Boom Pump Truck (38 m, stowed)",
+  "stem": "Concrete_Boom_Pump_38m",
+  "set": 4,
+  "size_mm": [
+   11669,
+   7900,
+   3940
+  ],
+  "parts": 69,
+  "print": {
+   "filaments": [
+    "T1 White #F2F2F0",
+    "T2 Black #1A1A1A",
+    "T3 Silver grey #8C8F92",
+    "T4 Safety orange #F26A0D"
+   ],
+   "size_mm": [
+    233.5,
+    158.0,
+    78.7
+   ],
+   "volume_cm3": 234.56,
+   "triangles": 196208,
+   "pieces": 1,
+   "sealed_voids": 0,
+   "genus": 149,
+   "skipped_solids": 0,
+   "nonmanifold_edges": 0
+  },
+  "seconds": 31.0
+ },
+ {
+  "key": "fuel_lube_truck",
+  "title": "Fuel and Lube Service Truck",
+  "stem": "Fuel_Lube_Service_Truck",
+  "set": 4,
+  "size_mm": [
+   9651,
+   3050,
+   3478
+  ],
+  "parts": 132,
+  "print": {
+   "filaments": [
+    "T1 Black #1A1A1A",
+    "T2 Signal red #BF160D",
+    "T3 White #F2F2F0",
+    "T4 Silver grey #8C8F92"
+   ],
+   "size_mm": [
+    193.0,
+    61.0,
+    69.4
+   ],
+   "volume_cm3": 278.47,
+   "triangles": 85502,
+   "pieces": 1,
+   "sealed_voids": 2,
+   "genus": 103,
+   "skipped_solids": 0,
+   "nonmanifold_edges": 0
+  },
+  "seconds": 23.2
+ },
+ {
+  "key": "road_sweeper",
+  "title": "Vacuum Road Sweeper Truck",
+  "stem": "Vacuum_Road_Sweeper",
+  "set": 4,
+  "size_mm": [
+   8646,
+   3070,
+   3208
+  ],
+  "parts": 136,
+  "print": {
+   "filaments": [
+    "T1 Black #1A1A1A",
+    "T2 White #F2F2F0",
+    "T3 Silver grey #8C8F92",
+    "T4 Safety orange #F26A0D"
+   ],
+   "size_mm": [
+    172.9,
+    61.4,
+    64.0
+   ],
+   "volume_cm3": 330.61,
+   "triangles": 105706,
+   "pieces": 1,
+   "sealed_voids": 1,
+   "genus": 56,
+   "skipped_solids": 0,
+   "nonmanifold_edges": 0
+  },
+  "seconds": 20.5
+ },
+ {
+  "key": "vibratory_pile_hammer",
+  "title": "Vibratory Pile Hammer with Power Pack",
+  "stem": "Vibratory_Pile_Hammer",
+  "set": 4,
+  "size_mm": [
+   7895,
+   2588,
+   3562
+  ],
+  "parts": 57,
+  "print": {
+   "filaments": [
+    "T1 Black #1A1A1A",
+    "T2 Safety orange #F26A0D",
+    "T3 Construction yellow #FFC200",
+    "T4 Silver grey #8C8F92"
+   ],
+   "size_mm": [
+    157.9,
+    52.5,
+    71.2
+   ],
+   "volume_cm3": 202.38,
+   "triangles": 68602,
+   "pieces": 1,
+   "sealed_voids": 0,
+   "genus": 67,
+   "skipped_solids": 0,
+   "nonmanifold_edges": 0
+  },
+  "seconds": 25.8
+ },
+ {
+  "key": "pipe_pile_stack",
+  "title": "Steel Pipe Pile Stack (36 in, 12 m)",
+  "stem": "Steel_Pipe_Pile_Stack",
+  "set": 4,
+  "size_mm": [
+   12090,
+   3403,
+   3362
+  ],
+  "parts": 38,
+  "print": {
+   "filaments": [
+    "T1 Silver grey #8C8F92",
+    "T2 Wood brown #A07848",
+    "T3 Sand #D8C8A4",
+    "T4 Construction yellow #FFC200"
+   ],
+   "size_mm": [
+    241.8,
+    68.0,
+    67.2
+   ],
+   "volume_cm3": 68.44,
+   "triangles": 12718,
+   "pieces": 1,
+   "sealed_voids": 0,
+   "genus": 49,
+   "skipped_solids": 0,
+   "nonmanifold_edges": 0
+  },
+  "seconds": 16.9
+ },
+ {
+  "key": "radial_stacker",
+  "title": "Radial Stacking Conveyor (36 in x 100 ft)",
+  "stem": "Radial_Stacking_Conveyor",
+  "set": 4,
+  "size_mm": [
+   30728,
+   4954,
+   11551
+  ],
+  "parts": 74,
+  "print": {
+   "filaments": [
+    "T1 Construction yellow #FFC200",
+    "T2 Black #1A1A1A",
+    "T3 Silver grey #8C8F92",
+    "T4 Signal red #BF160D"
+   ],
+   "size_mm": [
+    615.5,
+    99.1,
+    231.2
+   ],
+   "volume_cm3": 92.96,
+   "triangles": 154268,
+   "pieces": 1,
+   "sealed_voids": 0,
+   "genus": 364,
+   "skipped_solids": 0,
+   "nonmanifold_edges": 0
+  },
+  "seconds": 21.3
+ },
+ {
+  "key": "conveyor_gallery",
+  "title": "Conveyor Gallery Module on Trestle Bent",
+  "stem": "Conveyor_Gallery_Module",
+  "set": 4,
+  "size_mm": [
+   12550,
+   5900,
+   9002
+  ],
+  "parts": 43,
+  "print": {
+   "filaments": [
+    "T1 Silver grey #8C8F92",
+    "T2 White #F2F2F0",
+    "T3 Black #1A1A1A",
+    "T4 Construction yellow #FFC200"
+   ],
+   "size_mm": [
+    251.0,
+    118.0,
+    180.0
+   ],
+   "volume_cm3": 101.36,
+   "triangles": 58124,
+   "pieces": 1,
+   "sealed_voids": 0,
+   "genus": 221,
+   "skipped_solids": 0,
+   "nonmanifold_edges": 0
+  },
+  "seconds": 14.7
+ },
+ {
+  "key": "rail_gondola",
+  "title": "Coal Rail Car (rotary-dump gondola)",
+  "stem": "Rail_Gondola_Coal",
+  "set": 4,
+  "size_mm": [
+   16180,
+   3272,
+   4231
+  ],
+  "parts": 49,
+  "print": {
+   "filaments": [
+    "T1 Silver grey #8C8F92",
+    "T2 Black #1A1A1A",
+    "T3 Signal red #BF160D",
+    "T4 White #F2F2F0"
+   ],
+   "size_mm": [
+    323.6,
+    65.7,
+    83.1
+   ],
+   "volume_cm3": 1204.79,
+   "triangles": 101354,
+   "pieces": 1,
+   "sealed_voids": 0,
+   "genus": 91,
+   "skipped_solids": 0,
+   "nonmanifold_edges": 0
+  },
+  "seconds": 17.2
+ },
+ {
+  "key": "railcar_mover",
+  "title": "Road-Rail Railcar Mover",
+  "stem": "Road_Rail_Railcar_Mover",
+  "set": 4,
+  "size_mm": [
+   6800,
+   2945,
+   3247
+  ],
+  "parts": 89,
+  "print": {
+   "filaments": [
+    "T1 Black #1A1A1A",
+    "T2 Construction yellow #FFC200",
+    "T3 Wood brown #A07848",
+    "T4 Silver grey #8C8F92"
+   ],
+   "size_mm": [
+    136.0,
+    58.9,
+    64.9
+   ],
+   "volume_cm3": 146.75,
+   "triangles": 69226,
+   "pieces": 1,
+   "sealed_voids": 0,
+   "genus": 81,
+   "skipped_solids": 0,
+   "nonmanifold_edges": 0
+  },
+  "seconds": 20.2
+ },
+ {
+  "key": "fog_cannon",
+  "title": "Dust Suppression Fog Cannon (trailer)",
+  "stem": "Dust_Fog_Cannon",
+  "set": 4,
+  "size_mm": [
+   3679,
+   2080,
+   3329
+  ],
+  "parts": 108,
+  "print": {
+   "filaments": [
+    "T1 Safety orange #F26A0D",
+    "T2 Black #1A1A1A",
+    "T3 Silver grey #8C8F92",
+    "T4 White #F2F2F0"
+   ],
+   "size_mm": [
+    73.6,
+    41.6,
+    66.5
+   ],
+   "volume_cm3": 33.16,
+   "triangles": 95422,
+   "pieces": 1,
+   "sealed_voids": 0,
+   "genus": 79,
+   "skipped_solids": 0,
+   "nonmanifold_edges": 0
+  },
+  "seconds": 16.8
+ },
+ {
+  "key": "wheel_wash",
+  "title": "Drive-Through Wheel Wash Station",
+  "stem": "Drive_Through_Wheel_Wash",
+  "set": 4,
+  "size_mm": [
+   12260,
+   10090,
+   3624
+  ],
+  "parts": 75,
+  "print": {
+   "filaments": [
+    "T1 Blue #0066C0",
+    "T2 Silver grey #8C8F92",
+    "T3 Construction yellow #FFC200",
+    "T4 Black #1A1A1A"
+   ],
+   "size_mm": [
+    245.2,
+    201.8,
+    72.3
+   ],
+   "volume_cm3": 507.33,
+   "triangles": 109902,
+   "pieces": 1,
+   "sealed_voids": 0,
+   "genus": 85,
+   "skipped_solids": 0,
+   "nonmanifold_edges": 0
+  },
+  "seconds": 18.7
  }
 ]

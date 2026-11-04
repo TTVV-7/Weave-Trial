@@ -1,5 +1,5 @@
 {
-  "generated": "2026-11-04T17:07:29+00:00",
+  "generated": "2026-11-04T22:56:28+00:00",
   "models": [
     {
       "name": "Articulated Dump Truck 30t",
@@ -68,6 +68,28 @@
       "preview": "construction_site/Cable_Reel_Wooden_preview.png"
     },
     {
+      "name": "Concrete Boom Pump 38m",
+      "file": "Concrete_Boom_Pump_38m.glb",
+      "path": "construction_site/Concrete_Boom_Pump_38m.glb",
+      "folder": "construction_site",
+      "ext": "glb",
+      "type": "glTF",
+      "size": 2250256,
+      "modified": "2026-11-04T21:51:27+00:00",
+      "preview": "construction_site/Concrete_Boom_Pump_38m_preview.png"
+    },
+    {
+      "name": "Concrete Boom Pump 38m",
+      "file": "Concrete_Boom_Pump_38m.step",
+      "path": "construction_site/Concrete_Boom_Pump_38m.step",
+      "folder": "construction_site",
+      "ext": "step",
+      "type": "STEP",
+      "size": 37426156,
+      "modified": "2026-11-04T21:51:27+00:00",
+      "preview": "construction_site/Concrete_Boom_Pump_38m_preview.png"
+    },
+    {
       "name": "Concrete Mixer Truck 8m3",
       "file": "Concrete_Mixer_Truck_8m3.glb",
       "path": "construction_site/Concrete_Mixer_Truck_8m3.glb",
@@ -134,6 +156,28 @@
       "preview": "construction_site/Contractor_Wheelbarrow_preview.png"
     },
     {
+      "name": "Conveyor Gallery Module",
+      "file": "Conveyor_Gallery_Module.glb",
+      "path": "construction_site/Conveyor_Gallery_Module.glb",
+      "folder": "construction_site",
+      "ext": "glb",
+      "type": "glTF",
+      "size": 1458500,
+      "modified": "2026-11-04T21:51:27+00:00",
+      "preview": "construction_site/Conveyor_Gallery_Module_preview.png"
+    },
+    {
+      "name": "Conveyor Gallery Module",
+      "file": "Conveyor_Gallery_Module.step",
+      "path": "construction_site/Conveyor_Gallery_Module.step",
+      "folder": "construction_site",
+      "ext": "step",
+      "type": "STEP",
+      "size": 8634456,
+      "modified": "2026-11-04T21:51:27+00:00",
+      "preview": "construction_site/Conveyor_Gallery_Module_preview.png"
+    },
+    {
       "name": "Crawler Dozer 20t",
       "file": "Crawler_Dozer_20t.glb",
       "path": "construction_site/Crawler_Dozer_20t.glb",
@@ -154,6 +198,50 @@
       "size": 13186966,
       "modified": "2026-11-03T18:56:49+00:00",
       "preview": "construction_site/Crawler_Dozer_20t_preview.png"
+    },
+    {
+      "name": "Drive Through Wheel Wash",
+      "file": "Drive_Through_Wheel_Wash.glb",
+      "path": "construction_site/Drive_Through_Wheel_Wash.glb",
+      "folder": "construction_site",
+      "ext": "glb",
+      "type": "glTF",
+      "size": 2367488,
+      "modified": "2026-11-04T22:54:05+00:00",
+      "preview": "construction_site/Drive_Through_Wheel_Wash_preview.png"
+    },
+    {
+      "name": "Drive Through Wheel Wash",
+      "file": "Drive_Through_Wheel_Wash.step",
+      "path": "construction_site/Drive_Through_Wheel_Wash.step",
+      "folder": "construction_site",
+      "ext": "step",
+      "type": "STEP",
+      "size": 11979909,
+      "modified": "2026-11-04T22:54:03+00:00",
+      "preview": "construction_site/Drive_Through_Wheel_Wash_preview.png"
+    },
+    {
+      "name": "Dust Fog Cannon",
+      "file": "Dust_Fog_Cannon.glb",
+      "path": "construction_site/Dust_Fog_Cannon.glb",
+      "folder": "construction_site",
+      "ext": "glb",
+      "type": "glTF",
+      "size": 1916300,
+      "modified": "2026-11-04T22:53:48+00:00",
+      "preview": "construction_site/Dust_Fog_Cannon_preview.png"
+    },
+    {
+      "name": "Dust Fog Cannon",
+      "file": "Dust_Fog_Cannon.step",
+      "path": "construction_site/Dust_Fog_Cannon.step",
+      "folder": "construction_site",
+      "ext": "step",
+      "type": "STEP",
+      "size": 7397949,
+      "modified": "2026-11-04T22:53:46+00:00",
+      "preview": "construction_site/Dust_Fog_Cannon_preview.png"
     },
     {
       "name": "Electric Scissor Lift 26ft",
@@ -198,6 +286,50 @@
       "size": 982295,
       "modified": "2026-11-03T14:52:29+00:00",
       "preview": "construction_site/Frame_Scaffold_Tower_preview.png"
+    },
+    {
+      "name": "Fuel Lube Service Truck",
+      "file": "Fuel_Lube_Service_Truck.glb",
+      "path": "construction_site/Fuel_Lube_Service_Truck.glb",
+      "folder": "construction_site",
+      "ext": "glb",
+      "type": "glTF",
+      "size": 2446416,
+      "modified": "2026-11-04T21:51:27+00:00",
+      "preview": "construction_site/Fuel_Lube_Service_Truck_preview.png"
+    },
+    {
+      "name": "Fuel Lube Service Truck",
+      "file": "Fuel_Lube_Service_Truck.step",
+      "path": "construction_site/Fuel_Lube_Service_Truck.step",
+      "folder": "construction_site",
+      "ext": "step",
+      "type": "STEP",
+      "size": 23610546,
+      "modified": "2026-11-04T21:51:27+00:00",
+      "preview": "construction_site/Fuel_Lube_Service_Truck_preview.png"
+    },
+    {
+      "name": "Hydrovac Truck",
+      "file": "Hydrovac_Truck.glb",
+      "path": "construction_site/Hydrovac_Truck.glb",
+      "folder": "construction_site",
+      "ext": "glb",
+      "type": "glTF",
+      "size": 2320696,
+      "modified": "2026-11-04T18:59:05+00:00",
+      "preview": "construction_site/Hydrovac_Truck_preview.png"
+    },
+    {
+      "name": "Hydrovac Truck",
+      "file": "Hydrovac_Truck.step",
+      "path": "construction_site/Hydrovac_Truck.step",
+      "folder": "construction_site",
+      "ext": "step",
+      "type": "STEP",
+      "size": 21213754,
+      "modified": "2026-11-04T18:59:05+00:00",
+      "preview": "construction_site/Hydrovac_Truck_preview.png"
     },
     {
       "name": "Industrial Steel Stair 12ft",
@@ -464,6 +596,28 @@
       "preview": "construction_site/Portable_Toilet_preview.png"
     },
     {
+      "name": "Radial Stacking Conveyor",
+      "file": "Radial_Stacking_Conveyor.glb",
+      "path": "construction_site/Radial_Stacking_Conveyor.glb",
+      "folder": "construction_site",
+      "ext": "glb",
+      "type": "glTF",
+      "size": 1816552,
+      "modified": "2026-11-04T21:51:27+00:00",
+      "preview": "construction_site/Radial_Stacking_Conveyor_preview.png"
+    },
+    {
+      "name": "Radial Stacking Conveyor",
+      "file": "Radial_Stacking_Conveyor.step",
+      "path": "construction_site/Radial_Stacking_Conveyor.step",
+      "folder": "construction_site",
+      "ext": "step",
+      "type": "STEP",
+      "size": 20721118,
+      "modified": "2026-11-04T21:51:27+00:00",
+      "preview": "construction_site/Radial_Stacking_Conveyor_preview.png"
+    },
+    {
       "name": "Rail Crossover Gantry",
       "file": "Rail_Crossover_Gantry.glb",
       "path": "construction_site/Rail_Crossover_Gantry.glb",
@@ -484,6 +638,50 @@
       "size": 6511105,
       "modified": "2026-10-20T18:17:06+00:00",
       "preview": "construction_site/Rail_Crossover_Gantry_preview.png"
+    },
+    {
+      "name": "Rail Gondola Coal",
+      "file": "Rail_Gondola_Coal.glb",
+      "path": "construction_site/Rail_Gondola_Coal.glb",
+      "folder": "construction_site",
+      "ext": "glb",
+      "type": "glTF",
+      "size": 1747264,
+      "modified": "2026-11-04T21:51:27+00:00",
+      "preview": "construction_site/Rail_Gondola_Coal_preview.png"
+    },
+    {
+      "name": "Rail Gondola Coal",
+      "file": "Rail_Gondola_Coal.step",
+      "path": "construction_site/Rail_Gondola_Coal.step",
+      "folder": "construction_site",
+      "ext": "step",
+      "type": "STEP",
+      "size": 11500591,
+      "modified": "2026-11-04T21:51:27+00:00",
+      "preview": "construction_site/Rail_Gondola_Coal_preview.png"
+    },
+    {
+      "name": "Road Rail Railcar Mover",
+      "file": "Road_Rail_Railcar_Mover.glb",
+      "path": "construction_site/Road_Rail_Railcar_Mover.glb",
+      "folder": "construction_site",
+      "ext": "glb",
+      "type": "glTF",
+      "size": 2156748,
+      "modified": "2026-11-04T21:51:27+00:00",
+      "preview": "construction_site/Road_Rail_Railcar_Mover_preview.png"
+    },
+    {
+      "name": "Road Rail Railcar Mover",
+      "file": "Road_Rail_Railcar_Mover.step",
+      "path": "construction_site/Road_Rail_Railcar_Mover.step",
+      "folder": "construction_site",
+      "ext": "step",
+      "type": "STEP",
+      "size": 15664091,
+      "modified": "2026-11-04T21:51:27+00:00",
+      "preview": "construction_site/Road_Rail_Railcar_Mover_preview.png"
     },
     {
       "name": "Roll Off Dumpster 20yd",
@@ -594,6 +792,28 @@
       "size": 893038,
       "modified": "2026-11-03T14:52:29+00:00",
       "preview": "construction_site/Steel_Beam_Bundle_W12x26_preview.png"
+    },
+    {
+      "name": "Steel Pipe Pile Stack",
+      "file": "Steel_Pipe_Pile_Stack.glb",
+      "path": "construction_site/Steel_Pipe_Pile_Stack.glb",
+      "folder": "construction_site",
+      "ext": "glb",
+      "type": "glTF",
+      "size": 1961872,
+      "modified": "2026-11-04T21:51:27+00:00",
+      "preview": "construction_site/Steel_Pipe_Pile_Stack_preview.png"
+    },
+    {
+      "name": "Steel Pipe Pile Stack",
+      "file": "Steel_Pipe_Pile_Stack.step",
+      "path": "construction_site/Steel_Pipe_Pile_Stack.step",
+      "folder": "construction_site",
+      "ext": "step",
+      "type": "STEP",
+      "size": 20807722,
+      "modified": "2026-11-04T21:51:27+00:00",
+      "preview": "construction_site/Steel_Pipe_Pile_Stack_preview.png"
     },
     {
       "name": "Telehandler 10000lb 56ft",
@@ -794,6 +1014,50 @@
       "preview": "construction_site/Type_III_Barricade_Road_Closed_preview.png"
     },
     {
+      "name": "Vacuum Road Sweeper",
+      "file": "Vacuum_Road_Sweeper.glb",
+      "path": "construction_site/Vacuum_Road_Sweeper.glb",
+      "folder": "construction_site",
+      "ext": "glb",
+      "type": "glTF",
+      "size": 2263908,
+      "modified": "2026-11-04T21:51:27+00:00",
+      "preview": "construction_site/Vacuum_Road_Sweeper_preview.png"
+    },
+    {
+      "name": "Vacuum Road Sweeper",
+      "file": "Vacuum_Road_Sweeper.step",
+      "path": "construction_site/Vacuum_Road_Sweeper.step",
+      "folder": "construction_site",
+      "ext": "step",
+      "type": "STEP",
+      "size": 15844888,
+      "modified": "2026-11-04T21:51:27+00:00",
+      "preview": "construction_site/Vacuum_Road_Sweeper_preview.png"
+    },
+    {
+      "name": "Vibratory Pile Hammer",
+      "file": "Vibratory_Pile_Hammer.glb",
+      "path": "construction_site/Vibratory_Pile_Hammer.glb",
+      "folder": "construction_site",
+      "ext": "glb",
+      "type": "glTF",
+      "size": 2164192,
+      "modified": "2026-11-04T21:51:27+00:00",
+      "preview": "construction_site/Vibratory_Pile_Hammer_preview.png"
+    },
+    {
+      "name": "Vibratory Pile Hammer",
+      "file": "Vibratory_Pile_Hammer.step",
+      "path": "construction_site/Vibratory_Pile_Hammer.step",
+      "folder": "construction_site",
+      "ext": "step",
+      "type": "STEP",
+      "size": 7948999,
+      "modified": "2026-11-04T21:51:27+00:00",
+      "preview": "construction_site/Vibratory_Pile_Hammer_preview.png"
+    },
+    {
       "name": "Vibratory Soil Roller 84in",
       "file": "Vibratory_Soil_Roller_84in.glb",
       "path": "construction_site/Vibratory_Soil_Roller_84in.glb",
@@ -838,6 +1102,28 @@
       "preview": "construction_site/Water_Filled_Barrier_6ft_preview.png"
     },
     {
+      "name": "Water Truck 4000gal",
+      "file": "Water_Truck_4000gal.glb",
+      "path": "construction_site/Water_Truck_4000gal.glb",
+      "folder": "construction_site",
+      "ext": "glb",
+      "type": "glTF",
+      "size": 2249304,
+      "modified": "2026-11-04T18:59:05+00:00",
+      "preview": "construction_site/Water_Truck_4000gal_preview.png"
+    },
+    {
+      "name": "Water Truck 4000gal",
+      "file": "Water_Truck_4000gal.step",
+      "path": "construction_site/Water_Truck_4000gal.step",
+      "folder": "construction_site",
+      "ext": "step",
+      "type": "STEP",
+      "size": 16670308,
+      "modified": "2026-11-04T18:59:05+00:00",
+      "preview": "construction_site/Water_Truck_4000gal_preview.png"
+    },
+    {
       "name": "Wheel Loader 3yd",
       "file": "Wheel_Loader_3yd.glb",
       "path": "construction_site/Wheel_Loader_3yd.glb",
@@ -860,6 +1146,28 @@
       "preview": "construction_site/Wheel_Loader_3yd_preview.png"
     },
     {
+      "name": "Radial Stacking Conveyor 1 100",
+      "file": "Radial_Stacking_Conveyor_1-100.stl",
+      "path": "construction_site/print_1-100/Radial_Stacking_Conveyor_1-100.stl",
+      "folder": "construction_site/print_1-100",
+      "ext": "stl",
+      "type": "STL",
+      "size": 5978484,
+      "modified": "2026-11-04T22:55:08+00:00",
+      "preview": null
+    },
+    {
+      "name": "Radial Stacking Conveyor 1 100 painted",
+      "file": "Radial_Stacking_Conveyor_1-100_painted.3mf",
+      "path": "construction_site/print_1-100/Radial_Stacking_Conveyor_1-100_painted.3mf",
+      "folder": "construction_site/print_1-100",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 1201663,
+      "modified": "2026-11-04T22:55:08+00:00",
+      "preview": "construction_site/print_1-100/Radial_Stacking_Conveyor_1-100_painted_preview.png"
+    },
+    {
       "name": "Articulated Dump Truck 30t 1 50",
       "file": "Articulated_Dump_Truck_30t_1-50.stl",
       "path": "construction_site/print_1-50/Articulated_Dump_Truck_30t_1-50.stl",
@@ -878,7 +1186,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 1402439,
-      "modified": "2026-11-04T17:04:54+00:00",
+      "modified": "2026-11-04T17:07:30+00:00",
       "preview": "construction_site/print_1-50/Articulated_Dump_Truck_30t_1-50_painted_preview.png"
     },
     {
@@ -900,7 +1208,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 1396410,
-      "modified": "2026-11-04T17:05:18+00:00",
+      "modified": "2026-11-04T17:07:30+00:00",
       "preview": "construction_site/print_1-50/Backhoe_Loader_1-50_painted_preview.png"
     },
     {
@@ -922,8 +1230,30 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 583974,
-      "modified": "2026-11-04T17:04:31+00:00",
+      "modified": "2026-11-04T17:07:30+00:00",
       "preview": "construction_site/print_1-50/Cable_Reel_Wooden_1-50_painted_preview.png"
+    },
+    {
+      "name": "Concrete Boom Pump 38m 1 50",
+      "file": "Concrete_Boom_Pump_38m_1-50.stl",
+      "path": "construction_site/print_1-50/Concrete_Boom_Pump_38m_1-50.stl",
+      "folder": "construction_site/print_1-50",
+      "ext": "stl",
+      "type": "STL",
+      "size": 9810484,
+      "modified": "2026-11-04T21:51:27+00:00",
+      "preview": "construction_site/print_1-50/Concrete_Boom_Pump_38m_1-50_preview.png"
+    },
+    {
+      "name": "Concrete Boom Pump 38m 1 50 painted",
+      "file": "Concrete_Boom_Pump_38m_1-50_painted.3mf",
+      "path": "construction_site/print_1-50/Concrete_Boom_Pump_38m_1-50_painted.3mf",
+      "folder": "construction_site/print_1-50",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 2022783,
+      "modified": "2026-11-04T21:51:27+00:00",
+      "preview": "construction_site/print_1-50/Concrete_Boom_Pump_38m_1-50_painted_preview.png"
     },
     {
       "name": "Concrete Mixer Truck 8m3 1 50",
@@ -933,7 +1263,7 @@
       "ext": "stl",
       "type": "STL",
       "size": 9938284,
-      "modified": "2026-11-03T18:56:49+00:00",
+      "modified": "2026-11-04T17:07:30+00:00",
       "preview": "construction_site/print_1-50/Concrete_Mixer_Truck_8m3_1-50_preview.png"
     },
     {
@@ -944,7 +1274,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 2070727,
-      "modified": "2026-11-04T17:05:52+00:00",
+      "modified": "2026-11-04T17:07:30+00:00",
       "preview": "construction_site/print_1-50/Concrete_Mixer_Truck_8m3_1-50_painted_preview.png"
     },
     {
@@ -966,7 +1296,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 357316,
-      "modified": "2026-11-04T17:06:41+00:00",
+      "modified": "2026-11-04T17:07:30+00:00",
       "preview": "construction_site/print_1-50/Concrete_Pipe_Stack_24in_1-50_painted_preview.png"
     },
     {
@@ -988,8 +1318,30 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 127576,
-      "modified": "2026-11-04T17:04:24+00:00",
+      "modified": "2026-11-04T17:07:30+00:00",
       "preview": "construction_site/print_1-50/Contractor_Wheelbarrow_1-50_painted_preview.png"
+    },
+    {
+      "name": "Conveyor Gallery Module 1 50",
+      "file": "Conveyor_Gallery_Module_1-50.stl",
+      "path": "construction_site/print_1-50/Conveyor_Gallery_Module_1-50.stl",
+      "folder": "construction_site/print_1-50",
+      "ext": "stl",
+      "type": "STL",
+      "size": 2906284,
+      "modified": "2026-11-04T21:51:27+00:00",
+      "preview": "construction_site/print_1-50/Conveyor_Gallery_Module_1-50_preview.png"
+    },
+    {
+      "name": "Conveyor Gallery Module 1 50 painted",
+      "file": "Conveyor_Gallery_Module_1-50_painted.3mf",
+      "path": "construction_site/print_1-50/Conveyor_Gallery_Module_1-50_painted.3mf",
+      "folder": "construction_site/print_1-50",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 557289,
+      "modified": "2026-11-04T21:51:27+00:00",
+      "preview": "construction_site/print_1-50/Conveyor_Gallery_Module_1-50_painted_preview.png"
     },
     {
       "name": "Crawler Dozer 20t 1 50",
@@ -1010,8 +1362,52 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 1233383,
-      "modified": "2026-11-04T17:05:05+00:00",
+      "modified": "2026-11-04T17:07:30+00:00",
       "preview": "construction_site/print_1-50/Crawler_Dozer_20t_1-50_painted_preview.png"
+    },
+    {
+      "name": "Drive Through Wheel Wash 1 50",
+      "file": "Drive_Through_Wheel_Wash_1-50.stl",
+      "path": "construction_site/print_1-50/Drive_Through_Wheel_Wash_1-50.stl",
+      "folder": "construction_site/print_1-50",
+      "ext": "stl",
+      "type": "STL",
+      "size": 5495184,
+      "modified": "2026-11-04T22:54:10+00:00",
+      "preview": "construction_site/print_1-50/Drive_Through_Wheel_Wash_1-50_preview.png"
+    },
+    {
+      "name": "Drive Through Wheel Wash 1 50 painted",
+      "file": "Drive_Through_Wheel_Wash_1-50_painted.3mf",
+      "path": "construction_site/print_1-50/Drive_Through_Wheel_Wash_1-50_painted.3mf",
+      "folder": "construction_site/print_1-50",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 1107690,
+      "modified": "2026-11-04T22:54:11+00:00",
+      "preview": "construction_site/print_1-50/Drive_Through_Wheel_Wash_1-50_painted_preview.png"
+    },
+    {
+      "name": "Dust Fog Cannon 1 50",
+      "file": "Dust_Fog_Cannon_1-50.stl",
+      "path": "construction_site/print_1-50/Dust_Fog_Cannon_1-50.stl",
+      "folder": "construction_site/print_1-50",
+      "ext": "stl",
+      "type": "STL",
+      "size": 4771184,
+      "modified": "2026-11-04T22:53:53+00:00",
+      "preview": "construction_site/print_1-50/Dust_Fog_Cannon_1-50_preview.png"
+    },
+    {
+      "name": "Dust Fog Cannon 1 50 painted",
+      "file": "Dust_Fog_Cannon_1-50_painted.3mf",
+      "path": "construction_site/print_1-50/Dust_Fog_Cannon_1-50_painted.3mf",
+      "folder": "construction_site/print_1-50",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 983497,
+      "modified": "2026-11-04T22:53:53+00:00",
+      "preview": "construction_site/print_1-50/Dust_Fog_Cannon_1-50_painted_preview.png"
     },
     {
       "name": "Electric Scissor Lift 26ft 1 50",
@@ -1032,7 +1428,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 1116581,
-      "modified": "2026-11-04T17:06:03+00:00",
+      "modified": "2026-11-04T17:07:30+00:00",
       "preview": "construction_site/print_1-50/Electric_Scissor_Lift_26ft_1-50_painted_preview.png"
     },
     {
@@ -1054,8 +1450,52 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 482258,
-      "modified": "2026-11-04T17:03:55+00:00",
+      "modified": "2026-11-04T17:07:30+00:00",
       "preview": "construction_site/print_1-50/Frame_Scaffold_Tower_1-50_painted_preview.png"
+    },
+    {
+      "name": "Fuel Lube Service Truck 1 50",
+      "file": "Fuel_Lube_Service_Truck_1-50.stl",
+      "path": "construction_site/print_1-50/Fuel_Lube_Service_Truck_1-50.stl",
+      "folder": "construction_site/print_1-50",
+      "ext": "stl",
+      "type": "STL",
+      "size": 4275184,
+      "modified": "2026-11-04T21:51:27+00:00",
+      "preview": "construction_site/print_1-50/Fuel_Lube_Service_Truck_1-50_preview.png"
+    },
+    {
+      "name": "Fuel Lube Service Truck 1 50 painted",
+      "file": "Fuel_Lube_Service_Truck_1-50_painted.3mf",
+      "path": "construction_site/print_1-50/Fuel_Lube_Service_Truck_1-50_painted.3mf",
+      "folder": "construction_site/print_1-50",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 813622,
+      "modified": "2026-11-04T21:51:27+00:00",
+      "preview": "construction_site/print_1-50/Fuel_Lube_Service_Truck_1-50_painted_preview.png"
+    },
+    {
+      "name": "Hydrovac Truck 1 50",
+      "file": "Hydrovac_Truck_1-50.stl",
+      "path": "construction_site/print_1-50/Hydrovac_Truck_1-50.stl",
+      "folder": "construction_site/print_1-50",
+      "ext": "stl",
+      "type": "STL",
+      "size": 4741784,
+      "modified": "2026-11-04T18:59:05+00:00",
+      "preview": "construction_site/print_1-50/Hydrovac_Truck_1-50_preview.png"
+    },
+    {
+      "name": "Hydrovac Truck 1 50 painted",
+      "file": "Hydrovac_Truck_1-50_painted.3mf",
+      "path": "construction_site/print_1-50/Hydrovac_Truck_1-50_painted.3mf",
+      "folder": "construction_site/print_1-50",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 943385,
+      "modified": "2026-11-04T18:59:05+00:00",
+      "preview": "construction_site/print_1-50/Hydrovac_Truck_1-50_painted_preview.png"
     },
     {
       "name": "Jersey Barrier NJ 10ft 1 50",
@@ -1076,7 +1516,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 77092,
-      "modified": "2026-11-04T17:04:06+00:00",
+      "modified": "2026-11-04T17:07:30+00:00",
       "preview": "construction_site/print_1-50/Jersey_Barrier_NJ_10ft_1-50_painted_preview.png"
     },
     {
@@ -1098,7 +1538,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 268861,
-      "modified": "2026-11-04T17:04:11+00:00",
+      "modified": "2026-11-04T17:07:30+00:00",
       "preview": "construction_site/print_1-50/Jersey_Barrier_Run_3x10ft_1-50_painted_preview.png"
     },
     {
@@ -1120,7 +1560,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 189947,
-      "modified": "2026-11-04T17:03:50+00:00",
+      "modified": "2026-11-04T17:07:30+00:00",
       "preview": "construction_site/print_1-50/LED_Light_Tower_1-50_painted_preview.png"
     },
     {
@@ -1142,7 +1582,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 302462,
-      "modified": "2026-11-04T17:03:36+00:00",
+      "modified": "2026-11-04T17:07:30+00:00",
       "preview": "construction_site/print_1-50/Mini_Excavator_3-5t_1-50_painted_preview.png"
     },
     {
@@ -1164,7 +1604,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 716466,
-      "modified": "2026-11-04T17:06:12+00:00",
+      "modified": "2026-11-04T17:07:30+00:00",
       "preview": "construction_site/print_1-50/Mobile_Site_Office_10x40ft_1-50_painted_preview.png"
     },
     {
@@ -1186,7 +1626,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 58776,
-      "modified": "2026-11-04T17:04:16+00:00",
+      "modified": "2026-11-04T17:07:30+00:00",
       "preview": "construction_site/print_1-50/Pallet_of_CMU_Blocks_1-50_painted_preview.png"
     },
     {
@@ -1208,8 +1648,74 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 43752,
-      "modified": "2026-11-04T17:03:59+00:00",
+      "modified": "2026-11-04T17:07:30+00:00",
       "preview": "construction_site/print_1-50/Portable_Toilet_1-50_painted_preview.png"
+    },
+    {
+      "name": "Radial Stacking Conveyor 1 50",
+      "file": "Radial_Stacking_Conveyor_1-50.stl",
+      "path": "construction_site/print_1-50/Radial_Stacking_Conveyor_1-50.stl",
+      "folder": "construction_site/print_1-50",
+      "ext": "stl",
+      "type": "STL",
+      "size": 7713484,
+      "modified": "2026-11-04T21:51:27+00:00",
+      "preview": "construction_site/print_1-50/Radial_Stacking_Conveyor_1-50_preview.png"
+    },
+    {
+      "name": "Radial Stacking Conveyor 1 50 painted",
+      "file": "Radial_Stacking_Conveyor_1-50_painted.3mf",
+      "path": "construction_site/print_1-50/Radial_Stacking_Conveyor_1-50_painted.3mf",
+      "folder": "construction_site/print_1-50",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 1554554,
+      "modified": "2026-11-04T21:51:27+00:00",
+      "preview": "construction_site/print_1-50/Radial_Stacking_Conveyor_1-50_painted_preview.png"
+    },
+    {
+      "name": "Rail Gondola Coal 1 50",
+      "file": "Rail_Gondola_Coal_1-50.stl",
+      "path": "construction_site/print_1-50/Rail_Gondola_Coal_1-50.stl",
+      "folder": "construction_site/print_1-50",
+      "ext": "stl",
+      "type": "STL",
+      "size": 5067784,
+      "modified": "2026-11-04T21:51:27+00:00",
+      "preview": "construction_site/print_1-50/Rail_Gondola_Coal_1-50_preview.png"
+    },
+    {
+      "name": "Rail Gondola Coal 1 50 painted",
+      "file": "Rail_Gondola_Coal_1-50_painted.3mf",
+      "path": "construction_site/print_1-50/Rail_Gondola_Coal_1-50_painted.3mf",
+      "folder": "construction_site/print_1-50",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 953236,
+      "modified": "2026-11-04T21:51:27+00:00",
+      "preview": "construction_site/print_1-50/Rail_Gondola_Coal_1-50_painted_preview.png"
+    },
+    {
+      "name": "Road Rail Railcar Mover 1 50",
+      "file": "Road_Rail_Railcar_Mover_1-50.stl",
+      "path": "construction_site/print_1-50/Road_Rail_Railcar_Mover_1-50.stl",
+      "folder": "construction_site/print_1-50",
+      "ext": "stl",
+      "type": "STL",
+      "size": 3461384,
+      "modified": "2026-11-04T21:51:27+00:00",
+      "preview": "construction_site/print_1-50/Road_Rail_Railcar_Mover_1-50_preview.png"
+    },
+    {
+      "name": "Road Rail Railcar Mover 1 50 painted",
+      "file": "Road_Rail_Railcar_Mover_1-50_painted.3mf",
+      "path": "construction_site/print_1-50/Road_Rail_Railcar_Mover_1-50_painted.3mf",
+      "folder": "construction_site/print_1-50",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 666002,
+      "modified": "2026-11-04T21:51:27+00:00",
+      "preview": "construction_site/print_1-50/Road_Rail_Railcar_Mover_1-50_painted_preview.png"
     },
     {
       "name": "Shipping Container 20ft 1 50",
@@ -1230,7 +1736,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 108855,
-      "modified": "2026-11-04T17:03:46+00:00",
+      "modified": "2026-11-04T17:07:30+00:00",
       "preview": "construction_site/print_1-50/Shipping_Container_20ft_1-50_painted_preview.png"
     },
     {
@@ -1252,7 +1758,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 228220,
-      "modified": "2026-11-04T17:03:41+00:00",
+      "modified": "2026-11-04T17:07:30+00:00",
       "preview": "construction_site/print_1-50/Skid_Steer_Loader_1-50_painted_preview.png"
     },
     {
@@ -1263,7 +1769,7 @@
       "ext": "stl",
       "type": "STL",
       "size": 7221184,
-      "modified": "2026-11-03T18:56:49+00:00",
+      "modified": "2026-11-04T17:07:30+00:00",
       "preview": "construction_site/print_1-50/Solar_Arrow_Board_Trailer_1-50_preview.png"
     },
     {
@@ -1274,7 +1780,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 1390972,
-      "modified": "2026-11-04T17:06:29+00:00",
+      "modified": "2026-11-04T17:07:30+00:00",
       "preview": "construction_site/print_1-50/Solar_Arrow_Board_Trailer_1-50_painted_preview.png"
     },
     {
@@ -1296,8 +1802,30 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 12550,
-      "modified": "2026-11-04T17:04:20+00:00",
+      "modified": "2026-11-04T17:07:30+00:00",
       "preview": "construction_site/print_1-50/Steel_Beam_Bundle_W12x26_1-50_painted_preview.png"
+    },
+    {
+      "name": "Steel Pipe Pile Stack 1 50",
+      "file": "Steel_Pipe_Pile_Stack_1-50.stl",
+      "path": "construction_site/print_1-50/Steel_Pipe_Pile_Stack_1-50.stl",
+      "folder": "construction_site/print_1-50",
+      "ext": "stl",
+      "type": "STL",
+      "size": 635984,
+      "modified": "2026-11-04T21:51:27+00:00",
+      "preview": "construction_site/print_1-50/Steel_Pipe_Pile_Stack_1-50_preview.png"
+    },
+    {
+      "name": "Steel Pipe Pile Stack 1 50 painted",
+      "file": "Steel_Pipe_Pile_Stack_1-50_painted.3mf",
+      "path": "construction_site/print_1-50/Steel_Pipe_Pile_Stack_1-50_painted.3mf",
+      "folder": "construction_site/print_1-50",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 122516,
+      "modified": "2026-11-04T21:51:27+00:00",
+      "preview": "construction_site/print_1-50/Steel_Pipe_Pile_Stack_1-50_painted_preview.png"
     },
     {
       "name": "Traffic Drum Channelizer 1 50",
@@ -1318,7 +1846,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 129928,
-      "modified": "2026-11-04T17:06:49+00:00",
+      "modified": "2026-11-04T17:07:30+00:00",
       "preview": "construction_site/print_1-50/Traffic_Drum_Channelizer_1-50_painted_preview.png"
     },
     {
@@ -1340,7 +1868,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 564163,
-      "modified": "2026-11-04T17:06:36+00:00",
+      "modified": "2026-11-04T17:07:30+00:00",
       "preview": "construction_site/print_1-50/Trench_Shield_8x20ft_1-50_painted_preview.png"
     },
     {
@@ -1362,8 +1890,52 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 147648,
-      "modified": "2026-11-04T17:04:03+00:00",
+      "modified": "2026-11-04T17:07:30+00:00",
       "preview": "construction_site/print_1-50/Type_III_Barricade_Road_Closed_1-50_painted_preview.png"
+    },
+    {
+      "name": "Vacuum Road Sweeper 1 50",
+      "file": "Vacuum_Road_Sweeper_1-50.stl",
+      "path": "construction_site/print_1-50/Vacuum_Road_Sweeper_1-50.stl",
+      "folder": "construction_site/print_1-50",
+      "ext": "stl",
+      "type": "STL",
+      "size": 5285384,
+      "modified": "2026-11-04T21:51:27+00:00",
+      "preview": "construction_site/print_1-50/Vacuum_Road_Sweeper_1-50_preview.png"
+    },
+    {
+      "name": "Vacuum Road Sweeper 1 50 painted",
+      "file": "Vacuum_Road_Sweeper_1-50_painted.3mf",
+      "path": "construction_site/print_1-50/Vacuum_Road_Sweeper_1-50_painted.3mf",
+      "folder": "construction_site/print_1-50",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 1069390,
+      "modified": "2026-11-04T21:51:27+00:00",
+      "preview": "construction_site/print_1-50/Vacuum_Road_Sweeper_1-50_painted_preview.png"
+    },
+    {
+      "name": "Vibratory Pile Hammer 1 50",
+      "file": "Vibratory_Pile_Hammer_1-50.stl",
+      "path": "construction_site/print_1-50/Vibratory_Pile_Hammer_1-50.stl",
+      "folder": "construction_site/print_1-50",
+      "ext": "stl",
+      "type": "STL",
+      "size": 3430184,
+      "modified": "2026-11-04T21:51:27+00:00",
+      "preview": "construction_site/print_1-50/Vibratory_Pile_Hammer_1-50_preview.png"
+    },
+    {
+      "name": "Vibratory Pile Hammer 1 50 painted",
+      "file": "Vibratory_Pile_Hammer_1-50_painted.3mf",
+      "path": "construction_site/print_1-50/Vibratory_Pile_Hammer_1-50_painted.3mf",
+      "folder": "construction_site/print_1-50",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 716304,
+      "modified": "2026-11-04T21:51:27+00:00",
+      "preview": "construction_site/print_1-50/Vibratory_Pile_Hammer_1-50_painted_preview.png"
     },
     {
       "name": "Vibratory Soil Roller 84in 1 50",
@@ -1384,7 +1956,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 875431,
-      "modified": "2026-11-04T17:05:31+00:00",
+      "modified": "2026-11-04T17:07:30+00:00",
       "preview": "construction_site/print_1-50/Vibratory_Soil_Roller_84in_1-50_painted_preview.png"
     },
     {
@@ -1406,8 +1978,30 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 119016,
-      "modified": "2026-11-04T17:06:46+00:00",
+      "modified": "2026-11-04T17:07:30+00:00",
       "preview": "construction_site/print_1-50/Water_Filled_Barrier_6ft_1-50_painted_preview.png"
+    },
+    {
+      "name": "Water Truck 4000gal 1 50",
+      "file": "Water_Truck_4000gal_1-50.stl",
+      "path": "construction_site/print_1-50/Water_Truck_4000gal_1-50.stl",
+      "folder": "construction_site/print_1-50",
+      "ext": "stl",
+      "type": "STL",
+      "size": 4716384,
+      "modified": "2026-11-04T18:59:05+00:00",
+      "preview": "construction_site/print_1-50/Water_Truck_4000gal_1-50_preview.png"
+    },
+    {
+      "name": "Water Truck 4000gal 1 50 painted",
+      "file": "Water_Truck_4000gal_1-50_painted.3mf",
+      "path": "construction_site/print_1-50/Water_Truck_4000gal_1-50_painted.3mf",
+      "folder": "construction_site/print_1-50",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 926004,
+      "modified": "2026-11-04T18:59:05+00:00",
+      "preview": "construction_site/print_1-50/Water_Truck_4000gal_1-50_painted_preview.png"
     },
     {
       "name": "Wheel Loader 3yd 1 50",
@@ -1428,7 +2022,7 @@
       "ext": "3mf",
       "type": "3MF",
       "size": 1320412,
-      "modified": "2026-11-04T17:04:41+00:00",
+      "modified": "2026-11-04T17:07:30+00:00",
       "preview": "construction_site/print_1-50/Wheel_Loader_3yd_1-50_painted_preview.png"
     },
     {

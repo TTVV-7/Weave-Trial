@@ -589,7 +589,7 @@ def build(m):
     h0, h1 = p_end + t_end * 120, p_end + t_end * 470          # D-grip over the tube
     h0[2] = h1[2] = 93.0
     add("dig_tube_handle", SAFETY, rods([h0 + up * 60, h0 + up * 260, h1 + up * 260, h1 + up * 60], m.r(24)))
-    add("dig_tube_collar", BLACK, rod(p_end + t_end * 20 + np.array((0, 0, -25)), p_end + t_end * 110 + np.array((0, 0, -25)), 112, 16))
+    add("dig_tube_collar", BLACK, rod(p_end + t_end * 20 + np.array((0, 0, -5)), p_end + t_end * 110 + np.array((0, 0, -5)), 112, 16))
 
     # merge the many small same-finish details into a few parts, to keep the web twin light
     out = {}

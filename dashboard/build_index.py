@@ -61,11 +61,24 @@ def find_preview(path: Path) -> str | None:
     return None
 
 
+def git_ignored() -> set[str]:
+    """Files git ignores (local build output, staging folders): never part of the library."""
+    try:
+        out = subprocess.run(["git", "ls-files", "--others", "--ignored", "--exclude-standard"],
+                             cwd=ROOT, capture_output=True, text=True, check=True).stdout
+    except (OSError, subprocess.CalledProcessError):
+        return set()
+    return set(out.splitlines())
+
+
 def scan() -> list[dict]:
     models = []
+    ignored = git_ignored()
     for path in sorted(ROOT.rglob("*")):
         parts = path.relative_to(ROOT).parts
         if any(part in SKIP_DIRS for part in parts) or parts[0] in SKIP_TOP_DIRS:
+            continue
+        if path.relative_to(ROOT).as_posix() in ignored:
             continue
         kind = TYPES.get(path.suffix.lower())
         if kind is None or not path.is_file():

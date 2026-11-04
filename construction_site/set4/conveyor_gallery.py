@@ -358,7 +358,7 @@ def bent(m):
     ped, grout, plates, bolts, nuts = [], [], [], [], []
     for s in (1, -1):
         y = s * YB0
-        ped.append(box(XB - 550, XB + 550, y - 550, y + 550, -100, 525))
+        ped.append(box(XB - 550, XB + 550, y - 550, y + 550, -2, 525))   # 2 mm into the ground, like every other base
         ped.append(frustum((XB - 550, XB + 550, y - 550, y + 550, 520), (XB - 500, XB + 500, y - 500, y + 500, 600)))
         grout.append(box(XB - 380, XB + 380, y - 380, y + 380, 595, 630))
         pt = m.t(40)

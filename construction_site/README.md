@@ -1,6 +1,6 @@
 # Construction Site Assets
 
-39 construction-site models built to real-world dimensions, for site planning, layout drawings, visualisation and 3D printing: the original 13 (01–13), set 2 (14–26) and set 3 (27–39). Sets 2 and 3 also come as print-ready 1:50 STLs.
+52 construction-site models built to real-world dimensions, for site planning, layout drawings, visualisation and 3D printing: the original 13 (01–13), set 2 (14–26), set 3 (27–39) and set 4 (40–52, port and bulk-terminal works). Sets 2–4 also come as print-ready 1:50 STLs and painted multi-colour 3MFs.
 
 ## Formats
 
@@ -132,3 +132,37 @@ Every file is one closed, connected body with a flat base, at least 0.8 mm thick
 - **Supports:** see the listing for each asset in [LISTINGS.md](LISTINGS.md).
 
 All set 3 assets are generic. They follow published class figures and standards (MUTCD drums and arrow panels, ASTM C76 pipe, 23.5R25 / 19.5L-24 tyre sizes) and don't copy a particular manufacturer's design. The dozer, for example, uses a conventional oval track frame.
+
+---
+
+## Set 4 (40–52): port and bulk-terminal works
+
+![the whole set together](Construction_Set_4_collection.png)
+
+Equipment for a rail-fed dry-bulk terminal and its construction works: dust control, piling, conveyors, rail and track-out. Chosen from what the [Neptune Terminals twin](NEPTUNE_INTEGRATION.md) and sets 1–3 were missing. Same formats and print rules as sets 2 and 3, including the painted 3MF; one module per asset in `set4/`.
+
+| # | Asset | Full size (L × W × H) | At 1:50 (mm) | Description | Suggested tags |
+|---|---|---|---|---|---|
+| 40 | Water Truck (4,000 gal dust control) | 31.9 × 10.0 × 11.1 ft | 195 × 61 × 68 | 6x4 conventional water truck for dust control: white cab, yellow 4,000 US gal elliptical tank with baffle ribs, catwalk and handrails, pump deck with PTO pump and manifold, cab-top water cannon, hose reel, rear spray bar and side nozzles, 22.5 in wheels on a tandem bogie. | water-truck, dust-suppression, water-tanker, haul-road |
+| 41 | Hydrovac Excavation Truck | 36.5 × 12.5 × 12.6 ft | 222 × 76 × 76 | Tridem hydrovac (vacuum excavation) truck in fleet red: blower module with silencer, 12 m3 debris tank with full-diameter rear door, rams and rim clamps, saddle water tanks, wash reels, and a two-stage boom laid over the cab carrying the 8 in suction tube, with the hose on the ground. | hydrovac, vacuum-excavation, hydro-excavation, utilities |
+| 42 | Concrete Boom Pump Truck (38 m, stowed) | 38.3 × 25.9 × 12.9 ft | 234 × 158 × 79 | 8x4 truck-mounted 38 m concrete boom pump, boom folded in a Z/R package over the cab, outriggers deployed on pads: tapered box sections with knuckle rams, the delivery line clamped along every section, turret, hopper with grille, S-valve, water tank and controls. | concrete-pump, boom-pump, pump-truck, foundations |
+| 43 | Fuel and Lube Service Truck | 31.7 × 10.0 × 11.4 ft | 193 × 61 × 69 | 6x4 fuel and lube service truck: compartmented fuel tank, enclosed lube module with its roll-up door open on five hose reels, filters and pumps, rear knuckle crane, ladder and catwalk, hazard placards and fire extinguisher. | fuel-truck, lube-truck, service-truck, field-service |
+| 44 | Vacuum Road Sweeper Truck | 28.4 × 10.1 × 10.5 ft | 173 × 61 × 64 | Cab-over vacuum road sweeper: debris hopper with rear door, water tanks, auxiliary engine and fan housing, suction pick-up head between the axles, two angled gutter brooms, wander hose, spray bar and orange-and-white rear chevrons. | road-sweeper, street-sweeper, vacuum-sweeper, track-out |
+| 45 | Vibratory Pile Hammer with Power Pack | 25.9 × 8.5 × 11.7 ft | 158 × 52 × 71 | Vibratory pile driver/extractor standing on timber cribbing between lifts (suspension housing on rubber isolators, eccentric gearbox, sheet-pile clamp, drive motors) and its diesel hydraulic power pack, joined by the hose bundle on the ground. | pile-driver, vibratory-hammer, sheet-piling, power-pack |
+| 46 | Steel Pipe Pile Stack (36 in, 12 m) | 39.7 × 11.2 × 11.0 ft | 242 × 68 × 67 | Six 36 in (914 mm) x 12 m open-ended steel pipe piles stacked 3-2-1 on dunnage with chocks: weld-prep bevels, weld seams, pitching padeyes and painted heat-number patches. | pipe-piles, steel-piles, marine-piling, wharf |
+| 47 | Radial Stacking Conveyor (36 in x 100 ft) | 100.8 × 16.3 × 37.9 ft | 616 × 99 × 231 | Portable radial stacking conveyor, 36 in x 100 ft, raised to 19 degrees (11 m discharge): box-lattice truss, troughed belt on idlers, feed hopper and skirting on a pivot base, head pulley with hood and drive, and a wheeled radial undercarriage. | radial-stacker, stacking-conveyor, stockpile, bulk-handling |
+| 48 | Conveyor Gallery Module on Trestle Bent | 41.2 × 19.4 × 29.9 ft | 251 × 118 × 180 | 12 m module of an elevated covered 1,200 mm belt conveyor: Pratt side trusses, troughing and return idlers, hoop covers, walkway with grating and handrails, on a splayed trestle bent with a concrete pedestal. Modules placed every 12 m form a continuous gallery. | conveyor, conveyor-gallery, belt-conveyor, bulk-terminal |
+| 49 | Coal Rail Car (rotary-dump gondola) | 53.1 × 10.7 × 13.9 ft | 324 × 66 × 83 | 53 ft aluminium rotary-dump coal gondola with a tub body, side posts, top chords, rotary-coupler end marks and two 3-piece trucks on 36 in wheels, heaped with coal. | coal-car, gondola, rail-car, unit-train |
+| 50 | Road-Rail Railcar Mover | 22.3 × 9.7 × 10.7 ft | 136 × 59 × 65 | Road-rail railcar mover on a short length of standard-gauge track, rail gear lowered: four rubber tyres on the rail heads, swing-arm rail wheels at each end, centre cab glazed all round, couplers, air tanks, handrails and chevron end plates. | railcar-mover, shunter, road-rail, rail-yard |
+| 51 | Dust Suppression Fog Cannon (trailer) | 12.1 × 6.8 × 10.9 ft | 74 × 42 × 66 | Trailer-mounted dust-suppression fog cannon, 60 m throw, set up for work: barrel elevated 30 degrees on a slewing yoke with a 24-nozzle ring and straightener vanes, power pack, outrigger stands, drawbar and jockey wheel. | fog-cannon, mist-cannon, dust-control, demolition |
+| 52 | Drive-Through Wheel Wash Station | 40.2 × 33.1 × 11.9 ft | 245 × 202 × 72 | 12 m drive-through wheel wash: entry and exit ramps with cleats, a bath with grating panels and wheel-guide kerbs, low spray bars, splash screens, a settlement tank with sludge auger and skip, a pump cabinet and a GO/STOP light. | wheel-wash, track-out, site-gate, dust-control |
+
+### Printing set 4
+
+Every file is one closed, connected body with a flat base, at least 0.8 mm thick everywhere at 1:50, with a painted 3MF in up to four filaments. Some set 4 models are large at 1:50:
+
+- **The radial stacker is 615 mm long.** Rebuild it at 1:100 with `python construction_site/build_assets.py radial_stacker --scale 100` (thin members are re-thickened for that scale, into `print_1-100/`), or split the truss.
+- **The rail car is 324 mm**, the conveyor gallery 251 × 118 mm, the wheel wash 245 × 202 mm and the pipe pile stack 242 mm: they need a 250–330 mm bed, or scale them down.
+- The trucks, pile hammer, railcar mover and fog cannon fit a 256 mm bed. Resin is best for their handrails, mirrors and ladders.
+
+All set 4 assets are generic: typical class dimensions and standard sizes, no manufacturer's names, marks or distinctive styling; fleet numbers and reporting marks are invented.

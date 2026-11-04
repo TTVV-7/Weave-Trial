@@ -117,7 +117,7 @@ def main() -> int:
         thumbnail(shot, lib / "thumbs" / f"{i['id']}.webp")
         (x0, y0, z0), (x1, y1, z1) = info["min"], info["max"]
         dims = {"length": round(x1 - x0, 2), "width": round(z1 - z0, 2), "height": round(y1 - y0, 2)}
-        if abs(y0) > 0.02:
+        if abs(y0) > max(0.02, i.get("below_ground_m", 0)):
             problems.append(f"{i['id']}: the model's base is at y = {y0:.3f} m, not on the ground")
         entry = {
             "id": i["id"], "name": i["name"], "category": i["category"],
