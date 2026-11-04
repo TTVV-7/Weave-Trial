@@ -7,8 +7,8 @@ and the three decisions that are yours to make first. The twin was surveyed read
 
 **In short:** 39 of the 52 models go in. 35 are new library items and 4 replace weaker existing ones.
 The other 13 are left out because the twin already has a good, lighter equivalent. Each model is
-slimmed for the web on the way in. The 26 from packs 1–3 go from 41 MB to **9 MB**, and from about
-4,000 draw calls to one or two each. They land as ordinary entries in the twin's own library format,
+slimmed for the web on the way in. All 39 go from 68 MB to **14.5 MB**, and from thousands of draw
+calls to one or two each. They land as ordinary entries in the twin's own library format,
 so placing, rotating, Rows, the Show panel, saving, sharing and undo all work with **no app code
 changes**.
 
@@ -136,24 +136,24 @@ y = 0, footprint centred, front along +X, which is `front: "+x"`, as 10 existing
 draws a Row as one instanced mesh per mesh in the model. Unmerged, a row of backhoes would cost 153
 draw calls per row; merged, it costs one or two.
 
-**Measured on packs 1–3:**
+**Measured on all 39 models going in:**
 
 | | Size | Draw calls |
 |---|---|---|
-| As built | 41.2 MB | ~4,000 |
-| Slimmed for the twin | **9.0 MB** | 1–2 per model |
+| As built | 68.3 MB | thousands |
+| Slimmed for the twin | **14.5 MB** | 1–2 per model |
 
-The twin's library is 35 MB today. All 39 models would add about 12–14 MB once Pack 4 is in.
+The twin's library is 35 MB today; all 39 models add 14.5 MB.
 
 ## Tried on a copy of the twin
 
-Packs 1–3 were staged, then merged into a throwaway copy of the twin (`a264638`) with
+Packs 1–3, and then all 39 models with pack 4, were staged and merged into a throwaway copy of the twin (`a264638`) with
 `merge-into-twin.mjs`. The real repository was not changed.
 
 | Check | Before merging | After merging |
 |---|---|---|
-| `scripts/test-library.mjs` (new; every library entry complete and the right size) | 37 / 37 | 59 / 59 |
-| `scripts/test-construction-ui.mjs` (new; each pack model has a card, loads with no page error, stands on its base at its card size) | — | 3 / 3, all 26 models |
+| `scripts/test-library.mjs` (new; every library entry complete and the right size) | 37 / 37 | 59 / 59 with packs 1–3; **72 / 72 with all 39** |
+| `scripts/test-construction-ui.mjs` (new; each pack model has a card, loads with no page error, stands on its base at its card size) | — | 3 / 3 with packs 1–3; **3 / 3 with all 39** |
 | `npm run test:rows-ui` | 16 / 16 | 16 / 16 |
 | `npm run test:site-items-ui` | 3 / 3 | 3 / 3 |
 | `npm run test:plant-ui` | 4 / 4 | 4 / 4 |
