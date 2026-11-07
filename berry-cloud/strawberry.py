@@ -177,7 +177,16 @@ def ellipsoid(c, x, z, axes):
     return s.transform(M.tolist())
 
 
-def strawberry():
+def inner_solid(body, wall):
+    """The cavity: the smooth body pushed in along its normals by the wall
+    thickness, with a floor left above the flat foot."""
+    inner = trimesh.Trimesh(body.vertices - body.vertex_normals * wall, body.faces)
+    floor = m3.Manifold.cube((400, 400, FLAT + wall), True).translate((0, 0, (FLAT + wall) / 2))
+    return man(inner) - floor
+
+
+def strawberry(wall=None):
+    """The three parts, solid, or hollow with a `wall`-mm shell."""
     body = body_solid()
     pts, nrm, down = seed_frames(body)
     pits, seeds = [], []
@@ -191,6 +200,8 @@ def strawberry():
     leaves = leaves_solid()
     flat = m3.Manifold.cube((400, 400, FLAT), True).translate((0, 0, FLAT / 2 - 0.001))
     red = man(body) - pits - seeds - leaves - flat
+    if wall:
+        red = red - inner_solid(body, wall)
     seeds = seeds - flat
     shift = (0, 0, -FLAT)
     return {"strawberry-body": drop_slivers(tri(red.translate(shift))),

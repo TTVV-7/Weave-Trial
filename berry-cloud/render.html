@@ -3,6 +3,7 @@
 <script type="module">
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+import {STLLoader} from 'three/addons/loaders/STLLoader.js';
 import {RoomEnvironment} from 'three/addons/environments/RoomEnvironment.js';
 const q=new URLSearchParams(location.search), view=q.get('view')||'group';
 const W=+q.get('w')||1600,H=+q.get('h')||1000;
@@ -18,7 +19,9 @@ Object.assign(sun.shadow.camera,{left:-600,right:600,top:600,bottom:-600,near:1,
 s.add(sun);
 const floor=new THREE.Mesh(new THREE.PlaneGeometry(5000,5000),new THREE.ShadowMaterial({opacity:0.18})); floor.receiveShadow=true; s.add(floor);
 s.up=new THREE.Vector3(0,0,1);
-new GLTFLoader().load('shapes.glb',g=>{
+const SPLIT=['splitberry','splitcloud'].includes(view), PLATE=view.startsWith('plate');
+r.localClippingEnabled=true;
+if(PLATE) plate(); else new GLTFLoader().load(SPLIT?'halves.glb':'shapes.glb',g=>{
   const get=n=>{const o=g.scene.getObjectByName(n); o.traverse(c=>{if(c.isMesh){c.castShadow=true;c.receiveShadow=true;}}); return o;};
   g.scene.rotation.x=0; // glb is Y-up converted; undo
   const root=new THREE.Group(); s.add(root);
@@ -38,10 +41,39 @@ new GLTFLoader().load('shapes.glb',g=>{
     target=new THREE.Vector3(0,0,170); cam.position.set(-120,-300,560);
   } else if(view==='cloud'){
     add('cloud',0,0,0); target=new THREE.Vector3(0,0,70); cam.position.set(-110,-640,200);
+  } else if(view==='splitberry'){
+    const clip=[new THREE.Plane(new THREE.Vector3(0,1,0),0)];
+    g.scene.traverse(c=>{if(c.isMesh&&c.name.startsWith('strawberry')){c.material=c.material.clone();c.material.side=THREE.DoubleSide;c.material.clippingPlanes=clip;c.material.clipShadows=true;}});
+    ['body','seeds'].forEach(n=>add('strawberry-'+n+'-bottom',0,0,0));
+    add('strawberry-ring',0,0,55);
+    ['body','seeds','leaves'].forEach(n=>add('strawberry-'+n+'-top',0,0,120));
+    target=new THREE.Vector3(0,0,160); cam.position.set(-300,-720,420);
+  } else if(view==='splitcloud'){
+    g.scene.traverse(c=>{if(c.isMesh){c.material=c.material.clone();c.material.side=THREE.DoubleSide;}});
+    add('cloud-back',0,90,0); add('cloud-ring',0,0,0); add('cloud-front',0,-90,0);
+    target=new THREE.Vector3(0,0,60); cam.position.set(-560,-480,400);
   } else if(view==='drop'){
     add('raindrop',0,0,0); target=new THREE.Vector3(0,0,32); cam.position.set(0,-260,90);
   }
   cam.up.set(0,0,1); cam.lookAt(target);
   r.render(s,cam); document.title='done';
 });
+
+function plate(){
+  const names={plateberrybottom:['strawberry-body-bottom','strawberry-seeds-bottom'],
+    plateberrytop:['strawberry-body-top','strawberry-seeds-top','strawberry-leaves-top'],
+    platecloudfront:['cloud-front'],platecloudback:['cloud-back']}[view];
+  const col=n=>n.includes('seeds')?'#f2c230':n.includes('leaves')?'#2f8a2f':n.includes('cloud')?'#f4f6fa':'#c4142c';
+  const bed=new THREE.Mesh(new THREE.BoxGeometry(270,270,2),new THREE.MeshStandardMaterial({color:'#3a3f47',roughness:0.8}));
+  bed.position.z=-1; bed.receiveShadow=true; s.add(bed);
+  const grid=new THREE.GridHelper(270,9,0x5a616b,0x5a616b); grid.rotation.x=Math.PI/2; grid.position.z=0.2; s.add(grid);
+  let left=names.length;
+  names.forEach(n=>new STLLoader().load('stl/print/'+n+'.stl',geo=>{
+    geo.computeVertexNormals();
+    const m=new THREE.Mesh(geo,new THREE.MeshStandardMaterial({color:col(n),roughness:0.55}));
+    m.castShadow=m.receiveShadow=true; s.add(m);
+    if(--left===0){const cam=new THREE.PerspectiveCamera(28,W/H,1,10000); cam.up.set(0,0,1);
+      cam.position.set(-330,-700,640); cam.lookAt(0,0,30); r.render(s,cam); document.title='done';}
+  }));
+}
 </script></body></html>
