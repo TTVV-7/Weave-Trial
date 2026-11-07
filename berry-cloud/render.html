@@ -26,16 +26,16 @@ new GLTFLoader().load('shapes.glb',g=>{
   // trimesh glb keeps Z-up coords inside; GLTFLoader adds nothing, so meshes are Z-up already
   let cam=new THREE.PerspectiveCamera(28,W/H,1,10000), target;
   if(view==='group'){
-    add('strawberry-body',-230,0,0); add('strawberry-leaves',-230,0,0);
+    ['body','seeds','leaves'].forEach(n=>add('strawberry-'+n,-230,0,0));
     add('cloud',150,40,0);
     [[-20,-170],[50,-200],[120,-160],[190,-210],[260,-170],[330,-195]].forEach(([x,y],i)=>add('raindrop',x,y,0,i));
     target=new THREE.Vector3(30,-40,90); cam.position.set(60,-1250,520);
   } else if(view==='berry'){
-    add('strawberry-body',0,0,0); add('strawberry-leaves',0,0,0);
-    target=new THREE.Vector3(0,0,110); cam.position.set(0,-780,330);
+    ['body','seeds','leaves'].forEach(n=>add('strawberry-'+n,0,0,0));
+    target=new THREE.Vector3(0,0,105); cam.position.set(-60,-760,300);
   } else if(view==='berrytop'){
-    add('strawberry-body',0,0,0); add('strawberry-leaves',0,0,0);
-    target=new THREE.Vector3(0,0,150); cam.position.set(-200,-420,650);
+    ['body','seeds','leaves'].forEach(n=>add('strawberry-'+n,0,0,0));
+    target=new THREE.Vector3(0,0,170); cam.position.set(-120,-300,560);
   } else if(view==='cloud'){
     add('cloud',0,0,0); target=new THREE.Vector3(0,0,70); cam.position.set(-110,-640,200);
   } else if(view==='drop'){

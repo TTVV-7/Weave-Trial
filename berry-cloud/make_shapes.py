@@ -11,6 +11,7 @@ import numpy as np
 import trimesh
 from shapely.geometry import Polygon
 import manifold3d as m3
+from strawberry import strawberry
 
 HERE = Path(__file__).parent
 OUT = HERE / "stl"
@@ -54,58 +55,6 @@ def from_manifold(man):
     return trimesh.Trimesh(m.vert_properties[:, :3], m.tri_verts)
 
 
-# ---- strawberry -------------------------------------------------------------
-def berry_profile():
-    """(r, z) of the berry: rounded tip at the bottom, widest ~60 % up,
-    broad soft shoulders under the leaves."""
-    u = np.linspace(0, 1, 200)
-    peak = 0.6
-    p = math.log(0.5) / math.log(peak)
-    r = (BERRY_W / 2) * np.sin(np.pi * u ** p) ** 0.42
-    tip = np.clip(u / 0.12, 0, 1)            # round off the tip
-    r *= np.sqrt(tip * (2 - tip)) ** 0.7
-    r[0] = r[-1] = 0
-    return r, u * BERRY_H
-
-
-def strawberry_body():
-    r, z = berry_profile()
-    return revolve(list(zip(r, z)))
-
-
-def berry_top_z(rho):
-    """Height of the berry's upper surface at distance rho from the axis."""
-    r, z = berry_profile()
-    i = np.argmax(r)
-    ru, zu = r[i:][::-1], z[i:][::-1]        # top half, r increasing
-    return np.interp(rho, ru, zu)
-
-
-def leaf_top():
-    """Seven pointed leaves lying on the berry's shoulders, plus a short stem."""
-    n, L, T = 7, 78.0, 3.0
-    pts = []
-    for i in range(n * 24):
-        a = 2 * np.pi * i / (n * 24)
-        ph = (i % 24) / 24                       # 0..1 across one leaf
-        w = np.sin(np.pi * ph) ** 1.3            # pointed tip in the middle of each leaf
-        r = 18 + (L - 18) * w
-        pts.append((r * np.cos(a), r * np.sin(a)))
-    leaf = trimesh.creation.extrude_polygon(Polygon(pts), T)
-    for _ in range(4):
-        leaf = leaf.subdivide()
-    v = leaf.vertices.copy()
-    rho = np.hypot(v[:, 0], v[:, 1])
-    lift = 6 * np.clip((rho - 50) / 28, 0, 1) ** 2   # tips curl up off the berry
-    v[:, 2] += berry_top_z(rho) - 0.8 + lift
-    leaf = trimesh.Trimesh(v, leaf.faces)
-    stem = trimesh.creation.cylinder(radius=6, height=26, sections=48)
-    stem.apply_translation((0, 0, BERRY_H + 11))
-    cap = trimesh.creation.cylinder(radius=12, height=6, sections=64)
-    cap.apply_translation((0, 0, BERRY_H + 1))
-    return from_manifold(to_manifold(leaf) + to_manifold(stem) + to_manifold(cap))
-
-
 # ---- cloud -----------------------------------------------------------------
 def cloud():
     """Puffs unioned together, squashed front-to-back, flat underside."""
@@ -145,9 +94,12 @@ def raindrop():
 
 
 if __name__ == "__main__":
+    berry, n_seeds = strawberry()
+    print(f"strawberry: {n_seeds} seeds")
     parts = {
-        "strawberry-body": (strawberry_body(), "#c4142c"),
-        "strawberry-leaves": (leaf_top(), "#2f8a2f"),
+        "strawberry-body": (berry["strawberry-body"], "#c4142c"),
+        "strawberry-seeds": (berry["strawberry-seeds"], "#f2c230"),
+        "strawberry-leaves": (berry["strawberry-leaves"], "#2f8a2f"),
         "cloud": (cloud(), "#f4f6fa"),
         "raindrop": (raindrop(), "#2a86d0"),
     }

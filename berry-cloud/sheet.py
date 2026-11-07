@@ -13,7 +13,7 @@ bg = (243, 239, 233)
 W = 1600
 group = crop("group", (200, 220, 1420, 800))
 tiles = [
-    ("Strawberry", "9\" tall × 7.5\" wide · red with green leafy top", crop("berry", (450, 150, 1150, 830))),
+    ("Strawberry", "8.8\" tall × 7.5\" wide · red, yellow seeds, green leaves", crop("berry", (450, 150, 1150, 830))),
     ("Cloud", "11.4\" wide × 5.4\" tall × 4.8\" deep · white", crop("cloud", (250, 200, 1350, 820))),
     ("Raindrop", "2.6\" long × 1.6\" wide · blue", crop("drop", (450, 120, 1150, 900))),
 ]
