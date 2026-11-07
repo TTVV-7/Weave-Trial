@@ -1,0 +1,47 @@
+<!doctype html><html><body style="margin:0;background:#fff">
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+<script type="module">
+import * as THREE from 'three';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+import {RoomEnvironment} from 'three/addons/environments/RoomEnvironment.js';
+const q=new URLSearchParams(location.search), view=q.get('view')||'group';
+const W=+q.get('w')||1600,H=+q.get('h')||1000;
+const r=new THREE.WebGLRenderer({antialias:true,preserveDrawingBuffer:true});
+r.setSize(W,H); r.shadowMap.enabled=true; r.shadowMap.type=THREE.PCFSoftShadowMap;
+r.toneMapping=THREE.ACESFilmicToneMapping; r.outputColorSpace=THREE.SRGBColorSpace;
+document.body.appendChild(r.domElement);
+const s=new THREE.Scene(); s.background=new THREE.Color('#f3efe9');
+s.environment=new THREE.PMREMGenerator(r).fromScene(new RoomEnvironment(),0.04).texture; s.environmentIntensity=0.9;
+s.add(new THREE.HemisphereLight(0xffffff,0xd8cfc4,0.7));
+const sun=new THREE.DirectionalLight(0xffffff,1.6); sun.position.set(-450,-700,900); sun.castShadow=true;
+Object.assign(sun.shadow.camera,{left:-600,right:600,top:600,bottom:-600,near:1,far:3000}); sun.shadow.mapSize.set(4096,4096); sun.shadow.radius=6;
+s.add(sun);
+const floor=new THREE.Mesh(new THREE.PlaneGeometry(5000,5000),new THREE.ShadowMaterial({opacity:0.18})); floor.receiveShadow=true; s.add(floor);
+s.up=new THREE.Vector3(0,0,1);
+new GLTFLoader().load('shapes.glb',g=>{
+  const get=n=>{const o=g.scene.getObjectByName(n); o.traverse(c=>{if(c.isMesh){c.castShadow=true;c.receiveShadow=true;}}); return o;};
+  g.scene.rotation.x=0; // glb is Y-up converted; undo
+  const root=new THREE.Group(); s.add(root);
+  const add=(n,x,y,z,rz=0)=>{const o=get(n).clone(); o.position.set(x,y,z); o.rotation.z=rz; root.add(o); return o;};
+  // trimesh glb keeps Z-up coords inside; GLTFLoader adds nothing, so meshes are Z-up already
+  let cam=new THREE.PerspectiveCamera(28,W/H,1,10000), target;
+  if(view==='group'){
+    add('strawberry-body',-230,0,0); add('strawberry-leaves',-230,0,0);
+    add('cloud',150,40,0);
+    [[-20,-170],[50,-200],[120,-160],[190,-210],[260,-170],[330,-195]].forEach(([x,y],i)=>add('raindrop',x,y,0,i));
+    target=new THREE.Vector3(30,-40,90); cam.position.set(60,-1250,520);
+  } else if(view==='berry'){
+    add('strawberry-body',0,0,0); add('strawberry-leaves',0,0,0);
+    target=new THREE.Vector3(0,0,110); cam.position.set(0,-780,330);
+  } else if(view==='berrytop'){
+    add('strawberry-body',0,0,0); add('strawberry-leaves',0,0,0);
+    target=new THREE.Vector3(0,0,150); cam.position.set(-200,-420,650);
+  } else if(view==='cloud'){
+    add('cloud',0,0,0); target=new THREE.Vector3(0,0,70); cam.position.set(-110,-640,200);
+  } else if(view==='drop'){
+    add('raindrop',0,0,0); target=new THREE.Vector3(0,0,32); cam.position.set(0,-260,90);
+  }
+  cam.up.set(0,0,1); cam.lookAt(target);
+  r.render(s,cam); document.title='done';
+});
+</script></body></html>
