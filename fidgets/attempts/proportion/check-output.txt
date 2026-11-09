@@ -1,0 +1,29 @@
+test strip: 3 separate bodies, tightest gap as printed 0.35 mm
+   leg              full circle      tightest gap 0.35 mm
+   body joint       +20/-20 deg      tightest gap 0.27 mm
+   curled and S-bent with every joint at its limit: nothing collides
+   every part is held in whichever way it is pulled
+   the flank is flat round every leg socket
+   overhang past 45 deg 0.00 mm2; nothing below the bed
+   thinnest walls: leg pin's hold in its socket 0.81, body under the leg socket 0.96, joint ring wall 1.40, leg plate 1.60
+   pins: body pin neck 3.00, leg pin 2.50
+pocket-capybara-test  26.0 x 17.1 x 15.0 mm  4.3 cm3  4598 tris
+
+pocket capybara: 10 separate bodies, tightest gap as printed 0.35 mm
+   front left leg   full circle      tightest gap 0.35 mm
+   front right leg  full circle      tightest gap 0.35 mm
+   hind left leg    full circle      tightest gap 0.35 mm
+   hind right leg   full circle      tightest gap 0.35 mm
+   orange           full circle      tightest gap 0.35 mm
+   body joint 3     +20/-20 deg      tightest gap 0.27 mm
+   body joint 2     +20/-20 deg      tightest gap 0.27 mm
+   body joint 1     +20/-20 deg      tightest gap 0.27 mm
+   head nod         +15/-17.5 deg    tightest gap 0.35 mm
+   curled and S-bent with every joint at its limit: nothing collides
+   every part is held in whichever way it is pulled
+   the flank is flat round every leg socket
+   overhang past 45 deg 0.00 mm2; nothing below the bed
+   thinnest walls: leg pin's hold in its socket 0.81, wall behind the hind leg socket 0.91, body under the leg socket 0.96, neck tab round its sockets 1.04
+   pins: body pin neck 3.00, leg pin 2.50, head nod pins 2.50, orange shaft 3.00
+pocket-capybara  65.1 x 19.6 x 19.4 mm  10.3 cm3  26724 tris
+
