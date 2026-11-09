@@ -1,5 +1,5 @@
 {
-  "generated": "2026-11-09T15:54:01+00:00",
+  "generated": "2026-11-09T17:28:49+00:00",
   "models": [
     {
       "name": "Articulated Dump Truck 30t",
@@ -9,7 +9,7 @@
       "ext": "glb",
       "type": "glTF",
       "size": 50996028,
-      "modified": "2026-11-09T15:50:58+00:00",
+      "modified": "2026-11-09T15:54:36+00:00",
       "preview": "construction_equipment/Articulated_Dump_Truck_30t_preview.png"
     },
     {
@@ -20,7 +20,7 @@
       "ext": "glb",
       "type": "glTF",
       "size": 49218436,
-      "modified": "2026-11-09T15:49:16+00:00",
+      "modified": "2026-11-09T15:54:36+00:00",
       "preview": "construction_equipment/Backhoe_Loader_preview.png"
     },
     {
@@ -31,7 +31,7 @@
       "ext": "glb",
       "type": "glTF",
       "size": 49551612,
-      "modified": "2026-11-09T15:50:58+00:00",
+      "modified": "2026-11-09T15:54:36+00:00",
       "preview": "construction_equipment/Concrete_Mixer_Truck_preview.png"
     },
     {
@@ -42,7 +42,7 @@
       "ext": "glb",
       "type": "glTF",
       "size": 50616096,
-      "modified": "2026-11-09T15:49:16+00:00",
+      "modified": "2026-11-09T15:54:36+00:00",
       "preview": "construction_equipment/Crawler_Dozer_20t_preview.png"
     },
     {
@@ -53,7 +53,7 @@
       "ext": "glb",
       "type": "glTF",
       "size": 49589256,
-      "modified": "2026-11-09T15:47:18+00:00",
+      "modified": "2026-11-09T15:54:36+00:00",
       "preview": "construction_equipment/Crawler_Excavator_20t_preview.png"
     },
     {
@@ -64,7 +64,7 @@
       "ext": "glb",
       "type": "glTF",
       "size": 49161088,
-      "modified": "2026-11-09T15:49:16+00:00",
+      "modified": "2026-11-09T15:54:36+00:00",
       "preview": "construction_equipment/Mini_Excavator_3.5t_preview.png"
     },
     {
@@ -75,7 +75,7 @@
       "ext": "glb",
       "type": "glTF",
       "size": 48521584,
-      "modified": "2026-11-09T15:52:44+00:00",
+      "modified": "2026-11-09T15:54:36+00:00",
       "preview": "construction_equipment/Scissor_Lift_26ft_preview.png"
     },
     {
@@ -86,7 +86,7 @@
       "ext": "glb",
       "type": "glTF",
       "size": 49703616,
-      "modified": "2026-11-09T15:49:17+00:00",
+      "modified": "2026-11-09T15:54:36+00:00",
       "preview": "construction_equipment/Skid_Steer_Loader_preview.png"
     },
     {
@@ -97,7 +97,7 @@
       "ext": "glb",
       "type": "glTF",
       "size": 48989932,
-      "modified": "2026-11-09T15:50:59+00:00",
+      "modified": "2026-11-09T15:54:36+00:00",
       "preview": "construction_equipment/Vibratory_Soil_Compactor_12t_preview.png"
     },
     {
@@ -108,8 +108,118 @@
       "ext": "glb",
       "type": "glTF",
       "size": 50508144,
-      "modified": "2026-11-09T15:49:16+00:00",
+      "modified": "2026-11-09T15:54:36+00:00",
       "preview": "construction_equipment/Wheel_Loader_18t_preview.png"
+    },
+    {
+      "name": "Articulated Dump Truck 30t 1 50 painted",
+      "file": "Articulated_Dump_Truck_30t_1-50_painted.3mf",
+      "path": "construction_equipment/print_1-50/Articulated_Dump_Truck_30t_1-50_painted.3mf",
+      "folder": "construction_equipment/print_1-50",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 2909963,
+      "modified": "2026-11-09T17:00:41+00:00",
+      "preview": null
+    },
+    {
+      "name": "Backhoe Loader 1 50 painted",
+      "file": "Backhoe_Loader_1-50_painted.3mf",
+      "path": "construction_equipment/print_1-50/Backhoe_Loader_1-50_painted.3mf",
+      "folder": "construction_equipment/print_1-50",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 2430306,
+      "modified": "2026-11-09T16:56:08+00:00",
+      "preview": null
+    },
+    {
+      "name": "Concrete Mixer Truck 1 50 painted",
+      "file": "Concrete_Mixer_Truck_1-50_painted.3mf",
+      "path": "construction_equipment/print_1-50/Concrete_Mixer_Truck_1-50_painted.3mf",
+      "folder": "construction_equipment/print_1-50",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 3751785,
+      "modified": "2026-11-09T17:04:37+00:00",
+      "preview": null
+    },
+    {
+      "name": "Crawler Dozer 20t 1 50 painted",
+      "file": "Crawler_Dozer_20t_1-50_painted.3mf",
+      "path": "construction_equipment/print_1-50/Crawler_Dozer_20t_1-50_painted.3mf",
+      "folder": "construction_equipment/print_1-50",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 4888106,
+      "modified": "2026-11-09T17:14:00+00:00",
+      "preview": null
+    },
+    {
+      "name": "Crawler Excavator 20t 1 50 painted",
+      "file": "Crawler_Excavator_20t_1-50_painted.3mf",
+      "path": "construction_equipment/print_1-50/Crawler_Excavator_20t_1-50_painted.3mf",
+      "folder": "construction_equipment/print_1-50",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 3891621,
+      "modified": "2026-11-09T17:08:46+00:00",
+      "preview": null
+    },
+    {
+      "name": "Mini Excavator 3.5t 1 50 painted",
+      "file": "Mini_Excavator_3.5t_1-50_painted.3mf",
+      "path": "construction_equipment/print_1-50/Mini_Excavator_3.5t_1-50_painted.3mf",
+      "folder": "construction_equipment/print_1-50",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 1452102,
+      "modified": "2026-11-09T17:09:28+00:00",
+      "preview": null
+    },
+    {
+      "name": "Scissor Lift 26ft 1 50 painted",
+      "file": "Scissor_Lift_26ft_1-50_painted.3mf",
+      "path": "construction_equipment/print_1-50/Scissor_Lift_26ft_1-50_painted.3mf",
+      "folder": "construction_equipment/print_1-50",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 1488356,
+      "modified": "2026-11-09T17:06:39+00:00",
+      "preview": null
+    },
+    {
+      "name": "Skid Steer Loader 1 50 painted",
+      "file": "Skid_Steer_Loader_1-50_painted.3mf",
+      "path": "construction_equipment/print_1-50/Skid_Steer_Loader_1-50_painted.3mf",
+      "folder": "construction_equipment/print_1-50",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 1698391,
+      "modified": "2026-11-09T16:56:50+00:00",
+      "preview": null
+    },
+    {
+      "name": "Vibratory Soil Compactor 12t 1 50 painted",
+      "file": "Vibratory_Soil_Compactor_12t_1-50_painted.3mf",
+      "path": "construction_equipment/print_1-50/Vibratory_Soil_Compactor_12t_1-50_painted.3mf",
+      "folder": "construction_equipment/print_1-50",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 2117266,
+      "modified": "2026-11-09T17:06:03+00:00",
+      "preview": null
+    },
+    {
+      "name": "Wheel Loader 18t 1 50 painted",
+      "file": "Wheel_Loader_18t_1-50_painted.3mf",
+      "path": "construction_equipment/print_1-50/Wheel_Loader_18t_1-50_painted.3mf",
+      "folder": "construction_equipment/print_1-50",
+      "ext": "3mf",
+      "type": "3MF",
+      "size": 2875482,
+      "modified": "2026-11-09T17:12:03+00:00",
+      "preview": null
     },
     {
       "name": "Industrial Steel Stair 12ft",

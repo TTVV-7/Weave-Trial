@@ -5,6 +5,10 @@
 //     node construction_equipment/render_previews.cjs                 # every .glb here
 //     node construction_equipment/render_previews.cjs Wheel_Loader_18t
 //
+// PREVIEW_DIR renders the GLBs of another folder instead, and PREVIEW_SIZE
+// (e.g. 1600x1200) changes the image size from 800x600; PREVIEW_VIEW (x,y,z)
+// changes the direction the camera looks from.
+//
 // Needs Playwright's Chromium and internet access: it draws with the same
 // three.js the dashboard loads from jsDelivr, lit with three's RoomEnvironment
 // so the PBR metal parts read as metal rather than black. The camera looks from
@@ -14,8 +18,9 @@ const fs = require('fs');
 const path = require('path');
 const { chromium } = require('playwright');
 
-const HERE = __dirname;
-const W = 800, H = 600;
+const HERE = process.env.PREVIEW_DIR ? path.resolve(process.env.PREVIEW_DIR) : __dirname;
+const [W, H] = (process.env.PREVIEW_SIZE || '800x600').split('x').map(Number);
+const VIEW = process.env.PREVIEW_VIEW || '1,0.75,1.25';
 
 const PAGE = `<!doctype html><html><head><meta charset="utf-8">
 <style>html,body{margin:0;background:#fff}canvas{display:block}</style>
@@ -67,7 +72,7 @@ window.render = async (url) => {
   // frame the box, not its bounding sphere: aim at the middle of the box's
   // projected outline and move in until that outline fills most of the frame
   const camera = new THREE.PerspectiveCamera(30, ${W} / ${H}, radius / 100, radius * 100);
-  const dir = new THREE.Vector3(1, 0.75, 1.25).normalize();
+  const dir = new THREE.Vector3(${VIEW}).normalize();
   const corners = [];
   for (const x of [box.min.x, box.max.x]) for (const y of [box.min.y, box.max.y])
     for (const z of [box.min.z, box.max.z]) corners.push(new THREE.Vector3(x, y, z));

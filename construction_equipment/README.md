@@ -35,6 +35,35 @@ CAD: there are no separate parts and no STEP files.
 | 09 | Vibratory Soil Compactor (12 t) | 19.2 × 8.5 × 12.0 ft (5.85 × 2.59 × 3.66 m) | length, 5.85 m | Single smooth drum, ROPS canopy. About 20% taller (≈ 3.0 m) and 10% wider (≈ 2.3 m) than typical. |
 | 10 | Scissor Lift (26 ft) | 8.0 × 4.7 × 8.9 ft (2.44 × 1.43 × 2.71 m) | stowed length, 2.44 m | Electric slab lift, stowed, deck retracted. About 20% wider (≈ 1.2 m) and taller (≈ 2.3 m stowed) than a real 26 ft slab lift. |
 
+## 1:50 painted 3MFs (work in progress)
+
+`print_1-50/<name>_1-50_painted.3mf` is each machine at 1:50 as one solid
+piece, painted per triangle for a multi-colour printer (Bambu Studio,
+OrcaSlicer and Snapmaker Orca read the paint), in three or four of the stock
+filaments of Construction Site Packs 1-4. **They have not been test-printed
+yet.** `python construction_equipment/make_prints.py` builds them from the
+real-size GLBs (about 2 minutes and 5 GB of memory per machine): it simplifies
+the mesh, thickens anything under 0.8 mm, flattens the bottom, pegs loose
+pieces to the body and paints from the texture. It also writes a plain STL and
+a painted preview GLB of each, which are left out of git for size.
+
+Cab windows are painted from what the texture shows through the glass, so some
+come out as a patchwork of black and body colour; fill them in the slicer's
+paint tool if that matters.
+
+| Machine | At 1:50 (L × W × H) | Filaments, T1-T4 |
+|---|---|---|
+| Crawler Excavator 20t | 126 × 60 × 93 mm | Black, Construction yellow, Silver grey |
+| Mini Excavator 3.5t | 68 × 36 × 47 mm | Black, Construction yellow, Silver grey |
+| Wheel Loader 18t | 147 × 59 × 72 mm | Construction yellow, Black, Silver grey |
+| Crawler Dozer 20t | 117 × 66 × 64 mm | Construction yellow, Black, Silver grey |
+| Backhoe Loader | 119 × 48 × 69 mm | Construction yellow, Black, Silver grey |
+| Skid Steer Loader | 65 × 37 × 42 mm | Construction yellow, Black, Silver grey |
+| Articulated Dump Truck 30t | 206 × 71 × 78 mm | Construction yellow, Black, Silver grey |
+| Concrete Mixer Truck | 176 × 72 × 98 mm | Black, White, Silver grey, Safety orange |
+| Vibratory Soil Compactor 12t | 117 × 52 × 73 mm | Black, Construction yellow, Silver grey |
+| Scissor Lift 26ft | 49 × 29 × 54 mm | Safety orange, Black, Construction yellow, Silver grey |
+
 ## How accurate the sizes are
 
 Each model is scaled by **one** dimension that doesn't depend on its pose:
@@ -74,6 +103,10 @@ The machines are unbranded: the prompts asked for no logos, text or decals.
 
 Cost: 8 points per reference set and 45 per model, so 530 hi3D points for the
 ten.
+
+They are on Cults3D as Construction Site Pack 5: the textured GLBs (one eighth
+of the triangles, 2K textures) as the main download, and the painted 3MFs as a
+work-in-progress extra.
 
 | Asset | hi3D reference task | hi3D model |
 |---|---|---|

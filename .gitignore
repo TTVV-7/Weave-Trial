@@ -5,3 +5,6 @@ __pycache__/
 .venv/
 /site/
 node_modules/
+# 1:50 print outputs too big for git: the painted 3MFs carry the same mesh
+/construction_equipment/print_1-50/*.stl
+/construction_equipment/print_1-50/*_painted.glb
