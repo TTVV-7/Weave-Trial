@@ -1,7 +1,7 @@
 # Fidgets (3D print files)
 
-Two basketball fidgets, a construction nut & bolt, a Southwest Contracting gyro and a
-pocket gear fidget, each as a **painted 3MF** and a plain single-colour STL. The basketball seams, hazard
+Two basketball fidgets, a construction nut & bolt, a Southwest Contracting gyro, a
+pocket gear fidget and a pocket capybara, each as a **painted 3MF** and a plain single-colour STL. The basketball seams, hazard
 stripes and lettering are real 0.6 mm grooves, so they still show when printed in
 one colour.
 
@@ -14,6 +14,7 @@ one colour.
 | **Construction nut & bolt**: three hazard-striped nuts that spin up and down a chunky bolt | `stl/construction-nut-bolt.3mf` (bolt and 3 nuts on one plate), or `stl/construction-bolt.stl` + 3 × `stl/construction-nut.stl` | bolt 32 × 28 × 57, nuts 30 × 26 × 12 | none |
 | **Southwest Contracting gyro**: the gyro with SOUTHWEST / CONTRACTING round the outer ring and SWC on the ball | `stl/southwest-contracting-gyro.3mf` / `.stl` | 56 × 56 × 17 | none |
 | **Pocket gear fidget**: a sun gear and four planets turning inside a ring cut into a rounded square, SWC on the sun | `stl/pocket-gear-fidget.3mf` / `.stl`, test piece `stl/pocket-gear-fidget-test.3mf` / `.stl` | 52 × 52 × 8 (test 52 × 52 × 4) | none |
+| **Pocket capybara**: an articulated capybara with an orange on its head; body wiggles, legs swing, head nods, orange spins | `stl/pocket-capybara.3mf` / `.stl`, test strip `stl/pocket-capybara-test.3mf` / `.stl` | 65 × 19 × 18 (test 26 × 18 × 15) | none |
 
 ## Filaments
 
@@ -54,6 +55,15 @@ Placeholder colours until we have the company's; change `FILAMENTS` in
 | T1 | Black | `#1A1A1A` | the plate, the SWC lettering |
 | T2 | Safety orange | `#FF6A13` | the gears |
 | T3 | White | `#F2F2F2` | the hubs |
+
+### Pocket capybara
+
+| Slot | Filament | Hex | Paints |
+|---|---|---|---|
+| T1 | Warm brown | `#9A6A3E` | the head and body |
+| T2 | Dark brown | `#4E301C` | the nose, ears, legs and the orange's stalk dimple |
+| T3 | Black | `#1A1A1A` | the eyes and nostrils |
+| T4 | Orange | `#F28C1A` | the orange |
 
 The 3MFs use Bambu Studio's painting format, so they open the same in Bambu Studio
 (P1S + AMS), OrcaSlicer and Snapmaker Orca (U1).
@@ -159,6 +169,70 @@ rolling and spinning by their gear ratios) never makes two gears touch; lifting 
 gear 1 mm runs it into its neighbours, so none can fall out; no surface overhangs
 past 45°; and no tooth tip, wall or letter stroke is under 0.8 mm.
 
+## Pocket capybara
+
+![straight and wiggled, from the front and from above](pocket-capybara-preview.png)
+
+A chunky capybara with an orange on its head, printed flat in one piece. It is
+59.5 mm from nose to rump (65 mm with the keyring loop), 19 mm across the feet and
+15 mm tall at the back, 18 mm to the top of the orange. Ten separate bodies come off
+the plate already linked:
+
+- **Body:** four barrel segments that wiggle 25° each way at each of three joints.
+  Each joint is an hourglass pin standing on the bed, with the next segment's ring
+  round its waist under a 60° cone roof, so nothing is printed across a gap.
+- **Legs:** four stubby legs that swing a full circle on cone pins.
+- **Head:** nods about 15° each way on two stub pins either side of a neck tab.
+- **Orange:** an 8 mm ball that spins on a 3 mm shaft running down through the head
+  to a flared foot on the bed, so it can't be pulled off.
+- **Keyring loop** behind the rump (4.5 mm hole). Set `KEYRING_D = 0` to leave it off.
+
+**Print the test strip first.** `pocket-capybara-test` is two body segments, one
+body joint and one leg with exactly the same pins and clearances: about 20 minutes.
+If its joint and leg free up, the capybara will.
+
+- Print flat, as it comes. **No supports** (they would weld the joints solid).
+- 0.16 mm layers (0.2 works), 3 walls, 15% infill.
+- **Turn on elephant-foot compensation** (0.15 mm). Every part starts on the bed
+  0.5 mm from its neighbour, and a squished first layer is what fuses them.
+- Slow the first layer and skip the brim. On the AMS/U1 a prime tower is needed for
+  the four colours; in one colour the eyes and nostrils still show as 1 mm-deep pits.
+- When it comes off the plate: bend each body joint side to side until it cracks
+  free, twist each leg, rock the head, then turn the orange.
+- If the test strip stays fused, raise `CLEAR` in `make_capybara.py` from 0.35 to
+  0.45 (and `GAPJ` to 0.6). If it is floppy, drop them to 0.3 and 0.45. Re-run and
+  reprint the strip.
+
+The script won't write the files unless all of these pass:
+
+```
+pocket capybara: 10 separate bodies, tightest gap as printed 0.35 mm
+   front left leg   full circle      tightest gap 0.35 mm
+   front right leg  full circle      tightest gap 0.35 mm
+   hind left leg    full circle      tightest gap 0.35 mm
+   hind right leg   full circle      tightest gap 0.35 mm
+   orange           full circle      tightest gap 0.35 mm
+   body joint 3     +25/-25 deg      tightest gap 0.35 mm
+   body joint 2     +25/-25 deg      tightest gap 0.35 mm
+   body joint 1     +25/-25 deg      tightest gap 0.35 mm
+   head nod         +17.5/-22.5 deg  tightest gap 0.35 mm
+   curled and S-bent with every joint at its limit: nothing collides
+   every part is held in whichever way it is pulled
+   overhang past 45 deg 0.23 mm2; nothing below the bed
+   thinnest walls: leg round its pin 0.86, wall behind the neck slot 1.00, roof over the neck slot 1.27, joint ring wall 1.40
+   pins: body pin neck 3.00, leg pin 2.50, head nod pins 2.50, orange shaft 3.00
+pocket-capybara  65.2 x 19.4 x 18.4 mm  9.3 cm3  25846 tris
+```
+
+That is: every moving part is one body of its own, at least 0.35 mm from every other
+as printed; each joint is turned in steps both ways until it hits something, and has
+to reach its range (the range found and the tightest gap on the way are reported);
+the body is curled and S-bent with the legs and head at their limits; each part is
+pushed 1 mm in six directions and has to run into a neighbour, so none can fall off;
+overhangs past 45° total under 1 mm² (the rims of the eyes and nostrils); nothing
+goes below the bed; and no wall is under 0.8 mm and no pin under 2.5 mm. The wall
+and pin sizes are worked out from the dimensions, not measured off the mesh.
+
 ## Changing them
 
 Every dimension is a constant at the top of `make_fidgets.py` (ball size, ring
@@ -171,6 +245,7 @@ python3 make_fidgets.py   # basketball fidgets: writes stl/basketball-*
 python3 make_nut_bolt.py  # nut & bolt: writes stl/construction-*  (about a minute)
 python3 make_swc_gyro.py  # Southwest Contracting gyro: writes stl/southwest-contracting-*
 python3 make_gear_fidget.py  # pocket gear fidget and its test piece  (about a minute)
+python3 make_capybara.py  # pocket capybara and its test strip  (about 20 seconds)
 python3 preview.py        # redraws the preview images from the 3MFs
 ```
 

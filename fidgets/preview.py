@@ -7,7 +7,8 @@ Writes stl/basketball-gyro.png, stl/basketball-spinner.png and preview.png
 stl/construction-nut-bolt.png and construction-preview.png (the nut & bolt
 screwed together, and laid out as printed), and
 stl/southwest-contracting-gyro.png and southwest-contracting-preview.png, and
-stl/pocket-gear-fidget.png and pocket-gear-preview.png (before and after a turn).
+stl/pocket-gear-fidget.png and pocket-gear-preview.png (before and after a turn), and
+stl/pocket-capybara.png and pocket-capybara-preview.png (straight and wiggled).
 """
 import re
 import zipfile
@@ -176,6 +177,38 @@ def gears():
     fig.savefig(mk.HERE / "pocket-gear-preview.png", dpi=100, bbox_inches="tight", facecolor="white")
 
 
+def capybara():
+    import make_capybara as cb
+    colours = [f"#{r:02X}{g:02X}{b:02X}" for r, g, b in cb.FILAMENTS]
+    parts, joints, info = cb.make_capybara()
+
+    def as_draw(ps):
+        mesh, lab = cb.paint(parts, info, ps)
+        return [(mesh.vertices, mesh.faces, lab)]
+
+    pose = {"body joint 1": 25, "body joint 2": -25, "body joint 3": 25, "head nod": 12, "orange": 90,
+            "front left leg": 35, "front right leg": -30, "hind left leg": -40, "hind right leg": 30}
+    straight = as_draw(parts)
+    wiggled = as_draw(cb.posed(parts, joints, pose))
+    fig, ax = plt.subplots(figsize=(7, 4.5))
+    draw(ax, straight, colours, elev=25, azim=60)
+    fig.savefig(mk.OUT / "pocket-capybara.png", dpi=110, bbox_inches="tight", facecolor="white")
+    plt.close(fig)
+
+    fig, ax = plt.subplots(2, 2, figsize=(14, 9))
+    draw(ax[0, 0], straight, colours, elev=25, azim=60)
+    ax[0, 0].set_title("Pocket capybara, straight (as printed)", fontsize=13)
+    draw(ax[0, 1], wiggled, colours, elev=25, azim=60)
+    ax[0, 1].set_title("wiggled: body bent, head up, legs swung", fontsize=13)
+    draw(ax[1, 0], straight, colours, elev=89, azim=180)
+    ax[1, 0].set_title("from above, straight", fontsize=13)
+    draw(ax[1, 1], wiggled, colours, elev=89, azim=180)
+    ax[1, 1].set_title("from above, wiggled", fontsize=13)
+    fig.tight_layout()
+    fig.savefig(mk.HERE / "pocket-capybara-preview.png", dpi=100, bbox_inches="tight", facecolor="white")
+    plt.close(fig)
+
+
 def main():
     gyro, colours = read_3mf(mk.OUT / "basketball-gyro.3mf")
     spinner, _ = read_3mf(mk.OUT / "basketball-spinner.3mf")
@@ -199,6 +232,7 @@ def main():
     construction()
     southwest()
     gears()
+    capybara()
 
 
 if __name__ == "__main__":
