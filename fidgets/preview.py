@@ -6,7 +6,8 @@ Writes stl/basketball-gyro.png, stl/basketball-spinner.png and preview.png
 (both fidgets side by side, plus the gyro opened up to show it spins), and
 stl/construction-nut-bolt.png and construction-preview.png (the nut & bolt
 screwed together, and laid out as printed), and
-stl/southwest-contracting-gyro.png and southwest-contracting-preview.png.
+stl/southwest-contracting-gyro.png and southwest-contracting-preview.png, and
+stl/pocket-gear-fidget.png and pocket-gear-preview.png (before and after a turn).
 """
 import re
 import zipfile
@@ -148,6 +149,33 @@ def southwest():
     fig.savefig(mk.HERE / "southwest-contracting-preview.png", dpi=100, facecolor="white")
 
 
+def gears():
+    import make_gear_fidget as gf
+    colours = [f"#{r:02X}{g:02X}{b:02X}" for r, g, b in gf.FILAMENTS]
+    parts, base = gf.make_parts()
+
+    def as_draw(ps):
+        mesh, lab = gf.paint(ps, gf.GEAR_H)
+        return [(mesh.vertices, mesh.faces, lab)]
+
+    before = as_draw(parts)
+    after = as_draw(gf.turned(parts, base, 60))
+    fig, ax = plt.subplots(figsize=(5.5, 5))
+    draw(ax, before, colours, elev=55, azim=-30)
+    fig.savefig(mk.OUT / "pocket-gear-fidget.png", dpi=110, bbox_inches="tight", facecolor="white")
+    plt.close(fig)
+
+    fig, ax = plt.subplots(1, 3, figsize=(16, 5.4))
+    draw(ax[0], before, colours, elev=55, azim=-30)
+    ax[0].set_title("Pocket gear fidget, as printed", fontsize=13)
+    draw(ax[1], after, colours, elev=89, azim=0)
+    ax[1].set_title("sun turned 60°: planets rolled round", fontsize=13)
+    draw(ax[2], after, colours, elev=30, azim=40)
+    ax[2].set_title("herringbone teeth hold it together", fontsize=13)
+    fig.tight_layout()
+    fig.savefig(mk.HERE / "pocket-gear-preview.png", dpi=100, bbox_inches="tight", facecolor="white")
+
+
 def main():
     gyro, colours = read_3mf(mk.OUT / "basketball-gyro.3mf")
     spinner, _ = read_3mf(mk.OUT / "basketball-spinner.3mf")
@@ -170,6 +198,7 @@ def main():
     fig.savefig(mk.HERE / "preview.png", dpi=100, facecolor="white")
     construction()
     southwest()
+    gears()
 
 
 if __name__ == "__main__":
