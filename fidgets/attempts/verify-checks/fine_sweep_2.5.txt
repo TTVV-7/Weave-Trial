@@ -1,0 +1,26 @@
+=== test strip: step 2.5 deg ===
+  leg              +: free to  180.0 (want 45, limit 180); first hit None; tightest gap within want 0.347 at 42.5 deg (as printed 0.350); hits 0
+  leg              -: free to  180.0 (want 45, limit 180); first hit None; tightest gap within want 0.347 at 20 deg (as printed 0.350); hits 0
+  body joint       +: free to   27.5 (want 25, limit 40); first hit 30.0; tightest gap within want 0.387 at 10 deg (as printed 0.389); hits 5, worst 30.602 mm3 at 40
+  body joint       -: free to   27.5 (want 25, limit 40); first hit 30.0; tightest gap within want 0.387 at 10 deg (as printed 0.389); hits 5, worst 30.602 mm3 at 40
+
+=== pocket capybara: step 2.5 deg ===
+  front left leg   +: free to  180.0 (want 45, limit 180); first hit None; tightest gap within want 0.347 at 42.5 deg (as printed 0.350); hits 0
+  front left leg   -: free to  180.0 (want 45, limit 180); first hit None; tightest gap within want 0.347 at 20 deg (as printed 0.350); hits 0
+  front right leg  +: free to  180.0 (want 45, limit 180); first hit None; tightest gap within want 0.347 at 42.5 deg (as printed 0.350); hits 0
+  front right leg  -: free to  180.0 (want 45, limit 180); first hit None; tightest gap within want 0.347 at 20 deg (as printed 0.350); hits 0
+  hind left leg    +: free to  180.0 (want 45, limit 180); first hit None; tightest gap within want 0.347 at 20 deg (as printed 0.350); hits 0
+  hind left leg    -: free to  180.0 (want 45, limit 180); first hit None; tightest gap within want 0.347 at 20 deg (as printed 0.350); hits 0
+  hind right leg   +: free to  180.0 (want 45, limit 180); first hit None; tightest gap within want 0.347 at 20 deg (as printed 0.350); hits 0
+  hind right leg   -: free to  180.0 (want 45, limit 180); first hit None; tightest gap within want 0.347 at 20 deg (as printed 0.350); hits 0
+  orange           +: free to  180.0 (want 180, limit 180); first hit None; tightest gap within want 0.353 at 122.5 deg (as printed 0.354); hits 0
+  orange           -: free to  180.0 (want 180, limit 180); first hit None; tightest gap within want 0.353 at 122.5 deg (as printed 0.354); hits 0
+  body joint 3     +: free to   27.5 (want 25, limit 40); first hit 30.0; tightest gap within want 0.387 at 10 deg (as printed 0.389); hits 5, worst 30.602 mm3 at 40
+  body joint 3     -: free to   27.5 (want 25, limit 40); first hit 30.0; tightest gap within want 0.387 at 10 deg (as printed 0.389); hits 5, worst 30.602 mm3 at 40
+  body joint 2     +: free to   27.5 (want 25, limit 40); first hit 30.0; tightest gap within want 0.387 at 10 deg (as printed 0.389); hits 5, worst 30.602 mm3 at 40
+  body joint 2     -: free to   27.5 (want 25, limit 40); first hit 30.0; tightest gap within want 0.387 at 12.5 deg (as printed 0.389); hits 5, worst 30.602 mm3 at 40
+  body joint 1     +: free to   27.5 (want 25, limit 40); first hit 30.0; tightest gap within want 0.387 at 10 deg (as printed 0.389); hits 5, worst 30.602 mm3 at 40
+  body joint 1     -: free to   27.5 (want 25, limit 40); first hit 30.0; tightest gap within want 0.387 at 10 deg (as printed 0.389); hits 5, worst 30.602 mm3 at 40
+  head nod         +: free to   25.0 (want 15, limit 40); first hit 27.5; tightest gap within want 0.348 at 2.5 deg (as printed 0.350); hits 6, worst 5.135 mm3 at 40
+  head nod         -: free to   40.0 (want 15, limit 40); first hit None; tightest gap within want 0.348 at 2.5 deg (as printed 0.350); hits 0
+

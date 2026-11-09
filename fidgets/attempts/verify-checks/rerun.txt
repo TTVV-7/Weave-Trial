@@ -1,0 +1,33 @@
+test strip: 3 separate bodies, each starting on the bed with no layer starting in mid-air; tightest gap as printed 0.35 mm
+   leg              full circle      tightest gap 0.35 mm
+   body joint       +25/-25 deg      tightest gap 0.39 mm
+   curled and S-bent with every joint at its limit, either way: nothing collides
+   every part is held in whichever way it is pulled
+   overhang past 45 deg 0.00 mm2; nothing below the bed
+   thinnest walls: leg skin at its chamfer 0.82, leg round its pin 0.86, leg skin over its pin 0.90, socket lip at the flank (2nd layer up) 1.02, rim the hook holds 1.50
+   pins: leg pin 2.50, body hook (tongue, bridge, width) 2.50
+pocket-capybara-test  31.6 x 20.4 x 14.5 mm  6.3 cm3  7348 tris
+
+pocket capybara: 10 separate bodies, each starting on the bed with no layer starting in mid-air; tightest gap as printed 0.35 mm
+   front left leg   full circle      tightest gap 0.35 mm
+   front right leg  full circle      tightest gap 0.35 mm
+   hind left leg    full circle      tightest gap 0.35 mm
+   hind right leg   full circle      tightest gap 0.35 mm
+   orange           full circle      tightest gap 0.35 mm
+   body joint 3     +25/-25 deg      tightest gap 0.39 mm
+   body joint 2     +25/-25 deg      tightest gap 0.39 mm
+   body joint 1     +25/-25 deg      tightest gap 0.39 mm
+   head nod         +25/-40 deg      tightest gap 0.35 mm
+   curled and S-bent with every joint at its limit, either way: nothing collides
+   every part is held in whichever way it is pulled
+   overhang past 45 deg 0.00 mm2; nothing below the bed
+   thinnest walls: neck tab round its sockets 0.81, leg skin at its chamfer 0.82, leg round its pin 0.86, roof over the neck slot 0.86, leg skin over its pin 0.90
+   pins: leg pin 2.50, body hook (tongue, bridge, width) 2.50, head nod pins 2.50, orange shaft 3.00
+   nose to rump 61.6, width 23.8, height 20.2 (top of the back's loop 19.6)
+pocket-capybara  61.6 x 23.8 x 20.2 mm  12.5 cm3  37848 tris
+
+seconds 12.6
+pocket-capybara-test.3mf feca479ecfd6b88b 77045a9ec0a99f92 DIFFERENT
+pocket-capybara-test.stl acd380ec35131d15 acd380ec35131d15 SAME
+pocket-capybara.3mf 5f7b238d0462ad9c c353dad6bc50e2c9 DIFFERENT
+pocket-capybara.stl 8672a5f8b2593e14 8672a5f8b2593e14 SAME

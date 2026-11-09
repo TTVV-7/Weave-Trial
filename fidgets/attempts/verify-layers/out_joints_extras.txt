@@ -1,0 +1,154 @@
+1. separate pieces of one body in a layer (bed islands and where they join)
+   head: from z=0.05: 1 piece(s)  | from z=6.65: 2 piece(s) [19.04, 170.18] | from z=9.75: 1 piece(s)  | from z=13.45: 2 piece(s) [8.38, 8.38]
+        at z=6.65 smallest piece 19.04 mm2 at x 20.5..26.7 y -2.5..2.5
+        at z=13.45 smallest piece 8.38 mm2 at x 13.41..16.59 y -7.07..-3.77
+   orange: from z=0.05: 1 piece(s) 
+   body 1: from z=0.05: 1 piece(s)  | from z=7.45: 3 piece(s) [5.0, 5.0, 232.68] | from z=9.05: 1 piece(s) 
+        at z=7.45 smallest piece 5.0 mm2 at x 18.14..23.26 y 8.5..10.1
+   body 2: from z=0.05: 2 piece(s) [8.49, 107.52] | from z=3.95: 1 piece(s) 
+        at z=0.05 smallest piece 8.49 mm2 at x 30.53..33.2 y -1.98..1.98
+   body 3: from z=0.05: 2 piece(s) [8.49, 107.52] | from z=3.95: 1 piece(s) 
+        at z=0.05 smallest piece 8.49 mm2 at x 39.83..42.5 y -1.98..1.98
+   body 4: from z=0.05: 2 piece(s) [8.49, 108.61] | from z=3.95: 1 piece(s)  | from z=7.45: 3 piece(s) [5.0, 5.0, 139.46] | from z=9.05: 1 piece(s)  | from z=14.35: 2 piece(s) [22.27, 56.59] | from z=18.45: 1 piece(s) 
+        at z=0.05 smallest piece 8.49 mm2 at x 49.13..51.8 y -1.98..1.98
+        at z=7.45 smallest piece 5.0 mm2 at x 54.34..59.46 y -10.1..-8.5
+        at z=14.35 smallest piece 22.27 mm2 at x 56.9..59.7 y -5.85..5.85
+   front left leg: from z=0.05: 1 piece(s) 
+   front right leg: from z=0.05: 1 piece(s) 
+   hind left leg: from z=0.05: 1 piece(s) 
+   hind right leg: from z=0.05: 1 piece(s) 
+
+2. first layer (z=0.05): outline length of each pair lying within 0.41 / 0.51 / 0.56 mm of the other body
+   head       / orange              0.0 mm at <=0.41,   19.2 mm at <=0.51,   19.2 mm at <=0.56
+   head       / body 1              8.9 mm at <=0.41,    9.6 mm at <=0.51,   16.7 mm at <=0.56
+   body 1     / body 2             16.2 mm at <=0.41,   23.8 mm at <=0.51,   24.6 mm at <=0.56
+   body 2     / body 3             16.2 mm at <=0.41,   23.8 mm at <=0.51,   24.6 mm at <=0.56
+   body 3     / body 4             16.2 mm at <=0.41,   23.8 mm at <=0.51,   24.6 mm at <=0.56
+
+3. neck tab (head) round its hinge sockets: vertical sections y = const through the tab
+   y=2.49: socket radius 2.732, thinnest wall round it 0.001 mm
+   y=2.40: socket radius 2.642, thinnest wall round it 0.001 mm
+   y=2.30: socket radius 2.542, thinnest wall round it 0.001 mm
+   y=2.20: socket radius 2.442, thinnest wall round it 0.001 mm
+   y=2.00: socket radius 2.242, thinnest wall round it 0.001 mm
+   y=1.80: socket radius 2.043, thinnest wall round it 0.001 mm
+   y=1.50: socket radius 1.743, thinnest wall round it 0.001 mm
+   y=1.20: socket radius 1.443, thinnest wall round it 0.001 mm
+   design's own figure: 'neck tab round its sockets' uses socket radius 2.155 -> wall 0.815
+
+4. leg pin and the leg's lip, vertical sections through the pin axis
+   body 1 pin section y= 8.70: area   6.047 mm2, x -1.45..+1.45 from pin centre, z 5.15..7.65
+   body 1 pin section y= 8.91: area   6.984 mm2, x -1.66..+1.66 from pin centre, z 5.36..7.86
+   body 1 pin section y= 9.20: area   8.078 mm2, x -1.95..+1.95 from pin centre, z 5.65..8.15
+   body 1 pin section y= 9.60: area   9.365 mm2, x -2.35..+2.35 from pin centre, z 6.05..8.55
+   body 1 pin section y=10.00: area  10.488 mm2, x -2.74..+2.74 from pin centre, z 6.45..8.95
+   body 1 pin section y=10.09: area  10.724 mm2, x -2.82..+2.82 from pin centre, z 6.54..9.04
+   leg y=8.7: empty
+   leg section y= 8.91: area  74.516 mm2, x -6.00..+4.60 from pin centre, z 0.20..10.80
+   leg section y= 9.20: area  70.332 mm2, x -6.00..+4.60 from pin centre, z 0.20..10.80
+   leg section y= 9.60: area  63.695 mm2, x -6.00..+4.60 from pin centre, z 0.20..10.80
+   leg section y=10.00: area  56.055 mm2, x -6.00..+4.60 from pin centre, z 0.20..10.80
+   leg section y=10.09: area  54.197 mm2, x -6.00..+4.60 from pin centre, z 0.20..10.80
+A. neck tab wall round the hinge sockets (vertical sections y=const of the head, window round the nod axis)
+   y=2.49: socket radius 2.735 mm; thinnest wall to the tab's outside 0.235 mm, at x=25.53 z=4.67
+   y=2.40: socket radius 2.645 mm; thinnest wall to the tab's outside 0.325 mm, at x=25.47 z=4.73
+   y=2.30: socket radius 2.545 mm; thinnest wall to the tab's outside 0.425 mm, at x=25.40 z=4.80
+   y=2.10: socket radius 2.344 mm; thinnest wall to the tab's outside 0.625 mm, at x=25.26 z=4.94
+   y=1.90: socket radius 2.144 mm; thinnest wall to the tab's outside 0.825 mm, at x=25.12 z=5.08
+   y=1.60: socket radius 1.844 mm; thinnest wall to the tab's outside 1.125 mm, at x=24.90 z=5.30
+   y=1.30: socket radius 1.544 mm; thinnest wall to the tab's outside 1.425 mm, at x=24.69 z=5.51
+   y=1.05: socket radius 1.295 mm; thinnest wall to the tab's outside 1.675 mm, at x=24.52 z=5.68
+   the design's check uses socket radius 2.155 and reports wall 0.815; true radius at the tab face = 2.745
+
+B. slivers thinner than 0.4 mm by place (body 1, body 2, body 4, head, front left leg)
+   head:
+      x~  7.98 y~  1.50  z 12.85..12.95 (2 layers)  largest 0.102 mm2, up to 0.32 x 0.87 mm
+      x~  7.98 y~ -1.50  z 12.85..12.95 (2 layers)  largest 0.102 mm2, up to 0.32 x 0.87 mm
+   body 1:
+      x~ 33.22 y~ -0.00  z 3.15..3.25 (2 layers)  largest 5.526 mm2, up to 2.82 x 13.03 mm
+      x~ 20.70 y~  9.98  z 8.65..8.95 (4 layers)  largest 0.759 mm2, up to 2.90 x 0.40 mm
+      x~ 20.70 y~ -9.98  z 8.65..8.95 (4 layers)  largest 0.759 mm2, up to 2.90 x 0.40 mm
+      x~ 22.80 y~ -9.93  z 6.35..8.55 (19 layers)  largest 0.142 mm2, up to 0.86 x 0.36 mm
+      x~ 22.80 y~  9.93  z 6.35..8.55 (19 layers)  largest 0.142 mm2, up to 0.86 x 0.36 mm
+      x~ 18.30 y~  9.94  z 6.35..7.95 (17 layers)  largest 0.063 mm2, up to 0.50 x 0.31 mm
+      x~ 18.30 y~ -9.94  z 6.35..7.95 (17 layers)  largest 0.063 mm2, up to 0.50 x 0.31 mm
+      x~ 19.12 y~  9.93  z 8.05..8.55 (6 layers)  largest 0.142 mm2, up to 0.86 x 0.36 mm
+      x~ 19.12 y~ -9.93  z 8.05..8.55 (6 layers)  largest 0.142 mm2, up to 0.86 x 0.36 mm
+      x~ 22.52 y~ -9.21  z 5.35..6.25 (10 layers)  largest 0.057 mm2, up to 0.47 x 0.31 mm
+      x~ 22.52 y~  9.21  z 5.35..6.25 (10 layers)  largest 0.057 mm2, up to 0.47 x 0.31 mm
+      x~ 19.30 y~ -8.91  z 5.15..5.85 (8 layers)  largest 0.058 mm2, up to 0.49 x 0.31 mm
+      x~ 19.30 y~  8.91  z 5.15..5.85 (8 layers)  largest 0.058 mm2, up to 0.49 x 0.31 mm
+      x~ 32.39 y~ -2.31  z 14.55..14.55 (1 layers)  largest 0.180 mm2, up to 0.37 x 0.88 mm
+      x~ 32.39 y~  2.31  z 14.55..14.55 (1 layers)  largest 0.180 mm2, up to 0.37 x 0.88 mm
+      x~ 23.30 y~  9.96  z 6.55..6.85 (4 layers)  largest 0.044 mm2, up to 0.40 x 0.28 mm
+      x~ 23.30 y~ -9.96  z 6.55..6.85 (4 layers)  largest 0.044 mm2, up to 0.40 x 0.28 mm
+      x~ 18.50 y~ -9.51  z 5.95..6.25 (4 layers)  largest 0.043 mm2, up to 0.39 x 0.28 mm
+      x~ 18.50 y~  9.51  z 5.95..6.25 (4 layers)  largest 0.043 mm2, up to 0.39 x 0.28 mm
+      x~ 21.58 y~  8.64  z 5.15..5.25 (2 layers)  largest 0.058 mm2, up to 0.49 x 0.28 mm
+      x~ 21.58 y~ -8.64  z 5.15..5.25 (2 layers)  largest 0.058 mm2, up to 0.49 x 0.28 mm
+   body 2:
+      x~ 42.52 y~ -0.00  z 3.15..3.25 (2 layers)  largest 5.526 mm2, up to 2.82 x 13.03 mm
+      x~ 40.98 y~  2.60  z 15.15..15.15 (1 layers)  largest 0.088 mm2, up to 0.36 x 0.52 mm
+      x~ 40.98 y~ -2.60  z 15.15..15.15 (1 layers)  largest 0.088 mm2, up to 0.36 x 0.52 mm
+   body 4:
+      x~ 56.90 y~  9.98  z 8.65..8.95 (4 layers)  largest 0.759 mm2, up to 2.90 x 0.40 mm
+      x~ 56.90 y~ -9.98  z 8.65..8.95 (4 layers)  largest 0.759 mm2, up to 2.90 x 0.40 mm
+      x~ 58.78 y~ -9.94  z 7.45..8.55 (12 layers)  largest 0.142 mm2, up to 0.86 x 0.36 mm
+      x~ 58.78 y~  9.94  z 7.45..8.55 (12 layers)  largest 0.142 mm2, up to 0.86 x 0.36 mm
+      x~ 54.45 y~  9.94  z 6.35..7.75 (15 layers)  largest 0.056 mm2, up to 0.47 x 0.30 mm
+      x~ 54.45 y~ -9.94  z 6.35..7.75 (15 layers)  largest 0.056 mm2, up to 0.47 x 0.30 mm
+      x~ 55.21 y~  9.94  z 7.85..8.55 (8 layers)  largest 0.142 mm2, up to 0.86 x 0.36 mm
+      x~ 55.21 y~ -9.94  z 7.85..8.55 (8 layers)  largest 0.142 mm2, up to 0.86 x 0.36 mm
+      x~ 59.42 y~ -9.93  z 6.35..7.35 (11 layers)  largest 0.048 mm2, up to 0.43 x 0.29 mm
+      x~ 59.42 y~  9.93  z 6.35..7.35 (11 layers)  largest 0.048 mm2, up to 0.43 x 0.29 mm
+      x~ 58.59 y~  9.11  z 5.25..6.15 (10 layers)  largest 0.058 mm2, up to 0.49 x 0.31 mm
+      x~ 58.59 y~ -9.11  z 5.25..6.15 (10 layers)  largest 0.058 mm2, up to 0.49 x 0.31 mm
+      x~ 55.36 y~ -9.01  z 5.15..6.05 (10 layers)  largest 0.058 mm2, up to 0.49 x 0.31 mm
+      x~ 55.36 y~  9.01  z 5.15..6.05 (10 layers)  largest 0.058 mm2, up to 0.49 x 0.31 mm
+      x~ 57.94 y~  3.35  z 14.85..14.85 (1 layers)  largest 0.302 mm2, up to 0.39 x 1.32 mm
+      x~ 57.94 y~ -3.35  z 14.85..14.85 (1 layers)  largest 0.302 mm2, up to 0.39 x 1.32 mm
+      x~ 57.89 y~ -2.20  z 14.95..14.95 (1 layers)  largest 0.190 mm2, up to 0.11 x 2.22 mm
+      x~ 57.89 y~  2.20  z 14.95..14.95 (1 layers)  largest 0.190 mm2, up to 0.11 x 2.22 mm
+      x~ 57.60 y~ -4.84  z 14.55..14.65 (2 layers)  largest 0.049 mm2, up to 0.31 x 0.42 mm
+      x~ 57.60 y~  4.84  z 14.55..14.65 (2 layers)  largest 0.049 mm2, up to 0.31 x 0.42 mm
+      x~ 54.60 y~  9.61  z 6.15..6.25 (2 layers)  largest 0.042 mm2, up to 0.39 x 0.28 mm
+      x~ 54.60 y~ -9.61  z 6.15..6.25 (2 layers)  largest 0.042 mm2, up to 0.39 x 0.28 mm
+      x~ 57.81 y~ -4.20  z 14.75..14.75 (1 layers)  largest 0.073 mm2, up to 0.33 x 0.55 mm
+      x~ 57.81 y~  4.20  z 14.75..14.75 (1 layers)  largest 0.073 mm2, up to 0.33 x 0.55 mm
+      x~ 59.25 y~ -9.66  z 6.25..6.25 (1 layers)  largest 0.042 mm2, up to 0.39 x 0.28 mm
+      x~ 59.25 y~  9.66  z 6.25..6.25 (1 layers)  largest 0.042 mm2, up to 0.39 x 0.28 mm
+      x~ 57.68 y~  8.61  z 5.15..5.15 (1 layers)  largest 0.037 mm2, up to 0.43 x 0.18 mm
+      x~ 57.68 y~ -8.61  z 5.15..5.15 (1 layers)  largest 0.037 mm2, up to 0.43 x 0.18 mm
+   front left leg:
+      x~ 20.91 y~  9.07  z 3.75..8.65 (10 layers)  largest 0.416 mm2, up to 2.63 x 0.37 mm
+      x~ 22.70 y~  9.05  z 4.25..8.15 (40 layers)  largest 0.091 mm2, up to 0.71 x 0.32 mm
+      x~ 18.49 y~  9.04  z 4.95..7.45 (26 layers)  largest 0.052 mm2, up to 0.46 x 0.29 mm
+      x~ 19.16 y~  9.05  z 4.15..8.25 (16 layers)  largest 0.106 mm2, up to 0.84 x 0.32 mm
+
+C. downward-facing area by steepness, per body (mesh normals; independent of the slices)
+   head             bed face  175.19 mm2 | overhang 44-46 deg   83.80 | 46-50  0.000 | 50-70  0.000 | >70  0.000 | 30-44   76.96
+   orange           bed face   21.23 mm2 | overhang 44-46 deg   25.54 | 46-50  0.000 | 50-70  0.000 | >70  0.000 | 30-44   21.78
+   body 1           bed face  174.95 mm2 | overhang 44-46 deg  204.19 | 46-50  0.000 | 50-70  0.000 | >70  0.000 | 30-44   51.53
+   body 2           bed face  115.29 mm2 | overhang 44-46 deg   96.64 | 46-50  0.000 | 50-70  0.000 | >70  0.000 | 30-44   22.93
+   body 3           bed face  115.29 mm2 | overhang 44-46 deg   96.64 | 46-50  0.000 | 50-70  0.000 | >70  0.000 | 30-44   27.78
+   body 4           bed face  115.65 mm2 | overhang 44-46 deg   41.35 | 46-50  0.000 | 50-70  0.000 | >70  0.000 | 30-44   47.23
+   front left leg   bed face   15.32 mm2 | overhang 44-46 deg    9.21 | 46-50  0.000 | 50-70  0.000 | >70  0.000 | 30-44    9.37
+   front right leg  bed face   15.32 mm2 | overhang 44-46 deg    9.21 | 46-50  0.000 | 50-70  0.000 | >70  0.000 | 30-44    9.37
+   hind left leg    bed face   15.32 mm2 | overhang 44-46 deg    9.21 | 46-50  0.000 | 50-70  0.000 | >70  0.000 | 30-44    9.37
+   hind right leg   bed face   15.32 mm2 | overhang 44-46 deg    9.21 | 46-50  0.000 | 50-70  0.000 | >70  0.000 | 30-44    9.37
+pocket-capybara STL tris 37848 bounds [[0.0, -11.9, 0.0], [61.6, 11.9, 20.244]] components 16 watertight each [True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True]
+  STL volumes  [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 186.41, 186.41, 186.41, 186.41, 364.73, 1858.95, 1934.77, 2049.35, 2559.13, 2941.07]
+  part volumes [186.41, 186.41, 186.41, 186.41, 364.73, 1858.95, 1934.77, 2049.35, 2559.13, 2941.07]
+  STL zmin per component [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.45683, 0.45683, 0.45683, 0.57723, 6.6, 6.6]
+  3mf entries [('[Content_Types].xml', 317), ('_rels/.rels', 258), ('3D/3dmodel.model', 3048046), ('Metadata/model_settings.config', 161)]
+  model head: <?xml version="1.0" encoding="UTF-8"?><model unit="millimeter" xml:lang="en-US" xmlns="http://schemas.microsoft.com/3dmanufacturing/core/2015/02" xmlns:m="http://schemas.microsoft.com/3dmanufacturing/material/2015/02"><resources><m:colorgroup id="100"><m:color color="#9A6A3EFF"/><m:color color="#4E301CFF"/><m:color color="#1A1A1AFF"/><m:color color="#F28C1AFF"/></m:colorgroup><object id="1" type="
+  vertices 18934 triangles 37848 objects 1 items ['<item objectid="1" transform="1 0 0 0 1 0 0 0 1 0.000 0.000 0"/>'] paint attrs 37848
+  3mf z range 0.0 20.2445
+pocket-capybara-test STL tris 7348 bounds [[0.0, -10.2, 0.0], [31.6, 10.2, 14.5]] components 9 watertight each [True, False, False, False, False, False, False, True, True]
+  STL volumes  [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 186.41, 2535.43, 3583.78]
+  part volumes [186.41, 2535.43, 3583.78]
+  STL zmin per component [0.0, 0.0, 0.0, 3.33516, 3.33516, 4.95, 4.95, 4.95, 4.95]
+  3mf entries [('[Content_Types].xml', 317), ('_rels/.rels', 258), ('3D/3dmodel.model', 573671), ('Metadata/model_settings.config', 166)]
+  model head: <?xml version="1.0" encoding="UTF-8"?><model unit="millimeter" xml:lang="en-US" xmlns="http://schemas.microsoft.com/3dmanufacturing/core/2015/02" xmlns:m="http://schemas.microsoft.com/3dmanufacturing/material/2015/02"><resources><m:colorgroup id="100"><m:color color="#9A6A3EFF"/><m:color color="#4E301CFF"/><m:color color="#1A1A1AFF"/><m:color color="#F28C1AFF"/></m:colorgroup><object id="1" type="
+  vertices 3678 triangles 7348 objects 1 items ['<item objectid="1" transform="1 0 0 0 1 0 0 0 1 0.000 0.000 0"/>'] paint attrs 7348
+  3mf z range 0.0 14.5

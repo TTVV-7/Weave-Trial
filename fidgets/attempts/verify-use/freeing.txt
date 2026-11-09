@@ -1,0 +1,42 @@
+== body 1  <->  body 2  
+   layer at z=0.1: smallest gap 0.40 mm; length of outline facing the other part within  0.45 mm: 16.4 mm  0.55 mm: 24.4 mm  0.65 mm: 25.4 mm  0.85 mm: 27.0 mm
+   layer at z=0.3: smallest gap 0.40 mm; length of outline facing the other part within  0.45 mm: 16.4 mm  0.55 mm: 24.4 mm  0.65 mm: 25.4 mm  0.85 mm: 27.0 mm
+   whole surface: 0.0 mm2 of body 1 lies within 0.37 mm of body 2 (of that 0.0 mm2 in the bottom two layers; 0.0 mm2 on sloping faces |nz|>0.5, z 0.0..0.0)
+   whole surface: 172.7 mm2 of body 1 lies within 0.45 mm of body 2 (of that 8.4 mm2 in the bottom two layers; 57.4 mm2 on sloping faces |nz|>0.5, z 0.0..14.5)
+   whole surface: 220.7 mm2 of body 1 lies within 0.60 mm of body 2 (of that 15.4 mm2 in the bottom two layers; 71.6 mm2 on sloping faces |nz|>0.5, z 0.0..14.6)
+== body 2  <->  body 3  
+   layer at z=0.1: smallest gap 0.40 mm; length of outline facing the other part within  0.45 mm: 16.4 mm  0.55 mm: 24.4 mm  0.65 mm: 25.4 mm  0.85 mm: 27.0 mm
+   layer at z=0.3: smallest gap 0.40 mm; length of outline facing the other part within  0.45 mm: 16.4 mm  0.55 mm: 24.4 mm  0.65 mm: 25.4 mm  0.85 mm: 27.0 mm
+   whole surface: 0.0 mm2 of body 2 lies within 0.37 mm of body 3 (of that 0.0 mm2 in the bottom two layers; 0.0 mm2 on sloping faces |nz|>0.5, z 0.0..0.0)
+   whole surface: 178.6 mm2 of body 2 lies within 0.45 mm of body 3 (of that 8.5 mm2 in the bottom two layers; 62.6 mm2 on sloping faces |nz|>0.5, z 0.0..15.1)
+   whole surface: 225.9 mm2 of body 2 lies within 0.60 mm of body 3 (of that 15.8 mm2 in the bottom two layers; 77.0 mm2 on sloping faces |nz|>0.5, z 0.0..15.2)
+== body 3  <->  body 4  
+   layer at z=0.1: smallest gap 0.40 mm; length of outline facing the other part within  0.45 mm: 16.4 mm  0.55 mm: 24.4 mm  0.65 mm: 25.4 mm  0.85 mm: 27.0 mm
+   layer at z=0.3: smallest gap 0.40 mm; length of outline facing the other part within  0.45 mm: 16.4 mm  0.55 mm: 24.4 mm  0.65 mm: 25.4 mm  0.85 mm: 27.0 mm
+   whole surface: 0.0 mm2 of body 3 lies within 0.37 mm of body 4 (of that 0.0 mm2 in the bottom two layers; 0.0 mm2 on sloping faces |nz|>0.5, z 0.0..0.0)
+   whole surface: 179.8 mm2 of body 3 lies within 0.45 mm of body 4 (of that 8.5 mm2 in the bottom two layers; 62.9 mm2 on sloping faces |nz|>0.5, z 0.0..15.3)
+   whole surface: 227.0 mm2 of body 3 lies within 0.60 mm of body 4 (of that 15.4 mm2 in the bottom two layers; 77.3 mm2 on sloping faces |nz|>0.5, z 0.0..15.5)
+== body 1  <->  head  
+   layer at z=0.1: smallest gap 0.40 mm; length of outline facing the other part within  0.45 mm: 9.5 mm  0.55 mm: 16.6 mm  0.65 mm: 17.4 mm  0.85 mm: 18.5 mm
+   layer at z=0.3: smallest gap 0.40 mm; length of outline facing the other part within  0.45 mm: 10.3 mm  0.55 mm: 17.8 mm  0.65 mm: 18.6 mm  0.85 mm: 19.7 mm
+   whole surface: 44.3 mm2 of body 1 lies within 0.37 mm of head (of that 0.0 mm2 in the bottom two layers; 21.9 mm2 on sloping faces |nz|>0.5, z 4.1..9.2)
+   whole surface: 245.9 mm2 of body 1 lies within 0.45 mm of head (of that 7.9 mm2 in the bottom two layers; 45.5 mm2 on sloping faces |nz|>0.5, z 0.0..12.1)
+   whole surface: 290.7 mm2 of body 1 lies within 0.60 mm of head (of that 11.5 mm2 in the bottom two layers; 56.3 mm2 on sloping faces |nz|>0.5, z 0.0..12.5)
+== head  <->  orange  
+   layer at z=0.1: smallest gap 0.50 mm; length of outline facing the other part within  0.45 mm: 0.0 mm  0.55 mm: 18.8 mm  0.65 mm: 18.8 mm  0.85 mm: 18.8 mm
+   layer at z=0.3: smallest gap 0.50 mm; length of outline facing the other part within  0.45 mm: 0.0 mm  0.55 mm: 17.6 mm  0.65 mm: 17.6 mm  0.85 mm: 17.6 mm
+   whole surface: 44.3 mm2 of head lies within 0.37 mm of orange (of that 6.6 mm2 in the bottom two layers; 43.8 mm2 on sloping faces |nz|>0.5, z 0.2..13.4)
+   whole surface: 52.5 mm2 of head lies within 0.45 mm of orange (of that 9.9 mm2 in the bottom two layers; 49.0 mm2 on sloping faces |nz|>0.5, z 0.1..13.4)
+   whole surface: 195.5 mm2 of head lies within 0.60 mm of orange (of that 13.5 mm2 in the bottom two layers; 56.4 mm2 on sloping faces |nz|>0.5, z 0.0..13.4)
+== body 1  <->  front left leg  
+   layer at z=0.1: smallest gap 0.68 mm; length of outline facing the other part within  0.45 mm: 0.0 mm  0.55 mm: 0.0 mm  0.65 mm: 0.0 mm  0.85 mm: 6.8 mm
+   layer at z=0.3: smallest gap 0.52 mm; length of outline facing the other part within  0.45 mm: 0.0 mm  0.55 mm: 6.3 mm  0.65 mm: 6.9 mm  0.85 mm: 7.4 mm
+   whole surface: 11.7 mm2 of body 1 lies within 0.37 mm of front left leg (of that 0.0 mm2 in the bottom two layers; 5.7 mm2 on sloping faces |nz|>0.5, z 5.6..9.0)
+   whole surface: 86.5 mm2 of body 1 lies within 0.45 mm of front left leg (of that 0.5 mm2 in the bottom two layers; 7.4 mm2 on sloping faces |nz|>0.5, z 0.4..9.8)
+   whole surface: 101.7 mm2 of body 1 lies within 0.60 mm of front left leg (of that 2.3 mm2 in the bottom two layers; 11.4 mm2 on sloping faces |nz|>0.5, z 0.2..10.1)
+== body 4  <->  hind left leg  
+   layer at z=0.1: smallest gap 0.68 mm; length of outline facing the other part within  0.45 mm: 0.0 mm  0.55 mm: 0.0 mm  0.65 mm: 0.0 mm  0.85 mm: 7.3 mm
+   layer at z=0.3: smallest gap 0.52 mm; length of outline facing the other part within  0.45 mm: 0.0 mm  0.55 mm: 6.6 mm  0.65 mm: 7.2 mm  0.85 mm: 7.9 mm
+   whole surface: 11.5 mm2 of body 4 lies within 0.37 mm of hind left leg (of that 0.0 mm2 in the bottom two layers; 5.5 mm2 on sloping faces |nz|>0.5, z 5.5..9.0)
+   whole surface: 79.4 mm2 of body 4 lies within 0.45 mm of hind left leg (of that 0.5 mm2 in the bottom two layers; 7.3 mm2 on sloping faces |nz|>0.5, z 0.4..10.9)
+   whole surface: 92.9 mm2 of body 4 lies within 0.60 mm of hind left leg (of that 2.3 mm2 in the bottom two layers; 11.3 mm2 on sloping faces |nz|>0.5, z 0.2..11.1)
