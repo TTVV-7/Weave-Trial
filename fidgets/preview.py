@@ -3,7 +3,9 @@
     python3 preview.py        (needs trimesh, matplotlib)
 
 Writes stl/basketball-gyro.png, stl/basketball-spinner.png and preview.png
-(both fidgets side by side, plus the gyro opened up to show it spins).
+(both fidgets side by side, plus the gyro opened up to show it spins), and
+stl/construction-nut-bolt.png and construction-preview.png (the nut & bolt
+screwed together, and laid out as printed).
 """
 import re
 import zipfile
@@ -14,6 +16,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.collections import PolyCollection
 import make_fidgets as mk
+import make_nut_bolt as nb
 
 LIGHT = np.array([-0.3, -0.5, 0.8]) / np.linalg.norm([-0.3, -0.5, 0.8])
 
@@ -101,6 +104,31 @@ def gyro_opened(objs):
     return out
 
 
+def construction():
+    objs, colours = read_3mf(mk.OUT / "construction-nut-bolt.3mf")
+    bolt, nuts = objs[0], objs[1:]
+    built = [bolt]
+    for (v, f, k), z in zip(nuts, [44.0, 28.0, 12.0]):
+        v = v - [v[:, 0].mean(), v[:, 1].mean(), 0]      # back to the bolt's axis
+        a = np.radians(360 * (z - nb.HEAD_H) / nb.PITCH)
+        rz = np.array([[np.cos(a), -np.sin(a), 0], [np.sin(a), np.cos(a), 0], [0, 0, 1]])
+        built.append((v @ rz.T + [0, 0, z], f, k))
+    fig, ax = plt.subplots(figsize=(5, 6))
+    draw(ax, built, colours, elev=15, azim=-25)
+    fig.savefig(mk.OUT / "construction-nut-bolt.png", dpi=110, bbox_inches="tight", facecolor="white")
+    plt.close(fig)
+
+    fig, ax = plt.subplots(1, 3, figsize=(16, 6), gridspec_kw={"width_ratios": [1, 1.4, 1.1]})
+    draw(ax[0], built, colours, elev=15, azim=-25)
+    ax[0].set_title("Construction nut & bolt", fontsize=13)
+    draw(ax[1], objs, colours, elev=40, azim=-30)
+    ax[1].set_title("…as printed: bolt standing, nuts flat", fontsize=13)
+    draw(ax[2], [nuts[0]], colours, elev=70, azim=-20)
+    ax[2].set_title("hazard stripes run on round every face", fontsize=13)
+    fig.tight_layout()
+    fig.savefig(mk.HERE / "construction-preview.png", dpi=100, facecolor="white")
+
+
 def main():
     gyro, colours = read_3mf(mk.OUT / "basketball-gyro.3mf")
     spinner, _ = read_3mf(mk.OUT / "basketball-spinner.3mf")
@@ -121,6 +149,7 @@ def main():
     ax[2].set_title("Basketball spinner + 2 caps (608 bearing)", fontsize=13)
     fig.tight_layout()
     fig.savefig(mk.HERE / "preview.png", dpi=100, facecolor="white")
+    construction()
 
 
 if __name__ == "__main__":

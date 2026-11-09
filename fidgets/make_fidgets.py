@@ -281,9 +281,9 @@ def paint_cap(m):
 PAINT_CODE = ["4", "8", "0C", "1C"]
 
 
-def write_3mf(path, objects):
+def write_3mf(path, objects, filaments=FILAMENTS):
     """objects: list of (name, mesh, labels, offset_xy). One object each, painted."""
-    hexes = [f"#{r:02X}{g:02X}{b:02X}FF" for r, g, b in FILAMENTS]
+    hexes = [f"#{r:02X}{g:02X}{b:02X}FF" for r, g, b in filaments]
     res, build, cfg = [], [], []
     for i, (name, mesh, lab, (ox, oy)) in enumerate(objects, start=1):
         verts = "".join(f'<vertex x="{x:.4f}" y="{y:.4f}" z="{z:.4f}"/>' for x, y, z in mesh.vertices)
