@@ -125,11 +125,11 @@ def ring_radii():
     return radii
 
 
-def make_gyro():
-    """The gyro as a list of solids: the ball, then the rings from the inside out."""
+def make_gyro(ball=None):
+    """The gyro as a list of solids: the ball, then the rings from the inside out.
+    `ball` replaces the basketball; it must fit inside a sphere of BALL_R."""
     radii = ring_radii()
-    seams = ball_seams(BALL_R)
-    parts = [sphere(BALL_R) ^ slab() - seams]
+    parts = [ball if ball is not None else sphere(BALL_R) ^ slab() - ball_seams(BALL_R)]
     parts += [shell(a, b) for a, b in radii]
     # part k (0 = ball) pivots in part k+1 on two pins; axes alternate x, y, x, y
     inner_outer = [BALL_R] + [b for _, b in radii]

@@ -1,8 +1,9 @@
 # Fidgets (3D print files)
 
-Two basketball fidgets and a construction nut & bolt, each as a **painted 3MF**
-and a plain single-colour STL. The basketball seams and the hazard stripes are real
-0.6 mm grooves, so they still show when printed in one colour.
+Two basketball fidgets, a construction nut & bolt and a Southwest Contracting gyro,
+each as a **painted 3MF** and a plain single-colour STL. The basketball seams, hazard
+stripes and lettering are real 0.6 mm grooves, so they still show when printed in
+one colour.
 
 ![the gyro as printed and mid-spin, and the spinner with its caps](preview.png)
 
@@ -11,6 +12,7 @@ and a plain single-colour STL. The basketball seams and the hazard stripes are r
 | **Basketball gyro**: a ball spinning inside four rings, print-in-place | `stl/basketball-gyro.3mf` / `.stl` | 56 × 56 × 17 | none |
 | **Basketball spinner**: three-lobe spinner with a basketball on each lobe | `stl/basketball-spinner.3mf` (body and 2 caps on one plate), or `stl/basketball-spinner.stl` + 2 × `stl/basketball-spinner-cap.stl` | 80 × 73 × 7 | one 608 bearing (22 × 8 × 7, the skateboard kind) |
 | **Construction nut & bolt**: three hazard-striped nuts that spin up and down a chunky bolt | `stl/construction-nut-bolt.3mf` (bolt and 3 nuts on one plate), or `stl/construction-bolt.stl` + 3 × `stl/construction-nut.stl` | bolt 32 × 28 × 57, nuts 30 × 26 × 12 | none |
+| **Southwest Contracting gyro**: the gyro with SOUTHWEST / CONTRACTING round the outer ring and SWC on the ball | `stl/southwest-contracting-gyro.3mf` / `.stl` | 56 × 56 × 17 | none |
 
 ## Filaments
 
@@ -32,6 +34,17 @@ Both use the same three filaments in the same slots, so they can share a plate.
 | T2 | Black | `#1A1A1A` | the hazard stripes, the black nut |
 | T3 | Safety orange | `#FF6A13` | the orange nut |
 | T4 | Steel grey | `#8C9096` | the threaded shank |
+
+### Southwest Contracting gyro
+
+Placeholder colours until we have the company's; change `FILAMENTS` in
+`make_swc_gyro.py` and re-run.
+
+| Slot | Filament | Hex | Paints |
+|---|---|---|---|
+| T1 | Black | `#1A1A1A` | the outer ring and the innermost ring |
+| T2 | Safety orange | `#FF6A13` | all the lettering, the second ring |
+| T3 | White | `#F2F2F2` | the ball, the third ring |
 
 The 3MFs use Bambu Studio's painting format, so they open the same in Bambu Studio
 (P1S + AMS), OrcaSlicer and Snapmaker Orca (U1).
@@ -85,6 +98,19 @@ on unbroken round all six faces.
 - The 3MF has the bolt and all three nuts painted on one plate: a yellow nut and an
   orange nut with black stripes, and a black nut with yellow stripes.
 
+## Southwest Contracting gyro
+
+![front and back of the outer ring, and the gyro mid-spin](southwest-contracting-preview.png)
+
+The basketball gyro, branded. **SOUTHWEST** runs round the front of the outer ring
+and **CONTRACTING** round the back, in Inter Bold, 6.5 mm tall. **SWC** is cut into
+both flat faces of the ball, turned so it reads the same whichever face has spun
+up. It prints and frees up exactly like the basketball gyro (see above).
+
+The words, monogram, letter sizes, ring colours and filaments are all at the top of
+`make_swc_gyro.py`. Each word can span up to about 150° of the ring; a longer one is
+shrunk to fit.
+
 ## Changing them
 
 Every dimension is a constant at the top of `make_fidgets.py` (ball size, ring
@@ -95,10 +121,12 @@ colours). Then:
 ```bash
 python3 make_fidgets.py   # basketball fidgets: writes stl/basketball-*
 python3 make_nut_bolt.py  # nut & bolt: writes stl/construction-*  (about a minute)
+python3 make_swc_gyro.py  # Southwest Contracting gyro: writes stl/southwest-contracting-*
 python3 preview.py        # redraws the preview images from the 3MFs
 ```
 
-Needs `pip install numpy trimesh manifold3d matplotlib`.
+Needs `pip install numpy trimesh manifold3d matplotlib`, plus `fonttools qrcode`
+for the lettering (it uses the Inter font and text code from `reviewstand/`).
 
 Before writing anything, `make_fidgets.py` turns every gyro pivot through a full
 circle and stops if a ring jams or comes apart from its pins:

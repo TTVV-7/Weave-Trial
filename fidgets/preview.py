@@ -5,7 +5,8 @@
 Writes stl/basketball-gyro.png, stl/basketball-spinner.png and preview.png
 (both fidgets side by side, plus the gyro opened up to show it spins), and
 stl/construction-nut-bolt.png and construction-preview.png (the nut & bolt
-screwed together, and laid out as printed).
+screwed together, and laid out as printed), and
+stl/southwest-contracting-gyro.png and southwest-contracting-preview.png.
 """
 import re
 import zipfile
@@ -129,6 +130,24 @@ def construction():
     fig.savefig(mk.HERE / "construction-preview.png", dpi=100, facecolor="white")
 
 
+def southwest():
+    gyro, colours = read_3mf(mk.OUT / "southwest-contracting-gyro.3mf")
+    fig, ax = plt.subplots(figsize=(6, 4.5))
+    draw(ax, gyro, colours, elev=20, azim=-90)
+    fig.savefig(mk.OUT / "southwest-contracting-gyro.png", dpi=110, bbox_inches="tight", facecolor="white")
+    plt.close(fig)
+
+    fig, ax = plt.subplots(1, 3, figsize=(16, 5))
+    draw(ax[0], gyro, colours, elev=20, azim=-90)
+    ax[0].set_title("Southwest Contracting gyro: front", fontsize=13)
+    draw(ax[1], gyro, colours, elev=20, azim=90)
+    ax[1].set_title("back", fontsize=13)
+    draw(ax[2], gyro_opened(gyro), colours, elev=30, azim=-60)
+    ax[2].set_title("mid-spin", fontsize=13)
+    fig.tight_layout()
+    fig.savefig(mk.HERE / "southwest-contracting-preview.png", dpi=100, facecolor="white")
+
+
 def main():
     gyro, colours = read_3mf(mk.OUT / "basketball-gyro.3mf")
     spinner, _ = read_3mf(mk.OUT / "basketball-spinner.3mf")
@@ -150,6 +169,7 @@ def main():
     fig.tight_layout()
     fig.savefig(mk.HERE / "preview.png", dpi=100, facecolor="white")
     construction()
+    southwest()
 
 
 if __name__ == "__main__":
