@@ -182,30 +182,27 @@ def capybara():
     colours = [f"#{r:02X}{g:02X}{b:02X}" for r, g, b in cb.FILAMENTS]
     parts, joints, info = cb.make_capybara()
 
-    def as_draw(ps):
-        mesh, lab = cb.paint(parts, info, ps)
+    def as_draw(angles=None):
+        mesh, lab = cb.paint(parts, info, (joints, angles) if angles else None)
         return [(mesh.vertices, mesh.faces, lab)]
 
     pose = {"body joint 1": 25, "body joint 2": -25, "body joint 3": 25, "head nod": 12, "orange": 90,
             "front left leg": 35, "front right leg": -30, "hind left leg": -40, "hind right leg": 30}
-    straight = as_draw(parts)
-    wiggled = as_draw(cb.posed(parts, joints, pose))
+    straight, wiggled = as_draw(), as_draw(pose)
     fig, ax = plt.subplots(figsize=(7, 4.5))
     draw(ax, straight, colours, elev=25, azim=60)
     fig.savefig(mk.OUT / "pocket-capybara.png", dpi=110, bbox_inches="tight", facecolor="white")
     plt.close(fig)
 
-    fig, ax = plt.subplots(2, 2, figsize=(14, 9))
-    draw(ax[0, 0], straight, colours, elev=25, azim=60)
-    ax[0, 0].set_title("Pocket capybara, straight (as printed)", fontsize=13)
-    draw(ax[0, 1], wiggled, colours, elev=25, azim=60)
-    ax[0, 1].set_title("wiggled: body bent, head up, legs swung", fontsize=13)
-    draw(ax[1, 0], straight, colours, elev=89, azim=180)
-    ax[1, 0].set_title("from above, straight", fontsize=13)
-    draw(ax[1, 1], wiggled, colours, elev=89, azim=180)
-    ax[1, 1].set_title("from above, wiggled", fontsize=13)
+    views = [(straight, 25, 60, "Pocket capybara, straight (as printed)"), (wiggled, 25, 60, "wiggled: body bent, head up, legs swung"),
+             (straight, 8, 0, "side"), (straight, 89, 180, "from above, straight"),
+             (wiggled, 89, 180, "from above, wiggled"), (straight, 12, 90, "face")]
+    fig, ax = plt.subplots(2, 3, figsize=(20, 10))
+    for a, (m, elev, azim, title) in zip(ax.flat, views):
+        draw(a, m, colours, elev=elev, azim=azim)
+        a.set_title(title, fontsize=13)
     fig.tight_layout()
-    fig.savefig(mk.HERE / "pocket-capybara-preview.png", dpi=100, bbox_inches="tight", facecolor="white")
+    fig.savefig(mk.HERE / "pocket-capybara-preview.png", dpi=80, bbox_inches="tight", facecolor="white")
     plt.close(fig)
 
 
