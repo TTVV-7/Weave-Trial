@@ -1,0 +1,64 @@
+C2. HOOK BRIDGE: largest disc that can be rolled from the middle of the tongue into the body, in upright sections through the axis
+   full joint 1: 0 deg: 2.899, 8 deg: 2.899, 14 deg: 2.899, 17.5 deg: 2.899
+   full joint 2: 0 deg: 2.899, 8 deg: 2.899, 14 deg: 2.899, 17.5 deg: 2.899
+   full joint 3: 0 deg: 2.899, 8 deg: 2.899, 14 deg: 2.899, 17.5 deg: 2.899
+   strip joint 1: 0 deg: 2.899, 8 deg: 2.899, 14 deg: 2.899, 17.5 deg: 2.899
+
+E. LEG PINS (body) and LEG SOCKET WALLS / SKIN (leg)
+   full front pin, sections at flank+dy: -0.30: inside the body (section 15.4 x 7.9); -0.02: inside the body (section 13.8 x 5.8); +0.02: 2.540 wide x 2.500 tall, z 5.97..8.47, largest disc 2.498, area 5.04; +0.20: 2.900 wide x 2.500 tall, z 6.15..8.65, largest disc 2.498, area 6.05; +0.40: 3.300 wide x 2.500 tall, z 6.35..8.85, largest disc 2.498, area 6.94; +0.80: 4.100 wide x 2.500 tall, z 6.75..9.25, largest disc 2.498, area 8.42; +1.20: 4.900 wide x 2.500 tall, z 7.15..9.65, largest disc 2.498, area 9.66; +1.58: 5.617 wide x 2.500 tall, z 7.53..10.03, largest disc 2.498, area 10.70
+   full front leg: thinnest wall round the pin's socket, measured along a radius 0.885 (section turned 45 deg about the pin, y=10.47, rho 3.71..4.60); thinnest skin beyond the socket's end 0.900 (turned 0 deg, rho=-3.7, y 10.50..11.40)
+        3D: socket space to all other empty space (leg's own face shaved 0.03): 0.851 mm; pieces of empty space 2
+        gap pin-to-leg as printed 0.350
+   full hind pin, sections at flank+dy: -0.30: inside the body (section 6.5 x 9.1); -0.02: inside the body (section 5.3 x 6.2); +0.02: 2.540 wide x 2.500 tall, z 5.97..8.47, largest disc 2.498, area 5.04; +0.20: 2.900 wide x 2.500 tall, z 6.15..8.65, largest disc 2.498, area 6.05; +0.40: 3.300 wide x 2.500 tall, z 6.35..8.85, largest disc 2.498, area 6.94; +0.80: 4.100 wide x 2.500 tall, z 6.75..9.25, largest disc 2.498, area 8.42; +1.20: 4.900 wide x 2.500 tall, z 7.15..9.65, largest disc 2.498, area 9.66; +1.58: 5.617 wide x 2.500 tall, z 7.53..10.03, largest disc 2.498, area 10.70
+   full hind leg: thinnest wall round the pin's socket, measured along a radius 0.847 (section turned 145 deg about the pin, y=8.92, rho 6.38..7.23); thinnest skin beyond the socket's end 0.900 (turned 0 deg, rho=-3.7, y 10.50..11.40)
+        3D: socket space to all other empty space (leg's own face shaved 0.03): 0.851 mm; pieces of empty space 2
+        gap pin-to-leg as printed 0.350
+   full hind right pin, sections at flank+dy: -0.30: inside the body (section 6.5 x 9.1); -0.02: inside the body (section 5.3 x 6.2); +0.02: 2.540 wide x 2.500 tall, z 5.97..8.47, largest disc 2.498, area 5.04; +0.20: 2.900 wide x 2.500 tall, z 6.15..8.65, largest disc 2.498, area 6.05; +0.40: 3.300 wide x 2.500 tall, z 6.35..8.85, largest disc 2.498, area 6.94; +0.80: 4.100 wide x 2.500 tall, z 6.75..9.25, largest disc 2.498, area 8.42; +1.20: 4.900 wide x 2.500 tall, z 7.15..9.65, largest disc 2.498, area 9.66; +1.58: 5.617 wide x 2.500 tall, z 7.53..10.03, largest disc 2.498, area 10.70
+   full hind right leg: thinnest wall round the pin's socket, measured along a radius 0.847 (section turned 145 deg about the pin, y=8.92, rho 6.38..7.23); thinnest skin beyond the socket's end 0.900 (turned 0 deg, rho=-3.7, y 10.50..11.40)
+        3D: socket space to all other empty space (leg's own face shaved 0.03): 0.851 mm; pieces of empty space 2
+        gap pin-to-leg as printed 0.350
+   strip front pin, sections at flank+dy: -0.30: inside the body (section 15.4 x 7.9); -0.02: inside the body (section 13.8 x 5.8); +0.02: 2.540 wide x 2.500 tall, z 5.97..8.47, largest disc 2.498, area 5.04; +0.20: 2.900 wide x 2.500 tall, z 6.15..8.65, largest disc 2.498, area 6.05; +0.40: 3.300 wide x 2.500 tall, z 6.35..8.85, largest disc 2.498, area 6.94; +0.80: 4.100 wide x 2.500 tall, z 6.75..9.25, largest disc 2.498, area 8.42; +1.20: 4.900 wide x 2.500 tall, z 7.15..9.65, largest disc 2.498, area 9.66; +1.58: 5.617 wide x 2.500 tall, z 7.53..10.03, largest disc 2.498, area 10.70
+   strip front leg: thinnest wall round the pin's socket, measured along a radius 0.885 (section turned 45 deg about the pin, y=10.47, rho 3.71..4.60); thinnest skin beyond the socket's end 0.900 (turned 0 deg, rho=-3.7, y 10.50..11.40)
+        3D: socket space to all other empty space (leg's own face shaved 0.03): 0.851 mm; pieces of empty space 2
+        gap pin-to-leg as printed 0.350
+
+F. KEYRING LUG (body 4)
+   section y=0.01: hole is closed; thinnest wall round it 2.095 at x=55.65 z=15.48; over the hole's peak 2.101; top of lug 19.10
+   section y=1.00: hole is closed; thinnest wall round it 2.095 at x=55.65 z=15.48; over the hole's peak 2.101; top of lug 19.10
+   section y=2.00: hole is closed; thinnest wall round it 2.095 at x=55.65 z=15.48; over the hole's peak 2.101; top of lug 19.10
+   section y=2.20: hole is closed; thinnest wall round it 2.095 at x=55.65 z=15.48; over the hole's peak 2.101; top of lug 19.10
+   section y=2.50: hole is closed; thinnest wall round it 0.949 at x=57.10 z=17.95; over the hole's peak 0.950; top of lug 17.95
+   section y=3.00: hole is open here (a groove in the back); surface height near the lug 15.65
+   section y=3.50: hole is open here (a groove in the back); surface height near the lug 14.97
+   layer z=13.60: piece x 52.20..55.73 (3.53) y -6.34..+6.34 (12.68) area 37.89; piece x 58.47..60.76 (2.29) y -3.89..+3.89 (7.77) area 14.85
+   layer z=14.60: piece x 52.20..55.40 (3.20) y -5.03..+5.03 (10.07) area 29.35; piece x 58.80..60.90 (2.10) y -3.23..+3.23 (6.46) area 12.31
+   layer z=15.60: piece x 53.44..55.73 (2.29) y -3.01..+3.01 (6.02) area 12.75; piece x 58.47..60.76 (2.29) y -3.01..+3.01 (6.02) area 12.59
+   layer z=16.30: piece x 53.71..56.40 (2.69) y -2.86..+2.86 (5.72) area 14.47; piece x 57.80..60.49 (2.69) y -2.86..+2.86 (5.72) area 14.37
+   layer z=17.10: piece x 54.25..59.95 (5.71) y -2.68..+2.68 (5.37) area 29.36
+   layer z=17.50: piece x 54.63..59.57 (4.94) y -2.60..+2.60 (5.20) area 24.81
+   layer z=18.00: piece x 55.13..59.07 (3.94) y -2.49..+2.49 (4.98) area 19.17
+   layer z=18.50: piece x 55.63..58.57 (2.94) y -2.38..+2.38 (4.76) area 13.79
+   layer z=19.00: piece x 56.45..57.75 (1.30) y -2.27..+2.27 (4.55) area 5.87
+   3D, within |y| < 2.2: hole space to all other empty space 2.095 mm
+
+G. ORANGE: the shaft from the bed up into the ball; head wall round its bore
+   seat (shaft meets the cone) z=12.12, ball centre z=15.53; smallest diameter across flats anywhere from the bed to 3 mm above the seat: 4.500 at z=1.25
+   diameter by height: z=0.01: 6.79, z=1.00: 4.79, z=2.00: 4.50, z=3.00: 4.50, z=4.00: 4.50, z=4.80: 4.50, z=5.60: 4.50, z=6.40: 4.50, z=7.20: 4.50, z=8.00: 4.50, z=8.80: 4.50, z=9.60: 4.50, z=10.40: 4.50, z=11.20: 4.50, z=12.00: 4.50, z=12.80: 5.85, z=13.60: 7.01, z=14.40: 7.68
+   head: thinnest wall between the bore and any other surface of the head, per layer: 1.024 at z=12.35, x=6.41 y=+0.00
+   3D gap orange-to-head as printed: 0.500
+
+H. GAPS BETWEEN BODIES: 3D as printed, and sideways in thin slabs near the bed
+   full: body 4           hind left leg    3D 0.350 | slab 0-0.02: 1.630  0-0.1: 1.558  0-0.2: 1.467  0.2-0.4: 1.310 | outline gap at z=0.001: 1.647  z=0.1: 1.558  z=0.2: 1.467 | overlap 0.0e+00
+   full: body 4           hind right leg   3D 0.350 | slab 0-0.02: 1.630  0-0.1: 1.558  0-0.2: 1.467  0.2-0.4: 1.310 | outline gap at z=0.001: 1.647  z=0.1: 1.558  z=0.2: 1.467 | overlap 0.0e+00
+   full: body 1           front left leg   3D 0.350 | slab 0-0.02: 1.630  0-0.1: 1.558  0-0.2: 1.467  0.2-0.4: 1.310 | outline gap at z=0.001: 1.647  z=0.1: 1.558  z=0.2: 1.467 | overlap 0.0e+00
+   full: body 1           front right leg  3D 0.350 | slab 0-0.02: 1.630  0-0.1: 1.558  0-0.2: 1.467  0.2-0.4: 1.310 | outline gap at z=0.001: 1.647  z=0.1: 1.558  z=0.2: 1.467 | overlap 0.0e+00
+   full: head             body 1           3D 0.350 | slab 0-0.02: 0.883  0-0.1: 0.800  0-0.2: 0.600  0.2-0.4: 0.400 | outline gap at z=0.001: 0.902  z=0.1: 0.800  z=0.2: 0.600 | overlap 0.0e+00
+   full: body 2           body 3           3D 0.389 | slab 0-0.02: 0.730  0-0.1: 0.650  0-0.2: 0.550  0.2-0.4: 0.400 | outline gap at z=0.001: 0.749  z=0.1: 0.650  z=0.2: 0.550 | overlap 0.0e+00
+   full: body 3           body 4           3D 0.389 | slab 0-0.02: 0.730  0-0.1: 0.650  0-0.2: 0.550  0.2-0.4: 0.400 | outline gap at z=0.001: 0.749  z=0.1: 0.650  z=0.2: 0.550 | overlap 0.0e+00
+   full: body 1           body 2           3D 0.389 | slab 0-0.02: 0.730  0-0.1: 0.650  0-0.2: 0.550  0.2-0.4: 0.400 | outline gap at z=0.001: 0.749  z=0.1: 0.650  z=0.2: 0.550 | overlap 0.0e+00
+   full: head             orange           3D 0.500 | slab 0-0.02: 0.687  0-0.1: 0.615  0-0.2: 0.545  0.2-0.4: 0.545 | outline gap at z=0.001: 0.707  z=0.1: 0.707  z=0.2: 0.707 | overlap 0.0e+00
+   full: body 3           hind left leg    3D 1.249 | slab 0-0.02: 2.034  0-0.1: 1.910  0-0.2: 1.766  0.2-0.4: 1.588 | outline gap at z=0.001: 2.064  z=0.1: 1.910  z=0.2: 1.766 | overlap 0.0e+00
+   full: body 3           hind right leg   3D 1.249 | slab 0-0.02: 2.034  0-0.1: 1.910  0-0.2: 1.766  0.2-0.4: 1.588 | outline gap at z=0.001: 2.064  z=0.1: 1.910  z=0.2: 1.766 | overlap 0.0e+00
+   strip: body 1           front left leg   3D 0.350 | slab 0-0.02: 1.630  0-0.1: 1.558  0-0.2: 1.467  0.2-0.4: 1.310 | outline gap at z=0.001: 1.647  z=0.1: 1.558  z=0.2: 1.467 | overlap 0.0e+00
+   strip: head             body 1           3D 0.350 | slab 0-0.02: 0.883  0-0.1: 0.800  0-0.2: 0.600  0.2-0.4: 0.400 | outline gap at z=0.001: 0.902  z=0.1: 0.800  z=0.2: 0.600 | overlap 0.0e+00
+   strip: body 1           body 2           3D 0.389 | slab 0-0.02: 0.730  0-0.1: 0.650  0-0.2: 0.550  0.2-0.4: 0.400 | outline gap at z=0.001: 0.749  z=0.1: 0.650  z=0.2: 0.550 | overlap 0.0e+00

@@ -1,0 +1,24 @@
+hinge region proper (x 12.9..30, |y| < 3, z < 12): strip head vs real head differ by 0.84727 mm3
+body 2 in front of x = 37: strip vs real differ by 0.00000 mm3
+design's sweep(): hind left leg with body joint 3 at -25: +76/-180 deg  (want 45), tightest gap in range 0.050
+design's sweep(): hind right leg with body joint 3 at -25: full circle  (want 45), tightest gap in range 0.347
+design's sweep(): hind left leg with body joint 3 at -19: +41/-180 deg  (want 45), tightest gap in range 0.043
+design's sweep(): hind right leg with body joint 3 at -19: full circle  (want 45), tightest gap in range 0.347
+design's sweep(): hind left leg with body joint 3 at -13: +28/-180 deg  (want 45), tightest gap in range 0.005
+design's sweep(): hind right leg with body joint 3 at -13: full circle  (want 45), tightest gap in range 0.347
+design's sweep(): hind left leg with body joint 3 at -8: +28/-180 deg  (want 45), tightest gap in range 0.007
+design's sweep(): hind right leg with body joint 3 at -8: full circle  (want 45), tightest gap in range 0.347
+design's sweep(): hind left leg with body joint 3 at -5: +28/-180 deg  (want 45), tightest gap in range 0.006
+design's sweep(): hind right leg with body joint 3 at -5: full circle  (want 45), tightest gap in range 0.347
+design's sweep(): hind left leg with body joint 3 at +13: full circle  (want 45), tightest gap in range 0.347
+design's sweep(): hind right leg with body joint 3 at +13: +28/-180 deg  (want 45), tightest gap in range 0.005
+file shift x -0.0 y -0.0
+brown/dark edge at the paws: 33 corners, z from 2.4000 to 2.4000 (cut plane z = 2.4)
+brown/dark edge round the nose pad: 241 corners, ellipsoid equation value 0.9974..1.0000 (1 = exactly on the cut)
+brown/dark edge at the ears: 132 corners, z 12.3000..13.3808 (cut plane z = 12.3)
+brown/black (eyes, mouth): 159 edges, 32.8 mm, every corner on exactly 2 boundary edges (clean closed loops): False
+dark/black (nostrils): 147 edges, 13.6 mm, every corner on exactly 2 boundary edges (clean closed loops): False
+brown/orange: 128 edges, 16.6 mm, every corner on exactly 2 boundary edges (clean closed loops): True
+dark/orange (stalk): 160 edges, 8.2 mm, every corner on exactly 2 boundary edges (clean closed loops): True
+brown/orange edge on the orange: z 12.519..12.519, radius about the shaft 2.650..2.650; head top at the bore 13.32, seat 12.12
+black mouth: y -2.22..2.22, z 3.83..7.82, area 13.0 mm2; nose pad area 24.6; eyes 15.3

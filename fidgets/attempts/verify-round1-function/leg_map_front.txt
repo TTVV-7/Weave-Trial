@@ -1,0 +1,2 @@
+--- front left leg against body 2, body joint 1 from -29 to 29 ---
+  => smallest free leg swing over all body joint 1 angles: 999 deg at body joint 1 = None

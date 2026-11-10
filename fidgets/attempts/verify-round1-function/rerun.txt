@@ -1,0 +1,48 @@
+test strip: 4 separate bodies, each starting on the bed with no layer starting in mid-air; tightest gap as printed 0.35 mm, in the first layer 0.65 mm
+   front left leg   full circle      tightest gap 0.35 mm; with body joint 1 bent 25 either way: full circle
+   body joint 1     +29/-29 deg      tightest gap 0.29 mm
+   head nod         +18/-18 deg      tightest gap 0.13 mm; stopped both ways before 30
+   curled and S-bent with every joint at its limit, either way: nothing collides
+   every part is held in whichever way it is pulled
+   overhang past 45 deg 0.01 mm2; nothing below the bed
+   thinnest walls (measured): front leg round its pin's socket 0.85, neck tab round its sockets 1.00, socket lip over the ball 1.02, roof over the neck slot 1.03, socket lip horn at the flank, any layer 1.14, ball round the hook's pocket (rim, sides) 1.35, walls of the neck slot 1.35, rim the hook holds 2.20
+   pins (measured): front leg pin 2.50, hook tongue (across, wide) 2.57, hook bridge 2.90, head nod pins 2.52; each tongue is 3.45 across and 2.57 wide at its narrowest, 12.6 mm2
+   [6 s] parts: ['head', 'body 1', 'body 2', 'front left leg']; joints: ['front left leg', 'body joint 1', 'head nod']
+
+no lug: 10 separate bodies, each starting on the bed with no layer starting in mid-air; tightest gap as printed 0.35 mm, in the first layer 0.62 mm
+   front left leg   full circle      tightest gap 0.35 mm; with body joint 1 bent 25 either way: full circle
+   front right leg  full circle      tightest gap 0.35 mm; with body joint 1 bent 25 either way: full circle
+   hind left leg    full circle      tightest gap 0.35 mm; with body joint 3 bent 25 either way: +75/-180 deg
+   hind right leg   full circle      tightest gap 0.35 mm; with body joint 3 bent 25 either way: +75/-180 deg
+   orange           full circle      tightest gap 0.50 mm
+   body joint 3     +29/-29 deg      tightest gap 0.29 mm
+   body joint 2     +29/-29 deg      tightest gap 0.29 mm
+   body joint 1     +29/-29 deg      tightest gap 0.29 mm
+   head nod         +18/-18 deg      tightest gap 0.13 mm; stopped both ways before 30
+   curled and S-bent with every joint at its limit, either way: nothing collides
+   every part is held in whichever way it is pulled
+   overhang past 45 deg 0.01 mm2; nothing below the bed
+   thinnest walls (measured): hind leg round its pin's socket 0.85, front leg round its pin's socket 0.85, ball 2 round the hook's pocket (rim, sides) 0.91, ball 3 round the hook's pocket (rim, sides) 0.91, neck tab round its sockets 1.00, socket lip 2 over the ball 1.01, socket lip 3 over the ball 1.01, socket lip 1 over the ball 1.02, roof over the neck slot 1.03, socket lip 1 horn at the flank, any layer 1.14, socket lip 2 horn at the flank, any layer 1.14, socket lip 3 horn at the flank, any layer 1.14, ball 1 round the hook's pocket (rim, sides) 1.35, walls of the neck slot 1.35, head round the orange's shaft 1.45, rim 1 the hook holds 2.20, rim 2 the hook holds 2.20, rim 3 the hook holds 2.20, ear tip 2.65
+   pins (measured): front leg pin 2.50, hind leg pin 2.50, hook 1 tongue (across, wide) 2.57, hook 1 bridge 2.90, hook 2 tongue (across, wide) 2.57, hook 2 bridge 2.90, hook 3 tongue (across, wide) 2.57, hook 3 bridge 2.90, head nod pins 2.52, orange shaft 4.50; each tongue is 3.45 across and 2.57 wide at its narrowest, 12.6 mm2
+   nose to rump 61.6, width 23.8, height 19.4 (top of the back 15.8)
+   [21 s] parts: ['head', 'orange', 'body 1', 'body 2', 'body 3', 'body 4', 'front left leg', 'front right leg', 'hind left leg', 'hind right leg']; joints: ['front left leg', 'front right leg', 'hind left leg', 'hind right leg', 'orange', 'body joint 3', 'body joint 2', 'body joint 1', 'head nod']
+
+full: 10 separate bodies, each starting on the bed with no layer starting in mid-air; tightest gap as printed 0.35 mm, in the first layer 0.62 mm
+   front left leg   full circle      tightest gap 0.35 mm; with body joint 1 bent 25 either way: full circle
+   front right leg  full circle      tightest gap 0.35 mm; with body joint 1 bent 25 either way: full circle
+   hind left leg    full circle      tightest gap 0.35 mm; with body joint 3 bent 25 either way: +75/-180 deg
+   hind right leg   full circle      tightest gap 0.35 mm; with body joint 3 bent 25 either way: +75/-180 deg
+   orange           full circle      tightest gap 0.50 mm
+   body joint 3     +29/-29 deg      tightest gap 0.29 mm
+   body joint 2     +29/-29 deg      tightest gap 0.29 mm
+   body joint 1     +29/-29 deg      tightest gap 0.29 mm
+   head nod         +18/-18 deg      tightest gap 0.13 mm; stopped both ways before 30
+   curled and S-bent with every joint at its limit, either way: nothing collides
+   every part is held in whichever way it is pulled
+   overhang past 45 deg 0.01 mm2; nothing below the bed
+   thinnest walls (measured): hind leg round its pin's socket 0.85, front leg round its pin's socket 0.85, ball 2 round the hook's pocket (rim, sides) 0.91, ball 3 round the hook's pocket (rim, sides) 0.91, neck tab round its sockets 1.00, socket lip 2 over the ball 1.01, socket lip 3 over the ball 1.01, socket lip 1 over the ball 1.02, roof over the neck slot 1.03, socket lip 1 horn at the flank, any layer 1.14, socket lip 2 horn at the flank, any layer 1.14, socket lip 3 horn at the flank, any layer 1.14, ball 1 round the hook's pocket (rim, sides) 1.35, walls of the neck slot 1.35, head round the orange's shaft 1.45, keyring lug round its hole 2.10, rim 1 the hook holds 2.20, rim 2 the hook holds 2.20, rim 3 the hook holds 2.20, ear tip 2.65
+   pins (measured): front leg pin 2.50, hind leg pin 2.50, hook 1 tongue (across, wide) 2.57, hook 1 bridge 2.90, hook 2 tongue (across, wide) 2.57, hook 2 bridge 2.90, hook 3 tongue (across, wide) 2.57, hook 3 bridge 2.90, head nod pins 2.52, orange shaft 4.50; each tongue is 3.45 across and 2.57 wide at its narrowest, 12.6 mm2
+   keyring lug 4.94 thick, 2.10 over the hole's peak
+   nose to rump 61.6, width 23.8, height 19.4 (top of the keyring lug 19.1)
+   [21 s] parts: ['head', 'orange', 'body 1', 'body 2', 'body 3', 'body 4', 'front left leg', 'front right leg', 'hind left leg', 'hind right leg']; joints: ['front left leg', 'front right leg', 'hind left leg', 'hind right leg', 'orange', 'body joint 3', 'body joint 2', 'body joint 1', 'head nod']
+

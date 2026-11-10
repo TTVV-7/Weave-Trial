@@ -1,0 +1,10 @@
+tab section y = 2.299: socket radius 2.344, thinnest wall to the outside 0.956 mm (hole pt x 22.50 z 8.67 -> outside pt x 22.07 z 9.52)
+tab section y = 2.250: socket radius 2.295, thinnest wall to the outside 1.005 mm (hole pt x 22.52 z 8.62 -> outside pt x 22.07 z 9.52)
+tab section y = 2.000: socket radius 2.045, thinnest wall to the outside 1.255 mm (hole pt x 25.49 z 5.82 -> outside pt x 26.64 z 5.31)
+tab section y = 1.700: socket radius 1.745, thinnest wall to the outside 1.555 mm (hole pt x 21.93 z 6.09 -> outside pt x 20.45 z 5.61)
+tab section y = 1.300: socket radius 1.345, thinnest wall to the outside 1.954 mm (hole pt x 24.23 z 7.79 -> outside pt x 25.20 z 9.49)
+roof over the slot: thinnest upright run 1.04 mm at (x, y, z0, z1) = (22.85, 0.0, 13.08, 14.12)
+head pushed 0.0 mm to +y: overlaps body 0.0000 mm3; pin tip at |y| = 1.70; tab faces at y = -2.30 and 2.30 -> -y pin is -0.60 mm inside the tab face, +y pin -0.60 (negative = engaged)
+head pushed 0.2 mm to +y: overlaps body 0.0000 mm3; pin tip at |y| = 1.70; tab faces at y = -2.10 and 2.50 -> -y pin is -0.40 mm inside the tab face, +y pin -0.80 (negative = engaged)
+head pushed 0.4 mm to +y: overlaps body 0.0000 mm3; pin tip at |y| = 1.70; tab faces at y = -1.90 and 2.70 -> -y pin is -0.20 mm inside the tab face, +y pin -1.00 (negative = engaged)
+head side play: 0.40 mm each way

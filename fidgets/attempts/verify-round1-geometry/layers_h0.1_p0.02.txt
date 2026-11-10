@@ -1,0 +1,168 @@
+design under test: /home/user/Weave-Trial/fidgets/attempts/joints/make_capybara.py
+
+=========== pocket capybara: layer 0.1 mm, slice taken 0.02 of the way up each layer; allowed step-out 0.150 mm ===========
+
+(a) does each body start on the bed?
+   head             zmin +0.00000  top  15.40  bed contact  154.22 mm2 in 1 piece(s) [0.8..23.6 x -6.2..6.2]  first slice z=0.002:  154.37 mm2  vol   2377 mm3  height/min-foot-width 1.2
+   orange           zmin +0.00000  top  19.42  bed contact   36.30 mm2 in 1 piece(s) [6.2..13.0 x -3.4..3.4]  first slice z=0.002:   36.26 mm2  vol    467 mm3  height/min-foot-width 2.9
+   body 1           zmin +0.00000  top  14.40  bed contact  159.52 mm2 in 1 piece(s) [16.9..36.1 x -7.3..7.3]  first slice z=0.002:  159.66 mm2  vol   3147 mm3  height/min-foot-width 1.0
+   body 2           zmin +0.00000  top  15.17  bed contact   82.47 mm2 in 2 piece(s) [30.4..45.1 x -7.3..7.3]  first slice z=0.002:   82.57 mm2  vol   1609 mm3  height/min-foot-width 1.0
+   body 3           zmin +0.00000  top  15.80  bed contact   82.47 mm2 in 2 piece(s) [39.4..54.1 x -7.3..7.3]  first slice z=0.002:   82.57 mm2  vol   1724 mm3  height/min-foot-width 1.1
+   body 4           zmin +0.00000  top  19.10  bed contact   82.42 mm2 in 2 piece(s) [48.4..59.6 x -7.3..7.3]  first slice z=0.002:   82.51 mm2  vol   1820 mm3  height/min-foot-width 1.7
+   front left leg   zmin +0.00000  top  12.00  bed contact   11.28 mm2 in 1 piece(s) [17.5..23.1 x 8.9..10.9]  first slice z=0.002:   11.30 mm2  vol    175 mm3  height/min-foot-width 6.0
+   front right leg  zmin +0.00000  top  12.00  bed contact   11.28 mm2 in 1 piece(s) [17.5..23.1 x -10.9..-8.9]  first slice z=0.002:   11.30 mm2  vol    175 mm3  height/min-foot-width 6.0
+   hind left leg    zmin +0.00000  top  12.60  bed contact   13.04 mm2 in 1 piece(s) [52.2..58.7 x 8.9..10.9]  first slice z=0.002:   13.06 mm2  vol    205 mm3  height/min-foot-width 6.3
+   hind right leg   zmin +0.00000  top  12.60  bed contact   13.04 mm2 in 1 piece(s) [52.2..58.7 x -10.9..-8.9]  first slice z=0.002:   13.06 mm2  vol    205 mm3  height/min-foot-width 6.3
+
+(b) islands with none of their own body beneath   (c) overhang past the allowed step-out
+   head             mid-air islands 0   weakly rooted (<30% on layer below) 0   overhang past 0.15: 0.0000 mm2 in 0 patches over 0 layers
+   orange           mid-air islands 0   weakly rooted (<30% on layer below) 0   overhang past 0.15: 0.0000 mm2 in 0 patches over 0 layers
+   body 1           mid-air islands 0   weakly rooted (<30% on layer below) 0   overhang past 0.15: 0.0448 mm2 in 32 patches over 9 layers
+        overhang z=6.202  0.0049 mm2  x 19.78..19.92  y -8.75..-8.68  reaches 0.264 mm past the layer below (69 deg from vertical)
+        overhang z=6.202  0.0049 mm2  x 21.88..22.02  y 8.68..8.75  reaches 0.251 mm past the layer below (68 deg from vertical)
+        overhang z=6.202  0.0049 mm2  x 19.78..19.92  y 8.68..8.75  reaches 0.264 mm past the layer below (69 deg from vertical)
+        overhang z=6.202  0.0049 mm2  x 21.88..22.02  y -8.75..-8.68  reaches 0.251 mm past the layer below (68 deg from vertical)
+        overhang z=6.102  0.0032 mm2  x 20.03..20.28  y -8.65..-8.63  reaches 0.169 mm past the layer below (59 deg from vertical)
+        overhang z=6.102  0.0032 mm2  x 20.03..20.28  y 8.63..8.65  reaches 0.169 mm past the layer below (59 deg from vertical)
+        overhang z=6.302  0.0023 mm2  x 19.57..19.67  y -8.85..-8.80  reaches 0.224 mm past the layer below (66 deg from vertical)
+        overhang z=6.302  0.0023 mm2  x 22.13..22.23  y 8.80..8.85  reaches 0.224 mm past the layer below (66 deg from vertical)
+   body 2           mid-air islands 0   weakly rooted (<30% on layer below) 0   overhang past 0.15: 0.0000 mm2 in 0 patches over 0 layers
+   body 3           mid-air islands 0   weakly rooted (<30% on layer below) 0   overhang past 0.15: 0.0000 mm2 in 0 patches over 0 layers
+   body 4           mid-air islands 0   weakly rooted (<30% on layer below) 0   overhang past 0.15: 0.0393 mm2 in 32 patches over 9 layers
+        overhang z=6.202  0.0049 mm2  x 56.98..57.12  y 8.68..8.75  reaches 0.262 mm past the layer below (69 deg from vertical)
+        overhang z=6.202  0.0049 mm2  x 54.88..55.02  y -8.75..-8.68  reaches 0.251 mm past the layer below (68 deg from vertical)
+        overhang z=6.202  0.0049 mm2  x 56.98..57.12  y -8.75..-8.68  reaches 0.262 mm past the layer below (69 deg from vertical)
+        overhang z=6.202  0.0049 mm2  x 54.88..55.02  y 8.68..8.75  reaches 0.251 mm past the layer below (68 deg from vertical)
+        overhang z=6.302  0.0023 mm2  x 54.67..54.77  y -8.85..-8.80  reaches 0.224 mm past the layer below (66 deg from vertical)
+        overhang z=6.302  0.0023 mm2  x 57.23..57.33  y 8.80..8.85  reaches 0.224 mm past the layer below (66 deg from vertical)
+        overhang z=6.302  0.0023 mm2  x 54.67..54.77  y 8.80..8.85  reaches 0.224 mm past the layer below (66 deg from vertical)
+        overhang z=6.302  0.0023 mm2  x 57.23..57.33  y -8.85..-8.80  reaches 0.224 mm past the layer below (66 deg from vertical)
+   front left leg   mid-air islands 0   weakly rooted (<30% on layer below) 0   overhang past 0.15: 0.0476 mm2 in 7 patches over 4 layers
+        overhang z=9.402  0.0366 mm2  x 20.60..21.20  y 8.90..8.98  reaches 0.428 mm past the layer below (77 deg from vertical)
+        overhang z=9.302  0.0044 mm2  x 20.28..20.47  y 8.90..8.95  reaches 0.330 mm past the layer below (73 deg from vertical)
+        overhang z=9.302  0.0044 mm2  x 21.33..21.52  y 8.90..8.95  reaches 0.330 mm past the layer below (73 deg from vertical)
+        overhang z=9.202  0.0010 mm2  x 21.66..21.74  y 8.90..8.93  reaches 0.218 mm past the layer below (65 deg from vertical)
+        overhang z=9.202  0.0010 mm2  x 20.06..20.14  y 8.90..8.93  reaches 0.218 mm past the layer below (65 deg from vertical)
+        overhang z=9.102  0.0001 mm2  x 19.89..19.91  y 8.90..8.91  reaches 0.165 mm past the layer below (59 deg from vertical)
+        overhang z=9.102  0.0001 mm2  x 21.89..21.91  y 8.90..8.91  reaches 0.165 mm past the layer below (59 deg from vertical)
+   front right leg  mid-air islands 0   weakly rooted (<30% on layer below) 0   overhang past 0.15: 0.0476 mm2 in 7 patches over 4 layers
+        overhang z=9.402  0.0366 mm2  x 20.60..21.20  y -8.98..-8.90  reaches 0.428 mm past the layer below (77 deg from vertical)
+        overhang z=9.302  0.0044 mm2  x 21.33..21.52  y -8.95..-8.90  reaches 0.330 mm past the layer below (73 deg from vertical)
+        overhang z=9.302  0.0044 mm2  x 20.28..20.47  y -8.95..-8.90  reaches 0.330 mm past the layer below (73 deg from vertical)
+        overhang z=9.202  0.0010 mm2  x 20.06..20.14  y -8.93..-8.90  reaches 0.218 mm past the layer below (65 deg from vertical)
+        overhang z=9.202  0.0010 mm2  x 21.66..21.74  y -8.93..-8.90  reaches 0.218 mm past the layer below (65 deg from vertical)
+        overhang z=9.102  0.0001 mm2  x 21.89..21.91  y -8.91..-8.90  reaches 0.165 mm past the layer below (59 deg from vertical)
+        overhang z=9.102  0.0001 mm2  x 19.89..19.91  y -8.91..-8.90  reaches 0.165 mm past the layer below (59 deg from vertical)
+   hind left leg    mid-air islands 0   weakly rooted (<30% on layer below) 0   overhang past 0.15: 0.0476 mm2 in 7 patches over 4 layers
+        overhang z=9.402  0.0366 mm2  x 55.70..56.30  y 8.90..8.98  reaches 0.428 mm past the layer below (77 deg from vertical)
+        overhang z=9.302  0.0044 mm2  x 55.38..55.57  y 8.90..8.95  reaches 0.330 mm past the layer below (73 deg from vertical)
+        overhang z=9.302  0.0044 mm2  x 56.43..56.62  y 8.90..8.95  reaches 0.330 mm past the layer below (73 deg from vertical)
+        overhang z=9.202  0.0010 mm2  x 56.76..56.84  y 8.90..8.93  reaches 0.218 mm past the layer below (65 deg from vertical)
+        overhang z=9.202  0.0010 mm2  x 55.16..55.24  y 8.90..8.93  reaches 0.218 mm past the layer below (65 deg from vertical)
+        overhang z=9.102  0.0001 mm2  x 54.99..55.01  y 8.90..8.91  reaches 0.165 mm past the layer below (59 deg from vertical)
+        overhang z=9.102  0.0001 mm2  x 56.99..57.01  y 8.90..8.91  reaches 0.165 mm past the layer below (59 deg from vertical)
+   hind right leg   mid-air islands 0   weakly rooted (<30% on layer below) 0   overhang past 0.15: 0.0476 mm2 in 7 patches over 4 layers
+        overhang z=9.402  0.0366 mm2  x 55.70..56.30  y -8.98..-8.90  reaches 0.428 mm past the layer below (77 deg from vertical)
+        overhang z=9.302  0.0044 mm2  x 56.43..56.62  y -8.95..-8.90  reaches 0.330 mm past the layer below (73 deg from vertical)
+        overhang z=9.302  0.0044 mm2  x 55.38..55.57  y -8.95..-8.90  reaches 0.330 mm past the layer below (73 deg from vertical)
+        overhang z=9.202  0.0010 mm2  x 55.16..55.24  y -8.93..-8.90  reaches 0.218 mm past the layer below (65 deg from vertical)
+        overhang z=9.202  0.0010 mm2  x 56.76..56.84  y -8.93..-8.90  reaches 0.218 mm past the layer below (65 deg from vertical)
+        overhang z=9.102  0.0001 mm2  x 56.99..57.01  y -8.91..-8.90  reaches 0.165 mm past the layer below (59 deg from vertical)
+        overhang z=9.102  0.0001 mm2  x 54.99..55.01  y -8.91..-8.90  reaches 0.165 mm past the layer below (59 deg from vertical)
+
+(d) horizontal gap between different bodies in the same layer (minimum over all layers)
+   head             body 1           min 0.350 mm at z=6.402 x=21.47 y=2.35; first layer 0.901 at x=16.46 y=-6.19; layers <0.30: 0, <0.40: 31, overlapping: 0
+   body 1           front left leg   min 0.350 mm at z=7.002 x=18.48 y=9.43; first layer 1.646 at x=18.50 y=8.08; layers <0.30: 0, <0.40: 28, overlapping: 0
+   body 1           front right leg  min 0.350 mm at z=7.002 x=18.62 y=-9.29; first layer 1.646 at x=18.50 y=-8.08; layers <0.30: 0, <0.40: 28, overlapping: 0
+   body 4           hind left leg    min 0.350 mm at z=7.002 x=53.58 y=9.43; first layer 1.646 at x=56.30 y=8.08; layers <0.30: 0, <0.40: 28, overlapping: 0
+   body 4           hind right leg   min 0.350 mm at z=7.002 x=53.58 y=-9.43; first layer 1.646 at x=53.03 y=-8.08; layers <0.30: 0, <0.40: 28, overlapping: 0
+   body 1           body 2           min 0.400 mm at z=0.802 x=36.03 y=3.40; first layer 0.748 at x=33.49 y=-2.22; layers <0.30: 0, <0.40: 23, overlapping: 0
+   body 2           body 3           min 0.400 mm at z=0.802 x=45.03 y=3.40; first layer 0.748 at x=42.49 y=-2.22; layers <0.30: 0, <0.40: 23, overlapping: 0
+   body 3           body 4           min 0.400 mm at z=0.802 x=54.03 y=3.40; first layer 0.748 at x=51.49 y=-2.22; layers <0.30: 0, <0.40: 23, overlapping: 0
+   head             orange           min 0.500 mm at z=2.002 x=7.74 y=1.67; first layer 0.707 at x=6.58 y=-2.23; layers <0.30: 0, <0.40: 0, overlapping: 0
+   body 3           hind left leg    min 1.249 mm at z=7.202 x=51.02 y=8.41; first layer 2.062 at x=51.56 y=8.08; layers <0.30: 0, <0.40: 0, overlapping: 0
+   body 3           hind right leg   min 1.249 mm at z=7.202 x=51.02 y=-8.41; first layer 2.062 at x=51.56 y=-8.08; layers <0.30: 0, <0.40: 0, overlapping: 0
+
+(e) one body printed over another: fewest empty layers between them
+   orange           over head             7 empty layer(s) = 0.70 mm, above z=12.002 (1.582 mm2 at x=9.60 y=-0.00)
+   body 1           over head             5 empty layer(s) = 0.50 mm, above z=12.002 (0.581 mm2 at x=23.60 y=0.00)
+   head             over orange           7 empty layer(s) = 0.70 mm, above z=0.002 (1.955 mm2 at x=9.60 y=-0.00)
+   head             over body 1           5 empty layer(s) = 0.50 mm, above z=8.102 (0.317 mm2 at x=23.60 y=-0.00)
+   body 2           over body 1           5 empty layer(s) = 0.50 mm, above z=3.002 (0.572 mm2 at x=35.20 y=0.00)
+   front left leg   over body 1           5 empty layer(s) = 0.50 mm, above z=9.602 (0.234 mm2 at x=20.90 y=9.81)
+   front right leg  over body 1           5 empty layer(s) = 0.50 mm, above z=9.602 (0.234 mm2 at x=20.90 y=-9.81)
+   body 1           over body 2           5 empty layer(s) = 0.50 mm, above z=9.202 (0.313 mm2 at x=36.01 y=-0.00)
+   body 3           over body 2           5 empty layer(s) = 0.50 mm, above z=3.002 (0.572 mm2 at x=44.20 y=0.00)
+   body 2           over body 3           5 empty layer(s) = 0.50 mm, above z=9.202 (0.313 mm2 at x=45.01 y=-0.00)
+   body 4           over body 3           5 empty layer(s) = 0.50 mm, above z=3.002 (0.572 mm2 at x=53.20 y=0.00)
+   body 3           over body 4           5 empty layer(s) = 0.50 mm, above z=9.202 (0.313 mm2 at x=54.01 y=-0.00)
+   hind left leg    over body 4           5 empty layer(s) = 0.50 mm, above z=9.602 (0.234 mm2 at x=56.00 y=9.81)
+   hind right leg   over body 4           5 empty layer(s) = 0.50 mm, above z=9.602 (0.234 mm2 at x=56.00 y=-9.81)
+   body 1           over front left leg   8 empty layer(s) = 0.80 mm, above z=5.502 (0.013 mm2 at x=20.90 y=8.93)
+   body 1           over front right leg  8 empty layer(s) = 0.80 mm, above z=5.502 (0.013 mm2 at x=20.90 y=-8.93)
+   body 4           over hind left leg    8 empty layer(s) = 0.80 mm, above z=5.502 (0.013 mm2 at x=56.00 y=8.93)
+   body 4           over hind right leg   8 empty layer(s) = 0.80 mm, above z=5.502 (0.013 mm2 at x=56.00 y=-8.93)
+
+(f) slivers narrower than one 0.4 mm line (area that vanishes when the layer is shrunk and regrown by 0.2)
+   head             27 slivers in z 5.70..13.30; largest: z=5.70 2.483 mm2 x 13.91..20.36 y -0.20..0.20; z=5.80 1.272 mm2 x 13.86..20.38 y -0.10..0.10; z=12.40 0.797 mm2 x 22.08..25.12 y -0.20..0.20; z=12.50 0.490 mm2 x 6.06..6.43 y -1.09..1.09
+   orange           1 slivers in z 19.40..19.40; largest: z=19.40 0.595 mm2 x 8.62..10.58 y -0.98..0.98
+   body 1           152 slivers in z 3.50..14.10; largest: z=3.50 5.786 mm2 x 32.32..35.50 y -6.75..6.75; z=3.60 2.910 mm2 x 32.35..35.40 y -6.71..6.71; z=9.70 0.619 mm2 x 19.54..22.26 y -10.10..-9.75; z=9.70 0.619 mm2 x 19.54..22.26 y 9.75..10.10
+   body 2           4 slivers in z 3.50..15.10; largest: z=3.50 5.786 mm2 x 41.32..44.50 y -6.75..6.75; z=3.60 2.910 mm2 x 41.35..44.40 y -6.71..6.71; z=15.10 0.044 mm2 x 41.97..42.27 y -2.22..-1.87; z=15.10 0.044 mm2 x 41.97..42.27 y 1.87..2.22
+   body 3           2 slivers in z 3.50..3.60; largest: z=3.50 5.786 mm2 x 50.32..53.50 y -6.75..6.75; z=3.60 2.910 mm2 x 50.35..53.40 y -6.71..6.71
+   body 4           166 slivers in z 6.20..19.10; largest: z=9.70 0.619 mm2 x 54.64..57.36 y 9.75..10.10; z=9.70 0.619 mm2 x 54.64..57.36 y -10.10..-9.75; z=15.50 0.517 mm2 x 52.49..52.88 y -0.81..0.81; z=19.10 0.396 mm2 x 57.06..57.14 y -2.25..2.25
+   front left leg   94 slivers in z 4.70..9.70; largest: z=9.50 0.407 mm2 x 19.87..21.93 y 8.90..9.25; z=4.90 0.406 mm2 x 19.86..21.94 y 8.90..9.25; z=4.80 0.394 mm2 x 20.12..21.68 y 8.90..9.26; z=9.60 0.391 mm2 x 20.13..21.67 y 8.90..9.26
+   front right leg  94 slivers in z 4.70..9.70; largest: z=9.50 0.407 mm2 x 19.87..21.93 y -9.25..-8.90; z=4.90 0.406 mm2 x 19.86..21.94 y -9.25..-8.90; z=4.80 0.394 mm2 x 20.12..21.68 y -9.26..-8.90; z=9.60 0.391 mm2 x 20.13..21.67 y -9.26..-8.90
+   hind left leg    94 slivers in z 4.70..9.70; largest: z=9.50 0.407 mm2 x 54.97..57.03 y 8.90..9.25; z=4.90 0.406 mm2 x 54.96..57.04 y 8.90..9.25; z=4.80 0.394 mm2 x 55.22..56.78 y 8.90..9.26; z=9.60 0.391 mm2 x 55.23..56.77 y 8.90..9.26
+   hind right leg   94 slivers in z 4.70..9.70; largest: z=9.50 0.407 mm2 x 54.97..57.03 y -9.25..-8.90; z=4.90 0.406 mm2 x 54.96..57.04 y -9.25..-8.90; z=4.80 0.394 mm2 x 55.22..56.78 y -9.26..-8.90; z=9.60 0.391 mm2 x 55.23..56.77 y -9.26..-8.90
+
+=========== test strip: layer 0.1 mm, slice taken 0.02 of the way up each layer; allowed step-out 0.150 mm ===========
+
+(a) does each body start on the bed?
+   head             zmin +0.00000  top  13.40  bed contact  130.69 mm2 in 1 piece(s) [7.6..23.6 x -6.2..6.2]  first slice z=0.002:  130.76 mm2  vol   1720 mm3  height/min-foot-width 1.1
+   body 1           zmin +0.00000  top  14.40  bed contact  159.52 mm2 in 1 piece(s) [16.9..36.1 x -7.3..7.3]  first slice z=0.002:  159.66 mm2  vol   3134 mm3  height/min-foot-width 1.0
+   body 2           zmin +0.00000  top  14.95  bed contact   67.43 mm2 in 2 piece(s) [30.4..40.2 x -7.3..7.3]  first slice z=0.002:   67.49 mm2  vol   1189 mm3  height/min-foot-width 1.5
+   front left leg   zmin +0.00000  top  12.00  bed contact   11.28 mm2 in 1 piece(s) [17.5..23.1 x 8.9..10.9]  first slice z=0.002:   11.30 mm2  vol    175 mm3  height/min-foot-width 6.0
+
+(b) islands with none of their own body beneath   (c) overhang past the allowed step-out
+   head             mid-air islands 0   weakly rooted (<30% on layer below) 0   overhang past 0.15: 0.0000 mm2 in 0 patches over 0 layers
+   body 1           mid-air islands 0   weakly rooted (<30% on layer below) 0   overhang past 0.15: 0.0224 mm2 in 16 patches over 8 layers
+        overhang z=6.202  0.0049 mm2  x 21.88..22.02  y 8.68..8.75  reaches 0.251 mm past the layer below (68 deg from vertical)
+        overhang z=6.202  0.0049 mm2  x 19.78..19.92  y 8.68..8.75  reaches 0.264 mm past the layer below (69 deg from vertical)
+        overhang z=6.102  0.0032 mm2  x 20.03..20.28  y 8.63..8.65  reaches 0.169 mm past the layer below (59 deg from vertical)
+        overhang z=6.302  0.0023 mm2  x 22.13..22.23  y 8.80..8.85  reaches 0.224 mm past the layer below (66 deg from vertical)
+        overhang z=6.302  0.0023 mm2  x 19.57..19.67  y 8.80..8.85  reaches 0.224 mm past the layer below (66 deg from vertical)
+        overhang z=6.402  0.0011 mm2  x 22.34..22.40  y 8.92..8.95  reaches 0.198 mm past the layer below (63 deg from vertical)
+        overhang z=6.402  0.0011 mm2  x 19.40..19.46  y 8.92..8.95  reaches 0.198 mm past the layer below (63 deg from vertical)
+        overhang z=6.502  0.0006 mm2  x 22.51..22.56  y 9.03..9.05  reaches 0.182 mm past the layer below (61 deg from vertical)
+   body 2           mid-air islands 0   weakly rooted (<30% on layer below) 0   overhang past 0.15: 0.0000 mm2 in 0 patches over 0 layers
+   front left leg   mid-air islands 0   weakly rooted (<30% on layer below) 0   overhang past 0.15: 0.0476 mm2 in 7 patches over 4 layers
+        overhang z=9.402  0.0366 mm2  x 20.60..21.20  y 8.90..8.98  reaches 0.428 mm past the layer below (77 deg from vertical)
+        overhang z=9.302  0.0044 mm2  x 20.28..20.47  y 8.90..8.95  reaches 0.330 mm past the layer below (73 deg from vertical)
+        overhang z=9.302  0.0044 mm2  x 21.33..21.52  y 8.90..8.95  reaches 0.330 mm past the layer below (73 deg from vertical)
+        overhang z=9.202  0.0010 mm2  x 21.66..21.74  y 8.90..8.93  reaches 0.218 mm past the layer below (65 deg from vertical)
+        overhang z=9.202  0.0010 mm2  x 20.06..20.14  y 8.90..8.93  reaches 0.218 mm past the layer below (65 deg from vertical)
+        overhang z=9.102  0.0001 mm2  x 19.89..19.91  y 8.90..8.91  reaches 0.165 mm past the layer below (59 deg from vertical)
+        overhang z=9.102  0.0001 mm2  x 21.89..21.91  y 8.90..8.91  reaches 0.165 mm past the layer below (59 deg from vertical)
+
+(d) horizontal gap between different bodies in the same layer (minimum over all layers)
+   head             body 1           min 0.350 mm at z=6.402 x=21.47 y=2.35; first layer 0.901 at x=16.46 y=-6.19; layers <0.30: 0, <0.40: 31, overlapping: 0
+   body 1           front left leg   min 0.350 mm at z=7.002 x=18.48 y=9.43; first layer 1.646 at x=18.60 y=8.08; layers <0.30: 0, <0.40: 28, overlapping: 0
+   body 1           body 2           min 0.400 mm at z=0.802 x=36.03 y=3.40; first layer 0.748 at x=33.49 y=-2.22; layers <0.30: 0, <0.40: 23, overlapping: 0
+
+(e) one body printed over another: fewest empty layers between them
+   body 1           over head             5 empty layer(s) = 0.50 mm, above z=12.002 (0.581 mm2 at x=23.60 y=0.00)
+   head             over body 1           5 empty layer(s) = 0.50 mm, above z=8.102 (0.317 mm2 at x=23.60 y=-0.00)
+   body 2           over body 1           5 empty layer(s) = 0.50 mm, above z=3.002 (0.572 mm2 at x=35.20 y=0.00)
+   front left leg   over body 1           5 empty layer(s) = 0.50 mm, above z=9.602 (0.234 mm2 at x=20.90 y=9.81)
+   body 1           over body 2           5 empty layer(s) = 0.50 mm, above z=9.202 (0.313 mm2 at x=36.01 y=-0.00)
+   body 1           over front left leg   8 empty layer(s) = 0.80 mm, above z=5.502 (0.013 mm2 at x=20.90 y=8.93)
+
+(f) slivers narrower than one 0.4 mm line (area that vanishes when the layer is shrunk and regrown by 0.2)
+   head             12 slivers in z 5.70..12.50; largest: z=5.70 2.483 mm2 x 13.91..20.36 y -0.20..0.20; z=5.80 1.272 mm2 x 13.86..20.38 y -0.10..0.10; z=12.40 0.797 mm2 x 22.08..25.12 y -0.20..0.20; z=12.50 0.277 mm2 x 22.53..24.67 y -0.10..0.10
+   body 1           78 slivers in z 3.50..14.10; largest: z=3.50 5.786 mm2 x 32.32..35.50 y -6.75..6.75; z=3.60 2.910 mm2 x 32.35..35.40 y -6.71..6.71; z=9.70 0.619 mm2 x 19.54..22.26 y 9.75..10.10; z=9.80 0.376 mm2 x 19.74..22.06 y 9.85..10.10
+   body 2           3 slivers in z 14.80..14.90; largest: z=14.90 1.498 mm2 x 39.82..40.20 y -2.29..2.29; z=14.80 0.033 mm2 x 39.94..40.20 y 2.61..2.93; z=14.80 0.033 mm2 x 39.94..40.20 y -2.93..-2.61
+   front left leg   94 slivers in z 4.70..9.70; largest: z=9.50 0.407 mm2 x 19.87..21.93 y 8.90..9.25; z=4.90 0.406 mm2 x 19.86..21.94 y 8.90..9.25; z=4.80 0.394 mm2 x 20.12..21.68 y 8.90..9.26; z=9.60 0.391 mm2 x 20.13..21.67 y 8.90..9.26
+
+SUMMARY
+  pocket capybara: not on bed 0; mid-air islands 0; weak islands 0; overhang mm2 total 0.2747; body pairs under 0.30 mm 0; tightest pair ('head', 'body 1', 0.34999999506367635, 6.402)
+  test strip: not on bed 0; mid-air islands 0; weak islands 0; overhang mm2 total 0.0700; body pairs under 0.30 mm 0; tightest pair ('head', 'body 1', 0.34999999506367635, 6.402)

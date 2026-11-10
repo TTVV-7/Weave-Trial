@@ -1,0 +1,18 @@
+== test strip ==
+ parts: {'head': [6.5, -7.3, 0.0, 26.9, 7.3, 13.4], 'body 1': [14.2, -8.5, 0.0, 36.4, 10.1, 14.4], 'body 2': [30.1, -8.5, 0.0, 40.2, 8.5, 14.95], 'front left leg': [16.3, 8.9, 0.0, 25.5, 11.9, 12.0]}
+ joints: [('front left leg', 'y', 45, None, 'body joint 1'), ('body joint 1', 'z', 25.0, None, None), ('head nod', 'y', 15.0, 30.0, None)]
+ head hinge region (x 11.5..30, |y| < 6): strip head vs real head differ by 64.2939 mm3
+ body 1: strip vs real differ by 13.4320 mm3 (real body 1 has two leg pins, strip one: right pin volume 13.1887)
+ body 2 front (to 13.9 mm behind joint 1): strip vs real differ by 69.6900 mm3
+ leg: strip vs real differ by 0.0000 mm3
+ strip has an orange / orange bore: False | strip head volume 1720.4
+== written STLs reloaded ==
+ pocket-capybara.stl: 41702 tris, shells 10 (want 10), watertight 10, zero-area 0, winding ok True, volume 11902.6, extents [61.6, 23.8, 19.42]
+   volume of the solids 11902.7
+ pocket-capybara-test.stl: 10212 tris, shells 4 (want 4), watertight 4, zero-area 0, winding ok True, volume 6217.4, extents [33.7, 20.4, 14.95]
+   volume of the solids 6217.4
+== first layers: smallest gap between any two bodies in the slab 0..h ==
+ h = 0.1: 0.615 mm between ('head', 'orange')
+ h = 0.2: 0.545 mm between ('head', 'orange')
+ h = 0.3: 0.400 mm between ('body 2', 'body 3')
+ h = 0.4: 0.400 mm between ('body 2', 'body 3')

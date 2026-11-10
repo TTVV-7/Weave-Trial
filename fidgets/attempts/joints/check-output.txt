@@ -1,28 +1,36 @@
-test strip: 3 separate bodies, each starting on the bed with no layer starting in mid-air; tightest gap as printed 0.35 mm
-   leg              full circle      tightest gap 0.35 mm
-   body joint       +25/-25 deg      tightest gap 0.39 mm
+test strip: 4 separate bodies, each starting on the bed with no layer starting in mid-air; tightest gap as printed 0.35 mm, in the first layer 0.65 mm
+   front left leg   full circle      tightest gap 0.35 mm; with body joint 1 bent 25 either way: full circle
+   body joint 1     +29/-29 deg      tightest gap 0.29 mm
+   head nod         +18/-18 deg      tightest gap 0.13 mm; stopped both ways before 30
    curled and S-bent with every joint at its limit, either way: nothing collides
    every part is held in whichever way it is pulled
-   overhang past 45 deg 0.00 mm2; nothing below the bed
-   thinnest walls: leg skin at its chamfer 0.82, leg round its pin 0.86, leg skin over its pin 0.90, socket lip at the flank (2nd layer up) 1.02, rim the hook holds 1.50
-   pins: leg pin 2.50, body hook (tongue, bridge, width) 2.50
-pocket-capybara-test  31.6 x 20.4 x 14.5 mm  6.3 cm3  7348 tris
+   overhang past 45 deg 0.01 mm2; nothing below the bed
+   thinnest walls (measured): front leg round its pin's socket 0.85, neck tab round its sockets 1.00, socket lip over the ball 1.02, roof over the neck slot 1.03, socket lip horn at the flank, any layer 1.14, ball round the hook's pocket (rim, sides) 1.35, walls of the neck slot 1.35, rim the hook holds 2.20
+   pins (measured): front leg pin 2.50, hook tongue (across, wide) 2.57, hook bridge 2.90, head nod pins 2.52; each tongue is 3.45 across and 2.57 wide at its narrowest, 12.6 mm2
+   paint: 5 patches cut along their edges, the smallest 56.5 mm2 (T1 4026 mm2, T2 56 mm2)
+   written file: 4 closed shells for 4 bodies, no triangle without area
+pocket-capybara-test  33.7 x 20.4 x 15.0 mm  6.2 cm3  10212 tris
 
-pocket capybara: 10 separate bodies, each starting on the bed with no layer starting in mid-air; tightest gap as printed 0.35 mm
-   front left leg   full circle      tightest gap 0.35 mm
-   front right leg  full circle      tightest gap 0.35 mm
-   hind left leg    full circle      tightest gap 0.35 mm
-   hind right leg   full circle      tightest gap 0.35 mm
-   orange           full circle      tightest gap 0.35 mm
-   body joint 3     +25/-25 deg      tightest gap 0.39 mm
-   body joint 2     +25/-25 deg      tightest gap 0.39 mm
-   body joint 1     +25/-25 deg      tightest gap 0.39 mm
-   head nod         +25/-40 deg      tightest gap 0.35 mm
+pocket capybara without the keyring lug: passes every check as well
+
+pocket capybara: 10 separate bodies, each starting on the bed with no layer starting in mid-air; tightest gap as printed 0.35 mm, in the first layer 0.62 mm
+   front left leg   full circle      tightest gap 0.35 mm; with body joint 1 bent 25 either way: full circle
+   front right leg  full circle      tightest gap 0.35 mm; with body joint 1 bent 25 either way: full circle
+   hind left leg    full circle      tightest gap 0.35 mm; with body joint 3 bent 25 either way: +75/-180 deg
+   hind right leg   full circle      tightest gap 0.35 mm; with body joint 3 bent 25 either way: +75/-180 deg
+   orange           full circle      tightest gap 0.50 mm
+   body joint 3     +29/-29 deg      tightest gap 0.29 mm
+   body joint 2     +29/-29 deg      tightest gap 0.29 mm
+   body joint 1     +29/-29 deg      tightest gap 0.29 mm
+   head nod         +18/-18 deg      tightest gap 0.13 mm; stopped both ways before 30
    curled and S-bent with every joint at its limit, either way: nothing collides
    every part is held in whichever way it is pulled
-   overhang past 45 deg 0.00 mm2; nothing below the bed
-   thinnest walls: neck tab round its sockets 0.81, leg skin at its chamfer 0.82, leg round its pin 0.86, roof over the neck slot 0.86, leg skin over its pin 0.90
-   pins: leg pin 2.50, body hook (tongue, bridge, width) 2.50, head nod pins 2.50, orange shaft 3.00
-   nose to rump 61.6, width 23.8, height 20.2 (top of the back's loop 19.6)
-pocket-capybara  61.6 x 23.8 x 20.2 mm  12.5 cm3  37848 tris
+   overhang past 45 deg 0.01 mm2; nothing below the bed
+   thinnest walls (measured): hind leg round its pin's socket 0.85, front leg round its pin's socket 0.85, ball 2 round the hook's pocket (rim, sides) 0.91, ball 3 round the hook's pocket (rim, sides) 0.91, neck tab round its sockets 1.00, socket lip 2 over the ball 1.01, socket lip 3 over the ball 1.01, socket lip 1 over the ball 1.02, roof over the neck slot 1.03, socket lip 1 horn at the flank, any layer 1.14, socket lip 2 horn at the flank, any layer 1.14, socket lip 3 horn at the flank, any layer 1.14, ball 1 round the hook's pocket (rim, sides) 1.35, walls of the neck slot 1.35, head round the orange's shaft 1.45, keyring lug round its hole 2.10, rim 1 the hook holds 2.20, rim 2 the hook holds 2.20, rim 3 the hook holds 2.20, ear tip 2.65
+   pins (measured): front leg pin 2.50, hind leg pin 2.50, hook 1 tongue (across, wide) 2.57, hook 1 bridge 2.90, hook 2 tongue (across, wide) 2.57, hook 2 bridge 2.90, hook 3 tongue (across, wide) 2.57, hook 3 bridge 2.90, head nod pins 2.52, orange shaft 4.50; each tongue is 3.45 across and 2.57 wide at its narrowest, 12.6 mm2
+   keyring lug 4.94 thick, 2.10 over the hole's peak
+   nose to rump 61.6, width 23.8, height 19.4 (top of the keyring lug 19.1)
+   paint: 24 patches cut along their edges, the smallest 3.5 mm2 (T1 8131 mm2, T2 327 mm2, T3 35 mm2, T4 170 mm2)
+   written file: 10 closed shells for 10 bodies, no triangle without area
+pocket-capybara  61.6 x 23.8 x 19.4 mm  11.9 cm3  41702 tris
 

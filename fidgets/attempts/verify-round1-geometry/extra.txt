@@ -1,0 +1,32 @@
+A. downward-facing area by steepness (angle of the face below horizontal-normal: 90 = flat ceiling, 45 = the limit), faces above z = 0.01
+   head             bed face  154.21 | 44-45.05:   71.082 | 45.05-46:    0.000 | 46-50:    0.000 | 50-70:    0.000 | 70-90.1:    0.000
+   orange           bed face   36.30 | 44-45.05:   13.048 | 45.05-46:    0.000 | 46-50:    0.000 | 50-70:    0.000 | 70-90.1:    0.000
+   body 1           bed face  159.52 | 44-45.05:  153.081 | 45.05-46:    0.000 | 46-50:    0.006 | 50-70:    0.008 | 70-90.1:    0.000   worst: 0.0018 mm2 at [20.05, 8.48, 6.29] 47.8 deg; 0.0018 mm2 at [20.05, -8.49, 6.29] 47.8 deg
+   body 2           bed face   82.46 | 44-45.05:  139.683 | 45.05-46:    0.000 | 46-50:    0.000 | 50-70:    0.000 | 70-90.1:    0.000
+   body 3           bed face   82.46 | 44-45.05:  139.683 | 45.05-46:    0.000 | 46-50:    0.000 | 50-70:    0.000 | 70-90.1:    0.000
+   body 4           bed face   82.42 | 44-45.05:   67.666 | 45.05-46:    0.000 | 46-50:    0.000 | 50-70:    0.000 | 70-90.1:    0.000
+   front left leg   bed face   11.28 | 44-45.05:    6.432 | 45.05-46:    0.000 | 46-50:    0.000 | 50-70:    0.000 | 70-90.1:    0.000
+   front right leg  bed face   11.28 | 44-45.05:    6.432 | 45.05-46:    0.000 | 46-50:    0.000 | 50-70:    0.000 | 70-90.1:    0.000
+   hind left leg    bed face   13.04 | 44-45.05:    7.059 | 45.05-46:    0.000 | 46-50:    0.000 | 50-70:    0.000 | 70-90.1:    0.000
+   hind right leg   bed face   13.04 | 44-45.05:    7.059 | 45.05-46:    0.000 | 46-50:    0.000 | 50-70:    0.000 | 70-90.1:    0.000
+   total steeper than 45.05 deg: 0.0148 mm2
+
+B. bed contact and stance of the free-standing bodies
+   head             contact  154.22 mm2, footprint x 0.77..23.60 y -6.19..6.19; body x 0.00..26.90 y -7.30..7.30 top 15.40; centre of mass x=9.74 y=0.00 z=6.07; inside the footprint's box
+   orange           contact   36.30 mm2, footprint x 6.20..13.00 y -3.40..3.40; body x 5.60..13.60 y -4.00..4.00 top 19.42; centre of mass x=9.60 y=-0.00 z=11.29; inside the footprint's box
+   body 1           contact  159.52 mm2, footprint x 16.91..36.10 y -7.25..7.25; body x 14.20..36.40 y -10.10..10.10 top 14.40; centre of mass x=24.98 y=0.00 z=7.03; inside the footprint's box
+   body 2           contact   82.47 mm2, footprint x 30.38..45.10 y -7.25..7.25; body x 30.10..45.40 y -8.50..8.50 top 15.17; centre of mass x=38.70 y=0.00 z=7.33; inside the footprint's box
+   body 3           contact   82.47 mm2, footprint x 39.38..54.10 y -7.25..7.25; body x 39.10..54.40 y -8.50..8.50 top 15.80; centre of mass x=47.63 y=-0.00 z=7.76; inside the footprint's box
+   body 4           contact   82.42 mm2, footprint x 48.38..59.55 y -7.25..7.25; body x 48.10..61.60 y -10.10..10.10 top 19.10; centre of mass x=56.51 y=-0.00 z=7.31; inside the footprint's box
+   front left leg   contact   11.28 mm2, footprint x 17.45..23.09 y 8.90..10.90; body x 16.30..25.50 y 8.90..11.90 top 12.00; centre of mass x=20.94 y=10.28 z=5.83; inside the footprint's box
+   front right leg  contact   11.28 mm2, footprint x 17.45..23.09 y -10.90..-8.90; body x 16.30..25.50 y -11.90..-8.90 top 12.00; centre of mass x=20.94 y=-10.28 z=5.83; inside the footprint's box
+   hind left leg    contact   13.04 mm2, footprint x 52.18..58.70 y 8.90..10.90; body x 51.40..61.40 y 8.90..11.90 top 12.60; centre of mass x=56.46 y=10.26 z=6.14; inside the footprint's box
+   hind right leg   contact   13.04 mm2, footprint x 52.18..58.70 y -10.90..-8.90; body x 51.40..61.40 y -11.90..-8.90 top 12.60; centre of mass x=56.46 y=-10.26 z=6.14; inside the footprint's box
+
+C. the variant without the keyring lug: body 4 layer by layer
+   body 4 pieces 1, zmin 0.00000, top 15.55, genus 0
+   layer 0.1: mid-air islands 0; layers with overhang past 45 deg (+0.05) 9, total 0.0518 mm2
+   layer 0.2: mid-air islands 0; layers with overhang past 45 deg (+0.05) 7, total 0.1469 mm2
+   body 3 / body 4: 3D gap 0.389
+   body 4 / hind left leg: 3D gap 0.350
+   body 4 / hind right leg: 3D gap 0.350

@@ -1,0 +1,2 @@
+theta -3 deg about y: fits with shift dx, dz = (0.2, -0.6); the next joint's foot ends at z = -0.12; gap to body 1 0.067
+theta -5 deg about y: does not fit anywhere on the grid

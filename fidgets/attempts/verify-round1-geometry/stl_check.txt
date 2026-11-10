@@ -1,0 +1,72 @@
+pocket-capybara.stl: 41702 triangles, 20861 distinct corners
+   triangles with two corners at the same place: 0; area < 1e-9 mm2: 0; area < 1e-6: 4; height < 1e-4 mm (needles): 35; height < 1e-3: 234; smallest area 6.780e-07, smallest height 2.106e-05
+   edges: 62553; used by 1 face: 0, by 2: 62553, by 3+: 0; same edge twice in the same direction: 0; directed edges without their opposite: 0
+   shells (faces joined across edges): 10; (joined through corners): 10
+      shell:   7708 tris, volume  2376.775 mm3, x   0.00.. 26.90 y  -7.30..  7.30 z  0.000..15.400
+      shell:  11584 tris, volume   466.716 mm3, x   5.60.. 13.60 y  -4.00..  4.00 z  0.000..19.423
+      shell:   4814 tris, volume  3147.320 mm3, x  14.20.. 36.40 y -10.10.. 10.10 z  0.000..14.400
+      shell:    906 tris, volume   174.517 mm3, x  16.30.. 25.50 y   8.90.. 11.90 z  0.000..12.000
+      shell:    906 tris, volume   174.517 mm3, x  16.30.. 25.50 y -11.90.. -8.90 z  0.000..12.000
+      shell:   4372 tris, volume  1608.967 mm3, x  30.10.. 45.40 y  -8.50..  8.50 z  0.000..15.168
+      shell:   4876 tris, volume  1723.543 mm3, x  39.10.. 54.40 y  -8.50..  8.50 z  0.000..15.800
+      shell:   4722 tris, volume  1819.629 mm3, x  48.10.. 61.60 y -10.10.. 10.10 z  0.000..19.104
+      shell:    908 tris, volume   205.331 mm3, x  51.40.. 61.40 y   8.90.. 11.90 z  0.000..12.600
+      shell:    906 tris, volume   205.331 mm3, x  51.40.. 61.40 y -11.90.. -8.90 z  0.000..12.600
+   stored normals agreeing with the winding: min dot 0.9949; zero-length stored normals 0
+   parts built from the source now: 10; shells in file: 10  -> MATCH
+   part volumes  174.52, 174.52, 205.33, 205.33, 466.72, 1608.97, 1723.54, 1819.63, 2376.78, 3147.32
+   shell volumes 174.52, 174.52, 205.33, 205.33, 466.72, 1608.97, 1723.54, 1819.63, 2376.77, 3147.32
+      shell 0: valid solid, genus 1; nearest part 'head': volume outside each other 0.0213 mm3 of 2376.8
+      shell 1: valid solid, genus 0; nearest part 'orange': volume outside each other 0.0065 mm3 of 466.7
+      shell 2: valid solid, genus 1; nearest part 'body 1': volume outside each other 0.0218 mm3 of 3147.3
+      shell 3: valid solid, genus 1; nearest part 'body 2': volume outside each other 0.0155 mm3 of 1609.0
+      shell 4: valid solid, genus 1; nearest part 'body 3': volume outside each other 0.0162 mm3 of 1723.5
+      shell 5: valid solid, genus 1; nearest part 'body 4': volume outside each other 0.0161 mm3 of 1819.6
+      shell 6: valid solid, genus 0; nearest part 'front left leg': volume outside each other 0.0024 mm3 of 174.5
+      shell 7: valid solid, genus 0; nearest part 'front right leg': volume outside each other 0.0024 mm3 of 174.5
+      shell 8: valid solid, genus 0; nearest part 'hind left leg': volume outside each other 0.0025 mm3 of 205.3
+      shell 9: valid solid, genus 0; nearest part 'hind right leg': volume outside each other 0.0024 mm3 of 205.3
+   largest difference between a shell and its part: 0.0218 mm3
+pocket-capybara.3mf: objects 1, vertices 20861, triangles 41702 (41702 triangle tags), paint codes {np.str_('0C'): np.int64(904), np.str_('1C'): np.int64(10016), np.str_('4'): np.int64(26472), np.str_('8'): np.int64(4310)}, z 0.0000..19.4230
+pocket-capybara.3mf mesh: 41702 triangles, 20861 distinct corners
+   triangles with two corners at the same place: 0; area < 1e-9 mm2: 0; area < 1e-6: 4; height < 1e-4 mm (needles): 35; height < 1e-3: 234; smallest area 6.780e-07, smallest height 2.106e-05
+   edges: 62553; used by 1 face: 0, by 2: 62553, by 3+: 0; same edge twice in the same direction: 0; directed edges without their opposite: 0
+   shells (faces joined across edges): 10; (joined through corners): 10
+      shell:   7708 tris, volume  2376.775 mm3, x   0.00.. 26.90 y  -7.30..  7.30 z  0.000..15.400
+      shell:  11584 tris, volume   466.716 mm3, x   5.60.. 13.60 y  -4.00..  4.00 z  0.000..19.423
+      shell:   4814 tris, volume  3147.320 mm3, x  14.20.. 36.40 y -10.10.. 10.10 z  0.000..14.400
+      shell:    906 tris, volume   174.517 mm3, x  16.30.. 25.50 y   8.90.. 11.90 z  0.000..12.000
+      shell:    906 tris, volume   174.517 mm3, x  16.30.. 25.50 y -11.90.. -8.90 z  0.000..12.000
+      shell:   4372 tris, volume  1608.967 mm3, x  30.10.. 45.40 y  -8.50..  8.50 z  0.000..15.168
+      shell:   4876 tris, volume  1723.543 mm3, x  39.10.. 54.40 y  -8.50..  8.50 z  0.000..15.800
+      shell:   4722 tris, volume  1819.629 mm3, x  48.10.. 61.60 y -10.10.. 10.10 z  0.000..19.104
+      shell:    908 tris, volume   205.331 mm3, x  51.40.. 61.40 y   8.90.. 11.90 z  0.000..12.600
+      shell:    906 tris, volume   205.331 mm3, x  51.40.. 61.40 y -11.90.. -8.90 z  0.000..12.600
+
+pocket-capybara-test.stl: 10212 triangles, 5112 distinct corners
+   triangles with two corners at the same place: 0; area < 1e-9 mm2: 0; area < 1e-6: 1; height < 1e-4 mm (needles): 9; height < 1e-3: 96; smallest area 9.040e-07, smallest height 1.879e-05
+   edges: 15318; used by 1 face: 0, by 2: 15318, by 3+: 0; same edge twice in the same direction: 0; directed edges without their opposite: 0
+   shells (faces joined across edges): 4; (joined through corners): 4
+      shell:   2502 tris, volume  1720.391 mm3, x   0.00.. 20.40 y  -9.00..  5.60 z  0.000..13.400
+      shell:   4456 tris, volume  3133.888 mm3, x   7.70.. 29.90 y -10.20..  8.40 z  0.000..14.400
+      shell:    906 tris, volume   174.518 mm3, x   9.80.. 19.00 y   7.20.. 10.20 z  0.000..12.000
+      shell:   2348 tris, volume  1188.560 mm3, x  23.60.. 33.70 y -10.20..  6.80 z  0.000..14.951
+   stored normals agreeing with the winding: min dot 0.9996; zero-length stored normals 0
+   parts built from the source now: 4; shells in file: 4  -> MATCH
+   part volumes  174.52, 1188.56, 1720.39, 3133.89
+   shell volumes 174.52, 1188.56, 1720.39, 3133.89
+      shell 0: valid solid, genus 0; nearest part 'head': volume outside each other 0.0126 mm3 of 1720.4
+      shell 1: valid solid, genus 1; nearest part 'body 1': volume outside each other 0.0216 mm3 of 3133.9
+      shell 2: valid solid, genus 0; nearest part 'body 2': volume outside each other 0.0077 mm3 of 1188.6
+      shell 3: valid solid, genus 0; nearest part 'front left leg': volume outside each other 0.0024 mm3 of 174.5
+   largest difference between a shell and its part: 0.0216 mm3
+pocket-capybara-test.3mf: objects 1, vertices 5112, triangles 10212 (10212 triangle tags), paint codes {np.str_('4'): np.int64(9972), np.str_('8'): np.int64(240)}, z 0.0000..14.9515
+pocket-capybara-test.3mf mesh: 10212 triangles, 5112 distinct corners
+   triangles with two corners at the same place: 0; area < 1e-9 mm2: 0; area < 1e-6: 1; height < 1e-4 mm (needles): 9; height < 1e-3: 96; smallest area 9.040e-07, smallest height 1.879e-05
+   edges: 15318; used by 1 face: 0, by 2: 15318, by 3+: 0; same edge twice in the same direction: 0; directed edges without their opposite: 0
+   shells (faces joined across edges): 4; (joined through corners): 4
+      shell:   2502 tris, volume  1720.391 mm3, x   0.00.. 20.40 y  -9.00..  5.60 z  0.000..13.400
+      shell:   4456 tris, volume  3133.888 mm3, x   7.70.. 29.90 y -10.20..  8.40 z  0.000..14.400
+      shell:    906 tris, volume   174.518 mm3, x   9.80.. 19.00 y   7.20.. 10.20 z  0.000..12.000
+      shell:   2348 tris, volume  1188.560 mm3, x  23.60.. 33.70 y -10.20..  6.80 z  0.000..14.951
+
