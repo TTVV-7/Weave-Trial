@@ -1,6 +1,0 @@
-  it 7: joint centre moved [0.4, 0.33, 0.46], turned 1.7 deg about [-0.54, 0.51, 0.67]
-  it 80: joint centre moved [0.53, 0.35, 1.15], turned 4.3 deg about [-0.33, 0.84, 0.44]
-  it 199: joint centre moved [0.81, -0.01, 1.7], turned 9.8 deg about [-0.16, 0.85, 0.5]
-  it 317: joint centre moved [1.17, 0.02, 2.18], turned 15.0 deg about [0.2, 0.86, 0.48]
-  it 711: joint centre moved [1.47, 0.32, 2.73], turned 19.1 deg about [-0.09, 0.87, 0.48]
-seed 2 upback: stalled at 2.97 mm after 1500 tries

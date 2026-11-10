@@ -1,5 +1,0 @@
-395cdc63db30cff2400b374c93af437a  ../joints/make_capybara.py
-f9e482db2fd145509b84a10a525276b6  ../joints/pocket-capybara-test.stl
-5b6226005586ad842ce8d0a1f5b285dd  ../joints/pocket-capybara.stl
-015b6fa739169bba2b9ecafaa4964596  ../joints/pocket-capybara-test.3mf
-ee06bd56d3629a8017e59397c5492b30  ../joints/pocket-capybara.3mf

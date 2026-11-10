@@ -1,5 +1,0 @@
-=== full / body 2: voxel 0.05 mm, grid [313, 346, 310], voxel volume 1621.2 mm3 (solid 1609.0)
-   minus a 0.4 mm skin: 1 piece(s) over 0.02 mm3
-   thinner than 0.8: 2.80 mm3 in 80 bits; listing those over 0.01 mm3 that reach more than 0.45 mm beyond the thick part (0 of 7)
-   minus a 0.3 mm skin: 1 piece(s) over 0.02 mm3
-   thinner than 0.6: 1.60 mm3 in 69 bits; listing those over 0.01 mm3 that reach more than 0.45 mm beyond the thick part (0 of 7)

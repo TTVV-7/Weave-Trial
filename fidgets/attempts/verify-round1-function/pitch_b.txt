@@ -1,2 +1,0 @@
-theta +13 deg about y: fits with shift dx, dz = (0.8, 1.9); the next joint's foot ends at z = -0.02; gap to body 1 0.006
-theta +16 deg about y: fits with shift dx, dz = (1.4, 2.6); the next joint's foot ends at z = +0.27; gap to body 1 0.012

@@ -1,6 +1,0 @@
-  it 22: joint centre moved [0.26, -0.11, 0.57], turned 2.3 deg about [0.25, 0.82, -0.52]
-  it 47: joint centre moved [0.35, -0.35, 1.12], turned 6.5 deg about [-0.69, 0.71, -0.1]
-  it 145: joint centre moved [0.71, -0.26, 1.63], turned 10.7 deg about [-0.45, 0.88, -0.14]
-  it 191: joint centre moved [1.04, -0.13, 2.16], turned 13.2 deg about [-0.05, 1.0, 0.04]
-  it 398: joint centre moved [1.46, 0.06, 2.71], turned 16.7 deg about [0.07, 1.0, 0.03]
-seed 1 up: stalled at 2.71 mm after 1500 tries

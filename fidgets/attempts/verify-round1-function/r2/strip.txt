@@ -1,7 +1,0 @@
-strip parts: ['head', 'body 1', 'body 2', 'front left leg'] | strip joints: [('front left leg', ['front left leg'], 45, None), ('body joint 1', ['body 2'], 25.0, None), ('head nod', ['head'], 15.0, 30.0)]
-hinge region (x 12.9..30, |y| < 3, z < 12): strip head vs real head differ by 1.12635 mm3; strip body 1 vs real body 1 there: 0.00000 mm3
-hinge region (x 13.7..30, |y| < 3, z < 12): strip head vs real head differ by 0.00000 mm3; strip body 1 vs real body 1 there: 0.00000 mm3
-whole back of the head (x 13.7..30): strip vs real differ by 33.9411 mm3
-strip head nose up: free to 18.5 deg, then blocked at every 2.5 deg step out to 180: True
-strip head nose down: free to 18.5 deg, then blocked at every 2.5 deg step out to 180: True
-strip head stub: x 6.5..26.9 (20.4 long), 14.6 wide, 14.2 tall; bed contact 130 mm2; in front of the body's drum face it sticks out 7.7 mm to hold it by

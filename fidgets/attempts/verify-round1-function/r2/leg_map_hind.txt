@@ -1,2 +1,0 @@
---- hind left leg against body 3, body joint 3 from -29 to 29 ---
-  => smallest free leg swing over all body joint 3 angles: 999 deg at body joint 3 = None

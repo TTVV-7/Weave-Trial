@@ -1,4 +1,0 @@
-  it 7: joint centre moved [0.09, -0.07, 0.52], turned 2.7 deg about [-0.4, 0.83, 0.38]
-  it 44: joint centre moved [0.37, -0.24, 1.04], turned 6.8 deg about [-0.64, 0.71, 0.28]
-  it 231: joint centre moved [0.73, 0.03, 1.55], turned 8.3 deg about [0.01, 0.95, 0.32]
-seed 1 up: stalled at 1.55 mm after 1500 tries

@@ -1,7 +1,0 @@
-=== test: step 2.5 deg, other joints {} ===
-  front left leg   +: free to  180.0 (want 45); first hit None; tightest gap within want 0.347 at 2.5 (start 0.350); hits 0
-  front left leg   -: free to  180.0 (want 45); first hit None; tightest gap within want 0.347 at 2.5 (start 0.350); hits 0
-  body joint 1     +: free to   27.5 (want 25); first hit 30.0; tightest gap within want 0.286 at 25 (start 0.389); hits 25, worst 234.13 mm3 at 90
-  body joint 1     -: free to   27.5 (want 25); first hit 30.0; tightest gap within want 0.286 at 25 (start 0.389); hits 25, worst 110.17 mm3 at 65
-  head nod         +: free to   17.5 (want 15); first hit 20.0; tightest gap within want 0.128 at 15 (start 0.350); hits 65, worst 1242.99 mm3 at 177.5
-  head nod         -: free to   17.5 (want 15); first hit 20.0; tightest gap within want 0.226 at 15 (start 0.350); hits 65, worst 1242.82 mm3 at 180
