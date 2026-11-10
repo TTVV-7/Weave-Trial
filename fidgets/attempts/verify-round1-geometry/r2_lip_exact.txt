@@ -1,0 +1,14 @@
+full joint 1, from 8.0001 behind the axis: y -8.4..+8.4: not separate (0/1); y -8.4..-3.0: not separate (0/1); y -3.0..+3.0: not separate (0/1); y +3.0..+8.4: not separate (0/1)
+full joint 1, from 8.0500 behind the axis: y -8.4..+8.4: not separate (0/1); y -8.4..-3.0: not separate (0/1); y -3.0..+3.0: not separate (0/1); y +3.0..+8.4: not separate (0/1)
+full joint 2, from 8.0001 behind the axis: y -8.4..+8.4: not separate (0/1); y -8.4..-3.0: 1.3178; y -3.0..+3.0: not separate (0/1); y +3.0..+8.4: 1.3178
+full joint 2, from 8.0500 behind the axis: y -8.4..+8.4: not separate (0/1); y -8.4..-3.0: 1.3896; y -3.0..+3.0: not separate (0/1); y +3.0..+8.4: 1.3896
+full joint 3, from 8.0001 behind the axis: y -8.4..+8.4: 1.4397; y -8.4..-3.0: 1.5984; y -3.0..+3.0: 1.4397; y +3.0..+8.4: 1.5984
+full joint 3, from 8.0500 behind the axis: y -8.4..+8.4: 1.4949; y -8.4..-3.0: 1.5984; y -3.0..+3.0: 1.4949; y +3.0..+8.4: 1.5984
+strip joint 1, from 8.0001 behind the axis: y -8.4..+8.4: not separate (0/1); y -8.4..-3.0: not separate (0/1); y -3.0..+3.0: not separate (0/1); y +3.0..+8.4: not separate (0/1)
+strip joint 1, from 8.0500 behind the axis: y -8.4..+8.4: not separate (0/1); y -8.4..-3.0: not separate (0/1); y -3.0..+3.0: not separate (0/1); y +3.0..+8.4: not separate (0/1)
+full, no keyring joint 1, from 8.0001 behind the axis: y -8.4..+8.4: not separate (0/1); y -8.4..-3.0: not separate (0/1); y -3.0..+3.0: not separate (0/1); y +3.0..+8.4: not separate (0/1)
+full, no keyring joint 1, from 8.0500 behind the axis: y -8.4..+8.4: not separate (0/1); y -8.4..-3.0: not separate (0/1); y -3.0..+3.0: not separate (0/1); y +3.0..+8.4: not separate (0/1)
+full, no keyring joint 2, from 8.0001 behind the axis: y -8.4..+8.4: not separate (0/1); y -8.4..-3.0: 1.3178; y -3.0..+3.0: not separate (0/1); y +3.0..+8.4: 1.3178
+full, no keyring joint 2, from 8.0500 behind the axis: y -8.4..+8.4: not separate (0/1); y -8.4..-3.0: 1.3896; y -3.0..+3.0: not separate (0/1); y +3.0..+8.4: 1.3896
+full, no keyring joint 3, from 8.0001 behind the axis: y -8.4..+8.4: 1.4397; y -8.4..-3.0: 2.1099; y -3.0..+3.0: 1.4397; y +3.0..+8.4: 2.1099
+full, no keyring joint 3, from 8.0500 behind the axis: y -8.4..+8.4: 1.4949; y -8.4..-3.0: 2.1720; y -3.0..+3.0: 1.4949; y +3.0..+8.4: 2.1720

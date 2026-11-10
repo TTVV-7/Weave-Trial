@@ -1,0 +1,7 @@
+=== full / hind left leg: voxel 0.05 mm, grid [198, 87, 248], voxel volume 199.0 mm3 (solid 193.6)
+   minus a 0.4 mm skin: 1 piece(s) over 0.02 mm3
+   thinner than 0.8: 7.11 mm3 in 13 bits; listing those over 0.01 mm3 that reach more than 0.45 mm beyond the thick part (1 of 2)
+        6.646 mm3, reaches 1.09 mm past the thick part, thickest place in it 0.80 mm, x 54.40..60.35 y 7.85..9.40 z 2.75..10.65
+   minus a 0.3 mm skin: 1 piece(s) over 0.02 mm3
+   thinner than 0.6: 0.58 mm3 in 6 bits; listing those over 0.01 mm3 that reach more than 0.45 mm beyond the thick part (1 of 3)
+        0.211 mm3, reaches 0.62 mm past the thick part, thickest place in it 0.25 mm, x 56.20..58.35 y 7.85..8.20 z 7.75..9.00

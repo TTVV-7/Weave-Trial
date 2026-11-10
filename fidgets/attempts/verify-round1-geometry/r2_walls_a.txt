@@ -1,0 +1,46 @@
+================ full model ================
+1. NECK TAB: its faces are at y = -2.300 and +2.300 (measured just above the sockets)
+   side +1: 0.002 in: socket r 2.343, wall 0.957 (x=22.11 z=8.41); 0.010 in: socket r 2.335, wall 0.965 (x=21.31 z=6.14); 0.030 in: socket r 2.315, wall 0.985 (x=25.87 z=6.15); 0.050 in: socket r 2.295, wall 1.005 (x=25.62 z=7.68); 0.100 in: socket r 2.245, wall 1.055 (x=25.80 z=6.16); 0.200 in: socket r 2.145, wall 1.155 (x=25.38 z=7.79); 0.300 in: socket r 2.045, wall 1.255 (x=25.49 z=5.82); 0.500 in: socket r 1.845, wall 1.455 (x=25.44 z=6.60); 0.800 in: socket r 1.545, wall 1.754 (x=24.69 z=7.69); 1.000 in: socket r 1.345, wall 1.954 (x=24.23 z=7.79)
+   side -1: 0.002 in: socket r 2.343, wall 0.957 (x=25.41 z=5.11); 0.010 in: socket r 2.335, wall 0.965 (x=25.92 z=6.83); 0.030 in: socket r 2.315, wall 0.985 (x=21.68 z=7.89); 0.050 in: socket r 2.295, wall 1.005 (x=25.22 z=8.22); 0.100 in: socket r 2.245, wall 1.055 (x=25.80 z=6.16); 0.200 in: socket r 2.145, wall 1.155 (x=24.79 z=8.38); 0.300 in: socket r 2.045, wall 1.255 (x=25.49 z=7.38); 0.500 in: socket r 1.845, wall 1.455 (x=25.44 z=6.60); 0.800 in: socket r 1.545, wall 1.754 (x=24.69 z=7.69); 1.000 in: socket r 1.345, wall 1.954 (x=22.56 z=7.45)
+   thinnest tab wall round a socket, any depth, either side: 0.957 mm at y=+2.298 x=22.11 z=8.41
+   side +1 3D: socket space 11.405 mm3; nearest other empty space 0.957 mm (1 other spaces)
+   side -1 3D: socket space 11.405 mm3; nearest other empty space 0.957 mm (1 other spaces)
+   solid along the nod axis itself (between the two socket tips), y runs: [(-1.205, 1.205)]
+   tab foot / disc at the axis, width in y per layer: z=0.00: 3.90 wide; z=0.10: 4.10 wide; z=0.20: 4.30 wide; z=0.40: 4.60 wide; z=1.00: 4.60 wide; z=2.00: 4.60 wide; z=3.00: 4.60 wide; z=4.00: 4.60 wide; z=3.25: 4.60 wide; z=4.10: 4.60 wide
+2. ROOF OVER THE NECK SLOT (body 1)
+   upright run of roof: roofed columns from x=14.25 to x=29.95; thinnest from 0.3 behind the front edge on: 0.248 mm at x=14.55 y=-0.00 (z 8.89..9.14)
+      by x: 14.5:0.04  15.0:1.65  15.5:2.65  16.0:3.39  16.5:4.02  17.0:4.57  17.5:5.05  18.0:5.48  18.5:5.86  19.0:2.38  19.5:2.06  20.0:1.78  20.5:1.54  21.0:1.35  21.5:1.21  22.0:1.11  22.5:1.06  23.0:1.04  23.5:1.06  24.0:1.12  24.5:1.22  25.0:1.36  25.5:1.53  26.0:1.73  26.5:1.93  27.0:2.16  27.5:2.45  28.0:2.81  28.5:3.26  29.0:10.44  29.5:9.85
+   3D: slot space x 14.25..28.56 y -3.05..3.05 z ..13.12; open air above the back: nearest 1.032 mm (empty spaces in the region: 3)
+      nearest open air by 1 mm lengths of the slot: 14-15: 1.13  15-16: 1.46  16-17: 2.26  17-18: 3.18  18-19: 2.22  19-20: 1.76  20-21: 1.35  21-22: 1.10  22-23: 1.03  23-24: 1.03  24-25: 1.12  25-26: 1.36  26-27: 1.73  27-28: 2.15  28-29: 2.79
+      another empty space x 28.65..31.00 y -5.15..5.15 z 0.00..6.44 vol 58.360: gap to the slot 1.355
+   sections x = const, slot outline to the outline of the air above (square to the faces): 15.0: 1.65  15.5: 2.65  16.0: 3.39  16.5: 4.02  17.0: 4.57  17.5: 5.05  18.0: 5.48  18.5: 5.86  19.0: 2.38  19.5: 2.06  20.0: 1.78  20.5: 1.54  21.0: 1.35  21.5: 1.21  22.0: 1.11  22.5: 1.06  23.0: 1.04  23.5: 1.06  24.0: 1.12  24.5: 1.22  25.0: 1.36  25.5: 1.53  26.0: 1.73  26.5: 1.93  27.0: 2.16  27.5: 2.45  28.0: 2.81  28.5: 3.26  29.0: -
+3. NOD PINS (body 1): sections y = const from the prong wall to the pin's tip
+   side +1: y=3.000: in the wall; y=2.710: in the wall; y=2.690: 4.480 across corners, 4.475 across flats; y=2.400: 3.900 across corners, 3.895 across flats; y=2.100: 3.300 across corners, 3.296 across flats; y=1.750: 2.600 across corners, 2.597 across flats; y=1.710: 2.520 across corners, 2.517 across flats; y=1.701: 2.502 across corners, 2.499 across flats
+   side -1: y=3.000: in the wall; y=2.710: in the wall; y=2.690: 4.480 across corners, 4.475 across flats; y=2.400: 3.900 across corners, 3.895 across flats; y=2.100: 3.300 across corners, 3.296 across flats; y=1.750: 2.600 across corners, 2.597 across flats; y=1.710: 2.520 across corners, 2.517 across flats; y=1.701: 2.502 across corners, 2.499 across flats
+   pin standing proud of the slot's wall: y -2.699..+2.699 (length 5.399), x-extent 8.000, z-extent 8.000
+   pin standing proud of the slot's wall: y -2.699..-1.700 (length 0.999), x-extent 4.499, z-extent 4.499
+   pin standing proud of the slot's wall: y +1.700..+2.699 (length 0.999), x-extent 4.499, z-extent 4.499
+   3D gap head / body 1 as printed: 0.350
+================ test strip ================
+1. NECK TAB: its faces are at y = -2.300 and +2.300 (measured just above the sockets)
+   side +1: 0.002 in: socket r 2.343, wall 0.957 (x=22.11 z=8.41); 0.010 in: socket r 2.335, wall 0.965 (x=21.31 z=6.14); 0.030 in: socket r 2.315, wall 0.985 (x=25.87 z=6.15); 0.050 in: socket r 2.295, wall 1.005 (x=25.62 z=7.68); 0.100 in: socket r 2.245, wall 1.055 (x=25.80 z=6.16); 0.200 in: socket r 2.145, wall 1.155 (x=25.38 z=7.79); 0.300 in: socket r 2.045, wall 1.255 (x=25.49 z=5.82); 0.500 in: socket r 1.845, wall 1.455 (x=25.44 z=6.60); 0.800 in: socket r 1.545, wall 1.754 (x=24.69 z=7.69); 1.000 in: socket r 1.345, wall 1.954 (x=24.23 z=7.79)
+   side -1: 0.002 in: socket r 2.343, wall 0.957 (x=25.41 z=5.11); 0.010 in: socket r 2.335, wall 0.965 (x=25.92 z=6.83); 0.030 in: socket r 2.315, wall 0.985 (x=21.68 z=7.89); 0.050 in: socket r 2.295, wall 1.005 (x=25.22 z=8.22); 0.100 in: socket r 2.245, wall 1.055 (x=25.80 z=6.16); 0.200 in: socket r 2.145, wall 1.155 (x=24.79 z=8.38); 0.300 in: socket r 2.045, wall 1.255 (x=25.49 z=7.38); 0.500 in: socket r 1.845, wall 1.455 (x=25.44 z=6.60); 0.800 in: socket r 1.545, wall 1.754 (x=24.69 z=7.69); 1.000 in: socket r 1.345, wall 1.954 (x=22.56 z=7.45)
+   thinnest tab wall round a socket, any depth, either side: 0.957 mm at y=+2.298 x=22.11 z=8.41
+   side +1 3D: socket space 11.405 mm3; nearest other empty space 0.957 mm (1 other spaces)
+   side -1 3D: socket space 11.405 mm3; nearest other empty space 0.957 mm (1 other spaces)
+   solid along the nod axis itself (between the two socket tips), y runs: [(-1.205, 1.205)]
+   tab foot / disc at the axis, width in y per layer: z=0.00: 3.90 wide; z=0.10: 4.10 wide; z=0.20: 4.30 wide; z=0.40: 4.60 wide; z=1.00: 4.60 wide; z=2.00: 4.60 wide; z=3.00: 4.60 wide; z=4.00: 4.60 wide; z=3.25: 4.60 wide; z=4.10: 4.60 wide
+2. ROOF OVER THE NECK SLOT (body 1)
+   upright run of roof: roofed columns from x=14.25 to x=29.95; thinnest from 0.3 behind the front edge on: 0.248 mm at x=14.55 y=-0.00 (z 8.89..9.14)
+      by x: 14.5:0.04  15.0:1.65  15.5:2.65  16.0:3.39  16.5:4.02  17.0:4.57  17.5:5.05  18.0:5.48  18.5:5.86  19.0:2.38  19.5:2.06  20.0:1.78  20.5:1.54  21.0:1.35  21.5:1.21  22.0:1.11  22.5:1.06  23.0:1.04  23.5:1.06  24.0:1.12  24.5:1.22  25.0:1.36  25.5:1.53  26.0:1.73  26.5:1.93  27.0:2.16  27.5:2.45  28.0:2.81  28.5:3.26  29.0:10.44  29.5:9.85
+   3D: slot space x 14.25..28.56 y -3.05..3.05 z ..13.12; open air above the back: nearest 1.032 mm (empty spaces in the region: 3)
+      nearest open air by 1 mm lengths of the slot: 14-15: 1.13  15-16: 1.46  16-17: 2.26  17-18: 3.18  18-19: 2.22  19-20: 1.76  20-21: 1.35  21-22: 1.10  22-23: 1.03  23-24: 1.03  24-25: 1.12  25-26: 1.36  26-27: 1.73  27-28: 2.15  28-29: 2.79
+      another empty space x 28.65..31.00 y -5.15..5.15 z 0.00..6.44 vol 58.360: gap to the slot 1.355
+   sections x = const, slot outline to the outline of the air above (square to the faces): 15.0: 1.65  15.5: 2.65  16.0: 3.39  16.5: 4.02  17.0: 4.57  17.5: 5.05  18.0: 5.48  18.5: 5.86  19.0: 2.38  19.5: 2.06  20.0: 1.78  20.5: 1.54  21.0: 1.35  21.5: 1.21  22.0: 1.11  22.5: 1.06  23.0: 1.04  23.5: 1.06  24.0: 1.12  24.5: 1.22  25.0: 1.36  25.5: 1.53  26.0: 1.73  26.5: 1.93  27.0: 2.16  27.5: 2.45  28.0: 2.81  28.5: 3.26  29.0: -
+3. NOD PINS (body 1): sections y = const from the prong wall to the pin's tip
+   side +1: y=3.000: in the wall; y=2.710: in the wall; y=2.690: 4.480 across corners, 4.475 across flats; y=2.400: 3.900 across corners, 3.895 across flats; y=2.100: 3.300 across corners, 3.296 across flats; y=1.750: 2.600 across corners, 2.597 across flats; y=1.710: 2.520 across corners, 2.517 across flats; y=1.701: 2.502 across corners, 2.499 across flats
+   side -1: y=3.000: in the wall; y=2.710: in the wall; y=2.690: 4.480 across corners, 4.475 across flats; y=2.400: 3.900 across corners, 3.895 across flats; y=2.100: 3.300 across corners, 3.296 across flats; y=1.750: 2.600 across corners, 2.597 across flats; y=1.710: 2.520 across corners, 2.517 across flats; y=1.701: 2.502 across corners, 2.499 across flats
+   pin standing proud of the slot's wall: y -2.699..+2.699 (length 5.399), x-extent 8.000, z-extent 8.000
+   pin standing proud of the slot's wall: y -2.699..-1.700 (length 0.999), x-extent 4.499, z-extent 4.499
+   pin standing proud of the slot's wall: y +1.700..+2.699 (length 0.999), x-extent 4.499, z-extent 4.499
+   3D gap head / body 1 as printed: 0.350

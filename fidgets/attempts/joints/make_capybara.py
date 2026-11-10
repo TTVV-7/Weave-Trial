@@ -8,13 +8,17 @@ How it holds together with nothing printed over a gap:
   * body joints: every segment ends in a ball (an upright cylinder below, a sphere
     above) centred on the joint's upright axis; the next segment's front is the
     matching socket, so the seam is a thin line that never opens when it bends.
-    Inside the ball, hidden by the socket, the next segment hooks over a low rim:
+    Inside the ball, hidden by the socket, the next segment hooks over a rim:
     an arc-shaped tongue standing on the bed, joined to the socket by a bridge
-    that rises at 45 degrees over the rim. The ball's own roof rises at 45
-    degrees over that bridge. Nothing is flatter than 45 degrees.
-  * legs: a cone pin on the flank widens outwards inside the leg, under the leg's
-    closed outer skin. The pin's underside is cut at 45 degrees rising outwards,
-    so it never starts in mid-air.
+    that rises at 45 degrees over the rim, whose top rises with it. The ball's
+    own roof rises at 45 degrees over that bridge. A V ridge round the inside of
+    the socket rides in a V groove round the ball's foot, so the joint cannot
+    lift or twist. Nothing is flatter than 45 degrees.
+  * legs: a pin on the flank, in a shallow cone-sided recess, goes through the
+    lip of the leg (a cone boss that sits in the recess) and ends in a flat
+    flange inside the leg, under the leg's closed outer skin. The pin's root is
+    a cone that narrows outwards, and from there its underside is cut at 45
+    degrees rising outwards, so it never starts in mid-air.
   * head: its back is a hollow cylinder round the nod axis and the body's front
     is the matching drum, so that seam stays closed too. A tab between two
     prongs, on two stub cone pins, is the hinge. The tab's neck strap meets a
@@ -51,7 +55,8 @@ CLEAR = 0.35          # gap square to a surface
 MIN_FEATURE = 0.8
 MIN_PIN = 2.5
 OVERHANG_OK = 1.0     # mm2 of steeper overhang allowed, for tiny details
-BED_GAP = 0.6         # bodies are at least this far apart in the first layer
+BED_GAP = 0.6         # bodies are at least this far apart in the first layer (the slab from 0 to FIRST_LAYER)
+FIRST_LAYER = 0.2
 MIN_PATCH = 1.0       # mm2: no painted patch smaller than this
 SEG = 64
 LENGTH = (55.0, 62.0)  # nose to rump
@@ -65,8 +70,10 @@ BELLY_R = 4.5         # the belly's rounded corners
 BELLY_Z = 0.69 * BELLY_R     # their height: the bed cuts them where they are just steeper than 45 degrees
 TOP_R, TOP_Y = 7.0, 1.5      # the back is two spheres this size, this far off the middle
 # (x, height) along the back: shoulders, a dip behind them, then up to the rump
+# each is (x, height) or (x, height, how far off the middle its two spheres are): the rump is wider on top
 SHOULDERS = [(21.0, 13.9), (26.0, 14.4), (32.5, 13.7)]
-RUMP = [(31.0, 13.7), (41.0, 15.0), (49.5, 15.8), (54.6, 15.3)]
+RUMP = [(31.0, 13.7), (41.0, 15.2, 2.0), (49.5, 16.5, 2.8), (54.6, 16.3, 2.8)]
+TAPER = (14.0, 7.5, 18.6)    # seen from above the shoulders narrow towards the head: x, half width there, x where it is FLANK again
 AXES = [26.2, 35.2, 44.2]   # x of the three upright joint axes
 SWING = 25.0          # each body joint wiggles this far either way
 MARGIN = 4.0          # degrees left over at full swing
@@ -80,30 +87,51 @@ X_CUT = 8.0           # the socket's lip is cut blunt this far behind the axis
 LIP_MIN = 1.0         # ...and cut back over the top of the ball to where it is this thick
 HORN_MIN = 1.4        # ...and near the bed to where the horn beside the socket is this wide
 R_CORE = 3.6          # inner wall of the pocket the hook lives in
-T_IN, T_OUT = 4.1, 7.55     # the hook's tongue
+T_IN, T_OUT = 4.1, 7.6      # the hook's tongue
 R_RIM = 8.0           # the rim the tongue hooks behind runs from here to R_BALL
-Z_RIM = 2.6           # rim height at its walls (it has a pitched top)
-Z_A = 3.4             # where the ball's roof starts to lean out over the hook
-G_SLOPE = 0.55        # vertical gap between 45 degree faces
+Z_RIM = 2.6           # rim height at its inner wall; its top rises outwards at 45 degrees to the ball's surface
+Z_A = 3.0             # where the ball's roof starts to lean out over the hook
+G_SLOPE = 0.5         # vertical gap between 45 degree faces (0.354 square to them)
 HOOK_HALF = 18.0      # half angle of the tongue and bridge
 BLEND = 0.35          # the tongue is blended into the bridge with a facet this big
-BED_CHAMFER = 0.3     # both sides of a seam are chamfered where they meet the bed
-TONGUE_CHAMFER = 0.3  # and so is the foot of the tongue
+BED_CHAMFER = 0.35    # both sides of a seam are chamfered where they meet the bed
+TONGUE_CHAMFER = 0.35 # and so are the foot of the tongue and the foot of the rim's inner wall
+RING_Z = 2.2          # a V ridge round the inside of the socket at this height rides in a V groove round the
+RING_D = 0.95         # ball this deep (the ridge is RING_FIT shallower): it stops the joint lifting and twisting
+RING_FIT = 0.11
+TILT_Z = 4.0          # the joint is tilted about axes at this height to measure its slop
+MAX_TILT = 6.0        # degrees a body joint may fold nose-down, or twist
+MAX_FOLD = 8.0        # degrees it may fold up at the joint. It cannot be held to MAX_TILT: the two stops against it,
+                      # the ball's roof on the tongue's front and the rim's top under the hook's bridge, are 45 degree
+                      # faces no closer than CLEAR, so each gives 0.5 mm up and down, and they are only 6 mm apart
 
 # --- legs ---------------------------------------------------------------------
-LEG_Z = 7.2           # pin height
-LEG_NECK = 2.5        # pin diameter at the flank; it widens outwards at 45 degrees
-LEG_GAP = 0.4         # between leg and flank
-LEG_END = 0.4         # gap beyond the pin's end
-LEG_SKIN = 0.9        # the leg's closed outer skin
-LEG_CHAMFER = 0.5
-LEG_BULGE = 0.5       # height of the dome on the haunch's outer face
+LEG_Z = 6.0           # pin height
+LEG_NECK = 3.12       # pin diameter where it enters the leg's lip; the 45 degree cut under it leaves 2.6 at the lip's far side
+LEG_GAP = 0.4         # between leg and flank, and between the leg's boss and the floor of its recess
+LEG_SINK = 1.0        # the pin stands in a cone-sided recess this deep in the flank; the leg's boss sits in it
+LEG_ROOT = 0.3        # the pin's root is a cone that narrows outwards as far as this into the lip
+LEG_LAND = 0.5        # then the lip's bore is a blunt cylinder this long: with LEG_ROOT, the lip's thickness
+LEG_PLAY = 0.4        # between the lip and the pin's flange behind it
+LEG_FLANGE = 0.7      # thickness of the flange on the end of the pin: a flat step, not a feather edge
+LEG_HOLD = 1.0        # the flange is this much bigger in radius than the bore it cannot pass
+LEG_END = 0.35        # gap beyond the pin's end
+LEG_SKIN = 0.85       # the leg's closed outer skin
+LEG_BOSS = 3.75       # radius of the boss's face
+LEG_CHAMFER = 0.6     # round the thigh's outer edge
+PAW_OUT = 0.9         # the paw stands this much further out than the thigh
+PAW_CHAMFER = 0.7
 PAW_Z = 2.4           # painted dark below this
-# x of the pin, haunch radius, how far the pin reaches into the leg, a second disc
-# that makes the haunch a thigh (x and z from the pin, radius), then the hock (heel)
-# and toe as (x from the pin, radius): each is a disc resting on the bed
-LEGS = {"front": dict(x=20.9, haunch=4.6, d=1.2, thigh=(0.5, 1.2, 3.6), hock=(1.2, 1.4), toe=(-2.6, 1.2)),
-        "hind": dict(x=56.0, haunch=4.6, d=1.2, thigh=(1.5, 1.5, 3.9), hock=(1.5, 1.7), toe=(-2.9, 1.3))}
+MIN_FOOT = 15.0       # mm2 of bed under each leg
+MIN_HOLD = 0.9        # mm of flange over lip left when everything a 0.4 mm nozzle cannot print is taken away...
+HOLD_BAND = (1.0, 2.6)   # ...in every layer this far above the pin's axis, the band where the flange stands over the lip
+NOZZLE = 0.4
+# x of the pin; the thigh is the hull of a big disc (x from the pin, radius) at pin height, a small
+# one above it (x and z from the pin, radius) that makes it a pear, the shin and the hock; shin,
+# hock (heel) and toe are discs (x from the pin, radius) resting on the bed: the shin keeps the
+# thigh's front from overhanging, and the paw is the hull of hock and toe
+LEGS = {"front": dict(x=20.9, thigh=(0.0, 4.3), top=(0.2, 3.1, 2.7), shin=(-0.9, 1.3), hock=(1.6, 1.5), toe=(-2.9, 1.3)),
+        "hind": dict(x=57.3, thigh=(-0.5, 4.8), top=(-0.4, 3.2, 2.9), shin=(-1.8, 1.3), hock=(2.4, 1.5), toe=(-2.6, 1.3))}
 
 # --- head ---------------------------------------------------------------------
 NECK_X, NECK_Z = 23.6, 6.6   # the nod axis
@@ -121,15 +149,16 @@ NOD_STOP = 18.5       # ...and is stopped here, both ways
 NOD_MAX = 30.0        # the check fails if it nods further than this
 HORN_R = 6.0          # the horn on top of the tab reaches this far from the axis
 HORN_HALF = 45.0 - NOD_STOP   # its half angle: its pocket's walls must lean at 45
-HEAD_TOP = 13.4
-EYE = (8.4, 10.4, 1.2, 25.0)     # x, z, radius, and how far it is turned to face forwards
-NOSTRIL = (1.7, 9.0, 0.8)    # y, z, radius
-EARS = [((14.6, 15.2), (4.9, 5.6), (11.0, 13.9), 2.0, 1.5)]   # (x, y, z) of root and tip, their radii
-EAR_FROM = 12.3           # painted dark above this height
+HEAD_TOP = 14.2       # as deep as the shoulders
+MUZZLE_TOP = 12.2
+EYE = (7.8, 11.2, 1.4, 38.0)     # x, z, radius, and how far it is turned to face forwards
+NOSTRIL = (1.7, 9.6, 0.8)    # y, z, radius
+EARS = [((14.6, 15.2), (4.9, 5.6), (11.8, 14.7), 2.0, 1.5)]   # (x, y, z) of root and tip, their radii
+EAR_FROM = 13.1           # painted dark above this height
 NOSE = (2.0, 4.0, 2.5)    # the dark nose pad is where an ellipsoid with these radii, centred on...
-NOSE_AT = (0.3, 10.0)     # ...this x and z, the top front edge of the muzzle, cuts the head
-MOUTH_Z, MOUTH_Y = 4.5, 2.1   # the mouth: a short groove, joined to the nose by a groove down the middle
-MOUTH = 0.5               # depth of those grooves (a V with 45 degree faces)
+NOSE_AT = (0.3, 10.6)     # ...this x and z, the top front edge of the muzzle, cuts the head
+MOUTH_Z, MOUTH_Y = 5.0, 1.8   # the mouth: one short shallow groove, under a third of the muzzle's width, painted dark brown
+MOUTH = 0.35              # its depth (a V with 45 degree faces)
 
 # --- orange -------------------------------------------------------------------
 ORANGE_X = 9.6
@@ -140,12 +169,14 @@ SHAFT_FOOT = 3.4      # foot radius on the bed
 SHAFT_GAP = 0.5       # round the shaft, and square to the two cones
 ORANGE_BROWN = 0.4    # the shaft's colour runs this far up into the cone under the ball
 
-KEYRING_D = 3.4       # hole in the lug on the back; 0 for none
-KEYRING_X = 57.1
-KEYRING_Z = 14.6      # hole centre
-KEYRING_T = 4.5       # lug thickness
-KEYRING_WALL = 2.1    # round the hole and over its peak
-KEYRING_FOOT = 1.5    # the lug spreads this much at its foot
+KEYRING_D = 3.0       # hole of the keyring eye on the rump; 0 for none
+KEYRING_X = 56.6
+KEYRING_Z = 13.3      # hole centre: the eye is sunk into the rump, so that only a low round hump stands above the back
+KEYRING_T = 4.5       # thickness of the web the hole goes through
+KEYRING_WALL = 2.05   # round the hole and over its peak
+KEYRING_FOOT = 1.5    # the hump spreads this much at its foot
+KEYRING_SCOOP = 2.2   # radius of the scoop in the back each side of the web, for the ring to swing in
+KEYRING_TOP = 17.5    # the hump must not stand higher than this
 
 
 # --- building blocks ----------------------------------------------------------
@@ -195,9 +226,9 @@ def drum(r):
 
 
 def turn(m, axis, point, deg):
-    """m turned deg about the 'y' or 'z' axis through point."""
+    """m turned deg about the 'x', 'y' or 'z' axis through point."""
     p = np.asarray(point, float)
-    rot = [0, deg, 0] if axis == "y" else [0, 0, deg]
+    rot = {"x": [deg, 0, 0], "y": [0, deg, 0], "z": [0, 0, deg]}[axis]
     return m.translate(list(-p)).rotate(rot).translate(list(p))
 
 
@@ -211,11 +242,14 @@ def barrel(x0, x1, groups):
         xa = x0 + BELLY_R if k == 0 else tops[0][0]
         xb = x1 - BELLY_R - 0.8 if k == len(groups) - 1 else tops[-1][0]
         blobs = [ball(BELLY_R, x, s * (FLANK - BELLY_R), BELLY_Z) for x in (xa, xb) for s in (-1, 1)]
-        blobs += [ball(TOP_R, x, s * TOP_Y, top - TOP_R) for x, top in tops for s in (-1, 1)]
+        blobs += [ball(TOP_R, t[0], s * (t[2] if len(t) > 2 else TOP_Y), t[1] - TOP_R) for t in tops for s in (-1, 1)]
         if k == len(groups) - 1:       # hips: they keep the flanks flat back to the hind legs' pins
             blobs += [ball(BELLY_R, x1 - BELLY_R, s * (FLANK - BELLY_R), LEG_Z) for s in (-1, 1)]
         hulls.append(mf.Manifold.batch_hull(blobs))
-    return union(hulls) ^ box(x0 - 1, x1 + 1, -FLANK, FLANK, 0, 40)
+    xa, wa, xb = TAPER
+    plan = [(xa - 3, -wa + 3 * (FLANK - wa) / (xb - xa)), (xb, -FLANK), (x1 + 1, -FLANK)]
+    plan += [(x, -y) for x, y in plan[::-1]]
+    return union(hulls) ^ mf.Manifold.extrude(mf.CrossSection([plan]), 40)
 
 
 def union(ms):
@@ -258,13 +292,11 @@ def trim_lip(seg, at):
     """Over the top of the ball the socket's lip would feather out to nothing where it
     meets the back. Keep only the columns of it that are LIP_MIN thick, so that it
     ends in a blunt upright step."""
-    r = R_BALL + G_SEAM
-    z1 = Z_A + r - R_CORE - G_SLOPE + 0.3          # just above the hook's bridge
-    zone = mf.Manifold.cylinder(60, r, r, 128).translate([at, 0, z1])
+    zone = lip_zone(at)
     lip = seg ^ zone
     thick = (lip ^ lip.translate([0, 0, -LIP_MIN])).project()
     thick = mf.CrossSection(thick.to_polygons(), mf.FillRule.Positive).offset(0.01, mf.JoinType.Round)
-    return seg - (zone - mf.Manifold.extrude(thick, 80).translate([0, 0, z1 - 1]))
+    return seg - (zone - mf.Manifold.extrude(thick, 80).translate([0, 0, -1]))
 
 
 def bed_ring(at, r, ball_side):
@@ -277,19 +309,22 @@ def bed_ring(at, r, ball_side):
 
 
 def hook_peak():
-    r = (T_OUT + R_BALL + G_SLOPE - 0.1) / 2
-    return r, Z_RIM + 0.1 + (r - T_OUT)
+    """Where the hook's bridge is measured: half way across the rim, on its underside."""
+    r = (T_OUT + R_BALL) / 2
+    return r, Z_RIM + G_SLOPE + r - R_RIM
 
 
 def hook(at):
     """The rear segment's hook inside the ball: tongue on the bed, bridge over the rim.
-    A facet blends the tongue's outer face into the underside of the bridge."""
+    The bridge's underside rises outwards at 45 degrees all the way, G_SLOPE above the
+    rim's top. A facet blends the tongue's outer face into it."""
     far = R_BALL + 1.5
     top = lambda r: Z_A + r - R_CORE - G_SLOPE
-    zb, b = Z_RIM + 0.1, BLEND
+    under = lambda r: Z_RIM + G_SLOPE + r - R_RIM
+    zb, b = under(T_OUT), BLEND
     c = TONGUE_CHAMFER
-    prof = [(T_IN, c), (T_IN + c, 0), (T_OUT - c, 0), (T_OUT, c), (T_OUT, zb - b * np.sqrt(2)), (T_OUT + b, zb + b), hook_peak(),
-            (R_BALL + G_SLOPE, Z_RIM), (far, Z_RIM), (far, top(far)), (T_IN, top(T_IN))]
+    prof = [(T_IN, c), (T_IN + c, 0), (T_OUT - c, 0), (T_OUT, c), (T_OUT, zb - b * np.sqrt(2)), (T_OUT + b, zb + b),
+            (far, under(far)), (far, top(far)), (T_IN, top(T_IN))]
     return revolve(prof, at) ^ wedge(at, HOOK_HALF)
 
 
@@ -301,77 +336,152 @@ def pocket(at):
 
 
 def rim(at):
-    """The bar across the pocket's mouth that the tongue hooks behind; it has a pitched
-    top, and its inner top edge is cut back to match the tongue's blend."""
-    mid, b = (R_RIM + R_BALL) / 2, BLEND
-    prof = [(R_RIM, 0), (R_BALL, 0), (R_BALL, Z_RIM), (mid, Z_RIM + mid - R_RIM),
-            (R_RIM + b, Z_RIM + b), (R_RIM, Z_RIM - b * np.sqrt(2))]
+    """The bar across the pocket's mouth that the tongue hooks behind. Its top rises
+    outwards at 45 degrees from its inner wall to the ball's surface, so the hook's
+    bridge has a long slope to bear on; its inner top edge is cut back to match the
+    tongue's blend and its inner foot is chamfered."""
+    b, c = BLEND, TONGUE_CHAMFER
+    prof = [(R_RIM + c, 0), (R_BALL, 0), (R_BALL, Z_RIM + R_BALL - R_RIM),
+            (R_RIM + b, Z_RIM + b), (R_RIM, Z_RIM - b * np.sqrt(2)), (R_RIM, c)]
     return revolve(prof, at) ^ wedge(at, HOOK_HALF + SWING + MARGIN + 2)
 
 
+def ring(at, r, d):
+    """A V ring d deep, pointing inwards from radius r at height RING_Z, behind the axis."""
+    e = 0.2
+    return revolve([(r + e, RING_Z - d - e), (r + e, RING_Z + d + e), (r - d, RING_Z)], at) ^ box(at, at + 50, -50, 50, -1, 20)
+
+
+def lip_zone(at):
+    """Everything over the ball, above the hook's bridge: where the socket's lip is."""
+    r = R_BALL + G_SEAM
+    return mf.Manifold.cylinder(60, r, r, 128).translate([at, 0, Z_A + r - R_CORE - G_SLOPE + 0.3])
+
+
+def lip_reach(seg, at):
+    """How near the joint's axis the socket's lip comes, seen from above, measured on
+    the trimmed solid: the radius of the largest circle round the axis that misses it."""
+    flat = (seg ^ lip_zone(at)).project()
+    flat = mf.CrossSection(flat.to_polygons(), mf.FillRule.Positive)
+    lo, hi = 0.0, R_BALL + G_SEAM
+    for _ in range(14):
+        mid = (lo + hi) / 2
+        lo, hi = (mid, hi) if (flat ^ mf.CrossSection.circle(mid, 256).translate([at, 0])).area() < 1e-5 else (lo, mid)
+    return lo
+
+
 def split(body, axes):
-    """Cut a body into len(axes) + 1 segments joined by ball-and-hook joints."""
+    """Cut a body into len(axes) + 1 segments joined by ball-and-hook joints. Each
+    front segment keeps the body's own back, as a low collar over its ball, right up
+    to G_SEAM from where the next segment's trimmed lip swings past, so that the
+    back reads as one barrel with a fine seam and not a groove at each joint."""
+    rears = {}
+    for i, at in enumerate(axes):      # the socket and hook of the segment behind each joint
+        seg = body ^ ((behind(at) - (socket_space(at) - ring(at, R_BALL + G_SEAM, RING_D - RING_FIT))) + hook(at))
+        rears[i + 1] = trim_lip(seg, at) - bed_ring(at, R_BALL + G_SEAM, False)
     segs = []
     for i in range(len(axes) + 1):
-        seg = body
-        if i > 0:                      # this segment's socket and hook, round the ball in front
-            at = axes[i - 1]
-            seg = seg ^ ((behind(at) - socket_space(at)) + hook(at))
-            seg = trim_lip(seg, at) - bed_ring(at, R_BALL + G_SEAM, False)
+        seg = rears.get(i, body)
         if i < len(axes):              # this segment's ball, at its rear
             at = axes[i]
-            seg = seg ^ ((box(-100, at, -100, 100, -1, 100) + ball_end(at)) - pocket(at) + rim(at))
-            seg -= bed_ring(at, R_BALL, True)
+            rc = lip_reach(rears[i + 1], at) - G_SEAM
+            collar = mf.Manifold.cylinder(60, rc, rc, 256).translate([at, 0, -1])
+            seg = seg ^ ((box(-100, at, -100, 100, -1, 100) + ball_end(at) + collar) - pocket(at) + rim(at))
+            seg -= bed_ring(at, R_BALL, True) + ring(at, R_BALL, RING_D)
         segs.append(seg)
     return segs
 
 
 # --- legs ---------------------------------------------------------------------
-def leg_pin(kind, side):
-    """The cone pin on the flank: LEG_NECK across at the flank, widening outwards.
-    Its underside is cut by a plane rising outwards at 45 degrees from the bottom
-    of the neck, so every layer of it rests on the one below."""
-    x, r0 = LEGS[kind]["x"], LEG_NECK / 2
-    reach = LEG_GAP + LEGS[kind]["d"]
-    pin = frustum_y(x, LEG_Z, FLANK, r0, FLANK + reach, r0 + reach)
-    b = LEG_Z - r0
-    pin ^= prism_yz([(FLANK - 3, b - 3), (FLANK + 6, b + 6), (FLANK + 6, b + 30), (FLANK - 3, b + 30)], x - 10, x + 10)
-    pin += frustum_y(x, LEG_Z, FLANK - 1.5, r0, FLANK, r0)
-    return pin if side > 0 else pin.mirror([0, 1, 0])
+def leg_stations():
+    """Where things are along the pin, as y for the left side: the recess's floor, the
+    boss's face, where the bore's blunt land starts, the lip's outer face, the two
+    faces of the flange, the end of the socket, the leg's outer face."""
+    floor = FLANK - LEG_SINK
+    face = floor + LEG_GAP
+    land = face + LEG_ROOT
+    lip = land + LEG_LAND
+    f0 = lip + LEG_PLAY
+    f1 = f0 + LEG_FLANGE
+    end = f1 + LEG_END
+    return floor, face, land, lip, f0, f1, end, end + LEG_SKIN
+
+
+def leg_radii():
+    """Pin neck, the lip's bore, the flange, the socket round the flange."""
+    rn = LEG_NECK / 2
+    bore = rn + CLEAR * np.sqrt(2)
+    return rn, bore, bore + LEG_HOLD, bore + LEG_HOLD + CLEAR
+
+
+def teardrop_y(x, z, r, y0, y1, n=128):
+    """A cylinder along y with its roof drawn up to a 45 degree peak, so it prints as a hole."""
+    pts = [(x + r * np.cos(t), z + r * np.sin(t)) for t in np.linspace(3 * np.pi / 4, 9 * np.pi / 4, 3 * n // 4 + 1)]
+    return prism_xz(pts + [(x, z + r * np.sqrt(2))], y0, y1)
+
+
+def leg_mount(seg, kind, sides=(1, -1)):
+    """Give a body segment the pins for a pair of legs. Each stands in a shallow recess
+    with a 45 degree cone side. The pin's root is a cone narrowing outwards (so its
+    underside rises at 45 degrees and prints all round), then a straight neck through
+    the leg's lip, then a flat flange behind the lip. Of the neck and flange only what
+    lies within 45 degrees above the lower half of the root cone's end is kept: their
+    underside rises at 45 degrees or more away from it in every direction, sideways
+    as well as outwards, so no layer of them starts in mid-air."""
+    x = LEGS[kind]["x"]
+    floor, face, land, lip, f0, f1, end, out = leg_stations()
+    rn, bore, rf, rc = leg_radii()
+    root = rn + (land - floor)
+    r_floor = LEG_BOSS + CLEAR * np.sqrt(2) - LEG_GAP
+    recess = frustum_y(x, LEG_Z, floor, r_floor, FLANK + 1.0, r_floor + LEG_SINK + 1.0, 128)
+    pin = frustum_y(x, LEG_Z, floor - 1.5, root, floor, root, 128) + frustum_y(x, LEG_Z, floor, root, land, rn, 128)
+    beyond = frustum_y(x, LEG_Z, land - 0.01, rn, f1, rn, 128) + frustum_y(x, LEG_Z, f0, rf, f1, rf, 128)
+    # what can be printed beyond the root cone's end: everything within 45 degrees above the lower half of its rim
+    rim_ = [(x + rn * np.sin(a), LEG_Z - rn * np.cos(a)) for a in np.radians(np.linspace(-90, 90, 37))]
+    pin += beyond ^ union(mf.Manifold.cylinder(14, 0, 14, 64).translate([px, land - 0.01, pz]) for px, pz in rim_)
+    for s in sides:
+        seg = seg - (recess if s > 0 else recess.mirror([0, 1, 0])) + (pin if s > 0 else pin.mirror([0, 1, 0]))
+    return seg
 
 
 def leg_pieces(kind):
-    """The leg seen from the side, as two convex outlines: the thigh, from the round
-    haunch down to the hock, and the paw, from the hock forwards to the toe. Hock
-    and toe are discs low enough that the bed cuts them at 45 degrees."""
+    """The leg seen from the side, as two convex outlines: the thigh, a pear from the
+    small disc at its top through the big one round the pin down to the hock, and
+    the paw, from the hock forwards to the toe. Hock and toe are discs low enough
+    that the bed cuts them at 45 degrees."""
     g = LEGS[kind]
     disc = lambda r, cx, cz: mf.CrossSection.circle(r, 72).translate([cx, cz])
     low = lambda dx_r: disc(dx_r[1], g["x"] + dx_r[0], dx_r[1] * np.sqrt(0.5))
-    up = mf.CrossSection.square([60, 40]).translate([g["x"] - 30, 0])
-    tx, tz, tr = g["thigh"]
-    thigh = mf.CrossSection.batch_hull([disc(g["haunch"], g["x"], LEG_Z), disc(tr, g["x"] + tx, LEG_Z + tz), low(g["hock"])]) ^ up
-    paw = mf.CrossSection.batch_hull([low(g["hock"]), low(g["toe"])]) ^ up
+    (bx, br), (tx, tz, tr) = g["thigh"], g["top"]
+    thigh = mf.CrossSection.batch_hull([disc(br, g["x"] + bx, LEG_Z), disc(tr, g["x"] + tx, LEG_Z + tz), low(g["shin"]), low(g["hock"])])
+    paw = mf.CrossSection.batch_hull([low(g["hock"]), low(g["toe"])])
     return thigh, paw
 
 
-def leg_thickness(kind):
-    return LEGS[kind]["d"] + LEG_END + LEG_SKIN
-
-
 def leg(kind, side):
-    g, c, t = LEGS[kind], LEG_CHAMFER, leg_thickness(kind)
-    x = g["x"]
-    m = union(mf.Manifold.batch_hull([mf.Manifold.extrude(cs, t - c),
-                                      mf.Manifold.extrude(cs.offset(-c, mf.JoinType.Round), t)])
-              for cs in leg_pieces(kind))
-    m = m.rotate([90, 0, 0]).mirror([0, 1, 0]).translate([0, FLANK + LEG_GAP, 0])
-    y_out = FLANK + LEG_GAP + t
-    br = g["haunch"] - 1.0
-    rho = (br ** 2 + LEG_BULGE ** 2) / (2 * LEG_BULGE)      # a shallow dome over the haunch
-    m += ball(rho, x, y_out + LEG_BULGE - rho, LEG_Z) ^ box(x - 20, x + 20, y_out - 0.01, y_out + 5, 0, 40)
-    r0 = LEG_NECK / 2 + CLEAR * np.sqrt(2)
-    end = LEG_GAP + g["d"] + LEG_END
-    m -= frustum_y(x, LEG_Z, FLANK - 0.5, r0 - 0.5, FLANK + end, r0 + end)
+    """A leg: a plate with a rounded outer edge, a paw that stands out a little
+    further, and on the inside a cone boss that sits in the flank's recess. The boss
+    is the lip the pin's flange is caught behind; the socket for the flange has a
+    45 degree peaked roof and a closed outer skin."""
+    x = LEGS[kind]["x"]
+    floor, face, land, lip, f0, f1, end, out = leg_stations()
+    rn, bore, rf, rc = leg_radii()
+    y0 = FLANK + LEG_GAP
+    thigh, paw = leg_pieces(kind)
+
+    def plate(cs, t, c):
+        m = mf.Manifold.batch_hull([mf.Manifold.extrude(cs, t - c), mf.Manifold.extrude(cs.offset(-c, mf.JoinType.Round), t)])
+        return m.rotate([90, 0, 0]).mirror([0, 1, 0]).translate([0, y0, 0])
+
+    m = plate(thigh, out - y0, LEG_CHAMFER) + plate(paw, out - y0 + PAW_OUT, PAW_CHAMFER)
+    boss = frustum_y(x, LEG_Z, face, LEG_BOSS, y0 + 0.01, LEG_BOSS + y0 + 0.01 - face, 128)
+    m += boss ^ mf.Manifold.extrude(thigh, 5).rotate([90, 0, 0]).mirror([0, 1, 0]).translate([0, face - 1, 0])
+    m ^= box(x - 30, x + 30, 0, 40, 0, 40)
+    m -= frustum_y(x, LEG_Z, face - 0.5, bore + land - face + 0.5, land, bore, 128) + teardrop_y(x, LEG_Z, bore, land - 0.01, lip + 0.01)
+    # the socket: its peak is kept LEG_SKIN-and-a-bit inside the boss's cone
+    room = teardrop_y(x, LEG_Z, rc, lip, end)
+    keep = LEG_BOSS - (face - lip) - MIN_FEATURE * np.sqrt(2) - 0.01
+    m -= room ^ frustum_y(x, LEG_Z, lip, keep, end, keep + end - lip, 128)
     return m if side > 0 else m.mirror([0, 1, 0])
 
 
@@ -469,7 +579,8 @@ def orange_profile(seat, hole=False):
     if hole:
         gs, gc = SHAFT_GAP, SHAFT_GAP * np.sqrt(2)
         top = seat + gs - gc
-        return [(0, -1), (f + gc + 1, -1), (s + gs, f + gc - s - gs), (s + gs, top), (s + gs + 12, top + 12), (0, top + 12)]
+        z0, g0 = FIRST_LAYER + 0.02, BED_GAP + 0.02    # straight up from the bed first: the first layer's gap is all of g0
+        return [(0, -1), (f + g0, -1), (f + g0, z0), (s + gs, z0 + f + g0 - s - gs), (s + gs, top), (s + gs + 12, top + 12), (0, top + 12)]
     lat = ORANGE_R * np.sqrt(0.5)                 # the cone meets the ball at 45 degrees
     zc = seat + (lat - s) + lat
     dimple = 0.9
@@ -492,14 +603,9 @@ def nostril_cone(side, grow=0.0):
 
 
 def mouth_cut(grow=0.0):
-    """The mouth: a short V groove across the muzzle, and one down the middle from the
-    nose pad to it. The upright groove's top end rises outwards at 45 degrees."""
+    """The mouth: a short shallow V groove across the front of the muzzle."""
     d, e = MOUTH + grow * np.sqrt(2), grow
-    across = prism_xz([(-1, MOUTH_Z - d - 1), (d, MOUTH_Z), (-1, MOUTH_Z + d + 1)], -MOUTH_Y - e, MOUTH_Y + e)
-    top = NOSE_AT[1] - NOSE[2] + 0.2 + e
-    down = mf.Manifold.extrude(mf.CrossSection([[(-1, -d - 1), (d, 0), (-1, d + 1)]]), top - MOUTH_Z).translate([0, 0, MOUTH_Z])
-    down ^= prism_xz([(-2, 0), (3, 0), (3, top - 3), (-2, top + 2)], -5, 5)
-    return across + down
+    return prism_xz([(-1, MOUTH_Z - d - 1), (d, MOUTH_Z), (-1, MOUTH_Z + d + 1)], -MOUTH_Y - e, MOUTH_Y + e)
 
 
 def ear(side, grow=0.0):
@@ -512,8 +618,12 @@ def make_head(stub=False):
     back of the head with its hinge, for the test strip."""
     blobs = [ball(4.0, x, s * 3.3, z) for x in (10.5, 17.0) for s in (-1, 1) for z in (2.76, HEAD_TOP - 4.0)]
     if not stub:
-        blobs += [ball(2.8, 2.8, s * 3.3, z) for s in (-1, 1) for z in (1.93, 8.9)]              # blunt muzzle
+        blobs += [ball(2.8, 2.8, s * 3.3, z) for s in (-1, 1) for z in (1.93, MUZZLE_TOP - 2.8)]   # blunt muzzle
     head = mf.Manifold.batch_hull(blobs) ^ box(0, 40, -20, 20, 0, 40)
+    # the nape: above where the hollow back reaches 45 degrees it would lean back over the body
+    # too flat to print, so from there up the back of the head rises forwards at 45 degrees
+    k = (R_NOD + NECK_GAP) * np.sqrt(0.5)
+    head -= prism_xz([(NECK_X - k, NECK_Z + k), (NECK_X + 20, NECK_Z + k), (NECK_X + 20, NECK_Z + k + 30), (NECK_X - k - 30, NECK_Z + k + 30)], -20, 20)
     info = {"paint": {}}
     if not stub:
         ex, ez, er, _ = EYE
@@ -533,10 +643,10 @@ def make_head(stub=False):
     head -= revolve(orange_profile(seat, hole=True), ORANGE_X)
     prof, zc = orange_profile(seat)
     orange = revolve(prof, ORANGE_X)
-    black = union([eye_cone(s, ys, 0.12) for s in (-1, 1)] + [nostril_cone(s, 0.12) for s in (-1, 1)] + [mouth_cut(0.12)])
-    nose = mf.Manifold.sphere(1.0, 96).scale(list(NOSE)).translate([NOSE_AT[0], 0, NOSE_AT[1]])
+    black = union([eye_cone(s, ys, 0.12) for s in (-1, 1)] + [nostril_cone(s, 0.12) for s in (-1, 1)])
+    nose = mf.Manifold.sphere(1.0, 128).scale(list(NOSE)).translate([NOSE_AT[0], 0, NOSE_AT[1]])
     ears = (ear(1, 0.05) + ear(-1, 0.05)) ^ box(0, 40, -20, 20, EAR_FROM, 40)
-    info["paint"]["head"] = [(black, BLACK), (nose + ears, DARK)]
+    info["paint"]["head"] = [(black, BLACK), (nose + ears + mouth_cut(0.12), DARK)]
     stalk = mf.Manifold.cylinder(3, 1.3, 1.3, 48).translate([ORANGE_X, 0, zc + ORANGE_R - 1.2])
     info["paint"]["orange"] = [(box(-50, 50, -50, 50, -1, seat + ORANGE_BROWN), BROWN), (stalk, DARK)]
     info.update(eye_y=ys, seat=seat, orange_z=zc)
@@ -551,17 +661,22 @@ def keyhole(y0, y1):
 
 
 def keyring(seg):
-    """A low, thick lug on the rump. The hole is half sunk into the back, where it
-    carries on as a shallow groove for the ring; KEYRING_WALL stands round the hole
-    and over its peak, and the lug spreads sideways into the back at its foot."""
-    r, t = KEYRING_D / 2, KEYRING_T / 2
+    """A low eye on the rump. The hole is sunk below the back; a web KEYRING_T thick
+    with KEYRING_WALL round the hole and over its peak stands over it as a low round
+    hump, and each side of the web a scoop in the back, rising outwards to nothing,
+    gives a split ring room to pass through and swing. All the scoops' faces look up."""
+    r, t, q = KEYRING_D / 2, KEYRING_T / 2, KEYRING_SCOOP
     rr = r + KEYRING_WALL
     plate = lambda rad, cz: prism_xz([(KEYRING_X + rad * np.cos(a), cz + rad * np.sin(a))
                                       for a in np.linspace(0, 2 * np.pi, 64, endpoint=False)], -t, t)
     f = KEYRING_FOOT
     foot = box(KEYRING_X - rr + 0.8, KEYRING_X + rr - 1.2, -t - f, t + f, KEYRING_Z - r - 0.8, KEYRING_Z - r - 0.7)
     lug = mf.Manifold.batch_hull([plate(rr, KEYRING_Z), plate(KEYRING_WALL, KEYRING_Z + r * np.sqrt(2)), foot])
-    return seg + (lug - socket_space(AXES[-1])) - keyhole(-8, 8)
+    seg = seg + (lug - socket_space(AXES[-1]))
+    for s in (-1, 1):
+        ends = [(s * (t + q), KEYRING_Z - r - 0.2 + q), (s * (FLANK + 1.5), KEYRING_Z + r + q + 1.2)]
+        seg -= mf.Manifold.batch_hull([ball(q, KEYRING_X, y, z + up) for y, z in ends for up in (0, 12)])
+    return seg - keyhole(-t - 1, t + 1)
 
 
 # --- the two models -----------------------------------------------------------
@@ -585,9 +700,7 @@ def make_capybara(loop=True):
     head, orange, info = make_head()
     segs = split(barrel(BODY_X0, BODY_X1, [SHOULDERS, RUMP]), AXES)
     segs[0] = neck_mount(segs[0])
-    for s in (-1, 1):
-        segs[0] += leg_pin("front", s)
-        segs[-1] += leg_pin("hind", s)
+    segs[0], segs[-1] = leg_mount(segs[0], "front"), leg_mount(segs[-1], "hind")
     if loop and KEYRING_D:
         segs[-1] = keyring(segs[-1])
     parts = {"head": head, "orange": orange}
@@ -616,7 +729,7 @@ def make_test():
     head, _, info = make_head(stub=True)
     at = AXES[0]
     a, b = split(barrel(BODY_X0, BODY_X1, [SHOULDERS, RUMP]) ^ box(0, at + 14, -50, 50, -1, 50), [at])
-    a = neck_mount(a) + leg_pin("front", 1)
+    a = leg_mount(neck_mount(a), "front", (1,))
     name = "front left leg"
     parts = {"head": head, "body 1": a, "body 2": b, name: leg("front", 1)}
     joints = [leg_joint(name, "front", "body joint 1"),
@@ -640,6 +753,9 @@ def posed(parts, joints, angles):
 
 
 # --- measuring the solids -----------------------------------------------------
+BED = 0.001           # sections 'at the bed' are taken this far above it: a clip face exactly on the bed joins every void
+
+
 def section_y(m, y):
     """The section of m in the plane y = const, as a CrossSection in (x, -z)."""
     return m.rotate([90, 0, 0]).slice(float(y))
@@ -707,7 +823,7 @@ def horn_width(seg, at):
     """Narrowest the horn of the socket's lip beside the ball is at its blunt front
     face, over the print layers from the bed up to the ball's equator."""
     widths = []
-    for z in [0.1, 0.3, 0.5, 0.7, 1.0, 1.5, 2.0, 3.0, 4.0, 6.0, Z_C]:
+    for z in [BED, 0.05, 0.1, 0.2, 0.3, 0.5, 0.7, 1.0, 1.5, 2.0, 3.0, 4.0, 6.0, Z_C]:
         cs = seg.slice(float(z)) ^ mf.CrossSection.square([40, 40]).translate([at - 5, 5.0])
         x = cs.bounds()[0]
         b = (cs ^ mf.CrossSection.square([0.04, 40]).translate([x + 0.02, 0])).bounds()
@@ -722,16 +838,18 @@ def thin_features(parts, info):
     axes = info["axes"]
     for name, (kind, s) in info["legs"].items():
         g = LEGS[kind]
-        y0 = FLANK + LEG_GAP
-        if s > 0 and kind not in pins:
-            clip = (g["x"] - 12, g["x"] + 12, y0 + 0.05, y0 + 6, -1, 20)
-            walls[f"{kind} leg round its pin's socket"] = cavity_wall(parts[name], clip, (g["x"], y0 + 0.3, LEG_Z))
-            body = parts["body 1" if kind == "front" else f"body {len(axes) + 1}"]
-            pins[f"{kind} leg pin"] = extent(piece_at(section_y(body, FLANK + 0.02), g["x"], -LEG_Z))
+        if s > 0 and f"{kind} leg pin" not in pins:
+            face = parts[name].bounding_box()[1]              # the boss's face, as built
+            clip = (g["x"] - 12, g["x"] + 12, face, face + 8, -1, 20)
+            walls[f"{kind} leg round its pin's socket"] = cavity_wall(parts[name], clip, (g["x"], face + 0.1, LEG_Z))
+            body = parts[leg_body(kind, axes)]
+            land, lip = leg_stations()[2:4]                   # the pin where it passes through the lip
+            pins[f"{kind} leg pin"] = min(extent(piece_at(section_y(body, y), g["x"], -LEG_Z - 0.5))
+                                          for y in np.linspace(land + 0.01, lip, 6))
     for i, at in enumerate(axes):
         front, rear = parts[f"body {i + 1}"], parts[f"body {i + 2}"]
         k = f" {i + 1}" if len(axes) > 1 else ""
-        clip = (at - 2, at + R_BALL + 3, -12, 12, 0.05, Z_RIM - BLEND * np.sqrt(2) - 0.05)
+        clip = (at - 2, at + R_BALL + 3, -12, 12, BED, Z_RIM - BLEND * np.sqrt(2) - 0.05)
         walls[f"ball{k} round the hook's pocket (rim, sides)"] = cavity_wall(front, clip, (at + (R_CORE + R_RIM) / 2, 0, 1.0))
         walls[f"socket lip{k} over the ball"] = lip_thickness(rear, at)
         walls[f"socket lip{k} horn at the flank, any layer"] = horn_width(rear, at)
@@ -748,9 +866,9 @@ def thin_features(parts, info):
     if "head" in parts:
         head, b1 = parts["head"], parts["body 1"]
         w, rc = TAB_W / 2, TAB_RU + TAB_GAP
-        clip = (NECK_X - 5, NECK_X + 5, -w + 0.05, w - 0.05, 0.3, NECK_Z + 8)
+        clip = (NECK_X - 5, NECK_X + 5, -w, w, BED, NECK_Z + 8)                 # between the tab's true faces, from the bed
         walls["neck tab round its sockets"] = min(cavity_wall(head, clip, (NECK_X, s * (w - 0.3), NECK_Z)) for s in (-1, 1))
-        clip = (NECK_X - 6.5, NECK_X + rc + 4, -12, 12, 0.05, 30)
+        clip = (NECK_X - 6.5, NECK_X + rc + 4, -12, 12, BED, 30)
         slot = (NECK_X, 0, NECK_Z + rc + 0.5)
         walls["roof over the neck slot"] = cavity_wall(b1 + box(clip[0], clip[1], -12, 12, -1, NECK_Z + 3), clip, slot)
         walls["walls of the neck slot"] = cavity_wall(b1 + box(clip[0], clip[1], -12, 12, NECK_Z + 3, 30) - doorway(), clip, slot,
@@ -764,11 +882,119 @@ def thin_features(parts, info):
         walls["ear tip"] = extent(piece_at(parts["head"].slice(14.6), EARS[0][0][1], EARS[0][1][1]))
     if info["loop"]:
         b4, t = parts[f"body {len(axes) + 1}"], KEYRING_T / 2
-        clip = (KEYRING_X - 7, KEYRING_X + 7, -t + 0.05, t - 0.05, KEYRING_Z - 4, KEYRING_Z + 8)
-        walls["keyring lug round its hole"] = cavity_wall(b4, clip, (KEYRING_X, 0, KEYRING_Z))
-        info["lug"] = (extent(piece_at(b4.slice(KEYRING_Z + KEYRING_D / 2 * np.sqrt(2) + 0.5), KEYRING_X, 0)),
-                       min(b - a for a, b in column(b4, KEYRING_X, 0, KEYRING_Z)))
+        clip = (KEYRING_X - 7, KEYRING_X + 7, -t, t, KEYRING_Z - 4, KEYRING_Z + 8)
+        walls["keyring eye round its hole"] = cavity_wall(b4, clip, (KEYRING_X, 0, KEYRING_Z))
+        # the web between the two scoops: its run of solid across the body through the middle, at
+        # heights from the hole's bottom to above its peak (beside the hole where the hole is)
+        r = KEYRING_D / 2
+        web = []
+        for x, z in [(KEYRING_X + r + 0.5, KEYRING_Z - r), (KEYRING_X + r + 0.5, KEYRING_Z), (KEYRING_X - r - 0.5, KEYRING_Z),
+                     (KEYRING_X, KEYRING_Z + r * np.sqrt(2) + 0.3), (KEYRING_X, KEYRING_Z + r * np.sqrt(2) + 1.0)]:
+            run = piece_at(b4.slice(float(z)) ^ mf.CrossSection.square([0.04, 40]).translate([x - 0.02, -20]), x, 0).bounds()
+            web.append(run[3] - run[1])
+        info["lug"] = (min(web), min(b - a for a, b in column(b4, KEYRING_X, 0, KEYRING_Z)), b4.bounding_box()[5])
     return walls, pins
+
+
+def leg_body(kind, axes):
+    return "body 1" if kind == "front" else f"body {len(axes) + 1}"
+
+
+def printable(cs, w=NOZZLE):
+    """What is left of a layer when everything a nozzle w wide cannot get into is dropped."""
+    return cs.offset(-w / 2, mf.JoinType.Round, 2.0, 32).offset(w / 2, mf.JoinType.Round, 2.0, 32) ^ cs
+
+
+def leg_hold(leg_, body, x, side, layer=0.2, bite=0.3):
+    """How well a leg is held on its pin by material that will really be printed. The
+    leg is pulled straight off sideways until it touches (its play), then `bite`
+    further, and what overlaps is measured twice: on the solids, and layer by layer
+    after dropping from both everything a nozzle cannot print. Returns the play, the
+    share of the interference that is left, and the hold: the least, in any layer of
+    HOLD_BAND above the pin's axis, that the printable flange reaches over the printable
+    lip on either side of the pin."""
+    touches = lambda d: (leg_.translate([0, side * d, 0]) ^ body).volume() > 1e-7
+    hi = next((d for d in np.arange(0.05, 4.0, 0.05) if touches(d)), None)
+    if hi is None:
+        return 4.0, 0.0, 0.0                    # it comes straight off
+    lo = hi - 0.05
+    for _ in range(8):
+        mid = (lo + hi) / 2
+        lo, hi = (lo, mid) if touches(mid) else (mid, hi)
+    pull = side * (lo + bite)
+    exact = (leg_.translate([0, pull, 0]) ^ body).volume()
+    window = mf.CrossSection.square([16, 8]).translate([x - 8, FLANK - 2 if side > 0 else -FLANK - 6])
+    left, hold = 0.0, []
+    for z in np.arange(layer / 2, leg_.bounding_box()[5], layer):
+        if abs(z - LEG_Z) > 8:
+            continue
+        over = printable(leg_.slice(float(z))).translate([0, pull]) ^ printable(body.slice(float(z)) ^ window)
+        left += over.area() * layer
+        if HOLD_BAND[0] <= z - LEG_Z <= HOLD_BAND[1]:
+            sides = [over ^ mf.CrossSection.square([8, 40]).translate([x - 8 * k, -20]) for k in (0, 1)]
+            hold.append(min(0.0 if c.is_empty() else c.bounds()[2] - c.bounds()[0] for c in sides))
+    return lo, left / max(exact, 1e-9), min(hold)
+
+
+def leg_map(parts, joints, j, free, step=2.5):
+    """Swing leg j every `step` degrees out to the range it is meant to have, at every
+    `step` degrees of the body joint beside it across that joint's whole free range.
+    Returns the smallest free swing each way, and the joint angle it was found at."""
+    bj = next(k for k in joints if k["name"] == j["beside"])
+    name = j["name"]
+    others = {n: p for n, p in parts.items() if n != name}
+    worst, at = [j["want"], j["want"]], 0.0
+    angles = sorted(set(np.arange(-free[1], free[0] + 1e-6, step)) | {-free[1], free[0], 0.0})
+    for phi in angles:
+        pose = {bj["name"]: phi}
+        pivot = posed({name: ball(0.01, *j["point"])}, joints, pose)[name].bounding_box()
+        c = [(pivot[i] + pivot[i + 3]) / 2 for i in range(3)]
+        near = box(c[0] - 16, c[0] + 16, c[1] - 40, c[1] + 40, -1, 40)
+        rest = union(p ^ near for p in posed(others, joints, pose).values())
+        for k, sign in enumerate((1, -1)):
+            reached = 0.0
+            for a in np.arange(step, j["want"] + 1e-6, step):
+                turned = posed({name: parts[name]}, joints, dict(pose, **{name: sign * a}))[name]
+                if (turned ^ rest).volume() > 1e-6:
+                    break
+                reached = a
+            if reached < worst[k]:
+                worst[k], at = reached, phi
+    return worst, at
+
+
+def tilt_limit(front, rear, at, axis, sign, stop, step=0.5):
+    """How far a body joint can be turned the wrong way, measured on the solids. The
+    rear segment is turned about the crosswise ('y': + folds the joint up, nose of the
+    rear segment rising) or lengthwise ('x': twist) axis through the joint at height
+    TILT_Z, `step` degrees at a time, and at each angle is free to shift: first near
+    where it last fitted, then anywhere on a grid 0.2 mm apart (refined to 0.05 round
+    the best places). Returns the largest angle, up to `stop`, at which it still fits
+    somewhere without touching the front segment."""
+    import itertools
+    ref = [at, 0, TILT_Z]
+    fixed = front ^ box(at - 17, at + 17, -30, 30, -5, 40)
+    moving = rear ^ box(at - 14, at + 14, -30, 30, -5, 40)
+    if axis == "y":
+        grid = (np.arange(-0.8, 2.41, 0.2), [0.0], np.arange(-0.8, 3.61, 0.2))
+    else:
+        grid = ([0.0, 0.3], np.arange(-1.0, 1.01, 0.2), np.arange(-0.8, 1.21, 0.2))
+    free = [len(g) > 1 for g in grid]
+    last, best = (0.0, 0.0, 0.0), 0.0
+    for deg in np.arange(step, stop + 1e-6, step):
+        turned = turn(moving, axis, ref, sign * deg)
+        hits = lambda d: (turned.translate([float(c) for c in d]) ^ fixed).volume() > 1e-6
+        near = itertools.product(*[[last[k] + e for e in ((0, -0.1, 0.1, -0.2, 0.2) if free[k] else (0,))] for k in range(3)])
+        found = next((d for d in near if not hits(d)), None)
+        if found is None:
+            vols = sorted(((turned.translate([float(c) for c in d]) ^ fixed).volume(), d) for d in itertools.product(*grid))
+            fine = [np.arange(-0.15, 0.151, 0.05) if free[k] else [0.0] for k in range(3)]
+            tries = (tuple(a + b for a, b in zip(d0, e)) for _, d0 in vols[:4] for e in itertools.product(*fine))
+            found = vols[0][1] if vols[0][0] < 1e-6 else next((d for d in tries if not hits(d)), None)
+        if found is None:
+            break
+        last, best = tuple(float(c) for c in found), float(deg)
+    return best
 
 
 # --- checks -------------------------------------------------------------------
@@ -818,7 +1044,7 @@ def check(parts, joints, info):
     names = list(parts)
     # 1. every moving part is its own single body, standing on the bed, clear of the others as printed
     tight, bed = 9.0, 9.0
-    first = {n: p ^ box(-100, 200, -100, 100, -1, 0.1) for n, p in parts.items()}
+    first = {n: p ^ box(-100, 200, -100, 100, -1, FIRST_LAYER) for n, p in parts.items()}
     for n in names:
         if len(parts[n].decompose()) != 1:
             raise SystemExit(f"{n} is not one piece")
@@ -846,9 +1072,11 @@ def check(parts, joints, info):
            f"tightest gap as printed {tight:.2f} mm, in the first layer {bed:.2f} mm"]
 
     # 2. each joint through its range; a joint with a stop must not go past it, and a
-    #    leg is swung again with the body joint beside it bent each way
+    #    leg is swung again at every 2.5 degrees of the body joint beside it
+    lines, free_of = {}, {}
     for j in joints:
         free, gap = sweep(parts, joints, j)
+        free_of[j["name"]] = free
         if min(free) < j["want"] - 1e-6:
             raise SystemExit(f"{j['name']} only swings +{free[0]:.0f}/-{free[1]:.0f} degrees, wanted {j['want']:.0f}")
         line = f"   {j['name']:<16} {spread(free):<16} tightest gap {gap:.2f} mm"
@@ -856,13 +1084,44 @@ def check(parts, joints, info):
             if max(free) > j["stop"]:
                 raise SystemExit(f"{j['name']} swings +{free[0]:.0f}/-{free[1]:.0f} degrees: nothing stops it by {j['stop']:.0f}")
             line += f"; stopped both ways before {j['stop']:.0f}"
+        lines[j["name"]] = line
+    for j in joints:
         if j["beside"]:
-            bent = [sweep(parts, joints, j, {j["beside"]: s * SWING})[0] for s in (1, -1)]
-            worst = [min(f[0] for f in bent), min(f[1] for f in bent)]
+            far = free_of[j["beside"]]
+            worst, at = leg_map(parts, joints, j, far)
             if min(worst) < j["want"] - 1e-6:
-                raise SystemExit(f"{j['name']} only swings +{worst[0]:.0f}/-{worst[1]:.0f} with {j['beside']} bent")
-            line += f"; with {j['beside']} bent {SWING:g} either way: {spread(worst)}"
-        out.append(line)
+                raise SystemExit(f"{j['name']} only swings +{worst[0]:g}/-{worst[1]:g} with {j['beside']} at {at:+g}")
+            lines[j["name"]] += (f"; at least +{worst[0]:g}/-{worst[1]:g} with {j['beside']} anywhere "
+                                 f"from -{far[1]:g} to +{far[0]:g} (every 2.5)")
+    out += [lines[j["name"]] for j in joints]
+
+    # 2a. the body joints turned the wrong way: folded up, folded down and twisted
+    for i, at in enumerate(info["axes"]):
+        front, rear = parts[f"body {i + 1}"], parts[f"body {i + 2}"]
+        up, down, twist = (tilt_limit(front, rear, at, axis, sign, limit + 0.5)
+                           for axis, sign, limit in (("y", 1, MAX_FOLD), ("y", -1, MAX_TILT), ("x", 1, MAX_TILT)))
+        name = f"body joint {i + 1}"
+        if up > MAX_FOLD or down > MAX_TILT or twist > MAX_TILT:
+            raise SystemExit(f"{name} is too loose the wrong way: it folds up {up:g}, down {down:g} and twists {twist:g} degrees")
+        lines[name] += f"; the wrong way it folds up {up:g}, down {down:g} and twists {twist:g} deg at most"
+    out[-len(joints):] = [lines[j["name"]] for j in joints]
+
+    # 2b. each leg: enough bed under it, and held on its pin by material a nozzle can print
+    feet, holds = [], []
+    for name, (kind, s) in info["legs"].items():
+        foot = parts[name].slice(1e-3).area()
+        if foot < MIN_FOOT:
+            raise SystemExit(f"{name} stands on only {foot:.1f} mm2 of bed, wanted {MIN_FOOT:g}")
+        play, left, hold = leg_hold(parts[name], parts[leg_body(kind, info["axes"])], LEGS[kind]["x"], s)
+        if hold < MIN_HOLD or left < 0.6:
+            raise SystemExit(f"{name}: as printed with a {NOZZLE} mm nozzle its pin's flange holds only {hold:.2f} mm of lip "
+                             f"each side, {100 * left:.0f}% of the interference of the exact solids")
+        feet.append(foot)
+        holds.append((hold, left, play))
+    worst = min(holds)
+    out.append(f"   legs: {min(feet):.1f} mm2 or more of bed under each; pulled off sideways they move {worst[2]:.2f} mm and stop on "
+               f"{worst[0]:.2f} mm or more of flange over lip each side in every layer {HOLD_BAND[0]:g}-{HOLD_BAND[1]:g} mm above the pin's "
+               f"axis, {100 * worst[1]:.0f}% of the exact interference left, once everything a {NOZZLE} mm nozzle cannot print is dropped")
 
     # 3. the body curled up and S-bent, legs and head turned too (each way)
     body = [j for j in joints if j["name"].startswith("body joint")]
@@ -908,10 +1167,10 @@ def check(parts, joints, info):
     out.append("   pins (measured): " + ", ".join(f"{k} {v:.2f}" for k, v in pins.items())
                + "; each tongue is {:.2f} across and {:.2f} wide at its narrowest, {:.1f} mm2".format(*info["tongue"]))
     if info["loop"]:
-        thick, over = info["lug"]
-        if thick < 4.0 or over < 2.0:
-            raise SystemExit(f"keyring lug is {thick:.2f} thick with {over:.2f} over the hole's peak")
-        out.append(f"   keyring lug {thick:.2f} thick, {over:.2f} over the hole's peak")
+        thick, over, top = info["lug"]
+        if thick < 4.0 or over < 2.0 or top > KEYRING_TOP:
+            raise SystemExit(f"keyring eye: web {thick:.2f} thick, {over:.2f} over the hole's peak, top at {top:.2f}")
+        out.append(f"   keyring eye: web {thick:.2f} thick at its thinnest, {over:.2f} over the hole's peak, top at {top:.2f} (limit {KEYRING_TOP:g})")
 
     # 7. overall size (the full model only)
     if info["full"]:
@@ -921,7 +1180,7 @@ def check(parts, joints, info):
             raise SystemExit(f"size {size[0]:.1f} x {size[1]:.1f} x {size[2]:.1f} is outside the brief")
         back = max(parts[n].bounding_box()[5] for n in parts if n.startswith("body"))
         out.append(f"   nose to rump {size[0]:.1f}, width {size[1]:.1f}, height {size[2]:.1f} "
-                   f"(top of the {'keyring lug' if info['loop'] else 'back'} {back:.1f})")
+                   f"(top of the {'keyring eye' if info['loop'] else 'back'} {back:.1f})")
     return out
 
 
@@ -1048,10 +1307,10 @@ def build(name, maker, title):
 
 def main():
     build(f"{NAME}-test", make_test, "test strip")
-    if KEYRING_D:                    # the keyring lug is optional: the plain back must pass too
+    if KEYRING_D:                    # the keyring eye is optional: the plain back must pass too
         parts, joints, info = make_capybara(loop=False)
         check(parts, joints, info)
-        print("pocket capybara without the keyring lug: passes every check as well\n")
+        print("pocket capybara without the keyring eye: passes every check as well\n")
     build(NAME, make_capybara, "pocket capybara")
 
 

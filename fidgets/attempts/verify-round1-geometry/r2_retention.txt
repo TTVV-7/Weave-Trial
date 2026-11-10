@@ -1,0 +1,26 @@
+front left leg: pin head reaches y=9.80; leg inner face y=7.90
+   exact: socket mouth 12.000 wide x 12.000 tall; pin head inside the leg 5.823 wide x 3.905 tall; area of the head that cannot pass the mouth 0.00 mm2
+      leg pulled 0.5 mm off sideways: overlap with the body 0.595 mm3
+      leg pulled 0.6 mm off sideways: overlap with the body 1.180 mm3
+      leg pulled 0.8 mm off sideways: overlap with the body 2.319 mm3
+      leg pulled 1.0 mm off sideways: overlap with the body 3.465 mm3
+      leg pulled 1.2 mm off sideways: overlap with the body 3.930 mm3
+      leg pulled 1.6 mm off sideways: overlap with the body 1.633 mm3
+   layers 0.2 mm, dropping what a 0.4 mm disc cannot enter: pin loses 0.37 mm3, leg loses 0.37 mm3; overlap when pulled off by 0.6: 1.049, 0.8: 2.181, 1.0: 3.252, 1.2: 3.626, 1.6: 1.418 mm3
+   layers 0.2 mm, dropping what a 0.2 mm disc cannot enter: pin loses 0.09 mm3, leg loses 0.08 mm3; overlap when pulled off by 0.6: 1.142, 0.8: 2.277, 1.0: 3.395, 1.2: 3.860, 1.6: 1.591 mm3
+   layers 0.12 mm, dropping what a 0.4 mm disc cannot enter: pin loses 0.36 mm3, leg loses 0.37 mm3; overlap when pulled off by 0.6: 1.049, 0.8: 2.178, 1.0: 3.245, 1.2: 3.618, 1.6: 1.414 mm3
+   layers 0.12 mm, dropping what a 0.2 mm disc cannot enter: pin loses 0.09 mm3, leg loses 0.09 mm3; overlap when pulled off by 0.6: 1.140, 0.8: 2.273, 1.0: 3.385, 1.2: 3.843, 1.6: 1.578 mm3
+   exact: sideways play before the cone seats 0.400 mm
+hind left leg: pin head reaches y=9.80; leg inner face y=7.90
+   exact: socket mouth 12.000 wide x 12.000 tall; pin head inside the leg 5.823 wide x 3.905 tall; area of the head that cannot pass the mouth 0.00 mm2
+      leg pulled 0.5 mm off sideways: overlap with the body 0.595 mm3
+      leg pulled 0.6 mm off sideways: overlap with the body 1.180 mm3
+      leg pulled 0.8 mm off sideways: overlap with the body 2.319 mm3
+      leg pulled 1.0 mm off sideways: overlap with the body 3.465 mm3
+      leg pulled 1.2 mm off sideways: overlap with the body 3.930 mm3
+      leg pulled 1.6 mm off sideways: overlap with the body 1.633 mm3
+   layers 0.2 mm, dropping what a 0.4 mm disc cannot enter: pin loses 0.37 mm3, leg loses 0.44 mm3; overlap when pulled off by 0.6: 1.049, 0.8: 2.181, 1.0: 3.252, 1.2: 3.626, 1.6: 1.418 mm3
+   layers 0.2 mm, dropping what a 0.2 mm disc cannot enter: pin loses 0.09 mm3, leg loses 0.09 mm3; overlap when pulled off by 0.6: 1.142, 0.8: 2.277, 1.0: 3.395, 1.2: 3.860, 1.6: 1.591 mm3
+   layers 0.12 mm, dropping what a 0.4 mm disc cannot enter: pin loses 0.36 mm3, leg loses 0.44 mm3; overlap when pulled off by 0.6: 1.049, 0.8: 2.178, 1.0: 3.245, 1.2: 3.618, 1.6: 1.414 mm3
+   layers 0.12 mm, dropping what a 0.2 mm disc cannot enter: pin loses 0.09 mm3, leg loses 0.10 mm3; overlap when pulled off by 0.6: 1.140, 0.8: 2.273, 1.0: 3.385, 1.2: 3.843, 1.6: 1.578 mm3
+   exact: sideways play before the cone seats 0.400 mm

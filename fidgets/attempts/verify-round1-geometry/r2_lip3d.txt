@@ -1,0 +1,18 @@
+joint 1: socket surface 1306 faces / 77510 points, upper surface 223 faces / 519859 points
+   lip thickness (socket surface to the nearest face that looks up): 0.799 mm, from x=34.20 y=-5.58 z=12.15 to x=34.20 y=-6.10 z=12.75
+   share of the sampled socket surface under the lip thinner than 0.8: 0.00%
+   share of the sampled socket surface under the lip thinner than 0.9: 0.51%
+   share of the sampled socket surface under the lip thinner than 1.0: 2.26%
+   thinnest by strip across the body: y -8..-6: 1.00  y -6..-4: 0.80  y -4..-2: 0.90  y -2..+0: 0.98  y +0..+2: 0.98  y +2..+4: 0.90  y +4..+6: 0.80  y +6..+8: 1.00
+joint 2: socket surface 1542 faces / 88755 points, upper surface 100 faces / 239079 points
+   lip thickness (socket surface to the nearest face that looks up): 0.985 mm, from x=43.22 y=-2.01 z=14.64 to x=43.21 y=-2.05 z=15.62
+   share of the sampled socket surface under the lip thinner than 0.8: 0.00%
+   share of the sampled socket surface under the lip thinner than 0.9: 0.00%
+   share of the sampled socket surface under the lip thinner than 1.0: 0.16%
+   thinnest by strip across the body: y -8..-6: 2.37  y -6..-4: 1.70  y -4..-2: 0.99  y -2..+0: 0.99  y +0..+2: 0.99  y +2..+4: 0.99  y +4..+6: 1.70  y +6..+8: 2.37
+joint 3: socket surface 1716 faces / 89105 points, upper surface 548 faces / 324773 points
+   lip thickness (socket surface to the nearest face that looks up): 1.386 mm, from x=53.95 y=+0.00 z=12.16 to x=55.23 y=+0.00 z=12.68
+   share of the sampled socket surface under the lip thinner than 0.8: 0.00%
+   share of the sampled socket surface under the lip thinner than 0.9: 0.00%
+   share of the sampled socket surface under the lip thinner than 1.0: 0.00%
+   thinnest by strip across the body: y -8..-6: 3.01  y -6..-4: 1.71  y -4..-2: 1.58  y -2..+0: 1.39  y +0..+2: 1.39  y +2..+4: 1.58  y +4..+6: 1.71  y +6..+8: 3.01

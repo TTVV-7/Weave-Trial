@@ -1,0 +1,7 @@
+hole: 3.0 mm at x 56.6, z 13.3; web 4.5 thick; top of the eye 17.47; rump end x 61.60
+centre of mass [32.3, -0.0, 7.3]; hanging from the eye the ring pulls 76 deg from straight up, towards the tail
+ring 10 mm inside / 14 outside, wire 1.6: fits leaning -30..+55 deg (0 = straight up, + = towards the tail)
+ring 14 mm inside / 18 outside, wire 1.6: fits leaning -35..+65 deg (0 = straight up, + = towards the tail)
+ring 18 mm inside / 22 outside, wire 2.0: fits leaning -35..+55 deg (0 = straight up, + = towards the tail)
+ring 23 mm inside / 27 outside, wire 2.0: fits leaning -35..+55 deg (0 = straight up, + = towards the tail)
+ring 23 mm inside / 27 outside, wire 2.4: fits leaning -25..+45 deg (0 = straight up, + = towards the tail)

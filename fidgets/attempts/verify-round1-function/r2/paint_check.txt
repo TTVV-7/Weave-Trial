@@ -1,0 +1,35 @@
+=== pocket-capybara.3mf: 1 object(s), colours ['#9A6A3E', '#4E301C', '#1A1A1A', '#F28C1A']
+  33150 verts 66280 tris; watertight True; bounds [[0.0, -11.9, 0.0], [61.6, 11.9, 20.22]]; zero-area tris 0; min tri area 1.50e-08
+  shells 10; all watertight True
+    T1 brown: 49544 tris, 8580.9 mm2
+    T2 dark: 5828 tris, 378.4 mm2
+    T3 black: 892 tris, 35.4 mm2
+    T4 orange: 10016 tris, 170.4 mm2
+  24 patches; smallest 3.399 mm2; under 1 mm2: 0
+    patch T3 black       3.40 mm2    216 tris  x   0.00..  0.36 y  -2.60.. -0.80 z   8.69.. 10.34
+    patch T3 black       3.40 mm2    216 tris  x   0.00..  0.36 y   0.80..  2.60 z   8.69.. 10.38
+    patch T2 dark        5.28 mm2     14 tris  x   0.00..  0.23 y  -1.88..  1.88 z   4.54..  5.46
+    patch T2 dark        6.46 mm2    672 tris  x   8.31.. 10.89 y  -1.29..  1.29 z  19.92.. 20.20
+    patch T3 black      14.29 mm2    230 tris  x   4.01..  8.91 y   5.91..  7.05 z   9.17.. 12.17
+    patch T3 black      14.29 mm2    230 tris  x   3.89..  8.90 y  -7.05.. -5.91 z   9.17.. 12.18
+    patch T2 dark       24.73 mm2    536 tris  x   0.00..  1.92 y  -3.97..  3.97 z   8.13.. 12.06
+    patch T2 dark       27.48 mm2   1098 tris  x  13.13.. 16.70 y   3.69..  7.10 z  13.12.. 16.20
+    patch T2 dark       27.48 mm2   1098 tris  x  13.13.. 16.70 y  -7.10.. -3.69 z  13.12.. 16.20
+    patch T2 dark       70.20 mm2    581 tris  x  16.70.. 24.25 y   7.90.. 11.90 z   0.00..  2.39
+    patch T2 dark       70.20 mm2    581 tris  x  16.70.. 24.25 y -11.90.. -7.90 z   0.00..  2.39
+    patch T2 dark       73.28 mm2    624 tris  x  53.39.. 61.28 y -11.90.. -7.90 z   0.00..  2.40
+    patch T2 dark       73.28 mm2    624 tris  x  53.39.. 61.28 y   7.90.. 11.90 z   0.00..  2.40
+    patch T4 orange    170.42 mm2  10016 tris  x   5.60.. 13.60 y  -4.00..  4.00 z  13.38.. 20.11
+  colour boundary: 1244 edges, total 195.4 mm, shortest 0.0006, median 0.095
+  needle triangles (altitude < 0.005 mm): 7090, (<0.001): 2010
+=== pocket-capybara-test.3mf: 1 object(s), colours ['#9A6A3E', '#4E301C', '#1A1A1A', '#F28C1A']
+  8074 verts 16136 tris; watertight True; bounds [[0.0, -10.2, 0.0], [33.7, 10.2, 15.16]]; zero-area tris 0; min tri area 1.50e-08
+  shells 4; all watertight True
+    T1 brown: 15555 tris, 4170.9 mm2
+    T2 dark: 581 tris, 70.2 mm2
+    T3 black: 0 tris, 0.0 mm2
+    T4 orange: 0 tris, 0.0 mm2
+  5 patches; smallest 70.201 mm2; under 1 mm2: 0
+    patch T2 dark       70.20 mm2    581 tris  x  10.20.. 17.75 y   6.20.. 10.20 z   0.00..  2.39
+  colour boundary: 47 edges, total 17.5 mm, shortest 0.0026, median 0.216
+  needle triangles (altitude < 0.005 mm): 1888, (<0.001): 562

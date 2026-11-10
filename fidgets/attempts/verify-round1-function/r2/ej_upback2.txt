@@ -1,0 +1,4 @@
+  it 28: joint centre moved [0.35, 0.38, 0.45], turned 2.1 deg about [-0.7, 0.55, -0.45]
+  it 79: joint centre moved [0.53, 0.26, 1.09], turned 4.7 deg about [-0.43, 0.83, 0.35]
+  it 356: joint centre moved [0.79, 0.02, 1.59], turned 8.3 deg about [-0.07, 0.93, 0.37]
+seed 2 upback: stalled at 1.68 mm after 1500 tries

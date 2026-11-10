@@ -1,0 +1,3 @@
+joint 1, yawed +6: turned about -x it still fits at 6.5 deg (shift (0.3, -0.05, 0.3)); nothing fits at 7
+joint 2, yawed +12.5: turned about -x it still fits at 6.5 deg (shift (0.35, -0.05, 0.45)); nothing fits at 7
+joint 1, yawed +25: turned about -x it still fits at 8 deg (shift (0.45, -0.15, 0.95)); nothing fits at 8.5
