@@ -58,7 +58,11 @@ POST_LEN = 500.0                # joined length
 CORE_D = 8.0
 CORE_PITCH = 1.25
 CORE_BORE = 8.3                 # plain bore: 0.85 mm of wall at the flats
-CORE_MINOR, CORE_MAJOR = 6.85, 8.3   # the threaded bore's limits (ISO minor 6.65)
+# The threaded bore's limits (ISO internal minor 6.65). The first print's
+# 6.85 / 8.3 with 0.1 mm on the flanks was too tight for the steel rod; now
+# 0.35 mm larger across the root and 0.25 mm more on the flanks.
+CORE_MINOR, CORE_MAJOR = 7.2, 8.6
+CORE_FLANK = 0.35               # radial clearance at the pitch line (was 0.1)
 CORE_THREAD_LEN = 12.5          # ten turns
 CORE_START = 30.0
 
@@ -148,7 +152,7 @@ def threaded_bore(length: float, segs: int = 72, steps: int = 16) -> m3.Manifold
     the helix at a constant radius."""
     P = CORE_PITCH
     H = P * math.sqrt(3) / 2
-    r_pitch = (CORE_D - 0.6495 * P) / 2 + 0.1    # 0.1 mm of clearance
+    r_pitch = (CORE_D - 0.6495 * P) / 2 + CORE_FLANK
     r_lo = r_pitch - H / 2
     nz = int(math.ceil(length / P * steps))
     th = np.linspace(0, 2 * math.pi, segs, endpoint=False)
